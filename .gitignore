@@ -7,3 +7,5 @@ local/traps
 #Ignore images
 static/uploads
 
+#Ignore idea file
+.idea
