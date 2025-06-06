@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Host Page</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/host.css') }}">
+    <script src="{{ url_for('static', filename='js/host.js') }}"></script>
+</head>
+<body>
+  <header>Host</header>
+  <div id="buttons-bar">
+      <button onclick="manageTraps()">Manage Traps</button>
+  </div>
+  <div class="tabs" id="tab-bar"></div>
+  <div id="tab-contents"></div>
+</body>
+</html>

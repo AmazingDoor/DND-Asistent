@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='js/manage_traps.js') }}"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Traps</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_traps.css') }}">
+</head>
+<body>
+  <!--Add Trap Pop up -->
+  <div id="trapPrompt" class="modal hidden">
+    <div class="modal-box">
+      <h3>Add Trap</h3>
+      <label>Trap Name:</label><br>
+      <input type="text" id="trapName"><br><br>
+
+      <label>Trap Text:</label><br>
+      <textarea id="trapText" rows="3"></textarea><br><br>
+
+      <button onclick="submitTrap()">Submit</button>
+      <button onclick="closeTrapPrompt()">Cancel</button>
+    </div>
+  </div>
+  <!---->
+  <div class="container">
+    <h2>Manage Traps</h2>
+    <div class="trap-section">
+      <div class="trap-box" id="trapBox">
+        <!-- Traps will be added here -->
+      </div>
+      <div class="button-column">
+        <button class="add-btn" onclick="addTrap()">Add Trap</button>
+        <button class="delete-btn" onclick="deleteTrap()">Delete Trap</button>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button onclick="saveTraps()" class="save-btn">Save</button>
+      <button onclick="cancelChanges()" class="cancel-btn">Cancel</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
