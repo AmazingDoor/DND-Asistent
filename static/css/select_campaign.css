@@ -21,7 +21,8 @@ main {
 }
 
 .campaign-box {
-  min-height: 200px;
+  height: 400px;
+  overflow-y: auto;
   margin: 20px auto;
   border: 2px dashed #aaa;
   width: 60%;
@@ -43,6 +44,19 @@ main {
   width: 60%;
   margin: 0 auto;
   margin-top: 20px;
+}
+
+.list-item {
+    display: flex;
+    height: 40px;
+    border: 2px solid black;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.list-text{
+    font-size: 20px;
 }
 
 button {

@@ -35,6 +35,9 @@ function loadTrapDiv(name, text) {
     trap_name.className = 'trap-name';
     trap_name.value = name;
 
+    const s = document.createElement('p');
+    s.textContent = ':';
+
     const trap_text = document.createElement('input');
     trap_text.type = 'text';
     trap_text.placeholder = 'Trap Text';
@@ -42,6 +45,7 @@ function loadTrapDiv(name, text) {
     trap_text.value = text;
 
     trap_row.appendChild(trap_name);
+    trap_row.appendChild(s);
     trap_row.appendChild(trap_text);
     box.appendChild(trap_row);
 }
@@ -76,12 +80,16 @@ function createTrapDiv() {
     trap_name.placeholder = 'Trap Name';
     trap_name.className = 'trap-name';
 
+    const s = document.createElement('p');
+    s.textContent = ':';
+
     const trap_text = document.createElement('input');
     trap_text.type = 'text';
     trap_text.placeholder = 'Trap Text';
     trap_text.className = 'trap-text';
 
     trap_row.appendChild(trap_name);
+    trap_row.appendChild(s);
     trap_row.appendChild(trap_text);
     box.appendChild(trap_row);
 }

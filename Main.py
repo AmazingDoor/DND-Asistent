@@ -22,6 +22,11 @@ global PLAYERS_FOLDER
 global TRAPS_FOLDER
 global IMGS_FOLDER
 
+CURRENT_CAMPAIGN = None
+PLAYERS_FOLDER = None
+TRAPS_FOLDER = None
+IMGS_FOLDER = None
+
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -146,15 +151,17 @@ def get_traps_json():
 @socketio.on('register_name')
 def handle_register_name(data):
     global CURRENT_CAMPAIGN
+    sid = request.sid
+    print(CURRENT_CAMPAIGN)
     if CURRENT_CAMPAIGN == None:
         return
-    sid = request.sid
     name = data.get('name', 'Anonymous')
     char_id = data.get('char_id')
     if char_id:
         clients[sid] = {'name': name, 'sid': sid, 'char_id': char_id}
         print(f"Client {sid} registered as {name}")
         emit('client_name_registered', {'client_id': sid, 'name': name, 'char_id': char_id}, broadcast=True)
+        emit('allow_client', room=sid)
         init_json_data(sid, name, char_id)
     else:
         print(f"Warning: No id for {name}")

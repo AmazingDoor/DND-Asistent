@@ -5,7 +5,7 @@ body {
 }
 
 .container {
-  max-width: 500px;
+  max-width: 90%;
   margin: auto;
   background: white;
   padding: 20px;
@@ -25,7 +25,7 @@ h2 {
 
 .trap-box {
   border: 1px solid #ccc;
-  height: 200px;
+  height: 400px;
   overflow-y: auto;
   padding: 10px;
   border-radius: 4px;
@@ -59,10 +59,14 @@ button {
   cursor: pointer;
 }
 
-.add-btn { background-color: #4caf50; color: white; }
-.delete-btn { background-color: #f44336; color: white; }
-.save-btn { background-color: #2196f3; color: white; }
+.add-btn { background-color: white; color: black; border: 2px solid black;}
+.add-btn:hover { background-color: #eeeeee; }
+.delete-btn { background-color: red; color: white; }
+.delete-btn:hover { background-color:#bc0000; }
+.save-btn { background-color: white; color: black; border: 2px solid black;}
+.save-btn:hover { background-color: #eeeeee; }
 .cancel-btn { background-color: #9e9e9e; color: white; }
+.cancel-btn:hover { background-color: #676767; }
 
 
 
@@ -87,6 +91,20 @@ button {
 }
 
 .trap-row {
+  display: flex;
+  align-items: center;
+  height: 30px;
   border: 2px solid black;
   background-color: white;
+}
+
+.trap-name {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.trap-text {
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 100%;
 }
