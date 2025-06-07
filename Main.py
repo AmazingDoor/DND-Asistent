@@ -110,8 +110,6 @@ def handle_disconnect():
     for client in EARLY_CLIENTS:
         if client.get('sid') == sid:
             del client
-    print(f"Client disconnected: {sid}")
-
 
 def init_json_data(sid, name, char_id, dm_only=False):
     if not os.path.exists(f"{PLAYERS_FOLDER}\\{char_id}.json"):
@@ -179,7 +177,6 @@ def handle_register_name(data):
     char_id = data.get('char_id')
     if char_id:
         clients[sid] = {'name': name, 'sid': sid, 'char_id': char_id}
-        print(f"Client {sid} registered as {name}")
         emit('client_name_registered', {'client_id': sid, 'name': name, 'char_id': char_id}, broadcast=True)
         emit('allow_client', room=sid)
         init_json_data(sid, name, char_id)
