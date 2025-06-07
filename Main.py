@@ -11,6 +11,9 @@ import signal
 import sys
 import json
 import shutil
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.CRITICAL)
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -30,6 +33,9 @@ IMGS_FOLDER = None
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+global EARLY_CLIENTS
+EARLY_CLIENTS = []
 
 
 def allowed_file(filename):
@@ -95,10 +101,15 @@ def handle_connect():
 
 @socketio.on('disconnect')
 def handle_disconnect():
+    global EARLY_CLIENTS
     sid = request.sid
     if sid in clients:
         emit('client_disconnected', {'client_id': sid}, broadcast=True)
         del clients[sid]
+
+    for client in EARLY_CLIENTS:
+        if client.get('sid') == sid:
+            del client
     print(f"Client disconnected: {sid}")
 
 
@@ -148,14 +159,23 @@ def get_traps_json():
         j = json.load(json_file)
         emit('load_traps_json', j)
 
-@socketio.on('register_name')
-def handle_register_name(data):
+@socketio.on('client_ready')
+def client_ready(data):
+    global EARLY_CLIENTS
     global CURRENT_CAMPAIGN
     sid = request.sid
-    print(CURRENT_CAMPAIGN)
+    name = data.get('name')
+    char_id = data.get('char_id')
     if CURRENT_CAMPAIGN == None:
-        return
-    name = data.get('name', 'Anonymous')
+        EARLY_CLIENTS.append({'sid': sid, 'name': name, 'char_id': char_id})
+        emit('client_wait', room=sid)
+    else:
+        emit('client_continue', {'name': name, 'char_id': char_id}, room=sid)
+
+@socketio.on('register_name')
+def handle_register_name(data):
+    sid = request.sid
+    name = data.get('name')
     char_id = data.get('char_id')
     if char_id:
         clients[sid] = {'name': name, 'sid': sid, 'char_id': char_id}
@@ -350,6 +370,7 @@ def assign_folders(name):
     global PLAYERS_FOLDER
     global TRAPS_FOLDER
     global IMGS_FOLDER
+    global EARLY_CLIENTS
     cwd = os.getcwd() + '\\local\\campaigns\\'
 
     CURRENT_CAMPAIGN = name
@@ -362,6 +383,11 @@ def assign_folders(name):
         }
         with open(f"{TRAPS_FOLDER}\\traps.json", 'w') as json_file:
             json.dump(traps_data, json_file, indent=4)
+    for c in EARLY_CLIENTS:
+        emit('client_continue', {'name': c.get('name'), 'char_id': c.get('char_id')}, room=c.get('sid'))
+
+    EARLY_CLIENTS = []
+
 
 def get_campaigns():
     campaigns = os.getcwd() + "\\local\\campaigns"

@@ -1,8 +1,8 @@
 const socket = io();
 
 window.onload = function() {
-    name = localStorage.getItem('charName');
-    char_id = localStorage.getItem('charId');
+    name = sessionStorage.getItem('charName');
+    char_id = sessionStorage.getItem('charId');
     selectCharacter();
 }
 function selectCharacter() {

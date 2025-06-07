@@ -1,3 +1,4 @@
+const socket = io();
 window.onload = function () {
     const fileInput = document.getElementById('fileInput');
 
@@ -13,9 +14,7 @@ window.onload = function () {
 
                     let name = jsonData.char_name;
                     let char_id = jsonData.id;
-                    localStorage.setItem('charName', name);
-                    localStorage.setItem('charId', char_id);
-                    window.location.href = '/client';
+                    finish_character_select(name, char_id);
                 } catch (err) {
                     console.error("Invalid JSON:", err);
                 }
@@ -47,10 +46,12 @@ function saveCharacter() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    localStorage.setItem('charName', name);
-    localStorage.setItem('charId', char_id);
-    window.location.href='/client';
+    finish_character_select(name, char_id);
 
+}
+
+function finish_character_select(name, id) {
+    socket.emit('client_ready', {name: name, char_id: id});
 }
 
 function generateUUIDv4() {
@@ -64,4 +65,19 @@ function generateUUIDv4() {
 function selectCharacter() {
     fileInput.click();
 }
+
+socket.on('client_continue', ({name, char_id}) => {
+    sessionStorage.setItem('charName', name);
+    sessionStorage.setItem('charId', char_id);
+    window.location.href='/client';
+});
+
+socket.on('client_wait', function() {
+    const d = document.getElementById("temp-stuff");
+    d.remove()
+    const b = document.getElementById("body");
+    const h1 = document.createElement("h1");
+    h1.textContent = "Waiting for the DM to select a campaign..."
+    b.appendChild(h1);
+});
 

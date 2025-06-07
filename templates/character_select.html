@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+    <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
   <script src="{{ url_for('static', filename='js/character_id.js') }}"></script>
   <script src="{{ url_for('static', filename='js/create_character.js') }}"></script>
   <title>Select Character</title>
@@ -45,10 +46,12 @@
     }
   </style>
 </head>
-<body>
-  <h1>Select Character</h1>
-  <button id="select-btn" onclick="selectCharacter()">Select Character</button>
-  <input type="file" id="fileInput" accept=".json" style="display: none;">
-  <button id="new-btn" onclick="createCharacter()">New Character</button>
+<body id="body">
+  <div id="temp-stuff">
+    <h1>Select Character</h1>
+    <button id="select-btn" onclick="selectCharacter()">Select Character</button>
+    <input type="file" id="fileInput" accept=".json" style="display: none;">
+    <button id="new-btn" onclick="createCharacter()">New Character</button>
+  </div>
 </body>
 </html>
