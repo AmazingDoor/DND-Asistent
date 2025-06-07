@@ -7,7 +7,6 @@ import socket
 import random
 import webbrowser
 import atexit
-import shutil
 import signal
 import sys
 import json
