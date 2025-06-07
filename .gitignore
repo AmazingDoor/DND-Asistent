@@ -1,8 +1,8 @@
 # Ignore Campaigns
-local/campaigns/
+local/campaigns/*
 
 #Ignore images
-static/uploads/
+static/uploads/*
 
 #Ignore idea file
 .idea
