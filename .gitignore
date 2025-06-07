@@ -1,9 +1,10 @@
 # Ignore Campaigns
 local/campaigns/*
+!/local/campaigns/.gitkeep
 
 #Ignore images
 static/uploads/*
-
+!/static/uploads/.gitkeep
 #Ignore idea file
 .idea
 
