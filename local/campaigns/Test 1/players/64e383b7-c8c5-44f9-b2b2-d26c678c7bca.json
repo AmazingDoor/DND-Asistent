@@ -1,0 +1,15 @@
+{
+    "name": "door",
+    "messages": [
+        "DM: This is test 1",
+        "DM: Trap",
+        "door: a",
+        "door: wiwiwi"
+    ],
+    "imgs": [
+        "/static/uploads/Screenshot_2024-06-13_123554.png"
+    ],
+    "health": 25,
+    "ac": "15",
+    "states_text": ""
+}

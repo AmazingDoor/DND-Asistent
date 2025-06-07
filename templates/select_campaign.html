@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campaigns</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/select_campaign.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Campaigns</h1>
+  </header>
+
+  <main>
+    <div id="campaign-box" class="campaign-box">
+      <!-- Campaign divs will appear here -->
+    </div>
+
+    <div class="button-row">
+      <button onclick="select_campaign()" id="selectBtn">Select Campaign</button>
+      <button onclick="delete_campaign()" id="deleteBtn">Delete Campaign</button>
+      <button onclick="create_campaign()" id="newBtn">New Campaign</button>
+    </div>
+  </main>
+
+  <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='js/select_campaign.js') }}"></script>
+</body>
+</html>

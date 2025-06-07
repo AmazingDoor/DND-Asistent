@@ -11,11 +11,17 @@ import shutil
 import signal
 import sys
 import json
+import shutil
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
 clients = {}
+
+global CURRENT_CAMPAIGN
+global PLAYERS_FOLDER
+global TRAPS_FOLDER
+global IMGS_FOLDER
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -59,7 +65,7 @@ def index():
     if not request.args.get('role') == 'host':
         return render_template('character_select.html')
     else:
-        return render_template('host.html')
+        return render_template('select_campaign.html')
 
 @app.route('/host')
 def host():
@@ -93,7 +99,7 @@ def handle_disconnect():
 
 
 def init_json_data(sid, name, char_id, dm_only=False):
-    if not os.path.exists(f"local/players/{char_id}.json"):
+    if not os.path.exists(f"{PLAYERS_FOLDER}\\{char_id}.json"):
         char_data = {
             "name": name,
             "messages": [],
@@ -102,10 +108,10 @@ def init_json_data(sid, name, char_id, dm_only=False):
             "ac": 0,
             "states_text": ''
         }
-        with open(f"local/players/{char_id}.json", 'w') as json_file:
+        with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
             json.dump(char_data, json_file, indent=4)
 
-    with open(f"local/players/{char_id}.json", 'r') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         data = json.load(json_file)
         messages = data.get("messages")
         imgs = data.get("imgs")
@@ -128,18 +134,21 @@ def init_json_data(sid, name, char_id, dm_only=False):
             emit('host_change_armor_class', {'value': armor_class}, room=sid)
         emit('client_change_armor_class', {'client_id': sid, 'value': armor_class}, room=DM_SID)
 
-    with open(f"local/traps/traps.json", 'r') as json_file:
+    with open(f"{TRAPS_FOLDER}\\traps.json", 'r') as json_file:
         d = json.load(json_file)
         emit('update_traps_list', {'traps_data': d}, room=DM_SID)
 
 @socketio.on('get_traps_json')
 def get_traps_json():
-    with open(f"local/traps/traps.json", 'r') as json_file:
+    with open(f"{TRAPS_FOLDER}\\traps.json", 'r') as json_file:
         j = json.load(json_file)
         emit('load_traps_json', j)
 
 @socketio.on('register_name')
 def handle_register_name(data):
+    global CURRENT_CAMPAIGN
+    if CURRENT_CAMPAIGN == None:
+        return
     sid = request.sid
     name = data.get('name', 'Anonymous')
     char_id = data.get('char_id')
@@ -171,10 +180,10 @@ def message_to_dm(data):
     msg = data.get('message')
     name = data.get('char_name')
     char_id = data.get('char_id')
-    with open(f"local/players/{char_id}.json", 'r') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
     d["messages"].append(f"{name}: {msg}")
-    with open(f"local/players/{char_id}.json", 'w') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
     emit('message_to_dm', {'client_id': sid, 'message': msg, 'name': clients.get(sid).get('name')}, room=DM_SID)
 
@@ -183,10 +192,10 @@ def message_to_client(data):
     target_id = data.get('client_id')
     msg = data.get('message')
     char_id = data.get('char_id')
-    with open(f"local/players/{char_id}.json", 'r') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
     d["messages"].append(f"DM: {msg}")
-    with open(f"local/players/{char_id}.json", 'w') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
 
     emit('private_message', {'from': 'DM', 'message': msg}, room=target_id)
@@ -194,20 +203,20 @@ def message_to_client(data):
 @socketio.on('client_update_health')
 def client_update_health(data):
     char_id = data.get('char_id')
-    with open(f"local/players/{char_id}.json", 'r') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
     d["health"] = data.get("result")
-    with open(f"local/players/{char_id}.json", 'w') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
     emit('client_update_health', {'result': data.get('result'), 'client_id': request.sid}, room=DM_SID)
 
 @socketio.on('host_update_health')
 def host_update_health(data):
     char_id = data.get('char_id')
-    with open(f"local/players/{char_id}.json", 'r') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
     d["health"] = data.get("result")
-    with open(f"local/players/{char_id}.json", 'w') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
     emit('host_update_health', {'result': data.get('result')}, room=data.get('client_id'))
 
@@ -243,13 +252,6 @@ def setupServer():
     port = find_available_port()
     print(f"Clients connect to: {ipv4}:{port}")
     url = f"http://{ipv4}:{port}?role=host"
-    if not os.path.exists(f"local/traps/traps.json"):
-        traps_data = {
-            "traps": []
-        }
-        with open(f"local/traps/traps.json", 'w') as json_file:
-            json.dump(traps_data, json_file, indent=4)
-
     webbrowser.open(url)
     socketio.run(app, host=host, port=port, allow_unsafe_werkzeug=True)
 
@@ -258,7 +260,7 @@ def setupServer():
 def addTraps(traps_data):
     d = {}
     d["traps"] = traps_data
-    with open(f"local/traps/traps.json", 'w') as json_file:
+    with open(f"{TRAPS_FOLDER}\\traps.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
         emit('update_traps_list', {'traps_data': d}, room=DM_SID)
 
@@ -270,10 +272,10 @@ def handle_host_image_url(data):
     target_id = data.get('target_id')
     char_id = data.get('char_id')
     if url:
-        with open(f"local/players/{char_id}.json", 'r') as json_file:
+        with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
             d = json.load(json_file)
         d["imgs"].append(f"{url}")
-        with open(f"local/players/{char_id}.json", 'w') as json_file:
+        with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
             json.dump(d, json_file, indent=4)
         emit('send_image', {'url': url}, room=target_id)
 
@@ -283,10 +285,10 @@ def host_change_armor_class(data):
     sid = data.get('client_id')
     value = data.get('value')
     char_id = data.get('char_id')
-    with open(f"local/players/{char_id}.json", 'r') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
     d["ac"] = value
-    with open(f"local/players/{char_id}.json", 'w') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
     emit('host_change_armor_class', {'value': value}, room=sid)
 
@@ -295,13 +297,69 @@ def client_change_armor_class(data):
     sid = request.sid
     value = data.get('value')
     char_id = data.get('char_id')
-    with open(f"local/players/{char_id}.json", 'r') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
     d["ac"] = value
-    with open(f"local/players/{char_id}.json", 'w') as json_file:
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
     emit('client_change_armor_class', {'client_id': sid, 'value': value}, room=DM_SID)
 
+
+@socketio.on('create_campaign')
+def create_campaign(data):
+    name = str(data.get('campaign_name'))
+    if name == '':
+        emit('create_campaign_fail', {'error': 'no_name'}, room=DM_SID)
+    files = get_campaigns()
+    if name in files:
+        emit('create_campaign_fail', {'error': 'existing_name'}, room=DM_SID)
+    else:
+        cwd = os.getcwd() + '\\local\\campaigns\\'
+        os.makedirs(cwd + name)
+        os.makedirs(cwd + name + '\\players')
+        os.makedirs(cwd + name + '\\traps')
+        os.makedirs(cwd + name + '\\imgs')
+        assign_folders(name)
+        emit('create_campaign_success', room=DM_SID)
+
+@socketio.on('get_campaigns')
+def get_campaigns():
+    emit('return_campaigns', {'campaigns': get_campaigns()}, room=DM_SID)
+
+@socketio.on('delete_campaign')
+def delete_campaign(data):
+    name = data.get('name')
+    file_path = os.getcwd() + '\\local\\campaigns\\' + str(name)
+    if os.path.exists(file_path):
+        shutil.rmtree(file_path)
+
+@socketio.on('selected_campaign')
+def selected_campaign(data):
+    name = data.get('campaign_name')
+    assign_folders(name)
+    emit('continue_to_dashboard', room=DM_SID)
+
+def assign_folders(name):
+    global CURRENT_CAMPAIGN
+    global PLAYERS_FOLDER
+    global TRAPS_FOLDER
+    global IMGS_FOLDER
+    cwd = os.getcwd() + '\\local\\campaigns\\'
+
+    CURRENT_CAMPAIGN = name
+    PLAYERS_FOLDER = cwd + name + '\\players'
+    TRAPS_FOLDER = cwd + name + '\\traps'
+    IMGS_FOLDER = cwd + name + '\\imgs'
+    if not os.path.exists(f"{TRAPS_FOLDER}\\traps.json"):
+        traps_data = {
+            "traps": []
+        }
+        with open(f"{TRAPS_FOLDER}\\traps.json", 'w') as json_file:
+            json.dump(traps_data, json_file, indent=4)
+
+def get_campaigns():
+    campaigns = os.getcwd() + "\\local\\campaigns"
+    return [f for f in os.listdir(campaigns) if os.path.isdir(os.path.join(campaigns, f))]
 
 if __name__ == "__main__":
     setupServer()

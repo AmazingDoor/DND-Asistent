@@ -56,7 +56,6 @@ function deleteTrap() {
 
 function addTrap() {
     createTrapDiv();
-//document.getElementById("trapPrompt").classList.remove("hidden");
 }
 
 

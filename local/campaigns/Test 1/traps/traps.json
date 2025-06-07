@@ -1,0 +1,8 @@
+{
+    "traps": [
+        {
+            "trap_name": "Test 1",
+            "trap_text": "This is test 1"
+        }
+    ]
+}

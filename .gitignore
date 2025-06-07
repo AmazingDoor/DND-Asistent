@@ -1,11 +1,9 @@
-# Ignore Players
-local/players
-
-#Ignore Traps
-local/traps
+# Ignore Campaigns
+local/campaigns/
 
 #Ignore images
-static/uploads
+static/uploads/
 
 #Ignore idea file
 .idea
+
