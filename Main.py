@@ -112,6 +112,8 @@ def handle_disconnect():
             del client
 
 def init_json_data(sid, name, char_id, dm_only=False):
+#Load or Create all of the data for each client
+
     if not os.path.exists(f"{PLAYERS_FOLDER}\\{char_id}.json"):
         char_data = {
             "name": name,
@@ -153,12 +155,15 @@ def init_json_data(sid, name, char_id, dm_only=False):
 
 @socketio.on('get_traps_json')
 def get_traps_json():
+    #Server calls this to load the traps file
     with open(f"{TRAPS_FOLDER}\\traps.json", 'r') as json_file:
         j = json.load(json_file)
         emit('load_traps_json', j)
 
 @socketio.on('client_ready')
 def client_ready(data):
+    #Makes the client wait until a campaign is selected
+    #Registers the client when ready
     global EARLY_CLIENTS
     global CURRENT_CAMPAIGN
     sid = request.sid
@@ -172,6 +177,8 @@ def client_ready(data):
 
 @socketio.on('register_name')
 def handle_register_name(data):
+    #Keep track of connected clients
+    #Load saved data
     sid = request.sid
     name = data.get('name')
     char_id = data.get('char_id')
@@ -186,6 +193,7 @@ def handle_register_name(data):
 
 @socketio.on('host_page_load')
 def host_page_load():
+    #Tell the host to create a tab for the client
     for client in clients:
         c = clients.get(client)
         sid = c.get('sid')
@@ -225,6 +233,7 @@ def message_to_client(data):
 
 @socketio.on('client_update_health')
 def client_update_health(data):
+    #Save new health and sync with the host
     char_id = data.get('char_id')
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
@@ -235,6 +244,7 @@ def client_update_health(data):
 
 @socketio.on('host_update_health')
 def host_update_health(data):
+    #Save new health and sync with the client
     char_id = data.get('char_id')
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
@@ -281,6 +291,7 @@ def setupServer():
 
 @socketio.on('add_traps')
 def addTraps(traps_data):
+    #Load traps to server list
     d = {}
     d["traps"] = traps_data
     with open(f"{TRAPS_FOLDER}\\traps.json", 'w') as json_file:
@@ -291,6 +302,7 @@ def addTraps(traps_data):
 
 @socketio.on('host_send_image_url')
 def handle_host_image_url(data):
+    #Send an image from the host to the client
     url = data.get('url')
     target_id = data.get('target_id')
     char_id = data.get('char_id')
@@ -305,6 +317,7 @@ def handle_host_image_url(data):
 
 @socketio.on('host_change_armor_class')
 def host_change_armor_class(data):
+    #Save new armor class and sync to client
     sid = data.get('client_id')
     value = data.get('value')
     char_id = data.get('char_id')
@@ -317,6 +330,7 @@ def host_change_armor_class(data):
 
 @socketio.on('client_change_armor_class')
 def client_change_armor_class(data):
+    #Save new armor class and sync to host
     sid = request.sid
     value = data.get('value')
     char_id = data.get('char_id')
@@ -330,6 +344,7 @@ def client_change_armor_class(data):
 
 @socketio.on('create_campaign')
 def create_campaign(data):
+    #Creates a new save folder for a campaign
     name = str(data.get('campaign_name'))
     if name == '':
         emit('create_campaign_fail', {'error': 'no_name'}, room=DM_SID)
@@ -347,6 +362,7 @@ def create_campaign(data):
 
 @socketio.on('get_campaigns')
 def get_campaigns():
+    #Load the saved campaigns
     emit('return_campaigns', {'campaigns': get_campaigns()}, room=DM_SID)
 
 @socketio.on('delete_campaign')
@@ -363,6 +379,7 @@ def selected_campaign(data):
     emit('continue_to_dashboard', room=DM_SID)
 
 def assign_folders(name):
+    #Set the paths to the saved data when a campaign is selected
     global CURRENT_CAMPAIGN
     global PLAYERS_FOLDER
     global TRAPS_FOLDER

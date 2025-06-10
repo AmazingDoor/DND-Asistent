@@ -245,3 +245,7 @@ body {
   pointer-events: none;
   z-index: 1000;
 }
+
+.affected-tab {
+    border: 3px solid gold;
+}
