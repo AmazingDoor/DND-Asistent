@@ -193,7 +193,11 @@ def handle_register_name(data):
 
 @socketio.on('host_page_load')
 def host_page_load():
+    global IPV4
+    global PORT
     #Tell the host to create a tab for the client
+    txt = str(IPV4) + ':' + str(PORT)
+    emit('add_ip_text', {'ip': txt}, room=DM_SID)
     for client in clients:
         c = clients.get(client)
         sid = c.get('sid')
@@ -278,15 +282,18 @@ def is_port_available(port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('0.0.0.0', port)) != 0
 
-
+global IPV4
+global PORT
 def setupServer():
-    ipv4 = get_ipv4_address()
+    global IPV4
+    global PORT
+    IPV4 = get_ipv4_address()
     host = "0.0.0.0"
-    port = find_available_port()
-    print(f"Clients connect to: {ipv4}:{port}")
-    url = f"http://{ipv4}:{port}?role=host"
+    PORT = find_available_port()
+    print(f"Clients connect to: {IPV4}:{PORT}")
+    url = f"http://{IPV4}:{PORT}?role=host"
     webbrowser.open(url)
-    socketio.run(app, host=host, port=port, allow_unsafe_werkzeug=True)
+    socketio.run(app, host=host, port=PORT, allow_unsafe_werkzeug=True)
 
 
 @socketio.on('add_traps')

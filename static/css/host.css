@@ -12,7 +12,6 @@ body {
 }
 
     header {
-      background-color: #333;
       color: white;
       text-align: center;
       padding: 20px;
@@ -61,7 +60,6 @@ body {
 
     #chat-area {
       width: 50%;
-      background-color: #f4f4f4;
       display: flex;
       flex-direction: column;
       padding: 10px;
@@ -151,6 +149,7 @@ body {
     #right-side {
       width: 50%;
       display: flex;
+      background-color: #f4f4f4;
       flex-direction: row;
       padding: 10px;
     }
@@ -159,7 +158,6 @@ body {
     #player-stats {
       width: 50%;
       height: 100%;
-      background-color: #f4f4f4;
       display: flex;
       flex-direction: column;
       padding: 10px;
@@ -246,6 +244,51 @@ body {
   z-index: 1000;
 }
 
+#tab-bar {
+    height: 60px;
+    top: 60px;
+}
+
+#host {
+    background-color: #333;
+    flex-direction: row;
+    align-items: center;
+    top: 0px;
+    height: 60px;
+}
+
+.header-column {
+    display: flex;
+    flex: 1
+}
+
+#left {
+    justify-content: flex-start;
+}
+
+#center {
+    justify-content: center;
+}
+
+#right {
+    padding-right: 5px;
+    justify-content: flex-end;
+    color: white;
+}
+
+.floating {
+    display: flex;
+    width: 100%;
+    position: fixed;
+    z-index: 2;
+}
+
+#page {
+    padding-top: 130px;
+}
+
 .affected-tab {
     border: 3px solid gold;
 }
+
+

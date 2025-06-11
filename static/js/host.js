@@ -240,8 +240,6 @@ socket.on('client_name_registered', ({ client_id, name, char_id }) => {
   tabContent.className = 'tab-content';
   tabContent.id = tabId;
   tabContent.innerHTML = `
-  <h2 id="tab-title-${client_id}">${name}</h2>
-  <p><strong>Socket ID:</strong> <code>${client_id}</code></p>
     <div class="div-body">
         <div id="image-area">
             <h2>Images</h2>
@@ -432,6 +430,15 @@ socket.on('update_traps_list', data => {
     const traps_data = data.traps_data;
     const traps = traps_data.traps;
     updateTrapLists(traps);
+});
+
+socket.on('add_ip_text', data => {
+    const ip = data.ip;
+    const p = document.createElement('p');
+    const div = document.getElementById("right");
+    const txt = `Connect players on: ${ip}`;
+    p.textContent = txt;
+    div.appendChild(p);
 });
 
 
