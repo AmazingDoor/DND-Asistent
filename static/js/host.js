@@ -244,12 +244,12 @@ socket.on('client_name_registered', ({ client_id, name, char_id }) => {
             <h2>Images</h2>
             <div id="images">
                 <div id="drop-area-${client_id}" style="border: 2px dashed #ccc; padding: 20px; margin: 20px;">
-                Drop an image here
+                    Drop an image here
+                </div>
             </div>
             <div id="img-list">
             </div>
         </div>
-      </div>
       <div id="right-side">
           <div id="player-stats">
       <h2>Player</h2>
