@@ -24,9 +24,15 @@
       padding: 10px;
     }
 
+    #right-container {
+        width: 50%
+        height: 90%
+        display: flex;
+        flex-direction: row;
+        padding: 10px;
+    }
+
     #player-stats {
-      width: 50%;
-      height: 90%;
       display: flex;
       flex-direction: column;
       padding: 10px;
@@ -132,6 +138,135 @@
         font-size: 18px;
         width: 50px;
     }
+
+    #mobile-buttons {
+        display: none;
+    }
+
+
+@media (max-width: 1000px) {
+
+    body {
+        width: 100dvw;
+        height: 90dvh;
+    }
+
+    h3 {
+        font-size: 75px;
+    }
+
+    h2 {
+        font-size: 75px;
+    }
+
+    p {
+        font-size: 75px;
+    }
+
+    button {
+        font-size: 75px;
+    }
+
+
+    #mobile-buttons {
+        display: flex;
+    }
+
+    #right-side {
+        height: 90dvh;
+        width: 100dvw;
+    }
+
+    #chat-area {
+        display: flex;
+        position: absolute;
+        top: 130px;
+        left: 0px;
+        width: 100dvw;
+        height: 90dvh;
+        z-index: 3;
+    }
+
+    #player-stats {
+        height: 100dvh;
+        width: 100dvw;
+    }
+
+    #chat {
+        margin-bottom: 5px;
+        border: 2px solid black;
+    }
+
+
+    #image-area {
+        display: flex;
+        position: absolute;
+        top: 130px;
+        left: 0px;
+        width: 100dvw;
+        height: 90dvh;
+        z-index: 3;
+    }
+
+    .mobile-hidden {
+        display: none !important;
+    }
+
+    #health-num {
+        font-size: 100px;
+    }
+
+    #damage-input {
+        font-size: 100px;
+        width: 200px;
+    }
+
+    #heal-input {
+        font-size: 100px;
+        width: 200px;
+    }
+
+    #update-health-button {
+        width: 300px;
+        font-size: 75px;
+    }
+
+    #armor-class-text {
+        font-size: 75px;
+    }
+
+    #ac-input {
+        font-size: 100px;
+        width: 200px;
+    }
+
+    #mobile-buttons {
+        padding: 5px;
+        justify-content: space-between;
+
+    }
+
+    #toggle-chat {
+        font-size: 75px;
+        width: 300px;
+        background-color: lightgray;
+    }
+
+    #toggle-imgs {
+        width: 300px;
+        background-color: lightgray;
+        font-size: 75px;
+    }
+
+    #right-container {
+        width: 100dvw;
+    }
+
+    #msg {
+        font-size: 75px;
+        width: 100%;
+    }
+
 
 
 

@@ -139,7 +139,7 @@ def init_json_data(sid, name, char_id, dm_only=False):
 
         for img in imgs:
             if not dm_only:
-                emit('send_image', {'url': img}, room=sid)
+                emit('send_image', {'url': img, 'n': False}, room=sid)
             emit('load_image', {'url': img, 'client_id': sid}, room=DM_SID)
 
         emit('client_update_health', {'result': health, 'client_id': sid}, room=DM_SID)

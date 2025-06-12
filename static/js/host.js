@@ -171,7 +171,6 @@ function updateArmorClass(client_id, value) {
     ac_input.value = value;
 }
 
-
 function updateTrapLists(traps) {
     document.querySelectorAll(".trap-element").forEach((element) => {
         element.remove();

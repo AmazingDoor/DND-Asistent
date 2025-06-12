@@ -52,17 +52,71 @@ function updateHealth() {
     socket.emit("client_update_health", {result: result, char_id: char_id})
 }
 
+function toggleImages() {
+    const img_area = document.getElementById("image-area");
+    const chat_area = document.getElementById("chat-area");
+    const player_stats = document.getElementById("player-stats");
+
+    img_area.classList.toggle("mobile-hidden");
+    if (img_area.classList.contains("mobile-hidden")) {
+        player_stats.classList.remove("mobile-hidden");
+    } else {
+        player_stats.classList.add("mobile-hidden");
+    }
+
+    if (!chat_area.classList.contains("mobile-hidden")) {
+        chat_area.classList.add("mobile-hidden");
+    }
+
+    document.getElementById("toggle-imgs").style.backgroundColor = "lightgray";
+
+
+}
+
+function toggleChat() {
+    const chat_area = document.getElementById("chat-area");
+    chat_area.classList.toggle("mobile-hidden");
+    const img_area = document.getElementById("image-area");
+    const player_stats = document.getElementById("player-stats");
+
+    if (chat_area.classList.contains("mobile-hidden")) {
+        player_stats.classList.remove("mobile-hidden");
+    } else {
+        player_stats.classList.add("mobile-hidden");
+    }
+
+    if (!img_area.classList.contains("mobile-hidden")) {
+        img_area.classList.add("mobile-hidden");
+    }
+
+    document.getElementById("toggle-chat").style.backgroundColor = "lightgray";
+
+
+
+}
+
 socket.on('load_message', data => {
     loadMessage(data.message);
 });
 
 socket.on('private_message', data => {
   appendMessage(data.from, data.message);
+  const text_area = document.getElementById("chat-area");
+  if (text_area.classList.contains("mobile-hidden")) {
+    document.getElementById("toggle-chat").style.backgroundColor = "red";
+  }
+
 });
 
 
 
 socket.on('send_image', data => {
+  let n = data.n;
+  if (n == null) {
+    n = true;
+  }
+
+  console.log(n)
   const imageBox = document.createElement("div");
   imageBox.classList.add("image-box");
 
@@ -72,6 +126,14 @@ socket.on('send_image', data => {
 
   imageBox.appendChild(img);
   document.getElementById("images").appendChild(imageBox);
+  const img_area = document.getElementById("image-area");
+
+  if (n) {
+      if (img_area.classList.contains("mobile-hidden")) {
+        document.getElementById("toggle-imgs").style.backgroundColor = "red";
+      }
+  }
+
 });
 
 
