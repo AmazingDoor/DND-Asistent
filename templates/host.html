@@ -6,11 +6,14 @@
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/host.css') }}">
     <script src="{{ url_for('static', filename='js/host.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/combat.js') }}"></script>
+
 </head>
 <body>
   <div id="host" class="floating">
       <div class="header-column" id="left">
-        <button onclick="manageTraps()">Manage Traps</button>
+          <button onclick="manageTraps()">Manage Traps</button>
+          <button onclick="manageCombat()">Combat</button>
       </div>
       <div class="header-column" id="center">
         <header>Host</header>
@@ -21,9 +24,25 @@
       </div>
   </div>
   <div class="tabs floating" id="tab-bar"></div>
+  <div id="combat-div" class="floating hidden">
+      <div id="close-button">
+        <button onclick="manageCombat()">X</button>
+      </div>
+      <div class="combat-bottom">
+          <div class="combat-container">
+            <div id="combat-list" class="combat-list">
+
+            </div>
+              <div class="manage-buttons">
+                  <button class="manage-button" onclick="createCombat()">Create Combat</button>
+              </div>
+
+          </div>
+      </div>
+  </div>
+
   <div id="page">
     <div id="tab-contents"></div>
-
   </div>
 </body>
 </html>

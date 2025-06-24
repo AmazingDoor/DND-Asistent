@@ -324,3 +324,132 @@ body {
 }
 
 
+#combat-div {
+    height: calc(100vh - 130px);
+    width: 65vw;
+    z-index: 3;
+    top: 125px;
+    position: fixed;
+    border: 2px solid black;
+    flex-direction: column;
+}
+
+#combat-div.hidden {
+    display: none;
+}
+
+#close-button {
+    margin-right: 2px;
+    display: flex;
+    height: 5%;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.combat-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.combat-bottom {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.manage-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 29%;
+    height: 99%;
+}
+
+.combat-list {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 90%;
+    border: 2px solid black;
+    overflow: auto;
+}
+
+.combat-element {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+}
+
+.left-combat {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+
+.right-combat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: lightgray;
+}
+
+.upper-combat {
+    display: flex;
+    background: lightgray;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.lower-combat {
+    background: lightgray;
+}
+
+.enemy {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    border: 2px solid black;
+}
+
+.combat-name {
+    width: 80%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+.enemy-health-section {
+    display: flex;
+    flex-direction: row;
+    background: lightgray;
+    margin-left: 2px;
+    margin-right: 2px;
+    border: 2px solid black;
+}
+
+.enemy-health-inner {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+}
+
+.enemy-ac {
+    width: 30px;
+    margin-left: 2px;
+}
+
+.enemy-damage-input {
+    width: 30px;
+}
+
+.enemy-heal-input {
+    width: 30px;
+}
+
+
+

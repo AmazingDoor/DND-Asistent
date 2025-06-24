@@ -49,7 +49,7 @@ function updateHealth() {
     health.textContent = result.toString();
     document.getElementById("heal-input").value = '';
     document.getElementById("damage-input").value = '';
-    socket.emit("client_update_health", {result: result, char_id: char_id})
+    socket.emit("client_update_health", {result: result, char_id: char_id});
 }
 
 function toggleImages() {
