@@ -24,11 +24,13 @@ global CURRENT_CAMPAIGN
 global PLAYERS_FOLDER
 global TRAPS_FOLDER
 global IMGS_FOLDER
+global COMBAT_FOLDER
 
 CURRENT_CAMPAIGN = None
 PLAYERS_FOLDER = None
 TRAPS_FOLDER = None
 IMGS_FOLDER = None
+COMBAT_FOLDER = None
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -222,6 +224,33 @@ def message_to_dm(data):
         json.dump(d, json_file, indent=4)
     emit('message_to_dm', {'client_id': sid, 'message': msg, 'name': clients.get(sid).get('name')}, room=DM_SID)
 
+
+@socketio.on('saveCombat')
+def save_combat(data):
+    global COMBAT_FOLDER
+    combat_name = data.get('combat_name')
+    combat_data = data.get('data')
+    with open(f'{COMBAT_FOLDER}\\{combat_name}.json', 'w') as json_file:
+        json.dump(combat_data, json_file, indent=4)
+
+@socketio.on("load_combats")
+def load_combats():
+    global COMBAT_FOLDER
+    combat_data = {}
+    combats = [f.split(".json")[0] for f in os.listdir(COMBAT_FOLDER) if f.endswith('.json')]
+    for combat_name in combats:
+        with open(f'{COMBAT_FOLDER}\\{combat_name}.json', 'r') as json_file:
+            j = json.load(json_file)
+        combat_data[combat_name] = j
+    emit("combat_list", {"combats": combat_data}, room=DM_SID)
+
+@socketio.on("remove_combat")
+def remove_combat(data):
+    global COMBAT_FOLDER
+    name = data.get("name")
+    os.remove(f'{COMBAT_FOLDER}\\{name}.json')
+
+
 @socketio.on('message_to_client')
 def message_to_client(data):
     target_id = data.get('client_id')
@@ -364,6 +393,7 @@ def create_campaign(data):
         os.makedirs(cwd + name + '\\players')
         os.makedirs(cwd + name + '\\traps')
         os.makedirs(cwd + name + '\\imgs')
+        os.makedirs(cwd + name + '\\combat')
         assign_folders(name)
         emit('create_campaign_success', room=DM_SID)
 
@@ -391,6 +421,7 @@ def assign_folders(name):
     global PLAYERS_FOLDER
     global TRAPS_FOLDER
     global IMGS_FOLDER
+    global COMBAT_FOLDER
     global EARLY_CLIENTS
     cwd = os.getcwd() + '\\local\\campaigns\\'
 
@@ -398,6 +429,7 @@ def assign_folders(name):
     PLAYERS_FOLDER = cwd + name + '\\players'
     TRAPS_FOLDER = cwd + name + '\\traps'
     IMGS_FOLDER = cwd + name + '\\imgs'
+    COMBAT_FOLDER = cwd + name + '\\combat'
     if not os.path.exists(f"{TRAPS_FOLDER}\\traps.json"):
         traps_data = {
             "traps": []

@@ -332,6 +332,7 @@ body {
     position: fixed;
     border: 2px solid black;
     flex-direction: column;
+    background: white;
 }
 
 #combat-div.hidden {

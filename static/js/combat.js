@@ -1,10 +1,17 @@
+window.onload = function() {
+    loadCombats();
+}
+
 function manageCombat() {
     const combat_div = document.getElementById("combat-div");
     combat_div.classList.toggle("hidden");
 }
 
-function createCombat() {
-    const name = prompt("Combat Name:");
+function createCombat(c=null) {
+    let name = c;
+    if (name === null) {
+        name = prompt("Combat Name:");
+    }
     const combat_list = document.getElementById("combat-list");
     const combat_element = document.createElement("div");
     combat_element.classList.add("combat-element");
@@ -38,7 +45,7 @@ function createCombat() {
 
     const delete_button = document.createElement("button");
     delete_button.textContent = "X";
-    delete_button.onclick = function () { deleteCombat(combat_element, combat_element); };
+    delete_button.onclick = function () { deleteCombat(combat_element); };
 
     right_combat.appendChild(delete_button);
     combat_list.appendChild(combat_element);
@@ -47,20 +54,30 @@ function createCombat() {
     left_combat.appendChild(enemy_list);
 
     add_button.onclick = function () { createEnemy(enemy_list, combat_element); };
-
+    return combat_element;
 
 }
 
-function deleteCombat(element, combat_element) {
+function deleteCombat(element) {
     element.remove();
+    const name = element.querySelector(".combat-name").textContent;
+    socket.emit("remove_combat", {name})
 }
 
-function createEnemy(enemy_list, combat_element) {
+function deleteEnemy(element, combat_element) {
+    element.remove();
+    saveCombat(combat_element);
+}
+
+function createEnemy(enemy_list, combat_element, n=null, armor_class=null, h=null, save=true) {
     const enemy = document.createElement("div");
     enemy.classList.add("enemy");
 
     const enemy_name = document.createElement("input");
     enemy_name.type = "text";
+    if (n !== null) {
+        enemy_name.value = n;
+    }
     enemy_name.placeholder = "Enemy Name";
     enemy_name.classList.add("enemy-name");
 
@@ -91,19 +108,23 @@ function createEnemy(enemy_list, combat_element) {
     hl.textContent = "Health";
     const health = document.createElement("h3");
     health.classList.add("enemy-health");
-    health.textContent = "0";
+    if(h !== null) {
+        health.textContent = h;
+    } else {
+        health.textContent = "0";
+    }
     health.type = "number";
 
 
     const delete_button = document.createElement("button");
     delete_button.textContent = "X";
-    delete_button.onclick = function () { deleteCombat(enemy, combat_element); };
+    delete_button.onclick = function () { deleteEnemy(enemy, combat_element); };
 
     const damage_label = document.createElement("h3");
     damage_label.textContent = "Damage";
     const damage_input = document.createElement("input");
     damage_input.classList.add("enemy-damage-input");
-    damage_input.type = "Text";
+    damage_input.type = "number";
     health_left.appendChild(damage_label);
     health_left.appendChild(damage_input);
 
@@ -118,16 +139,35 @@ function createEnemy(enemy_list, combat_element) {
     heal_label.textContent = "Heal";
     const heal_input = document.createElement("input");
     heal_input.classList.add("enemy-heal-input");
-    heal_input.type = "Text";
+    heal_input.type = "number";
     health_right.appendChild(heal_label);
     health_right.appendChild(heal_input);
 
     enemy.appendChild(enemy_name);
-    enemy.appendChild(acl);
-    enemy.appendChild(ac);
     enemy.appendChild(health_section);
     enemy.appendChild(delete_button);
     enemy_list.appendChild(enemy);
+    if (save) {
+        saveCombat(combat_element);
+    }
+
+    enemy_name.addEventListener("change", function(event) {
+        saveCombat(combat_element);
+    });
+
+    ac.addEventListener("change", function(event) {
+        saveCombat(combat_element);
+    });
+
+    heal_input.addEventListener("change", function(event) {
+        updateHealth(combat_element, damage_input, heal_input, health);
+        heal_input.value = '';
+    });
+
+    damage_input.addEventListener("change", function(event) {
+        updateHealth(combat_element, damage_input, heal_input, health);
+        damage_input.value = '';
+    });
 
 }
 
@@ -137,19 +177,41 @@ function saveCombat(combat) {
     let data = [];
     enemies.forEach(enemy => {
         const enemy_name = enemy.querySelector(".enemy-name");
-        const enemy_ac = enemy.querySelector(".enemy-ac");
+        //const enemy_ac = enemy.querySelector(".enemy-ac");
         const enemy_health = enemy.querySelector(".enemy-health");
-        d = {enemy_name: enemy_name.value, enemy_ac: enemy_ac.value, enemy_health: enemy_health.textContent};
+        d = {enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent};
         data.push(d);
     });
     socket.emit("saveCombat", {combat_name: combat_name, data: data});
-    console.log(data);
 
 
 }
 
 function updateHealth(combat, damage, heal, health) {
-    const new_health = parseInt(health.textContent, 10) + heal.value - damage.value;
+    const h = parseFloat(health.textContent) || 0;
+    const heal_val = parseFloat(heal.value) || 0;
+    const damage_val = parseFloat(damage.value) || 0;
+
+    const new_health = h + heal_val - damage_val;
     health.textContent = new_health.toString();
     saveCombat(combat);
 }
+
+function loadCombats() {
+    socket.emit("load_combats");
+}
+
+socket.on("combat_list", function ({combats}) {
+    Object.entries(combats).forEach(([combat, enemy_list]) => {
+        const combat_element = createCombat(combat);
+        console.log(enemy_list);
+        enemy_list.forEach((enemy) => {
+            const name = enemy.enemy_name;
+            const ac = enemy.enemy_ac;
+            const health = enemy.enemy_health;
+            const enemy_list = combat_element.querySelector(".enemy-list");
+            createEnemy(enemy_list, combat_element, name, ac, health, false);
+        });
+    });
+
+});
