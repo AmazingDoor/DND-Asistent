@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/host.css') }}">
     <script src="{{ url_for('static', filename='js/host.js') }}"></script>
     <script src="{{ url_for('static', filename='js/combat.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/active_combat.js') }}"></script>
 
 </head>
 <body>
@@ -25,12 +24,6 @@
       </div>
   </div>
   <div class="tabs floating" id="tab-bar"></div>
-  <div class="active-combat floating hidden" id="active-combat">
-      <div class="combat-entity-list">
-
-      </div>
-      <button onclick="closeActiveCombat()">X</button>
-  </div>
   <div id="combat-div" class="floating hidden">
       <div id="close-button">
         <button onclick="manageCombat()">X</button>

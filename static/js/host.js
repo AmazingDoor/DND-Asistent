@@ -14,10 +14,10 @@ window.onload = function() {
 
 function sendMessage(active_client) {
     const msg = document.getElementById(`client-${active_client}`).querySelector('#msg').value;
-    affected_tabs.forEach((char_id) => {
-        const tab = document.getElementById(`client-${char_id}`);
+    affected_tabs.forEach((client_id) => {
+        const tab = document.getElementById(`client-${client_id}`);
         if (!msg) return;
-        socket.emit("message_to_client", {message: msg, client_id, char_id: charMap[char_id]});
+        socket.emit("message_to_client", {message: msg, client_id, char_id: charMap[client_id]});
         appendMessage("You", client_id, msg);
         tab.querySelector('#msg').value = '';
     });
@@ -25,10 +25,10 @@ function sendMessage(active_client) {
 }
 
 function addNotification(client_id, tab_id) {
-    const b = document.getElementById(`tab-btn-${char_id}`);
+    const b = document.getElementById(`tab-btn-${client_id}`);
     const active_button = document.querySelector('.tab.active');
     if(active_button) {
-        if (active_button.id == `tab-btn-${char_id}`) {
+        if (active_button.id == `tab-btn-${client_id}`) {
             return;
         }
     }
@@ -39,7 +39,7 @@ function addNotification(client_id, tab_id) {
 }
 
 function removeNotification(client_id) {
-    const b = document.getElementById(`tab-btn-${char_id}`);
+    const b = document.getElementById(`tab-btn-${client_id}`);
     if (b.style.backgroundColor === "red") {
         b.style.backgroundColor = "white"
     }
@@ -47,7 +47,7 @@ function removeNotification(client_id) {
 }
 
 function load_image(imageUrl, client_id) {
-    const tab = document.getElementById(`client-${char_id}`);
+    const tab = document.getElementById(`client-${client_id}`);
     add_image_to_host(imageUrl, tab);
 }
 
@@ -70,15 +70,15 @@ function showTabAndMark(event, client_id, tab_id, button_id) {
     if(event.shiftKey) {
         let active_tab = document.querySelector(".tab.active");
         if (active_tab.id !== button_id) {
-            if(affected_tabs.includes(char_id)) {
-                let index = affected_tabs.indexOf(char_id);
+            if(affected_tabs.includes(client_id)) {
+                let index = affected_tabs.indexOf(client_id);
                 if (index !== -1) {
                     affected_tabs.splice(index, 1);
                     document.getElementById(button_id).classList.remove("affected-tab");
                     change_tab = false;
                 }
             } else {
-                affected_tabs.push(char_id);
+                affected_tabs.push(client_id);
                 document.getElementById(button_id).classList.add("affected-tab");
             }
         }
@@ -88,10 +88,10 @@ function showTabAndMark(event, client_id, tab_id, button_id) {
             tab.classList.remove('affected-tab');
         });
         document.getElementById(button_id).classList.add("affected-tab");
-        affected_tabs = [char_id];
+        affected_tabs = [client_id];
     }
 
-    removeNotification(char_id);
+    removeNotification(client_id);
     if (change_tab) {
         showTab(tab_id);
     }
@@ -108,7 +108,7 @@ function showTab(tabId) {
 }
 
 function appendMessage(from, client_id, message) {
-    const tab = document.getElementById(`client-${char_id}`);
+    const tab = document.getElementById(`client-${client_id}`);
     const chat = tab.querySelector('#chat');
 
     const line = document.createElement("p");
@@ -129,18 +129,18 @@ function updateHealth(c) {
     const heal_val = parseFloat(document.getElementById(`heal-input-${c}`).value) || 0;
     const damage_val = parseFloat(document.getElementById(`damage-input-${c}`).value || 0);
     affected_tabs.forEach((client_id) => {
-        const health = document.getElementById(`health-num-${char_id}`);
+        const health = document.getElementById(`health-num-${client_id}`);
         const health_val = parseFloat(health.textContent) || 0;
         const result = health_val - damage_val + heal_val;
         health.textContent = result.toString();
-        document.getElementById(`heal-input-${char_id}`).value = '';
-        document.getElementById(`damage-input-${char_id}`).value = '';
+        document.getElementById(`heal-input-${client_id}`).value = '';
+        document.getElementById(`damage-input-${client_id}`).value = '';
         socket.emit("host_update_health", {result: result, client_id: client_id, char_id: charMap[client_id]});
     });
 }
 
 function loadMessage(message, client_id) {
-    const tab = document.getElementById(`client-${char_id}`);
+    const tab = document.getElementById(`client-${client_id}`);
     const chat = tab.querySelector('#chat');
     const line = document.createElement("p");
 
@@ -167,7 +167,7 @@ function sendTrapMessage(text) {
 }
 
 function updateArmorClass(client_id, value) {
-    const ac_input = document.getElementById(`ac-input-${char_id}`);
+    const ac_input = document.getElementById(`ac-input-${client_id}`);
     ac_input.value = value;
 }
 
@@ -219,19 +219,19 @@ function updateTrapLists(traps) {
 
 
 socket.on('client_name_registered', ({ client_id, name, char_id }) => {
-  const tabId = `client-${char_id}`;
-  clientMap[char_id] = tabId;
-  tabMap[tabId] = char_id;
-  charMap[char_id] = char_id;
+  const tabId = `client-${client_id}`;
+  clientMap[client_id] = tabId;
+  tabMap[tabId] = client_id;
+  charMap[client_id] = char_id;
 
   // Create tab button
   const tabButton = document.createElement('button');
   tabButton.className = 'tab';
   tabButton.innerText = name;
   tabButton.dataset.tabId = tabId;
-  tabButton.id = `tab-btn-${char_id}`;
+  tabButton.id = `tab-btn-${client_id}`;
   tabButton.style.backgroundColor = "white";
-  tabButton.onclick = (event) => showTabAndMark(event, char_id, tabId, tabButton.id);
+  tabButton.onclick = (event) => showTabAndMark(event, client_id, tabId, tabButton.id);
   document.getElementById('tab-bar').appendChild(tabButton);
 
   // Create tab content
@@ -243,7 +243,7 @@ socket.on('client_name_registered', ({ client_id, name, char_id }) => {
         <div id="image-area">
             <h2>Images</h2>
             <div id="images">
-                <div id="drop-area-${char_id}" style="border: 2px dashed #ccc; padding: 20px; margin: 20px;">
+                <div id="drop-area-${client_id}" style="border: 2px dashed #ccc; padding: 20px; margin: 20px;">
                     Drop an image here
                 </div>
             </div>
@@ -256,38 +256,38 @@ socket.on('client_name_registered', ({ client_id, name, char_id }) => {
       <div class="player-stat-row">
         <div class="player-stat-column" id="damage">
           <h3>Damage</h3>
-          <input type="number" class="damage-input" id="damage-input-${char_id}" placeholder="Damage Amount"/>
+          <input type="number" class="damage-input" id="damage-input-${client_id}" placeholder="Damage Amount"/>
         </div>
         <div class="player-stat-column" id="health">
           <h3>Health</h3>
-          <p class="health-num" id="health-num-${char_id}">0</p>
-          <button onclick="updateHealth('${char_id}')">Update Health</button>
+          <p class="health-num" id="health-num-${client_id}">0</p>
+          <button onclick="updateHealth('${client_id}')">Update Health</button>
         </div>
         <div class="player-stat-column" id="heal">
           <h3>Heal</h3>
-          <input type="number" class="heal-input" id="heal-input-${char_id}" placeholder="Heal Amount"/>
+          <input type="number" class="heal-input" id="heal-input-${client_id}" placeholder="Heal Amount"/>
         </div>
       </div>
 
       <div class="player-stat-row">
         <div class="armor-class-div">
           <p>Armor Class: </p>
-          <input type="number" class="ac-input" id="ac-input-${char_id}">
+          <input type="number" class="ac-input" id="ac-input-${client_id}">
         </div>
       </div>
 
     </div>
           <div id="chat-area">
 
-        <button id="menu-toggle-${char_id}">Traps</button>
-        <div id="menu-${char_id}" class="hidden trap-menu">
+        <button id="menu-toggle-${client_id}">Traps</button>
+        <div id="menu-${client_id}" class="hidden trap-menu">
         </div>
 
             <h2>Chat</h2>
             <div id="chat"></div>
             <div id="input-area">
               <input id="msg" placeholder="Message" autocomplete="off" />
-              <button onclick="sendMessage(${char_id})">Send</button>
+              <button onclick="sendMessage(${client_id})">Send</button>
             </div>
           </div>
       </div>
@@ -295,10 +295,10 @@ socket.on('client_name_registered', ({ client_id, name, char_id }) => {
   `;
 document.getElementById('tab-contents').appendChild(tabContent);
 
-const m = document.getElementById(`menu-${char_id}`);
-menuToClientId.set(m, char_id);
+const m = document.getElementById(`menu-${client_id}`);
+menuToClientId.set(m, client_id);
 
-const dropArea = document.getElementById(`drop-area-${char_id}`);
+const dropArea = document.getElementById(`drop-area-${client_id}`);
 const tab = document.getElementById(`client-${tabMap[tabId]}`);
 tab.querySelector("#msg").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
@@ -314,26 +314,26 @@ dropArea.addEventListener('dragleave', () => {
   dropArea.style.backgroundColor = '';
 });
 
-let toggleBtn = document.getElementById(`menu-toggle-${char_id}`);
-let menu = document.getElementById(`menu-${char_id}`);
+let toggleBtn = document.getElementById(`menu-toggle-${client_id}`);
+let menu = document.getElementById(`menu-${client_id}`);
 
 toggleBtn.addEventListener("click", () => {
     menu.classList.toggle("hidden");
 });
 
 
-document.getElementById(`ac-input-${char_id}`).addEventListener("change", function(event) {
+document.getElementById(`ac-input-${client_id}`).addEventListener("change", function(event) {
     changeArmorClass(this.value);
 });
 
 
-document.getElementById(`heal-input-${char_id}`).addEventListener("keydown", function(event) {
+document.getElementById(`heal-input-${client_id}`).addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         updateHealth(client_id);
     }
 });
 
-document.getElementById(`damage-input-${char_id}`).addEventListener("keydown", function(event) {
+document.getElementById(`damage-input-${client_id}`).addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         updateHealth(client_id);
     }
@@ -357,6 +357,7 @@ if (file && file.type.startsWith('image/')) {
   .then(data => {
     const imageUrl = data.url;
     // Emit this URL to clients via socket
+    console.log(`client-${tabMap[tabId]}`);
     affected_tabs.forEach((c) => {
         let t = document.getElementById(clientMap[c]);
         socket.emit('host_send_image_url', { url: imageUrl, target_id: c, char_id: charMap[c] });
@@ -371,7 +372,7 @@ if (file && file.type.startsWith('image/')) {
   // Auto-select first client
   if (++clientCount === 1) {
     tabButton.classList.add("affected-tab");
-    affected_tabs = [char_id];
+    affected_tabs = [client_id];
     showTab(tabId);
   }
 });
@@ -387,7 +388,7 @@ socket.on('load_message', data => {
 });
 
   socket.on('client_disconnected', ({ client_id }) => {
-const tabId = `client-${char_id}`;
+const tabId = `client-${client_id}`;
 
 // Remove tab button
 document.querySelectorAll('.tab').forEach(tab => {
@@ -415,7 +416,7 @@ socket.on('message_to_dm', ({client_id, message, name}) => {
 });
 
 socket.on('client_update_health', ({result, client_id}) => {
-    const health = document.getElementById(`health-num-${char_id}`);
+    const health = document.getElementById(`health-num-${client_id}`);
     health.textContent = result.toString();
 });
 

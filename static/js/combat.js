@@ -38,10 +38,6 @@ function createCombat(c=null) {
     add_button.textContent = "Add Enemy";
     lower.appendChild(add_button);
 
-    const select_combat_button = document.createElement("button");
-    select_combat_button.textContent = "Select Combat";
-    lower.appendChild(select_combat_button);
-
     const right_combat = document.createElement("div");
     right_combat.classList.add("right-combat");
     upper.appendChild(right_combat);
@@ -58,9 +54,7 @@ function createCombat(c=null) {
     left_combat.appendChild(enemy_list);
 
     add_button.onclick = function () { createEnemy(enemy_list, combat_element); };
-    select_combat_button.onclick = function() {selectCombat(combat_element)}
     return combat_element;
-
 
 }
 
@@ -210,6 +204,7 @@ function loadCombats() {
 socket.on("combat_list", function ({combats}) {
     Object.entries(combats).forEach(([combat, enemy_list]) => {
         const combat_element = createCombat(combat);
+        console.log(enemy_list);
         enemy_list.forEach((enemy) => {
             const name = enemy.enemy_name;
             const ac = enemy.enemy_ac;
