@@ -7,6 +7,12 @@ const charMap = {};
 const clientToTab = {};
 const menuToClientId = new Map();
 
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM fully loaded");
+    socket.emit('host_page_load');
+});
+
+
 window.onload = function() {
     socket.emit('host_page_load');
 }
