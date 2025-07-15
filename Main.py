@@ -12,13 +12,17 @@ import sys
 import json
 import shutil
 import logging
+from AppFactory import app, socketio
+import ActiveCombat
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.CRITICAL)
 
-app = Flask(__name__)
-socketio = SocketIO(app)
+#app = Flask(__name__)
+#socketio = SocketIO(app)
 
-clients = {}
+from ClientHelper import clients
+
+#clients = {}
 
 global CURRENT_CAMPAIGN
 global PLAYERS_FOLDER
@@ -106,13 +110,20 @@ def handle_disconnect():
     global EARLY_CLIENTS
     sid = request.sid
     if sid in clients:
-        emit('client_disconnected', {'client_id': sid}, broadcast=True)
+        #emit('client_disconnected', {'client_id': sid}, broadcast=True)
         del clients[sid]
 
     for client in EARLY_CLIENTS:
         if client.get('sid') == sid:
             del client
 
+
+def load_data_for_host(data):
+    messages = data.get("messages")
+    imgs = data.get("imgs")
+    health = data.get("health")
+    armor_class = data.get("ac")
+    name = data.get("name")
 def init_json_data(sid, name, char_id, dm_only=False):
 #Load or Create all of the data for each client
 
@@ -181,14 +192,18 @@ def client_ready(data):
 def handle_register_name(data):
     #Keep track of connected clients
     #Load saved data
+    global PLAYERS_FOLDER
     sid = request.sid
     name = data.get('name')
     char_id = data.get('char_id')
+    current_players = [f.split(".")[0] for f in os.listdir(PLAYERS_FOLDER)]
     if char_id:
+
         clients[sid] = {'name': name, 'sid': sid, 'char_id': char_id}
-        emit('client_name_registered', {'client_id': sid, 'name': name, 'char_id': char_id}, broadcast=True)
         emit('allow_client', room=sid)
-        init_json_data(sid, name, char_id)
+        if char_id not in current_players:
+            emit('client_name_registered', {'client_id': sid, 'name': name, 'char_id': char_id}, broadcast=True)
+            init_json_data(sid, name, char_id)
     else:
         print(f"Warning: No id for {name}")
 
@@ -323,7 +338,6 @@ def setupServer():
     url = f"http://{IPV4}:{PORT}?role=host"
     webbrowser.open(url)
     socketio.run(app, host=host, port=PORT, allow_unsafe_werkzeug=True)
-
 
 @socketio.on('add_traps')
 def addTraps(traps_data):

@@ -314,6 +314,15 @@ body {
     z-index: 2;
 }
 
+
+#active-combat.hidden {
+    display: none;
+}
+
+#active-combat {
+    background: white;
+}
+
 #page {
     padding-top: 130px;
     height: 75vh;
