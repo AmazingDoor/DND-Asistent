@@ -8,14 +8,8 @@ const clientToTab = {};
 const menuToClientId = new Map();
 
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOM fully loaded");
     socket.emit('host_page_load');
 });
-
-
-window.onload = function() {
-    socket.emit('host_page_load');
-}
 
 
 function sendMessage(active_client) {
@@ -52,8 +46,9 @@ function removeNotification(client_id) {
 
 }
 
-function load_image(imageUrl, client_id) {
-    const tab = document.getElementById(`client-${client_id}`);
+function load_image(imageUrl, char_id) {
+    const tab = document.getElementById(`client-${char_id}`);
+    console.log(tab);
     add_image_to_host(imageUrl, tab);
 }
 
@@ -223,21 +218,22 @@ function updateTrapLists(traps) {
     });
 }
 
-
-socket.on('client_name_registered', ({ client_id, name, char_id }) => {
-  const tabId = `client-${client_id}`;
-  clientMap[client_id] = tabId;
-  tabMap[tabId] = client_id;
-  charMap[client_id] = char_id;
+function createTab(client_id, name, char_id) {
+  const tabId = `client-${char_id}`;
+  //Trying to get rid of this
+  //clientMap[client_id] = tabId;
+  tabMap[tabId] = char_id;
+  //Trying to get rid of this
+  //charMap[client_id] = char_id;
 
   // Create tab button
   const tabButton = document.createElement('button');
   tabButton.className = 'tab';
   tabButton.innerText = name;
   tabButton.dataset.tabId = tabId;
-  tabButton.id = `tab-btn-${client_id}`;
+  tabButton.id = `tab-btn-${char_id}`;
   tabButton.style.backgroundColor = "white";
-  tabButton.onclick = (event) => showTabAndMark(event, client_id, tabId, tabButton.id);
+  tabButton.onclick = (event) => showTabAndMark(event, char_id, tabId, tabButton.id);
   document.getElementById('tab-bar').appendChild(tabButton);
 
   // Create tab content
@@ -249,7 +245,7 @@ socket.on('client_name_registered', ({ client_id, name, char_id }) => {
         <div id="image-area">
             <h2>Images</h2>
             <div id="images">
-                <div id="drop-area-${client_id}" style="border: 2px dashed #ccc; padding: 20px; margin: 20px;">
+                <div id="drop-area-${char_id}" style="border: 2px dashed #ccc; padding: 20px; margin: 20px;">
                     Drop an image here
                 </div>
             </div>
@@ -262,38 +258,38 @@ socket.on('client_name_registered', ({ client_id, name, char_id }) => {
       <div class="player-stat-row">
         <div class="player-stat-column" id="damage">
           <h3>Damage</h3>
-          <input type="number" class="damage-input" id="damage-input-${client_id}" placeholder="Damage Amount"/>
+          <input type="number" class="damage-input" id="damage-input-${char_id}" placeholder="Damage Amount"/>
         </div>
         <div class="player-stat-column" id="health">
           <h3>Health</h3>
-          <p class="health-num" id="health-num-${client_id}">0</p>
-          <button onclick="updateHealth('${client_id}')">Update Health</button>
+          <p class="health-num" id="health-num-${char_id}">0</p>
+          <button onclick="updateHealth('${char_id}')">Update Health</button>
         </div>
         <div class="player-stat-column" id="heal">
           <h3>Heal</h3>
-          <input type="number" class="heal-input" id="heal-input-${client_id}" placeholder="Heal Amount"/>
+          <input type="number" class="heal-input" id="heal-input-${char_id}" placeholder="Heal Amount"/>
         </div>
       </div>
 
       <div class="player-stat-row">
         <div class="armor-class-div">
           <p>Armor Class: </p>
-          <input type="number" class="ac-input" id="ac-input-${client_id}">
+          <input type="number" class="ac-input" id="ac-input-${char_id}">
         </div>
       </div>
 
     </div>
           <div id="chat-area">
 
-        <button id="menu-toggle-${client_id}">Traps</button>
-        <div id="menu-${client_id}" class="hidden trap-menu">
+        <button id="menu-toggle-${char_id}">Traps</button>
+        <div id="menu-${char_id}" class="hidden trap-menu">
         </div>
 
             <h2>Chat</h2>
             <div id="chat"></div>
             <div id="input-area">
               <input id="msg" placeholder="Message" autocomplete="off" />
-              <button onclick="sendMessage(${client_id})">Send</button>
+              <button onclick="sendMessage(${char_id})">Send</button>
             </div>
           </div>
       </div>
@@ -301,14 +297,14 @@ socket.on('client_name_registered', ({ client_id, name, char_id }) => {
   `;
 document.getElementById('tab-contents').appendChild(tabContent);
 
-const m = document.getElementById(`menu-${client_id}`);
-menuToClientId.set(m, client_id);
+const m = document.getElementById(`menu-${char_id}`);
+menuToClientId.set(m, char_id);
 
-const dropArea = document.getElementById(`drop-area-${client_id}`);
+const dropArea = document.getElementById(`drop-area-${char_id}`);
 const tab = document.getElementById(`client-${tabMap[tabId]}`);
 tab.querySelector("#msg").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
-        sendMessage(client_id);
+        sendMessage(char_id);
     }
 });
 dropArea.addEventListener('dragover', (e) => {
@@ -320,28 +316,28 @@ dropArea.addEventListener('dragleave', () => {
   dropArea.style.backgroundColor = '';
 });
 
-let toggleBtn = document.getElementById(`menu-toggle-${client_id}`);
-let menu = document.getElementById(`menu-${client_id}`);
+let toggleBtn = document.getElementById(`menu-toggle-${char_id}`);
+let menu = document.getElementById(`menu-${char_id}`);
 
 toggleBtn.addEventListener("click", () => {
     menu.classList.toggle("hidden");
 });
 
 
-document.getElementById(`ac-input-${client_id}`).addEventListener("change", function(event) {
+document.getElementById(`ac-input-${char_id}`).addEventListener("change", function(event) {
     changeArmorClass(this.value);
 });
 
 
-document.getElementById(`heal-input-${client_id}`).addEventListener("keydown", function(event) {
+document.getElementById(`heal-input-${char_id}`).addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
-        updateHealth(client_id);
+        updateHealth(char_id);
     }
 });
 
-document.getElementById(`damage-input-${client_id}`).addEventListener("keydown", function(event) {
+document.getElementById(`damage-input-${char_id}`).addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
-        updateHealth(client_id);
+        updateHealth(char_id);
     }
 });
 
@@ -378,15 +374,23 @@ if (file && file.type.startsWith('image/')) {
   // Auto-select first client
   if (++clientCount === 1) {
     tabButton.classList.add("affected-tab");
-    affected_tabs = [client_id];
+    affected_tabs = [char_id];
     showTab(tabId);
   }
+}
+
+socket.on('client_name_registered', ({ client_id, name, char_id }) => {
+    createTab(client_id, name, char_id);
+});
+
+socket.on('host_load_client_data', ({name, char_id}) => {
+    createTab(null, name, char_id);
 });
 
 socket.on('load_image', data => {
     const imageUrl = data.url;
-    const client_id = data.client_id;
-    load_image(imageUrl, client_id);
+    const char_id = data.char_id;
+    load_image(imageUrl, char_id);
 });
 
 socket.on('load_message', data => {

@@ -106,13 +106,31 @@ def handle_disconnect():
     global EARLY_CLIENTS
     sid = request.sid
     if sid in clients:
-        emit('client_disconnected', {'client_id': sid}, broadcast=True)
+        #emit('client_disconnected', {'client_id': sid}, broadcast=True)
         del clients[sid]
 
     for client in EARLY_CLIENTS:
         if client.get('sid') == sid:
             del client
 
+def host_init_client_data(data, char_id):
+
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
+        data = json.load(json_file)
+        messages = data.get("messages")
+        imgs = data.get("imgs")
+        health = data.get("health")
+        armor_class = data.get("ac")
+        for message in messages:
+            emit("load_message", {'message': message, 'char_id': char_id}, room=DM_SID)
+        for img in imgs:
+            emit('load_image', {'url': img, 'char_id': char_id}, room=DM_SID)
+        emit('client_update_health', {'result': health, 'char_id': char_id}, room=DM_SID)
+        emit('client_change_armor_class', {'char_id': char_id, 'value': armor_class}, room=DM_SID)
+
+    with open(f"{TRAPS_FOLDER}\\traps.json", 'r') as json_file:
+        d = json.load(json_file)
+        emit('update_traps_list', {'traps_data': d}, room=DM_SID)
 def init_json_data(sid, name, char_id, dm_only=False):
 #Load or Create all of the data for each client
 
@@ -142,7 +160,7 @@ def init_json_data(sid, name, char_id, dm_only=False):
         for img in imgs:
             if not dm_only:
                 emit('send_image', {'url': img, 'n': False}, room=sid)
-            emit('load_image', {'url': img, 'client_id': sid}, room=DM_SID)
+            emit('load_image', {'url': img, 'char_id': char_id}, room=DM_SID)
 
         emit('client_update_health', {'result': health, 'client_id': sid}, room=DM_SID)
         if not dm_only:
@@ -181,14 +199,18 @@ def client_ready(data):
 def handle_register_name(data):
     #Keep track of connected clients
     #Load saved data
+    global PLAYERS_FOLDER
     sid = request.sid
     name = data.get('name')
     char_id = data.get('char_id')
+    player_ids = [f.split('.')[0] for f in os.listdir(PLAYERS_FOLDER)]
     if char_id:
         clients[sid] = {'name': name, 'sid': sid, 'char_id': char_id}
-        emit('client_name_registered', {'client_id': sid, 'name': name, 'char_id': char_id}, broadcast=True)
+        if char_id not in player_ids:
+            emit('client_name_registered', {'client_id': sid, 'name': name, 'char_id': char_id}, broadcast=True)
+            init_json_data(sid, name, char_id)
         emit('allow_client', room=sid)
-        init_json_data(sid, name, char_id)
+
     else:
         print(f"Warning: No id for {name}")
 
@@ -197,17 +219,27 @@ def handle_register_name(data):
 def host_page_load():
     global IPV4
     global PORT
+    global PLAYERS_FOLDER
     #Tell the host to create a tab for the client
     txt = str(IPV4) + ':' + str(PORT)
     emit('add_ip_text', {'ip': txt}, room=DM_SID)
-    for client in clients:
+    players = [f for f in os.listdir(PLAYERS_FOLDER)]
+    for player in players:
+        with open(f"{PLAYERS_FOLDER}\\{player}", 'r') as json_file:
+            data = json.load(json_file)
+            char_id = player.split('.')[0]
+            name = data.get("name")
+            emit('host_load_client_data', {'name': name, 'char_id': char_id})
+            host_init_client_data(data, char_id)
+    #old stuff
+    '''for client in clients:
         c = clients.get(client)
         sid = c.get('sid')
         name = c.get('name')
         char_id = c.get('char_id')
 
         emit('client_name_registered', {'client_id': sid, 'name': name, 'char_id': char_id})
-        init_json_data(sid, name, char_id, True)
+        init_json_data(sid, name, char_id, True)'''
 
 @socketio.on('message_to_dm')
 def message_to_dm(data):
