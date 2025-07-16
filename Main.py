@@ -25,12 +25,15 @@ global PLAYERS_FOLDER
 global TRAPS_FOLDER
 global IMGS_FOLDER
 global COMBAT_FOLDER
+global ID_TO_CLIENT
+
 
 CURRENT_CAMPAIGN = None
 PLAYERS_FOLDER = None
 TRAPS_FOLDER = None
 IMGS_FOLDER = None
 COMBAT_FOLDER = None
+ID_TO_CLIENT = {}
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -104,10 +107,14 @@ def handle_connect():
 @socketio.on('disconnect')
 def handle_disconnect():
     global EARLY_CLIENTS
+    global ID_TO_CLIENT
     sid = request.sid
     if sid in clients:
         #emit('client_disconnected', {'client_id': sid}, broadcast=True)
         del clients[sid]
+    for key in ID_TO_CLIENT.keys():
+        if ID_TO_CLIENT.get(key) == sid:
+            ID_TO_CLIENT[key] = None
 
     for client in EARLY_CLIENTS:
         if client.get('sid') == sid:
@@ -131,7 +138,7 @@ def host_init_client_data(data, char_id):
     with open(f"{TRAPS_FOLDER}\\traps.json", 'r') as json_file:
         d = json.load(json_file)
         emit('update_traps_list', {'traps_data': d}, room=DM_SID)
-def init_json_data(sid, name, char_id, dm_only=False):
+def init_json_data(sid, name, char_id):
 #Load or Create all of the data for each client
 
     if not os.path.exists(f"{PLAYERS_FOLDER}\\{char_id}.json"):
@@ -153,25 +160,11 @@ def init_json_data(sid, name, char_id, dm_only=False):
         health = data.get("health")
         armor_class = data.get("ac")
         for message in messages:
-            if not dm_only:
-                emit("load_message", {'message': message}, room=sid)
-            emit("load_message", {'message': message, 'client_id': sid}, room=DM_SID)
-
+            emit("load_message", {'message': message}, room=sid)
         for img in imgs:
-            if not dm_only:
-                emit('send_image', {'url': img, 'n': False}, room=sid)
-            emit('load_image', {'url': img, 'char_id': char_id}, room=DM_SID)
-
-        emit('client_update_health', {'result': health, 'client_id': sid}, room=DM_SID)
-        if not dm_only:
-            emit('host_update_health', {'result': health, 'client_id': sid}, room=sid)
-        if not dm_only:
-            emit('host_change_armor_class', {'value': armor_class}, room=sid)
-        emit('client_change_armor_class', {'client_id': sid, 'value': armor_class}, room=DM_SID)
-
-    with open(f"{TRAPS_FOLDER}\\traps.json", 'r') as json_file:
-        d = json.load(json_file)
-        emit('update_traps_list', {'traps_data': d}, room=DM_SID)
+            emit('send_image', {'url': img, 'n': False}, room=sid)
+        emit('host_update_health', {'result': health, 'client_id': sid}, room=sid)
+        emit('host_change_armor_class', {'value': armor_class}, room=sid)
 
 @socketio.on('get_traps_json')
 def get_traps_json():
@@ -197,9 +190,11 @@ def client_ready(data):
 
 @socketio.on('register_name')
 def handle_register_name(data):
+    #happens when a connected client selects a character
     #Keep track of connected clients
     #Load saved data
     global PLAYERS_FOLDER
+    global ID_TO_CLIENT
     sid = request.sid
     name = data.get('name')
     char_id = data.get('char_id')
@@ -207,8 +202,9 @@ def handle_register_name(data):
     if char_id:
         clients[sid] = {'name': name, 'sid': sid, 'char_id': char_id}
         if char_id not in player_ids:
-            emit('client_name_registered', {'client_id': sid, 'name': name, 'char_id': char_id}, broadcast=True)
-            init_json_data(sid, name, char_id)
+            emit('client_name_registered', {'name': name, 'char_id': char_id}, room=DM_SID)
+        init_json_data(sid, name, char_id)
+        ID_TO_CLIENT[char_id] = sid
         emit('allow_client', room=sid)
 
     else:
@@ -243,6 +239,7 @@ def host_page_load():
 
 @socketio.on('message_to_dm')
 def message_to_dm(data):
+    global ID_TO_CLIENT
     if DM_SID is None:
         return
     sid = request.sid
@@ -254,8 +251,10 @@ def message_to_dm(data):
     d["messages"].append(f"{name}: {msg}")
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
-    emit('message_to_dm', {'client_id': sid, 'message': msg, 'name': clients.get(sid).get('name')}, room=DM_SID)
-
+    for key in ID_TO_CLIENT.keys():
+        if ID_TO_CLIENT.get(key) == sid:
+            emit('message_to_dm', {'char_id': key, 'message': msg, 'name': clients.get(sid).get('name')}, room=DM_SID)
+            break
 
 @socketio.on('saveCombat')
 def save_combat(data):
@@ -285,9 +284,10 @@ def remove_combat(data):
 
 @socketio.on('message_to_client')
 def message_to_client(data):
-    target_id = data.get('client_id')
-    msg = data.get('message')
+    global ID_TO_CLIENT
     char_id = data.get('char_id')
+    target_id = ID_TO_CLIENT.get(char_id)
+    msg = data.get('message')
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
     d["messages"].append(f"DM: {msg}")
@@ -372,8 +372,8 @@ def addTraps(traps_data):
 def handle_host_image_url(data):
     #Send an image from the host to the client
     url = data.get('url')
-    target_id = data.get('target_id')
     char_id = data.get('char_id')
+    target_id = ID_TO_CLIENT.get(char_id)
     if url:
         with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
             d = json.load(json_file)

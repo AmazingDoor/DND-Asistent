@@ -14,10 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function sendMessage(active_client) {
     const msg = document.getElementById(`client-${active_client}`).querySelector('#msg').value;
-    affected_tabs.forEach((client_id) => {
-        const tab = document.getElementById(`client-${client_id}`);
+    affected_tabs.forEach((char_id) => {
+        const tab = document.getElementById(`client-${char_id}`);
         if (!msg) return;
-        socket.emit("message_to_client", {message: msg, client_id, char_id: charMap[client_id]});
+        socket.emit("message_to_client", {message: msg, char_id: char_id});
         appendMessage("You", char_id, msg);
         tab.querySelector('#msg').value = '';
     });
@@ -38,8 +38,8 @@ function addNotification(char_id, tab_id) {
 
 }
 
-function removeNotification(client_id) {
-    const b = document.getElementById(`tab-btn-${client_id}`);
+function removeNotification(char_id) {
+    const b = document.getElementById(`tab-btn-${char_id}`);
     if (b.style.backgroundColor === "red") {
         b.style.backgroundColor = "white"
     }
@@ -48,7 +48,6 @@ function removeNotification(client_id) {
 
 function load_image(imageUrl, char_id) {
     const tab = document.getElementById(`client-${char_id}`);
-    console.log(tab);
     add_image_to_host(imageUrl, tab);
 }
 
@@ -66,20 +65,20 @@ function add_image_to_host(imageUrl, tab) {
     img_list.appendChild(imageBox);
 }
 
-function showTabAndMark(event, client_id, tab_id, button_id) {
+function showTabAndMark(event, char_id, tab_id, button_id) {
     let change_tab = true;
     if(event.shiftKey) {
         let active_tab = document.querySelector(".tab.active");
         if (active_tab.id !== button_id) {
-            if(affected_tabs.includes(client_id)) {
-                let index = affected_tabs.indexOf(client_id);
+            if(affected_tabs.includes(char_id)) {
+                let index = affected_tabs.indexOf(char_id);
                 if (index !== -1) {
                     affected_tabs.splice(index, 1);
                     document.getElementById(button_id).classList.remove("affected-tab");
                     change_tab = false;
                 }
             } else {
-                affected_tabs.push(client_id);
+                affected_tabs.push(char_id);
                 document.getElementById(button_id).classList.add("affected-tab");
             }
         }
@@ -89,10 +88,10 @@ function showTabAndMark(event, client_id, tab_id, button_id) {
             tab.classList.remove('affected-tab');
         });
         document.getElementById(button_id).classList.add("affected-tab");
-        affected_tabs = [client_id];
+        affected_tabs = [char_id];
     }
 
-    removeNotification(client_id);
+    removeNotification(char_id);
     if (change_tab) {
         showTab(tab_id);
     }
@@ -120,23 +119,23 @@ function appendMessage(from, char_id, message) {
 
 
 function changeArmorClass(value) {
-    affected_tabs.forEach((client_id) => {
-        updateArmorClass(client_id, value);
-        socket.emit("host_change_armor_class", {client_id: client_id, value: value, char_id: charMap[client_id]})
+    affected_tabs.forEach((char_id) => {
+        updateArmorClass(char_id, value);
+        socket.emit("host_change_armor_class", {value: value, char_id: char_id})
     });
 }
 
 function updateHealth(c) {
     const heal_val = parseFloat(document.getElementById(`heal-input-${c}`).value) || 0;
     const damage_val = parseFloat(document.getElementById(`damage-input-${c}`).value || 0);
-    affected_tabs.forEach((client_id) => {
-        const health = document.getElementById(`health-num-${client_id}`);
+    affected_tabs.forEach((char_id) => {
+        const health = document.getElementById(`health-num-${char_id}`);
         const health_val = parseFloat(health.textContent) || 0;
         const result = health_val - damage_val + heal_val;
         health.textContent = result.toString();
-        document.getElementById(`heal-input-${client_id}`).value = '';
-        document.getElementById(`damage-input-${client_id}`).value = '';
-        socket.emit("host_update_health", {result: result, client_id: client_id, char_id: charMap[client_id]});
+        document.getElementById(`heal-input-${char_id}`).value = '';
+        document.getElementById(`damage-input-${char_id}`).value = '';
+        socket.emit("host_update_health", {result: result, char_id: char_id});
     });
 }
 
@@ -161,14 +160,14 @@ window.location.href='/manage_traps';
 }
 
 function sendTrapMessage(text) {
-    affected_tabs.forEach((client_id) => {
-        socket.emit("message_to_client", {message: text, client_id, char_id: charMap[client_id]});
-        appendMessage("You", client_id, text);
+    affected_tabs.forEach((char_id) => {
+        socket.emit("message_to_client", {message: text, char_id: char_id});
+        appendMessage("You", char_id, text);
     });
 }
 
-function updateArmorClass(client_id, value) {
-    const ac_input = document.getElementById(`ac-input-${client_id}`);
+function updateArmorClass(char_id, value) {
+    const ac_input = document.getElementById(`ac-input-${char_id}`);
     ac_input.value = value;
 }
 
@@ -218,10 +217,10 @@ function updateTrapLists(traps) {
     });
 }
 
-function createTab(client_id, name, char_id) {
+function createTab(name, char_id) {
   const tabId = `client-${char_id}`;
   //Trying to get rid of this
-  //clientMap[client_id] = tabId;
+  clientMap[char_id] = tabId;
   tabMap[tabId] = char_id;
   //Trying to get rid of this
   //charMap[client_id] = char_id;
@@ -362,7 +361,7 @@ if (file && file.type.startsWith('image/')) {
     console.log(`client-${tabMap[tabId]}`);
     affected_tabs.forEach((c) => {
         let t = document.getElementById(clientMap[c]);
-        socket.emit('host_send_image_url', { url: imageUrl, target_id: c, char_id: charMap[c] });
+        socket.emit('host_send_image_url', { url: imageUrl, char_id: char_id });
         add_image_to_host(imageUrl, t);
     });
   })
@@ -379,12 +378,12 @@ if (file && file.type.startsWith('image/')) {
   }
 }
 
-socket.on('client_name_registered', ({ client_id, name, char_id }) => {
-    createTab(client_id, name, char_id);
+socket.on('client_name_registered', ({name, char_id }) => {
+    createTab(name, char_id);
 });
 
 socket.on('host_load_client_data', ({name, char_id}) => {
-    createTab(null, name, char_id);
+    createTab(name, char_id);
 });
 
 socket.on('load_image', data => {
