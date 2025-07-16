@@ -18,17 +18,17 @@ function sendMessage(active_client) {
         const tab = document.getElementById(`client-${client_id}`);
         if (!msg) return;
         socket.emit("message_to_client", {message: msg, client_id, char_id: charMap[client_id]});
-        appendMessage("You", client_id, msg);
+        appendMessage("You", char_id, msg);
         tab.querySelector('#msg').value = '';
     });
 
 }
 
-function addNotification(client_id, tab_id) {
-    const b = document.getElementById(`tab-btn-${client_id}`);
+function addNotification(char_id, tab_id) {
+    const b = document.getElementById(`tab-btn-${char_id}`);
     const active_button = document.querySelector('.tab.active');
     if(active_button) {
-        if (active_button.id == `tab-btn-${client_id}`) {
+        if (active_button.id == `tab-btn-${char_id}`) {
             return;
         }
     }
@@ -108,8 +108,8 @@ function showTab(tabId) {
     });
 }
 
-function appendMessage(from, client_id, message) {
-    const tab = document.getElementById(`client-${client_id}`);
+function appendMessage(from, char_id, message) {
+    const tab = document.getElementById(`client-${char_id}`);
     const chat = tab.querySelector('#chat');
 
     const line = document.createElement("p");
@@ -140,8 +140,8 @@ function updateHealth(c) {
     });
 }
 
-function loadMessage(message, client_id) {
-    const tab = document.getElementById(`client-${client_id}`);
+function loadMessage(message, char_id) {
+    const tab = document.getElementById(`client-${char_id}`);
     const chat = tab.querySelector('#chat');
     const line = document.createElement("p");
 
@@ -394,9 +394,10 @@ socket.on('load_image', data => {
 });
 
 socket.on('load_message', data => {
-    loadMessage(data.message, data.client_id);
+    loadMessage(data.message, data.char_id);
 });
 
+//I don't think this is used right now.
   socket.on('client_disconnected', ({ client_id }) => {
 const tabId = `client-${client_id}`;
 
@@ -420,18 +421,18 @@ if (remainingTabs.length > 0) {
 }});
 
 
-socket.on('message_to_dm', ({client_id, message, name}) => {
-    addNotification(client_id);
-    appendMessage(name, client_id, message);
+socket.on('message_to_dm', ({char_id, message, name}) => {
+    addNotification(char_id);
+    appendMessage(name, char_id, message);
 });
 
-socket.on('client_update_health', ({result, client_id}) => {
-    const health = document.getElementById(`health-num-${client_id}`);
+socket.on('client_update_health', ({result, char_id}) => {
+    const health = document.getElementById(`health-num-${char_id}`);
     health.textContent = result.toString();
 });
 
-socket.on('client_change_armor_class', ({client_id, value}) => {
-    updateArmorClass(client_id, value);
+socket.on('client_change_armor_class', ({char_id, value}) => {
+    updateArmorClass(char_id, value);
 });
 
 
