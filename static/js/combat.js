@@ -130,7 +130,7 @@ function createEnemy(enemy_list, combat_element, n=null, armor_class=null, h=nul
 
     const update_health_button = document.createElement("button");
     update_health_button.textContent = "Update";
-    update_health_button.onclick = function () { updateHealth(combat_element, damage_input, heal_input, health); };
+    update_health_button.onclick = function () { combatUpdateHealth(combat_element, damage_input, heal_input, health); };
     health_middle.appendChild(hl);
     health_middle.appendChild(health);
     health_middle.appendChild(update_health_button);
@@ -160,12 +160,12 @@ function createEnemy(enemy_list, combat_element, n=null, armor_class=null, h=nul
     });
 
     heal_input.addEventListener("change", function(event) {
-        updateHealth(combat_element, damage_input, heal_input, health);
+        combatUpdateHealth(combat_element, damage_input, heal_input, health);
         heal_input.value = '';
     });
 
     damage_input.addEventListener("change", function(event) {
-        updateHealth(combat_element, damage_input, heal_input, health);
+        combatUpdateHealth(combat_element, damage_input, heal_input, health);
         damage_input.value = '';
     });
 
@@ -187,7 +187,7 @@ function saveCombat(combat) {
 
 }
 
-function updateHealth(combat, damage, heal, health) {
+function combatUpdateHealth(combat, damage, heal, health) {
     const h = parseFloat(health.textContent) || 0;
     const heal_val = parseFloat(heal.value) || 0;
     const damage_val = parseFloat(damage.value) || 0;

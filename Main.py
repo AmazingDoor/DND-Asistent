@@ -305,18 +305,22 @@ def client_update_health(data):
     d["health"] = data.get("result")
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
-    emit('client_update_health', {'result': data.get('result'), 'client_id': request.sid}, room=DM_SID)
+    for key in ID_TO_CLIENT.keys():
+        if ID_TO_CLIENT.get(key) == request.sid:
+            emit('client_update_health', {'result': data.get('result'), 'char_id': key}, room=DM_SID)
+            break
 
 @socketio.on('host_update_health')
 def host_update_health(data):
     #Save new health and sync with the client
     char_id = data.get('char_id')
+    target_id = ID_TO_CLIENT.get(char_id)
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
     d["health"] = data.get("result")
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
-    emit('host_update_health', {'result': data.get('result')}, room=data.get('client_id'))
+    emit('host_update_health', {'result': data.get('result')}, room=target_id)
 
 def get_ipv4_address():
     try:
@@ -386,9 +390,9 @@ def handle_host_image_url(data):
 @socketio.on('host_change_armor_class')
 def host_change_armor_class(data):
     #Save new armor class and sync to client
-    sid = data.get('client_id')
-    value = data.get('value')
     char_id = data.get('char_id')
+    sid = ID_TO_CLIENT.get(char_id)
+    value = data.get('value')
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
     d["ac"] = value
@@ -399,7 +403,6 @@ def host_change_armor_class(data):
 @socketio.on('client_change_armor_class')
 def client_change_armor_class(data):
     #Save new armor class and sync to host
-    sid = request.sid
     value = data.get('value')
     char_id = data.get('char_id')
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
@@ -407,7 +410,7 @@ def client_change_armor_class(data):
     d["ac"] = value
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
-    emit('client_change_armor_class', {'client_id': sid, 'value': value}, room=DM_SID)
+    emit('client_change_armor_class', {'char_id': char_id, 'value': value}, room=DM_SID)
 
 
 @socketio.on('create_campaign')
