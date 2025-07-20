@@ -279,7 +279,10 @@ def load_combats():
 def remove_combat(data):
     global COMBAT_FOLDER
     name = data.get("name")
-    os.remove(f'{COMBAT_FOLDER}\\{name}.json')
+    try:
+        os.remove(f'{COMBAT_FOLDER}\\{name}.json')
+    except:
+        pass
 
 
 @socketio.on('message_to_client')

@@ -228,9 +228,10 @@ body {
 }
 
 
-    .hidden {
-      display: none;
-    }
+.hidden {
+    display: none;
+}
+
 
     .modal {
       position: fixed;
@@ -408,7 +409,7 @@ body {
     background: lightgray;
 }
 
-.enemy {
+.enemy-style {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -423,7 +424,7 @@ body {
     hyphens: auto;
 }
 
-.enemy-health-section {
+.enemy-health-section-style {
     display: flex;
     flex-direction: row;
     background: lightgray;
@@ -432,7 +433,7 @@ body {
     border: 2px solid black;
 }
 
-.enemy-health-inner {
+.enemy-health-inner-style {
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -444,11 +445,11 @@ body {
     margin-left: 2px;
 }
 
-.enemy-damage-input {
+.enemy-damage-input-style {
     width: 30px;
 }
 
-.enemy-heal-input {
+.enemy-heal-input-style {
     width: 30px;
 }
 
