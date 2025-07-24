@@ -40,7 +40,19 @@ function createCombat(c=null) {
 
     const init_button = document.createElement("button");
     init_button.textContent = "Initialize";
+    init_button.classList.add("init-combat-button");
     lower.appendChild(init_button);
+
+    const cancel_button = document.createElement("button");
+    cancel_button.textContent = "Cancel";
+    cancel_button.classList.add("cancel-init-button");
+    cancel_button.classList.add("hidden");
+    lower.appendChild(cancel_button);
+
+    const start_combat_button = document.createElement("button");
+    start_combat_button.textContent = "Start Combat";
+    start_combat_button.classList.add("start-combat-button");
+    lower.appendChild(start_combat_button);
 
     const right_combat = document.createElement("div");
     right_combat.classList.add("right-combat");
@@ -65,16 +77,47 @@ function createCombat(c=null) {
 
     add_button.onclick = function () { createEnemy(enemy_list, combat_element); };
     init_button.onclick = function() {initiateCombat(combat_element)}
+    cancel_button.onclick = function() {cancelInitiate(combat_element);}
     return combat_element;
 
 }
 
 
+function cancelInitiate(element) {
+    const enemy_list = element.querySelector(".enemy-list");
+    const initiative_list = element.querySelector(".initiative-list");
+    const cancel_init_button = element.querySelector(".cancel-init-button");
+    const initiate_button = element.querySelector(".init-combat-button");
+
+    enemy_list.classList.remove("hidden");
+    cancel_init_button.classList.add("hidden");
+    initiate_button.classList.remove("hidden");
+
+    const enemies = initiative_list.querySelectorAll(".enemy-initiative");
+    enemies.forEach((enemy) => {
+        enemy.remove();
+    });
+
+    initiative_list.classList.add("hidden");
+
+}
+
 function initiateCombat(element) {
     const enemy_list = element.querySelector(".enemy-list");
     const initiative_list = element.querySelector(".initiative-list");
+    const cancel_init_button = element.querySelector(".cancel-init-button");
+    const initiate_button = element.querySelector(".init-combat-button");
+    initiate_button.classList.add("hidden");
     enemy_list.classList.add("hidden");
     initiative_list.classList.remove("hidden");
+    cancel_init_button.classList.remove("hidden");
+    const enemies = enemy_list.querySelectorAll(".enemy");
+    enemies.forEach((enemy) => {
+        const enemy_name = enemy.querySelector(".enemy-name");
+        const health = enemy.querySelector(".enemy-health");
+        createEnemyInitiative(element, enemy_name.value,
+        health.textContent);
+    });
 
 
 
@@ -210,15 +253,13 @@ function createEnemy(enemy_list, combat_element, n=null, armor_class=null, h=nul
         damage_input.value = '';
     });
 
-    createEnemyInitiative(enemy_list, combat_element, enemy_name.value,
-    health.textContent);
-
 }
 
 
-function createEnemyInitiative(enemy_list, combatElement, name, h) {
+function createEnemyInitiative(combatElement, name, h) {
     const enemy = document.createElement("div");
     const initiative_list = combatElement.querySelector(".initiative-list");
+    enemy.classList.add("enemy-initiative");
     enemy.classList.add("enemy-style");
 
     const enemy_name = document.createElement("h2");
