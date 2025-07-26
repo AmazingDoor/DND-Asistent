@@ -453,6 +453,10 @@ body {
     width: 30px;
 }
 
+.enemy-id-object {
+    display: none;
+}
+
 
 
 

@@ -52,6 +52,7 @@ function createCombat(c=null) {
     const start_combat_button = document.createElement("button");
     start_combat_button.textContent = "Start Combat";
     start_combat_button.classList.add("start-combat-button");
+    start_combat_button.classList.add("hidden");
     lower.appendChild(start_combat_button);
 
     const right_combat = document.createElement("div");
@@ -88,10 +89,11 @@ function cancelInitiate(element) {
     const initiative_list = element.querySelector(".initiative-list");
     const cancel_init_button = element.querySelector(".cancel-init-button");
     const initiate_button = element.querySelector(".init-combat-button");
-
+    const start_combat_button = element.querySelector(".start-combat-button");
     enemy_list.classList.remove("hidden");
     cancel_init_button.classList.add("hidden");
     initiate_button.classList.remove("hidden");
+    start_combat_button.classList.add("hidden");
 
     const enemies = initiative_list.querySelectorAll(".enemy-initiative");
     enemies.forEach((enemy) => {
@@ -107,6 +109,9 @@ function initiateCombat(element) {
     const initiative_list = element.querySelector(".initiative-list");
     const cancel_init_button = element.querySelector(".cancel-init-button");
     const initiate_button = element.querySelector(".init-combat-button");
+    const start_combat_button = element.querySelector(".start-combat-button");
+
+    start_combat_button.classList.remove("hidden");
     initiate_button.classList.add("hidden");
     enemy_list.classList.add("hidden");
     initiative_list.classList.remove("hidden");
@@ -140,11 +145,23 @@ function deleteEnemy(element, combat_element) {
     saveCombat(combat_element);
 }
 
-function createEnemy(enemy_list, combat_element, n=null, armor_class=null, h=null, save=true) {
+function generateRandomId(length = 8) {
+  return Math.random().toString(36).substr(2, length);
+}
+
+function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=null, h=null, save=true) {
     const enemy = document.createElement("div");
+    let enemy_id = e_id;
+    if(enemy_id == null) {
+        enemy_id = generateRandomId();
+    }
     enemy.classList.add("enemy");
     enemy.classList.add("enemy-style");
 
+    const enemy_id_object = document.createElement("p");
+    enemy_id_object.classList.add("enemy-id-object");
+    enemy_id_object.textContent = enemy_id;
+    enemy.appendChild(enemy_id_object);
     const enemy_name = document.createElement("input");
     enemy_name.type = "text";
     if (n !== null) {
@@ -262,7 +279,7 @@ function createEnemyInitiative(combatElement, name, h) {
     enemy.classList.add("enemy-initiative");
     enemy.classList.add("enemy-style");
 
-    const enemy_name = document.createElement("h2");
+    const enemy_name = document.createElement("h3");
     enemy_name.textContent = name;
     enemy_name.classList.add("enemy-name-style");
 
@@ -323,8 +340,12 @@ function createEnemyInitiative(combatElement, name, h) {
     health_right.appendChild(heal_label);
     health_right.appendChild(heal_input);
 
+    const initiative_input = document.createElement("input");
+    initiative_input.type = "number";
+
     enemy.appendChild(enemy_name);
     enemy.appendChild(health_section);
+    enemy.appendChild(initiative_input);
     enemy.appendChild(delete_button);
     initiative_list.appendChild(enemy);
 
@@ -349,10 +370,11 @@ function saveCombat(combat) {
     const combat_name = combat.querySelector(".combat-name").textContent;
     let data = [];
     enemies.forEach(enemy => {
+        const enemy_id = enemy.querySelector(".enemy-id-object").textContent;
         const enemy_name = enemy.querySelector(".enemy-name");
         //const enemy_ac = enemy.querySelector(".enemy-ac");
         const enemy_health = enemy.querySelector(".enemy-health");
-        d = {enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent};
+        d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent}};
         data.push(d);
     });
     socket.emit("saveCombat", {combat_name: combat_name, data: data});
@@ -377,13 +399,15 @@ function loadCombats() {
 socket.on("combat_list", function ({combats}) {
     Object.entries(combats).forEach(([combat, enemy_list]) => {
         const combat_element = createCombat(combat);
-        console.log(enemy_list);
-        enemy_list.forEach((enemy) => {
+        enemy_list.forEach((enemy_object) => {
+            const [enemy_id, enemy] = Object.entries(enemy_object)[0];
+            console.log(enemy_id);
+            console.log(enemy);
             const name = enemy.enemy_name;
             const ac = enemy.enemy_ac;
             const health = enemy.enemy_health;
             const enemy_list = combat_element.querySelector(".enemy-list");
-            createEnemy(enemy_list, combat_element, name, ac, health, false);
+            createEnemy(enemy_list, combat_element, enemy_id, name, ac, health, false);
         });
     });
 
