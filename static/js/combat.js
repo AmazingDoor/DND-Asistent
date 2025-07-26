@@ -55,6 +55,18 @@ function createCombat(c=null) {
     start_combat_button.classList.add("hidden");
     lower.appendChild(start_combat_button);
 
+    const end_combat_button = document.createElement("button");
+    end_combat_button.textContent = "End Combat";
+    end_combat_button.classList.add("end-combat-button");
+    end_combat_button.classList.add("hidden");
+    lower.appendChild(end_combat_button);
+
+    const progress_combat_button = document.createElement("button");
+    progress_combat_button.textContent = "End Turn";
+    progress_combat_button.classList.add("progress-combat-button");
+    progress_combat_button.classList.add("hidden");
+    lower.appendChild(progress_combat_button);
+
     const right_combat = document.createElement("div");
     right_combat.classList.add("right-combat");
     upper.appendChild(right_combat);
@@ -79,6 +91,11 @@ function createCombat(c=null) {
     add_button.onclick = function () { createEnemy(enemy_list, combat_element); };
     init_button.onclick = function() {initiateCombat(combat_element)}
     cancel_button.onclick = function() {cancelInitiate(combat_element);}
+    end_combat_button.onclick = function () { endCombat(combat_element); };
+    progress_combat_button.onclick = function () { progressCombat(combat_element); };
+
+
+
     return combat_element;
 
 }
@@ -119,9 +136,11 @@ function initiateCombat(element) {
     const enemies = enemy_list.querySelectorAll(".enemy");
     enemies.forEach((enemy) => {
         const enemy_name = enemy.querySelector(".enemy-name");
-        const health = enemy.querySelector(".enemy-health");
+        const enemy_id = enemy.querySelector(".enemy-id-object").textContent;
+        const health_id = "enemy-health-" + enemy_id;
+        const health = enemy.querySelector("." + health_id);
         createEnemyInitiative(element, enemy_name.value,
-        health.textContent);
+        health.textContent, enemy_id);
     });
 
 
@@ -153,6 +172,10 @@ function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=
     const enemy = document.createElement("div");
     let enemy_id = e_id;
     if(enemy_id == null) {
+        /*this should really be changed at some point
+        to make sure there are no duplicates created.
+        Currently its very unlikely that it would happen,
+        but still possible.*/
         enemy_id = generateRandomId();
     }
     enemy.classList.add("enemy");
@@ -202,7 +225,8 @@ function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=
     const hl = document.createElement("h3");
     hl.textContent = "Health";
     const health = document.createElement("h3");
-    health.classList.add("enemy-health");
+    const health_id = "enemy-health-" + enemy_id;
+    health.classList.add(health_id);
     health.classList.add("enemy-health-style");
 
     if(h !== null) {
@@ -229,7 +253,7 @@ function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=
 
     const update_health_button = document.createElement("button");
     update_health_button.textContent = "Update";
-    update_health_button.onclick = function () { combatUpdateHealth(combat_element, damage_input, heal_input, health); };
+    update_health_button.onclick = function () { combatUpdateHealth(combat_element, damage_input, heal_input, health, health_id); };
     health_middle.appendChild(hl);
     health_middle.appendChild(health);
     health_middle.appendChild(update_health_button);
@@ -261,27 +285,33 @@ function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=
     });
 
     heal_input.addEventListener("change", function(event) {
-        combatUpdateHealth(combat_element, damage_input, heal_input, health);
+        combatUpdateHealth(combat_element, damage_input, heal_input, health, health_id);
         heal_input.value = '';
     });
 
     damage_input.addEventListener("change", function(event) {
-        combatUpdateHealth(combat_element, damage_input, heal_input, health);
+        combatUpdateHealth(combat_element, damage_input, heal_input, health, health_id);
         damage_input.value = '';
     });
 
 }
 
 
-function createEnemyInitiative(combatElement, name, h) {
+function createEnemyInitiative(combat_element, name, h, enemy_id) {
     const enemy = document.createElement("div");
-    const initiative_list = combatElement.querySelector(".initiative-list");
+    console.log(enemy_id);
+    const initiative_list = combat_element.querySelector(".initiative-list");
     enemy.classList.add("enemy-initiative");
     enemy.classList.add("enemy-style");
 
     const enemy_name = document.createElement("h3");
     enemy_name.textContent = name;
     enemy_name.classList.add("enemy-name-style");
+
+    const enemy_id_element = document.createElement("p");
+    enemy_id_element.textContent = enemy_id;
+    enemy_id_element.classList.add("enemy-id-object");
+    enemy.appendChild(enemy_id_element);
 
 
 
@@ -304,6 +334,7 @@ function createEnemyInitiative(combatElement, name, h) {
     const hl = document.createElement("h3");
     hl.textContent = "Health";
     const health = document.createElement("h3");
+    const health_id = "enemy-health-" + enemy_id;
     health.classList.add("enemy-health-style");
     if(h !== null) {
         health.textContent = h;
@@ -311,11 +342,6 @@ function createEnemyInitiative(combatElement, name, h) {
         health.textContent = "0";
     }
     health.type = "number";
-
-
-    const delete_button = document.createElement("button");
-    delete_button.textContent = "X";
-    delete_button.onclick = function () { deleteEnemy(enemy, combat_element); };
 
     const damage_label = document.createElement("h3");
     damage_label.textContent = "Damage";
@@ -327,7 +353,7 @@ function createEnemyInitiative(combatElement, name, h) {
 
     const update_health_button = document.createElement("button");
     update_health_button.textContent = "Update";
-    update_health_button.onclick = function () { combatUpdateHealth(combat_element, damage_input, heal_input, health); };
+    update_health_button.onclick = function () { combatUpdateHealth(combat_element, damage_input, heal_input, health, health_id); };
     health_middle.appendChild(hl);
     health_middle.appendChild(health);
     health_middle.appendChild(update_health_button);
@@ -346,7 +372,6 @@ function createEnemyInitiative(combatElement, name, h) {
     enemy.appendChild(enemy_name);
     enemy.appendChild(health_section);
     enemy.appendChild(initiative_input);
-    enemy.appendChild(delete_button);
     initiative_list.appendChild(enemy);
 
     enemy_name.addEventListener("change", function(event) {
@@ -354,12 +379,12 @@ function createEnemyInitiative(combatElement, name, h) {
     });
 
     heal_input.addEventListener("change", function(event) {
-        combatUpdateHealth(combat_element, damage_input, heal_input, health);
+        combatUpdateHealth(combat_element, damage_input, heal_input, health, health_id);
         heal_input.value = '';
     });
 
     damage_input.addEventListener("change", function(event) {
-        combatUpdateHealth(combat_element, damage_input, heal_input, health);
+        combatUpdateHealth(combat_element, damage_input, heal_input, health, health_id);
         damage_input.value = '';
     });
 }
@@ -373,7 +398,8 @@ function saveCombat(combat) {
         const enemy_id = enemy.querySelector(".enemy-id-object").textContent;
         const enemy_name = enemy.querySelector(".enemy-name");
         //const enemy_ac = enemy.querySelector(".enemy-ac");
-        const enemy_health = enemy.querySelector(".enemy-health");
+        const health_id = "enemy-health-" + enemy_id;
+        const enemy_health = enemy.querySelector("." + health_id);
         d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent}};
         data.push(d);
     });
@@ -382,19 +408,26 @@ function saveCombat(combat) {
 
 }
 
-function combatUpdateHealth(combat, damage, heal, health) {
+function combatUpdateHealth(combat, damage, heal, health, health_id) {
     const h = parseFloat(health.textContent) || 0;
     const heal_val = parseFloat(heal.value) || 0;
     const damage_val = parseFloat(damage.value) || 0;
 
     const new_health = h + heal_val - damage_val;
     health.textContent = new_health.toString();
+    console.log(health_id);
+    document.querySelectorAll("."+ health_id).forEach((element) => {
+        element.textContent = new_health.toString();
+    });
     saveCombat(combat);
 }
 
 function loadCombats() {
     socket.emit("load_combats");
 }
+
+
+
 
 socket.on("combat_list", function ({combats}) {
     Object.entries(combats).forEach(([combat, enemy_list]) => {
