@@ -1,3 +1,58 @@
+const combat_init_map = new WeakMap();
+
+function initCombatMap(element) {
+    combat_init_map.set(element, []);
+}
+
+
+function startCombat(element, player_inits, e_ints = {}) {
+    let enemy_inits = e_ints;
+    if (Object.keys(enemy_inits).length === 0) {
+        const enemies = element.querySelectorAll(".enemy-initiative");
+        console.log(enemies);
+        enemies.forEach((enemy) => {
+            const init_num = enemy.querySelector(".enemy-init-num").value;
+            const enemy_id = enemy.querySelector(".enemy-id-object").textContent;
+            const enemy_name = enemy.querySelector(".enemy-init-name").textContent;
+            enemy_inits[enemy_id] = {init: init_num, name: enemy_name};
+        });
+    }
+
+    setUpOrder(element, player_inits, enemy_inits);
+}
+
+function setUpOrder(element, player_inits, enemy_inits) {
+    //creates the turn order of combat
+    const players = Object.entries(player_inits).map(([id, data]) => ({
+      id,
+      initiative: data.init,
+      name: data.name,
+      type: 'player'
+    }));
+
+    const enemies = Object.entries(enemy_inits).map(([id, data]) => ({
+      id,
+      initiative: data.init,
+      name: data.name,
+      type: 'enemy'
+    }));
+
+    const combat_order = [...players, ...enemies];
+
+    combat_order.sort((a, b) => {
+      if (b.initiative !== a.initiative) {
+        return b.initiative - a.initiative; // Higher initiative first
+      } else {
+        return a.type === 'player' && b.type === 'enemy' ? -1 : 1; // Players go first if tied
+      }
+    });
+
+    let combat_init = combat_init_map.get(element);
+    combat_init = combat_order;
+    console.log(combat_init);
+    console.log("");
+}
+
 function progressCombat(element) {
 
 }

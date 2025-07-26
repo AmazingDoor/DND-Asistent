@@ -12,8 +12,12 @@ function createCombat(c=null) {
     if (name === null) {
         name = prompt("Combat Name:");
     }
+    let enemy_inits = {};
+    let player_inits = {};
     const combat_list = document.getElementById("combat-list");
     const combat_element = document.createElement("div");
+    initCombatMap(combat_element);
+
     combat_element.classList.add("combat-element");
 
     const left_combat = document.createElement("div");
@@ -93,7 +97,7 @@ function createCombat(c=null) {
     cancel_button.onclick = function() {cancelInitiate(combat_element);}
     end_combat_button.onclick = function () { endCombat(combat_element); };
     progress_combat_button.onclick = function () { progressCombat(combat_element); };
-
+    start_combat_button.onclick = function() {startCombat(combat_element, player_inits);}
 
 
     return combat_element;
@@ -299,13 +303,13 @@ function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=
 
 function createEnemyInitiative(combat_element, name, h, enemy_id) {
     const enemy = document.createElement("div");
-    console.log(enemy_id);
     const initiative_list = combat_element.querySelector(".initiative-list");
     enemy.classList.add("enemy-initiative");
     enemy.classList.add("enemy-style");
 
     const enemy_name = document.createElement("h3");
     enemy_name.textContent = name;
+    enemy_name.classList.add("enemy-init-name");
     enemy_name.classList.add("enemy-name-style");
 
     const enemy_id_element = document.createElement("p");
@@ -368,6 +372,7 @@ function createEnemyInitiative(combat_element, name, h, enemy_id) {
 
     const initiative_input = document.createElement("input");
     initiative_input.type = "number";
+    initiative_input.classList.add("enemy-init-num");
 
     enemy.appendChild(enemy_name);
     enemy.appendChild(health_section);
