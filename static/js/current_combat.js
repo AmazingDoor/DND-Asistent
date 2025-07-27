@@ -13,7 +13,6 @@ function startCombat(element, p_inits = {}, e_ints = {}) {
     const progress_combat_button = element.querySelector(".progress-combat-button");
     const initiative_list = element.querySelector(".initiative-list");
 
-
     start_combat_button.classList.add("hidden");
     cancel_button.classList.add("hidden");
     end_combat_button.classList.remove("hidden");
@@ -45,6 +44,7 @@ function startCombat(element, p_inits = {}, e_ints = {}) {
     }
 
     const turn_order = setUpOrder(element, player_inits, enemy_inits);
+    buildFinalCombatList(initiative_list);
 }
 
 function setUpOrder(element, player_inits, enemy_inits) {
@@ -79,6 +79,13 @@ function setUpOrder(element, player_inits, enemy_inits) {
     console.log("");
     return combat_init;
 }
+
+
+function buildFinalCombatList(initiative_list) {
+    initiative_list.replaceChildren();
+
+}
+
 
 function progressCombat(element) {
 
