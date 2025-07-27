@@ -75,6 +75,14 @@ socket.on('player_input_init', data => {
     const char_id = data.char_id;
     const init = data.init;
     const char_name = data.char_name;
+    if(parseInt(init, 10) > 0) {
+        init_map[char_id] = {init: init, name: char_name};
+    } else {
+        innit_map.delete(char_id);
+    }
+});
 
-    init_map[char_id] = {init: init, name: char_name}
+socket.on('add_layer_inits', data => {
+    const combat_id = data.combat_id;
+    const players_data = data.players_data;
 });

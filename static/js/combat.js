@@ -19,7 +19,7 @@ function generateCombatId(length = 8) {
   return id;
 }
 
-function createCombat(c=null) {
+function createCombat(c_id = null, c=null) {
     let name = c;
     if (name === null) {
         name = prompt("Combat Name:");
@@ -31,7 +31,12 @@ function createCombat(c=null) {
     initCombatMap(combat_element);
 
     const combat_id = document.createElement("p");
-    combat_id.textContent = generateCombatId();
+
+    if (c_id === null) {
+        combat_id.textContent = generateCombatId();
+    } else {
+        combat_id.textContent = c_id;
+    }
     combat_id.classList.add("hidden");
     combat_id.classList.add("combat-id");
     combat_element.appendChild(combat_id);
@@ -111,7 +116,7 @@ function createCombat(c=null) {
     left_combat.appendChild(initiative_list);
 
     add_button.onclick = function () { createEnemy(enemy_list, combat_element); };
-    init_button.onclick = function() {initiateCombat(combat_element)}
+    init_button.onclick = function() {initializeCombat(combat_element)}
     cancel_button.onclick = function() {cancelInitiate(combat_element);}
     end_combat_button.onclick = function () { endCombat(combat_element); };
     progress_combat_button.onclick = function () { progressCombat(combat_element); };
@@ -143,7 +148,7 @@ function cancelInitiate(element) {
 
 }
 
-function initiateCombat(element) {
+function initializeCombat(element) {
     const enemy_list = element.querySelector(".enemy-list");
     const initiative_list = element.querySelector(".initiative-list");
     const cancel_init_button = element.querySelector(".cancel-init-button");
@@ -166,10 +171,8 @@ function initiateCombat(element) {
         health.textContent, enemy_id);
     });
 
-socket.emit("initialize_combat", {combat_id});
-
-
-
+    socket.emit("initialize_combat", {combat_id});
+    socket.emit("add_player_inits", {combat_id});
 }
 
 
@@ -417,7 +420,9 @@ function createEnemyInitiative(combat_element, name, h, enemy_id) {
 function saveCombat(combat) {
     const enemies = combat.querySelectorAll(".enemy");
     const combat_name = combat.querySelector(".combat-name").textContent;
-    let data = [];
+    const combat_id = combat.querySelector(".combat-id").textContent;
+
+    let enemy_list = [];
     enemies.forEach(enemy => {
         const enemy_id = enemy.querySelector(".enemy-id-object").textContent;
         const enemy_name = enemy.querySelector(".enemy-name");
@@ -425,9 +430,9 @@ function saveCombat(combat) {
         const health_id = "enemy-health-" + enemy_id;
         const enemy_health = enemy.querySelector("." + health_id);
         d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent}};
-        data.push(d);
+        enemy_list.push(d);
     });
-    socket.emit("saveCombat", {combat_name: combat_name, data: data});
+    socket.emit("saveCombat", {combat_id: combat_id, combat_name: combat_name, enemy_list: enemy_list});
 
 
 }
@@ -454,8 +459,10 @@ function loadCombats() {
 
 
 socket.on("combat_list", function ({combats}) {
-    Object.entries(combats).forEach(([combat, enemy_list]) => {
-        const combat_element = createCombat(combat);
+    Object.entries(combats).forEach(([combat_id, combat_data]) => {
+        const combat_name = combat_data.name;
+        const enemy_list = combat_data.enemy_list;
+        const combat_element = createCombat(combat_id, combat_name);
         enemy_list.forEach((enemy_object) => {
             const [enemy_id, enemy] = Object.entries(enemy_object)[0];
             console.log(enemy_id);

@@ -260,19 +260,21 @@ def message_to_dm(data):
 def save_combat(data):
     global COMBAT_FOLDER
     combat_name = data.get('combat_name')
-    combat_data = data.get('data')
-    with open(f'{COMBAT_FOLDER}\\{combat_name}.json', 'w') as json_file:
-        json.dump(combat_data, json_file, indent=4)
+    enemy_list = data.get('enemy_list')
+    combat_id = data.get('combat_id')
+    with open(f'{COMBAT_FOLDER}\\{combat_id}.json', 'w') as json_file:
+        all_combat_data = {'name': combat_name, 'enemy_list': enemy_list}
+        json.dump(all_combat_data, json_file, indent=4)
 
 @socketio.on("load_combats")
 def load_combats():
     global COMBAT_FOLDER
     combat_data = {}
     combats = [f.split(".json")[0] for f in os.listdir(COMBAT_FOLDER) if f.endswith('.json')]
-    for combat_name in combats:
-        with open(f'{COMBAT_FOLDER}\\{combat_name}.json', 'r') as json_file:
+    for combat_id in combats:
+        with open(f'{COMBAT_FOLDER}\\{combat_id}.json', 'r') as json_file:
             j = json.load(json_file)
-        combat_data[combat_name] = j
+        combat_data[combat_id] = j
     emit("combat_list", {"combats": combat_data}, room=DM_SID)
 
 @socketio.on("remove_combat")
@@ -467,6 +469,19 @@ def player_input_init(data):
     init = data.get('init')
     char_name = data.get('char_name')
     emit('player_input_init', {'char_id': char_id, 'combat_id': combat_id, 'init': init, 'char_name': char_name}, room=DM_SID)
+
+
+@socketio.on('add_player_inits')
+def add_player_inits(data):
+    combat_id = data.get('combat_id')
+    players = [f.split(".json")[0] for f in os.listdir(PLAYERS_FOLDER) if f.endswith('.json')]
+    players_data = {}
+    for player in players:
+        with open(f'{COMBAT_FOLDER}\\{player}.json', 'r') as json_file:
+            j = json.load(json_file)
+            players_data[player] = {'player_name': j.name, 'player_ac': j.ac, 'player_health': j.health}
+
+    emit('add_player_inits', {'combat_id': combat_id, 'players_data': players_data}, room=DM_SID)
 
 def assign_folders(name):
     #Set the paths to the saved data when a campaign is selected
