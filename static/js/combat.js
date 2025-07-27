@@ -63,6 +63,7 @@ function createCombat(c_id = null, c=null) {
 
     const add_button = document.createElement("button");
     add_button.textContent = "Add Enemy";
+    add_button.classList.add("add-enemy-button");
     lower.appendChild(add_button);
 
     const init_button = document.createElement("button");
@@ -132,12 +133,14 @@ function cancelInitiate(element) {
     const enemy_list = element.querySelector(".enemy-list");
     const initiative_list = element.querySelector(".initiative-list");
     const cancel_init_button = element.querySelector(".cancel-init-button");
+    const add_enemy_button = element.querySelector(".add-enemy-button");
     const initiate_button = element.querySelector(".init-combat-button");
     const start_combat_button = element.querySelector(".start-combat-button");
     enemy_list.classList.remove("hidden");
     cancel_init_button.classList.add("hidden");
     initiate_button.classList.remove("hidden");
     start_combat_button.classList.add("hidden");
+    add_enemy_button.classList.remove("hidden");
 
     const enemies = initiative_list.querySelectorAll(".enemy-initiative");
     enemies.forEach((enemy) => {
@@ -157,6 +160,7 @@ function initializeCombat(element) {
     const enemy_list = element.querySelector(".enemy-list");
     const initiative_list = element.querySelector(".initiative-list");
     const cancel_init_button = element.querySelector(".cancel-init-button");
+    const add_enemy_button = element.querySelector(".add-enemy-button");
     const initiate_button = element.querySelector(".init-combat-button");
     const start_combat_button = element.querySelector(".start-combat-button");
     const combat_id = element.querySelector(".combat-id").textContent;
@@ -166,6 +170,7 @@ function initializeCombat(element) {
     enemy_list.classList.add("hidden");
     initiative_list.classList.remove("hidden");
     cancel_init_button.classList.remove("hidden");
+    add_enemy_button.classList.add("hidden");
     const enemies = enemy_list.querySelectorAll(".enemy");
     enemies.forEach((enemy) => {
         const enemy_name = enemy.querySelector(".enemy-name");
@@ -450,7 +455,8 @@ function combatUpdatePlayerHealth(char_id, damage, heal, health, health_id) {
 
     const new_health = h + heal_val - damage_val;
     health.textContent = new_health.toString();
-    document.querySelectorAll("."+ health_id).forEach((element) => {
+    document.querySelectorAll("." + health_id).forEach((element) => {
+        console.log(element);
         element.textContent = new_health.toString();
     });
 
@@ -527,6 +533,7 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
     hl.textContent = "Health";
     const health = document.createElement("h3");
     const health_id = "player-health-" + player_id;
+    health.classList.add(health_id);
     health.classList.add("enemy-health-style");
     if(player_health !== null) {
         health.textContent = player_health;

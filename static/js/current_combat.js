@@ -7,6 +7,20 @@ function initCombatMap(element) {
 
 
 function startCombat(element, p_inits = {}, e_ints = {}) {
+    const start_combat_button = element.querySelector(".start-combat-button");
+    const cancel_button = element.querySelector(".cancel-init-button");
+    const end_combat_button = element.querySelector(".end-combat-button");
+    const progress_combat_button = element.querySelector(".progress-combat-button");
+    const initiative_list = element.querySelector(".initiative-list");
+
+
+    start_combat_button.classList.add("hidden");
+    cancel_button.classList.add("hidden");
+    end_combat_button.classList.remove("hidden");
+    progress_combat_button.classList.remove("hidden");
+
+
+
     let enemy_inits = e_ints;
     let player_inits = p_inits;
     if (Object.keys(enemy_inits).length === 0) {
@@ -30,7 +44,7 @@ function startCombat(element, p_inits = {}, e_ints = {}) {
         });
     }
 
-    setUpOrder(element, player_inits, enemy_inits);
+    const turn_order = setUpOrder(element, player_inits, enemy_inits);
 }
 
 function setUpOrder(element, player_inits, enemy_inits) {
@@ -63,6 +77,7 @@ function setUpOrder(element, player_inits, enemy_inits) {
     combat_init = combat_order;
     console.log(combat_init);
     console.log("");
+    return combat_init;
 }
 
 function progressCombat(element) {

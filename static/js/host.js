@@ -126,8 +126,10 @@ function changeArmorClass(value) {
 }
 
 function updateHealth(c) {
-    const heal_val = parseFloat(document.getElementById(`heal-input-${c}`).value) || 0;
-    const damage_val = parseFloat(document.getElementById(`damage-input-${c}`).value || 0);
+    const heal_input = document.getElementById(`heal-input-${c}`);
+    const damage_input = document.getElementById(`damage-input-${c}`);
+    const heal_val = parseFloat(heal_input.value) || 0;
+    const damage_val = parseFloat(damage_input.value || 0);
     affected_tabs.forEach((char_id) => {
         const health = document.getElementById(`health-num-${char_id}`);
         const health_val = parseFloat(health.textContent) || 0;
@@ -135,7 +137,7 @@ function updateHealth(c) {
         health.textContent = result.toString();
         document.getElementById(`heal-input-${char_id}`).value = '';
         document.getElementById(`damage-input-${char_id}`).value = '';
-        combatUpdatePlayerHealth(char_id, damage_val, heal_val, health_val, "player-health-" + char_id);
+        combatUpdatePlayerHealth(char_id, damage_input, heal_input, health, "player-health-" + char_id);
         //socket.emit("host_update_health", {result: result, char_id: char_id});
     });
 }
