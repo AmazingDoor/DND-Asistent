@@ -144,6 +144,11 @@ function cancelInitiate(element) {
         enemy.remove();
     });
 
+    const players = initiative_list.querySelectorAll(".player-init");
+    players.forEach((player) => {
+        player.remove();
+    })
+
     initiative_list.classList.add("hidden");
 
 }
@@ -437,6 +442,21 @@ function saveCombat(combat) {
 
 }
 
+
+function combatUpdatePlayerHealth(char_id, damage, heal, health, health_id) {
+    const h = parseFloat(health.textContent) || 0;
+    const heal_val = parseFloat(heal.value) || 0;
+    const damage_val = parseFloat(damage.value) || 0;
+
+    const new_health = h + heal_val - damage_val;
+    health.textContent = new_health.toString();
+    document.querySelectorAll("."+ health_id).forEach((element) => {
+        element.textContent = new_health.toString();
+    });
+
+    socket.emit("host_update_health", {result: new_health, char_id: char_id});
+}
+
 function combatUpdateHealth(combat, damage, heal, health, health_id) {
     const h = parseFloat(health.textContent) || 0;
     const heal_val = parseFloat(heal.value) || 0;
@@ -444,7 +464,6 @@ function combatUpdateHealth(combat, damage, heal, health, health_id) {
 
     const new_health = h + heal_val - damage_val;
     health.textContent = new_health.toString();
-    console.log(health_id);
     document.querySelectorAll("."+ health_id).forEach((element) => {
         element.textContent = new_health.toString();
     });
@@ -456,6 +475,137 @@ function loadCombats() {
 }
 
 
+function updatePlayerAC(char_id, new_ac) {
+    const combat_list = document.querySelector(".combat-list");
+    const player_inits = combat_list.querySelectorAll(".player-init");
+    player_inits.forEach((player_init) => {
+        const player_id = player_init.querySelector(".player-id-object").textContent;
+        if(player_id == char_id) {
+            const ac = player_init.querySelector('.player-ac');
+            ac.textContent = new_ac;
+        }
+    });
+}
+
+
+function addPlayerInit(combat_element, player_id, player_name, player_health, player_ac) {
+    const player_init = document.createElement("div");
+    const initiative_list = combat_element.querySelector(".initiative-list");
+    player_init.classList.add("player-init");
+    player_init.classList.add("enemy-style");
+
+    const player_init_name = document.createElement("h3");
+    player_init_name.textContent = player_name;
+    player_init_name.classList.add("player-init-name");
+    player_init_name.classList.add("enemy-name-style");
+
+    const player_id_element = document.createElement("p");
+    player_id_element.textContent = player_id;
+    player_id_element.classList.add("player-id-object");
+    player_init.appendChild(player_id_element);
+
+
+
+    const health_section = document.createElement("div");
+    health_section.classList.add("enemy-health-section-style");
+
+    const health_left = document.createElement("div");
+    health_left.classList.add("enemy-health-inner-style");
+    health_section.appendChild(health_left);
+
+    const health_middle = document.createElement("div");
+    health_middle.classList.add("enemy-health-inner-style");
+    health_section.appendChild(health_middle);
+
+    const health_right = document.createElement("div");
+    health_right.classList.add("enemy-health-inner-style");
+    health_section.appendChild(health_right);
+
+
+    const hl = document.createElement("h3");
+    hl.textContent = "Health";
+    const health = document.createElement("h3");
+    const health_id = "player-health-" + player_id;
+    health.classList.add("enemy-health-style");
+    if(player_health !== null) {
+        health.textContent = player_health;
+    } else {
+        health.textContent = "0";
+    }
+    health.type = "number";
+
+    const damage_label = document.createElement("h3");
+    damage_label.textContent = "Damage";
+    const damage_input = document.createElement("input");
+    damage_input.classList.add("enemy-damage-input-style");
+    damage_input.type = "number";
+    health_left.appendChild(damage_label);
+    health_left.appendChild(damage_input);
+
+    const update_health_button = document.createElement("button");
+    update_health_button.textContent = "Update";
+    update_health_button.onclick = function () { combatUpdatePlayerHealth(player_id, damage_input, heal_input, health, health_id); };
+    health_middle.appendChild(hl);
+    health_middle.appendChild(health);
+    health_middle.appendChild(update_health_button);
+
+    const heal_label = document.createElement("h3");
+    heal_label.textContent = "Heal";
+    const heal_input = document.createElement("input");
+    heal_input.classList.add("enemy-heal-input-style");
+    heal_input.type = "number";
+    health_right.appendChild(heal_label);
+    health_right.appendChild(heal_input);
+
+
+    const ac_label = document.createElement("h3");
+    ac_label.textContent = "AC: "
+
+    const ac = document.createElement("h3");
+    ac.classList.add("player-ac");
+    ac.textContent = player_ac;
+
+    const initiative_input = document.createElement("input");
+    initiative_input.type = "number";
+    initiative_input.classList.add("player-init-num");
+
+    player_init.appendChild(player_init_name);
+    player_init.appendChild(health_section);
+    player_init.appendChild(ac_label);
+    player_init.appendChild(ac);
+    player_init.appendChild(initiative_input);
+    initiative_list.appendChild(player_init);
+
+    heal_input.addEventListener("change", function(event) {
+        combatUpdatePlayerHealth(player_id, damage_input, heal_input, health, health_id);
+        heal_input.value = '';
+    });
+
+    damage_input.addEventListener("change", function(event) {
+        combatUpdatePlayerHealth(player_id, damage_input, heal_input, health, health_id);
+        damage_input.value = '';
+    });
+}
+
+socket.on('add_player_inits', data => {
+    const combat_id = data.combat_id;
+    const players_data = data.players_data;
+    let combat_element = null;
+    const combats = document.querySelectorAll(".combat-id").forEach((combat) => {
+        const c_id = combat.textContent;
+        if(c_id == combat_id) {
+            combat_element = combat.parentElement;
+        }
+    });
+    Object.entries(players_data).forEach(([player_id, player_data]) => {
+        const player_name = player_data.player_name;
+        const player_health = player_data.player_health;
+        const player_ac = player_data.player_ac;
+
+        addPlayerInit(combat_element, player_id, player_name, player_health, player_ac);
+    });
+});
+
 
 
 socket.on("combat_list", function ({combats}) {
@@ -465,8 +615,6 @@ socket.on("combat_list", function ({combats}) {
         const combat_element = createCombat(combat_id, combat_name);
         enemy_list.forEach((enemy_object) => {
             const [enemy_id, enemy] = Object.entries(enemy_object)[0];
-            console.log(enemy_id);
-            console.log(enemy);
             const name = enemy.enemy_name;
             const ac = enemy.enemy_ac;
             const health = enemy.enemy_health;

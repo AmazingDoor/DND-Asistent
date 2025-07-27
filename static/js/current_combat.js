@@ -82,7 +82,3 @@ socket.on('player_input_init', data => {
     }
 });
 
-socket.on('add_layer_inits', data => {
-    const combat_id = data.combat_id;
-    const players_data = data.players_data;
-});

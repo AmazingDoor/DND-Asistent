@@ -477,9 +477,9 @@ def add_player_inits(data):
     players = [f.split(".json")[0] for f in os.listdir(PLAYERS_FOLDER) if f.endswith('.json')]
     players_data = {}
     for player in players:
-        with open(f'{COMBAT_FOLDER}\\{player}.json', 'r') as json_file:
+        with open(f'{PLAYERS_FOLDER}\\{player}.json', 'r') as json_file:
             j = json.load(json_file)
-            players_data[player] = {'player_name': j.name, 'player_ac': j.ac, 'player_health': j.health}
+            players_data[player] = {'player_name': j.get('name'), 'player_ac': j.get('ac'), 'player_health': j.get('health')}
 
     emit('add_player_inits', {'combat_id': combat_id, 'players_data': players_data}, room=DM_SID)
 

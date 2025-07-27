@@ -135,7 +135,8 @@ function updateHealth(c) {
         health.textContent = result.toString();
         document.getElementById(`heal-input-${char_id}`).value = '';
         document.getElementById(`damage-input-${char_id}`).value = '';
-        socket.emit("host_update_health", {result: result, char_id: char_id});
+        combatUpdatePlayerHealth(char_id, damage_val, heal_val, health_val, "player-health-" + char_id);
+        //socket.emit("host_update_health", {result: result, char_id: char_id});
     });
 }
 
@@ -169,6 +170,8 @@ function sendTrapMessage(text) {
 function updateArmorClass(char_id, value) {
     const ac_input = document.getElementById(`ac-input-${char_id}`);
     ac_input.value = value;
+    updatePlayerAC(char_id, value);
+
 }
 
 function updateTrapLists(traps) {
@@ -261,7 +264,7 @@ function createTab(name, char_id) {
         </div>
         <div class="player-stat-column" id="health">
           <h3>Health</h3>
-          <p class="health-num" id="health-num-${char_id}">0</p>
+          <p class="health-num player-health-${char_id}" id="health-num-${char_id}">0</p>
           <button onclick="updateHealth('${char_id}')">Update Health</button>
         </div>
         <div class="player-stat-column" id="heal">
