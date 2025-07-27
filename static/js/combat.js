@@ -7,6 +7,18 @@ function manageCombat() {
     combat_div.classList.toggle("hidden");
 }
 
+function generateCombatId(length = 8) {
+  let id = Math.random().toString(36).substr(2, length);
+  let combats = document.querySelectorAll(".combat-id");
+  combats.forEach((combat) => {
+        if(combat.textContent == id) {
+            id = generateCombatId();
+        }
+  });
+
+  return id;
+}
+
 function createCombat(c=null) {
     let name = c;
     if (name === null) {
@@ -17,6 +29,12 @@ function createCombat(c=null) {
     const combat_list = document.getElementById("combat-list");
     const combat_element = document.createElement("div");
     initCombatMap(combat_element);
+
+    const combat_id = document.createElement("p");
+    combat_id.textContent = generateCombatId();
+    combat_id.classList.add("hidden");
+    combat_id.classList.add("combat-id");
+    combat_element.appendChild(combat_id);
 
     combat_element.classList.add("combat-element");
 
@@ -131,6 +149,7 @@ function initiateCombat(element) {
     const cancel_init_button = element.querySelector(".cancel-init-button");
     const initiate_button = element.querySelector(".init-combat-button");
     const start_combat_button = element.querySelector(".start-combat-button");
+    const combat_id = element.querySelector(".combat-id").textContent;
 
     start_combat_button.classList.remove("hidden");
     initiate_button.classList.add("hidden");
@@ -147,7 +166,7 @@ function initiateCombat(element) {
         health.textContent, enemy_id);
     });
 
-
+socket.emit("initialize_combat", {combat_id});
 
 
 

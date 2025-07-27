@@ -95,6 +95,28 @@ function toggleChat() {
 
 }
 
+function show_initiative_overlay(combat_id) {
+    const overlay = document.querySelector(".initiative-input-container");
+    overlay.style.display = 'flex';
+    overlay.querySelector("#combat-id").textContent = combat_id;
+}
+
+function hide_initiative_overlay() {
+    const overlay = document.querySelector(".initiative-input-container");
+    overlay.style.display = 'none';
+    overlay.querySelector("#init-number").value = 0;
+    overlay.querySelector("#combat-id") = '';
+
+}
+
+function submit_init() {
+    const overlay = document.querySelector(".initiative-input-container");
+    const combat_id = overlay.querySelector("#combat-id").textContent;
+    const initiative = overlay.querySelector("#init-number").value;
+    socket.emit('player_input_init', {char_id: char_id, combat_id: combat_id, init: initiative, char_name: name});
+    hide_initiative_overlay();
+}
+
 socket.on('load_message', data => {
     loadMessage(data.message);
 });
@@ -146,6 +168,10 @@ socket.on('host_change_armor_class', ({value}) => {
     const ac_value = document.getElementById('ac-input');
     console.log(value);
     ac_value.value = value;
+});
+
+socket.on('initialize_combat', ({combat_id}) => {
+    show_initiative_overlay(combat_id);
 });
 
 document.addEventListener("DOMContentLoaded", function () {

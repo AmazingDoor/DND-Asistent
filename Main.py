@@ -453,6 +453,21 @@ def selected_campaign(data):
     assign_folders(name)
     emit('continue_to_dashboard', room=DM_SID)
 
+
+@socketio.on('initialize_combat')
+def initialize_combat(data):
+    combat_id = data.get('combat_id')
+    emit('initialize_combat', {'combat_id': combat_id}, broadcast=True)
+
+
+@socketio.on('player_input_init')
+def player_input_init(data):
+    char_id = data.get('char_id')
+    combat_id = data.get('combat_id')
+    init = data.get('init')
+    char_name = data.get('char_name')
+    emit('player_input_init', {'char_id': char_id, 'combat_id': combat_id, 'init': init, 'char_name': char_name}, room=DM_SID)
+
 def assign_folders(name):
     #Set the paths to the saved data when a campaign is selected
     global CURRENT_CAMPAIGN

@@ -9,6 +9,20 @@
 
 </head>
 <body>
+  <div class="initiative-input-container">
+    <p id="combat-id"></p>
+    <div class="initiative-input-background">
+        <div class="init-top">
+          <button onclick="hide_initiative_overlay()">X</button>
+        </div>
+        <div class="init-bottom">
+          <h3>Input Initiative</h3>
+          <input type="number" id="init-number">
+          <button onclick="submit_init()">Submit</button>
+        </div>
+    </div>
+  </div>
+
   <div class="mobile-hidden" id="image-area">
     <h2>Images</h2>
     <div id="images"></div>
