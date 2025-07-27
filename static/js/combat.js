@@ -185,8 +185,8 @@ function deleteCombat(element) {
     let c = confirm("Delete combat with all enemies?");
     if (c == true) {
         element.remove();
-        const name = element.querySelector(".combat-name").textContent;
-        socket.emit("remove_combat", {name});
+        const combat_id = element.querySelector(".combat-id").textContent;
+        socket.emit("remove_combat", {combat_id});
     }
 }
 
@@ -502,6 +502,7 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
     const player_id_element = document.createElement("p");
     player_id_element.textContent = player_id;
     player_id_element.classList.add("player-id-object");
+    player_id_element.classList.add("player-" + player_id);
     player_init.appendChild(player_id_element);
 
 
@@ -622,5 +623,20 @@ socket.on("combat_list", function ({combats}) {
             createEnemy(enemy_list, combat_element, enemy_id, name, ac, health, false);
         });
     });
+
+});
+
+socket.on('player_input_init', data => {
+    const combat_list = document.querySelector(".combat-list");
+    const combat_id = data.combat_id;
+    const combat_element = combat_list.querySelector(".combat-id").parentElement;
+    const char_id = data.char_id;
+    const init = data.init;
+    const char_name = data.char_name;
+    const player_init = combat_element.querySelector(".player-" + char_id).parentElement;
+    const player_init_num = player_init.querySelector(".player-init-num");
+    player_init_num.value = init;
+
+
 
 });

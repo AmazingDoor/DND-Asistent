@@ -280,9 +280,9 @@ def load_combats():
 @socketio.on("remove_combat")
 def remove_combat(data):
     global COMBAT_FOLDER
-    name = data.get("name")
+    combat_id = data.get("combat_id")
     try:
-        os.remove(f'{COMBAT_FOLDER}\\{name}.json')
+        os.remove(f'{COMBAT_FOLDER}\\{combat_id}.json')
     except:
         pass
 

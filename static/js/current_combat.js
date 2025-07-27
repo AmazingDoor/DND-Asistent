@@ -1,9 +1,7 @@
 const combat_init_map = new WeakMap();
-const combat_player_init_map = new WeakMap();
 
 function initCombatMap(element) {
     combat_init_map.set(element, []);
-    combat_player_init_map.set(element, {});
 
 }
 
@@ -22,7 +20,14 @@ function startCombat(element, p_inits = {}, e_ints = {}) {
     }
 
     if (Object.keys(player_inits).length === 0) {
-        player_inits = combat_player_init_map.get(element);
+        const player_inits_list = element.querySelectorAll(".player-init");
+        player_inits_list.forEach((player_init) => {
+            const init_num = player_init.querySelector(".player-init-num").value;
+            const player_id = player_init.querySelector(".player-id-object").textContent;
+            const player_name = player_init.querySelector(".player-init-name").textContent;
+            player_inits[player_id] = {init: init_num, name: player_name};
+
+        });
     }
 
     setUpOrder(element, player_inits, enemy_inits);
@@ -68,17 +73,5 @@ function endCombat(element) {
     initCombatMap(element);
 }
 
-socket.on('player_input_init', data => {
-    const combat_id = data.combat_id;
-    const combat_element = document.querySelector(".combat-id").parentElement;
-    const init_map = combat_player_init_map.get(combat_element);
-    const char_id = data.char_id;
-    const init = data.init;
-    const char_name = data.char_name;
-    if(parseInt(init, 10) > 0) {
-        init_map[char_id] = {init: init, name: char_name};
-    } else {
-        innit_map.delete(char_id);
-    }
-});
+
 
