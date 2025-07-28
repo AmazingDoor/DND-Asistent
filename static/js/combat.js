@@ -121,7 +121,7 @@ function createCombat(c_id = null, c=null) {
     cancel_button.onclick = function() {cancelInitiate(combat_element);}
     end_combat_button.onclick = function () { endCombat(combat_element); };
     progress_combat_button.onclick = function () { progressCombat(combat_element); };
-    start_combat_button.onclick = function() {startCombat(combat_element, player_inits);}
+    start_combat_button.onclick = function() {startCombat(combat_element);}
 
 
     return combat_element;
@@ -219,6 +219,7 @@ function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=
 
     const enemy_id_object = document.createElement("p");
     enemy_id_object.classList.add("enemy-id-object");
+    enemy_id_object.classList.add("enemy-" + enemy_id);
     enemy_id_object.textContent = enemy_id;
     enemy.appendChild(enemy_id_object);
     const enemy_name = document.createElement("input");
@@ -510,8 +511,6 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
     player_id_element.classList.add("player-id-object");
     player_id_element.classList.add("player-" + player_id);
     player_init.appendChild(player_id_element);
-
-
 
     const health_section = document.createElement("div");
     health_section.classList.add("enemy-health-section-style");
