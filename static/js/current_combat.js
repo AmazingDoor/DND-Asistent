@@ -1,7 +1,9 @@
 const combat_init_map = new WeakMap();
+const combat_turn = new WeakMap();
 
 function initCombatMap(element) {
     combat_init_map.set(element, []);
+    combat_turn.set(element, 0);
 
 }
 
@@ -17,9 +19,6 @@ function startCombat(element, p_inits = {}, e_inits = {}) {
     cancel_button.classList.add("hidden");
     end_combat_button.classList.remove("hidden");
     progress_combat_button.classList.remove("hidden");
-
-    console.log(e_inits);
-    console.log(p_inits);
 
     let enemy_inits = e_inits;
     let player_inits_dict = p_inits;
@@ -47,6 +46,7 @@ function startCombat(element, p_inits = {}, e_inits = {}) {
 
     const turn_order = setUpOrder(element, player_inits_dict, enemy_inits);
     buildFinalCombatList(initiative_list, turn_order, element);
+    highlightInitialTurn(element);
 }
 
 function setUpOrder(element, player_inits_dict, enemy_inits) {
@@ -56,14 +56,16 @@ function setUpOrder(element, player_inits_dict, enemy_inits) {
       initiative: data.init,
       name: data.name,
       type: 'player'
-    }));
+    }))
+    .filter(player => player.initiative !== 0 && player.initiative !=='');
 
     const enemies = Object.entries(enemy_inits).map(([id, data]) => ({
       id,
       initiative: data.init,
       name: data.name,
       type: 'enemy'
-    }));
+    }))
+    .filter(enemy => enemy.initiative !== 0 && enemy.initiative !=='');
 
     const combat_order = [...players, ...enemies];
 
@@ -90,7 +92,7 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
         const type = d.type;
 
         const entity = document.createElement("div");
-        entity.classList.add("player-combat-stats");
+        entity.classList.add("entity-combat-stats");
         entity.classList.add("enemy-style");
 
         const entity_name = document.createElement("h3");
@@ -123,29 +125,7 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
         const hl = document.createElement("h3");
         hl.tetContent = "Health";
         const health = document.createElement("h3");
-        let health_id = null;
-        let ac_label = null;
-        let ac = null;
-        if (type == 'player') {
-            health_id = 'player-health-' + id;
-            const player_tab = document.querySelector('#client-' + id);
-            const ac_value = player_tab.querySelector(".ac-input").value;
 
-            health.textContent = player_tab.querySelector(".health-num").textContent;
-
-            ac_label = document.createElement("h3");
-            ac_label.textContent = "AC: "
-
-            ac = document.createElement("h3");
-            ac.classList.add("player-ac");
-            ac.textContent = ac_value;
-
-        } else {
-            health_id = 'enemy-health-' + id;
-            const initial_enemy = element.querySelector(".enemy-" + id).parentElement;
-            const initial_health = initial_enemy.querySelector(".enemy-health-" + id);
-            health.textContent = initial_health.textContent;
-        }
 
         const damage_label = document.createElement("h3");
         damage_label.textContent = "Damage";
@@ -157,16 +137,66 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
 
         const update_health_button = document.createElement("button");
         update_health_button.textContent = "Update";
-        update_health_button.onclick = function () { combatUpdatePlayerHealth(player_id, damage_input, heal_input, health, health_id); };
-        health_middle.appendChild(hl);
-        health_middle.appendChild(health);
-        health_middle.appendChild(update_health_button);
 
         const heal_label = document.createElement("h3");
         heal_label.textContent = "Heal";
         const heal_input = document.createElement("input");
         heal_input.classList.add("enemy-heal-input-style");
         heal_input.type = "number";
+
+        let health_id = null;
+        let ac_label = null;
+        let ac = null;
+        if (type == 'player') {
+            health_id = 'player-health-' + id;
+            const player_tab = document.querySelector('#client-' + id);
+            const ac_value = player_tab.querySelector(".ac-input").value;
+
+
+            health.textContent = player_tab.querySelector(".health-num").textContent;
+
+            ac_label = document.createElement("h3");
+            ac_label.textContent = "AC: "
+
+            ac = document.createElement("h3");
+            ac.classList.add("player-ac");
+            ac.textContent = ac_value;
+
+            update_health_button.onclick = function () { combatUpdatePlayerHealth(id, damage_input, heal_input, health, health_id); };
+
+            heal_input.addEventListener("change", function(event) {
+                combatUpdatePlayerHealth(id, damage_input, heal_input, health, health_id);
+            });
+
+            damage_input.addEventListener("change", function(event) {
+                combatUpdatePlayerHealth(id, damage_input, heal_input, health, health_id);
+            });
+
+
+
+        } else {
+            health_id = 'enemy-health-' + id;
+            const initial_enemy = element.querySelector(".enemy-" + id).parentElement;
+            const initial_health = initial_enemy.querySelector(".enemy-health-" + id);
+            health.textContent = initial_health.textContent;
+
+            update_health_button.onclick = function () { combatUpdateHealth(id, damage_input, heal_input, health, health_id); };
+
+            heal_input.addEventListener("change", function(event) {
+                combatUpdateHealth(id, damage_input, heal_input, health, health_id);
+            });
+
+            damage_input.addEventListener("change", function(event) {
+                combatUpdateHealth(id, damage_input, heal_input, health, health_id);
+            });
+
+        }
+        health.classList.add(health_id);
+
+        health_middle.appendChild(hl);
+        health_middle.appendChild(health);
+        health_middle.appendChild(update_health_button);
+
         health_right.appendChild(heal_label);
         health_right.appendChild(heal_input);
 
@@ -183,7 +213,23 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
 
 
 function progressCombat(element) {
+    const init_list = element.querySelector(".initiative-list");
+    const entities = init_list.querySelectorAll(".entity-combat-stats");
+    const combat_length = entities.length;
+    entities[combat_turn.get(element)].classList.remove("current-turn");
+    if(combat_turn.get(element) >= combat_length - 1) {
+        combat_turn.set(element, 0);
+    } else {
+        combat_turn.set(element, combat_turn.get(element) + 1)
+    }
+    entities[combat_turn.get(element)].classList.add("current-turn");
 
+}
+
+function highlightInitialTurn(element) {
+    const init_list = element.querySelector(".initiative-list");
+    const entities = init_list.querySelectorAll(".entity-combat-stats");
+    entities[combat_turn.get(element)].classList.add("current-turn");
 }
 
 function endCombat(element) {

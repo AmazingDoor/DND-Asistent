@@ -454,10 +454,16 @@ function combatUpdatePlayerHealth(char_id, damage, heal, health, health_id) {
     const heal_val = parseFloat(heal.value) || 0;
     const damage_val = parseFloat(damage.value) || 0;
 
+
+    console.log(health_id);
+
+
+    damage.value = '';
+    heal.value = '';
+
     const new_health = h + heal_val - damage_val;
     health.textContent = new_health.toString();
     document.querySelectorAll("." + health_id).forEach((element) => {
-        console.log(element);
         element.textContent = new_health.toString();
     });
 
@@ -468,6 +474,10 @@ function combatUpdateHealth(combat, damage, heal, health, health_id) {
     const h = parseFloat(health.textContent) || 0;
     const heal_val = parseFloat(heal.value) || 0;
     const damage_val = parseFloat(damage.value) || 0;
+
+
+    damage.value = '';
+    heal.value = '';
 
     const new_health = h + heal_val - damage_val;
     health.textContent = new_health.toString();
@@ -585,12 +595,10 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
 
     heal_input.addEventListener("change", function(event) {
         combatUpdatePlayerHealth(player_id, damage_input, heal_input, health, health_id);
-        heal_input.value = '';
     });
 
     damage_input.addEventListener("change", function(event) {
         combatUpdatePlayerHealth(player_id, damage_input, heal_input, health, health_id);
-        damage_input.value = '';
     });
 }
 
