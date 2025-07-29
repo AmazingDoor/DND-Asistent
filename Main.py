@@ -138,6 +138,8 @@ def host_init_client_data(data, char_id):
     with open(f"{TRAPS_FOLDER}\\traps.json", 'r') as json_file:
         d = json.load(json_file)
         emit('update_traps_list', {'traps_data': d}, room=DM_SID)
+
+
 def init_json_data(sid, name, char_id):
 #Load or Create all of the data for each client
 
@@ -227,6 +229,8 @@ def host_page_load():
             name = data.get("name")
             emit('host_load_client_data', {'name': name, 'char_id': char_id})
             host_init_client_data(data, char_id)
+    load_combats()
+
     #old stuff
     '''for client in clients:
         c = clients.get(client)
@@ -262,11 +266,12 @@ def save_combat(data):
     combat_name = data.get('combat_name')
     enemy_list = data.get('enemy_list')
     combat_id = data.get('combat_id')
+    initiative_array = data.get("initiative_array")
+    current_turn = data.get("current_turn")
     with open(f'{COMBAT_FOLDER}\\{combat_id}.json', 'w') as json_file:
-        all_combat_data = {'name': combat_name, 'enemy_list': enemy_list}
+        all_combat_data = {'name': combat_name, 'enemy_list': enemy_list, 'initiative_array': initiative_array, 'current_turn': current_turn}
         json.dump(all_combat_data, json_file, indent=4)
 
-@socketio.on("load_combats")
 def load_combats():
     global COMBAT_FOLDER
     combat_data = {}
@@ -285,6 +290,28 @@ def remove_combat(data):
         os.remove(f'{COMBAT_FOLDER}\\{combat_id}.json')
     except:
         pass
+
+
+@socketio.on('update_turn')
+def update_turn(data):
+    combat_id = data.get('combat_id')
+    turn_num = data.get('turn_num')
+    with open(f"{COMBAT_FOLDER}\\{combat_id}.json", 'r') as json_file:
+        d = json.load(json_file)
+    d['current_turn'] = turn_num
+    with open(f"{COMBAT_FOLDER}\\{combat_id}.json", 'w') as json_file:
+        json.dump(d, json_file, indent=4)
+
+
+@socketio.on('end_combat')
+def end_combat(data):
+    combat_id = data.get('combat_id')
+    with open(f"{COMBAT_FOLDER}\\{combat_id}.json", 'r') as json_file:
+        d = json.load(json_file)
+    d['current_turn'] = 0
+    d['initiative_array'] = []
+    with open(f"{COMBAT_FOLDER}\\{combat_id}.json", 'w') as json_file:
+        json.dump(d, json_file, indent=4)
 
 
 @socketio.on('message_to_client')

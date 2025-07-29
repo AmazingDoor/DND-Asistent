@@ -8,7 +8,7 @@ function initCombatMap(element) {
 }
 
 
-function startCombat(element, p_inits = {}, e_inits = {}) {
+function startCombat(element, initiative_array = []) {
     const start_combat_button = element.querySelector(".start-combat-button");
     const cancel_button = element.querySelector(".cancel-init-button");
     const end_combat_button = element.querySelector(".end-combat-button");
@@ -20,33 +20,37 @@ function startCombat(element, p_inits = {}, e_inits = {}) {
     end_combat_button.classList.remove("hidden");
     progress_combat_button.classList.remove("hidden");
 
-    let enemy_inits = e_inits;
-    let player_inits_dict = p_inits;
+    let enemy_inits = [];
+    let player_inits_dict = [];
 
-    if (Object.keys(enemy_inits).length === 0) {
-        const enemies = element.querySelectorAll(".enemy-initiative");
-        enemies.forEach((enemy) => {
-            const init_num = enemy.querySelector(".enemy-init-num").value;
-            const enemy_id = enemy.querySelector(".enemy-id-object").textContent;
-            const enemy_name = enemy.querySelector(".enemy-init-name").textContent;
-            enemy_inits[enemy_id] = {init: init_num, name: enemy_name};
-        });
+    let turn_order = initiative_array;
+
+    if(turn_order.length === 0) {
+        if (Object.keys(enemy_inits).length === 0) {
+            const enemies = element.querySelectorAll(".enemy-initiative");
+            enemies.forEach((enemy) => {
+                const init_num = enemy.querySelector(".enemy-init-num").value;
+                const enemy_id = enemy.querySelector(".enemy-id-object").textContent;
+                const enemy_name = enemy.querySelector(".enemy-init-name").textContent;
+                enemy_inits[enemy_id] = {init: init_num, name: enemy_name};
+            });
+        }
+
+        if (Object.keys(player_inits_dict).length === 0) {
+            const player_inits_list = element.querySelectorAll(".player-init");
+            player_inits_list.forEach((player_init) => {
+                const init_num = player_init.querySelector(".player-init-num").value;
+                const player_id = player_init.querySelector(".player-id-object").textContent;
+                const player_name = player_init.querySelector(".player-init-name").textContent;
+                player_inits_dict[player_id] = {init: init_num, name: player_name};
+
+            });
+        }
+        turn_order = setUpOrder(element, player_inits_dict, enemy_inits);
     }
-
-    if (Object.keys(player_inits_dict).length === 0) {
-        const player_inits_list = element.querySelectorAll(".player-init");
-        player_inits_list.forEach((player_init) => {
-            const init_num = player_init.querySelector(".player-init-num").value;
-            const player_id = player_init.querySelector(".player-id-object").textContent;
-            const player_name = player_init.querySelector(".player-init-name").textContent;
-            player_inits_dict[player_id] = {init: init_num, name: player_name};
-
-        });
-    }
-
-    const turn_order = setUpOrder(element, player_inits_dict, enemy_inits);
     buildFinalCombatList(initiative_list, turn_order, element);
     highlightInitialTurn(element);
+    saveCombat(element, turn_order);
 }
 
 function setUpOrder(element, player_inits_dict, enemy_inits) {
@@ -84,7 +88,15 @@ function setUpOrder(element, player_inits_dict, enemy_inits) {
 
 
 function buildFinalCombatList(initiative_list, combat_order, element) {
+    const enemy_list = element.querySelector('.enemy-list');
+    const add_button = element.querySelector('.add-enemy-button');
+    const init_button = element.querySelector('.init-combat-button');
     initiative_list.replaceChildren();
+    enemy_list.classList.add('hidden');
+    add_button.classList.add('hidden');
+    init_button.classList.add('hidden');
+    initiative_list.classList.remove('hidden');
+
     combat_order.forEach((d) => {
         const id = d.id;
         const init = d.init;
@@ -149,6 +161,7 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
         let ac = null;
         if (type == 'player') {
             health_id = 'player-health-' + id;
+            console.log('#client-' + id);
             const player_tab = document.querySelector('#client-' + id);
             const ac_value = player_tab.querySelector(".ac-input").value;
 
@@ -223,6 +236,10 @@ function progressCombat(element) {
         combat_turn.set(element, combat_turn.get(element) + 1)
     }
     entities[combat_turn.get(element)].classList.add("current-turn");
+    const turn_num = combat_turn.get(element);
+    const combat_id = element.querySelector('.combat-id').textContent;
+
+    socket.emit('update_turn', {combat_id: combat_id, turn_num: turn_num})
 
 }
 
@@ -241,6 +258,7 @@ function endCombat(element) {
     const init_button = element.querySelector(".init-combat-button");
     const enemy_list = element.querySelector(".enemy-list");
     const initiative_list = element.querySelector(".initiative-list");
+    const combat_id = element.querySelector(".combat-id").textContent;
 
     end_combat_button.classList.add("hidden");
     progress_combat_button.classList.add("hidden");
@@ -250,6 +268,35 @@ function endCombat(element) {
     initiative_list.replaceChildren();
     initiative_list.classList.add("hidden");
 
+    socket.emit('end_combat', {combat_id: combat_id})
+
+}
+
+
+
+function saveCombat(combat, initiative_array = []) {
+    const enemies = combat.querySelectorAll(".enemy");
+    const combat_name = combat.querySelector(".combat-name").textContent;
+    const combat_id = combat.querySelector(".combat-id").textContent;
+    const current_turn = combat_turn.get(combat);
+    let enemy_list = [];
+    enemies.forEach(enemy => {
+        const enemy_id = enemy.querySelector(".enemy-id-object").textContent;
+        const enemy_name = enemy.querySelector(".enemy-name");
+        //const enemy_ac = enemy.querySelector(".enemy-ac");
+        const health_id = "enemy-health-" + enemy_id;
+        const enemy_health = enemy.querySelector("." + health_id);
+        d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent}};
+        enemy_list.push(d);
+    });
+
+    socket.emit("saveCombat", {combat_id: combat_id, combat_name: combat_name, enemy_list: enemy_list, initiative_array: initiative_array, current_turn: current_turn});
+}
+
+function loadActiveCombat(element, initiative_list, current_turn) {
+    console.log('loadActiveCombat');
+    combat_turn.set(element, current_turn);
+    startCombat(element, initiative_list);
 }
 
 

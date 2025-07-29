@@ -1,7 +1,3 @@
-window.onload = function() {
-    loadCombats();
-}
-
 function manageCombat() {
     const combat_div = document.getElementById("combat-div");
     combat_div.classList.toggle("hidden");
@@ -428,26 +424,6 @@ function createEnemyInitiative(combat_element, name, h, enemy_id) {
 }
 
 
-function saveCombat(combat) {
-    const enemies = combat.querySelectorAll(".enemy");
-    const combat_name = combat.querySelector(".combat-name").textContent;
-    const combat_id = combat.querySelector(".combat-id").textContent;
-
-    let enemy_list = [];
-    enemies.forEach(enemy => {
-        const enemy_id = enemy.querySelector(".enemy-id-object").textContent;
-        const enemy_name = enemy.querySelector(".enemy-name");
-        //const enemy_ac = enemy.querySelector(".enemy-ac");
-        const health_id = "enemy-health-" + enemy_id;
-        const enemy_health = enemy.querySelector("." + health_id);
-        d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent}};
-        enemy_list.push(d);
-    });
-    socket.emit("saveCombat", {combat_id: combat_id, combat_name: combat_name, enemy_list: enemy_list});
-
-
-}
-
 
 function combatUpdatePlayerHealth(char_id, damage, heal, health, health_id) {
     const h = parseFloat(health.textContent) || 0;
@@ -627,6 +603,8 @@ socket.on("combat_list", function ({combats}) {
     Object.entries(combats).forEach(([combat_id, combat_data]) => {
         const combat_name = combat_data.name;
         const enemy_list = combat_data.enemy_list;
+        const initiative_array = combat_data.initiative_array;
+        const current_turn = combat_data.current_turn;
         const combat_element = createCombat(combat_id, combat_name);
         enemy_list.forEach((enemy_object) => {
             const [enemy_id, enemy] = Object.entries(enemy_object)[0];
@@ -636,6 +614,12 @@ socket.on("combat_list", function ({combats}) {
             const enemy_list = combat_element.querySelector(".enemy-list");
             createEnemy(enemy_list, combat_element, enemy_id, name, ac, health, false);
         });
+
+
+        if(initiative_array.length > 0) {
+            loadActiveCombat(combat_element, initiative_array, current_turn);
+        }
+
     });
 
 });
