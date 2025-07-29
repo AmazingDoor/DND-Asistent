@@ -467,6 +467,13 @@ function loadCombats() {
     socket.emit("load_combats");
 }
 
+function setPlayerHealth(health, char_id) {
+    const health_elements = document.querySelectorAll(".player-health-" + char_id);
+    health_elements.forEach((h) => {
+        h.textContent = health.toString();
+    });
+}
+
 
 function updatePlayerAC(char_id, new_ac) {
     const combat_list = document.querySelector(".combat-list");
@@ -475,6 +482,15 @@ function updatePlayerAC(char_id, new_ac) {
         const player_id = player_init.querySelector(".player-id-object").textContent;
         if(player_id == char_id) {
             const ac = player_init.querySelector('.player-ac');
+            ac.textContent = new_ac;
+        }
+    });
+
+    const entity_stats = combat_list.querySelectorAll(".entity-combat-stats");
+    entity_stats.forEach((stats) => {
+        const entity_id = stats.querySelector(".entity-id-object").textContent;
+        if(entity_id == char_id) {
+            const ac = stats.querySelector('.player-ac');
             ac.textContent = new_ac;
         }
     });

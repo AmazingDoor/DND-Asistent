@@ -431,8 +431,9 @@ socket.on('message_to_dm', ({char_id, message, name}) => {
 });
 
 socket.on('client_update_health', ({result, char_id}) => {
-    const health = document.getElementById(`health-num-${char_id}`);
-    health.textContent = result.toString();
+    //const health = document.getElementById(`health-num-${char_id}`);
+    //health.textContent = result.toString();
+    setPlayerHealth(result, char_id);
 });
 
 socket.on('client_change_armor_class', ({char_id, value}) => {
