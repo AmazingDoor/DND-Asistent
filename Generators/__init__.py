@@ -1,5 +1,6 @@
-import qrcode
 import os
+
+import qrcode
 
 
 def make_code(data: str, error_correction='high', out_border: int=1):
@@ -25,7 +26,7 @@ def make_code(data: str, error_correction='high', out_border: int=1):
     code.make(fit=True)
     return code
 
-def save_image(code, file_name: str="QRcode_default", datatype: str=".jpeg", location: str="\\qrcode\\images"):
+def save_image(code, file_name: str="QRcode_default", datatype: str=".jpeg", location: str="\\qrcode_Images"):
     path = os.getcwd()
     print(path)
     img = code.make_image(fill_color="black", back_color="white")

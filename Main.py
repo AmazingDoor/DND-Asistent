@@ -7,13 +7,10 @@ import socket
 import random
 import webbrowser
 import atexit
-import signal
 import sys
 import json
 import shutil
 import logging
-
-import qrcode.scripts.QRCodeGenerator as qr
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.CRITICAL)
 
@@ -544,7 +541,6 @@ def get_campaigns():
     return [f for f in os.listdir(campaigns) if os.path.isdir(os.path.join(campaigns, f))]
 
 if __name__ == "__main__":
-    qr.save_image(qr.make_code("test"))
-    # setupServer()
-    # signal.signal(signal.SIGINT, handle_exit)  # Ctrl+C
-    # signal.signal(signal.SIGTERM, handle_exit)  # Termination signal
+    setupServer()
+    signal.signal(signal.SIGINT, handle_exit)  # Ctrl+C
+    signal.signal(signal.SIGTERM, handle_exit)  # Termination signal
