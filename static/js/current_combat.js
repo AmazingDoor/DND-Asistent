@@ -246,7 +246,9 @@ function progressCombat(element) {
 function highlightInitialTurn(element) {
     const init_list = element.querySelector(".initiative-list");
     const entities = init_list.querySelectorAll(".entity-combat-stats");
-    entities[combat_turn.get(element)].classList.add("current-turn");
+    if(entities.length > 0) {
+        entities[combat_turn.get(element)].classList.add("current-turn");
+       }
 }
 
 function endCombat(element) {
