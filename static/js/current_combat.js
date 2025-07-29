@@ -193,14 +193,14 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
             const initial_health = initial_enemy.querySelector(".enemy-health-" + id);
             health.textContent = initial_health.textContent;
 
-            update_health_button.onclick = function () { combatUpdateHealth(element, damage_input, heal_input, health, health_id); };
+            update_health_button.onclick = function () { combatUpdateHealth(element, damage_input, heal_input, health, health_id, combat_order); };
 
             heal_input.addEventListener("change", function(event) {
-                combatUpdateHealth(element, damage_input, heal_input, health, health_id);
+                combatUpdateHealth(element, damage_input, heal_input, health, health_id, combat_order);
             });
 
             damage_input.addEventListener("change", function(event) {
-                combatUpdateHealth(element, damage_input, heal_input, health, health_id);
+                combatUpdateHealth(element, damage_input, heal_input, health, health_id, combat_order);
             });
 
         }

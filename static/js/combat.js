@@ -446,7 +446,7 @@ function combatUpdatePlayerHealth(char_id, damage, heal, health, health_id) {
     socket.emit("host_update_health", {result: new_health, char_id: char_id});
 }
 
-function combatUpdateHealth(combat, damage, heal, health, health_id) {
+function combatUpdateHealth(combat, damage, heal, health, health_id, initiative_array = []) {
     const h = parseFloat(health.textContent) || 0;
     const heal_val = parseFloat(heal.value) || 0;
     const damage_val = parseFloat(damage.value) || 0;
@@ -461,7 +461,7 @@ function combatUpdateHealth(combat, damage, heal, health, health_id) {
         element.textContent = new_health.toString();
     });
     console.log('yes');
-    saveCombat(combat);
+    saveCombat(combat, initiative_array);
 }
 
 function loadCombats() {
