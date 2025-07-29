@@ -43,6 +43,8 @@ function createCombat(c_id = null, c=null) {
     left_combat.classList.add("left-combat");
     combat_element.appendChild(left_combat);
 
+
+
     const upper = document.createElement("div");
     upper.classList.add("upper-combat")
     left_combat.appendChild(upper);
@@ -50,6 +52,10 @@ function createCombat(c_id = null, c=null) {
     const lower = document.createElement("div");
     lower.classList.add("lower-combat");
     left_combat.appendChild(lower);
+
+    const list_object = document.createElement("div");
+    list_object.classList.add("list-object");
+    left_combat.appendChild(list_object);
 
     const combat_name = document.createElement("h3");
     combat_name.textContent = name;
@@ -105,27 +111,58 @@ function createCombat(c_id = null, c=null) {
 
     const enemy_list = document.createElement("div");
     enemy_list.classList.add("enemy-list");
-    left_combat.appendChild(enemy_list);
+    list_object.appendChild(enemy_list);
 
     const initiative_list = document.createElement("div");
     initiative_list.classList.add("initiative-list");
     initiative_list.classList.add("hidden");
-    left_combat.appendChild(initiative_list);
+    list_object.appendChild(initiative_list);
 
-    add_button.onclick = function () { createEnemy(enemy_list, combat_element); };
-    init_button.onclick = function() {initializeCombat(combat_element)}
-    cancel_button.onclick = function() {cancelInitiate(combat_element);}
-    end_combat_button.onclick = function () { endCombat(combat_element); };
-    progress_combat_button.onclick = function () { progressCombat(combat_element); };
-    start_combat_button.onclick = function() {startCombat(combat_element);}
+    add_button.onclick = function (event) { createEnemy(enemy_list, combat_element); };
+    init_button.onclick = function(event) {initializeCombat(combat_element)}
+    cancel_button.onclick = function(event) {cancelInitiate(combat_element);}
+    end_combat_button.onclick = function (event) { endCombat(combat_element); };
+    progress_combat_button.onclick = function (event) { progressCombat(combat_element); };
+    start_combat_button.onclick = function(event) {startCombat(combat_element);}
 
+    lower.addEventListener('click', function () {toggleListObject(list_object, upper, lower);});
+    lower.addEventListener('mouseenter', function() {handleCombatHoverEnter(upper, lower, right_combat)});
+    lower.addEventListener('mouseleave', function() {handleCombatHoverExit(upper, lower, right_combat)});
+
+    upper.addEventListener('click', function () {toggleListObject(list_object, upper, lower);});
+    upper.addEventListener('mouseenter', function() {handleCombatHoverEnter(upper, lower, right_combat)});
+    upper.addEventListener('mouseleave', function() {handleCombatHoverExit(upper, lower, right_combat)});
 
     return combat_element;
 
 }
 
+function toggleListObject(list_object, upper, lower) {
+    list_object.classList.toggle("hidden");
+    lower.classList.toggle("hidden");
+
+}
+
+function handleCombatHoverEnter(upper, lower, right_combat) {
+    upper.style.backgroundColor = 'gray';
+    lower.style.backgroundColor = 'gray';
+    right_combat.style.backgroundColor = 'gray';
+
+
+}
+
+function handleCombatHoverExit(upper, lower, right_combat) {
+    upper.style.backgroundColor = 'lightgray';
+    lower.style.backgroundColor = 'lightgray';
+    right_combat.style.backgroundColor = 'lightgray';
+
+}
+
 
 function cancelInitiate(element) {
+    if(event) {
+        event.stopPropagation()
+    }
     const enemy_list = element.querySelector(".enemy-list");
     const initiative_list = element.querySelector(".initiative-list");
     const cancel_init_button = element.querySelector(".cancel-init-button");
@@ -153,6 +190,9 @@ function cancelInitiate(element) {
 }
 
 function initializeCombat(element) {
+    if(event) {
+        event.stopPropagation()
+    }
     const enemy_list = element.querySelector(".enemy-list");
     const initiative_list = element.querySelector(".initiative-list");
     const cancel_init_button = element.querySelector(".cancel-init-button");
@@ -201,6 +241,10 @@ function generateRandomId(length = 8) {
 }
 
 function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=null, h=null, save=true) {
+    if(event) {
+        event.stopPropagation()
+    }
+
     const enemy = document.createElement("div");
     let enemy_id = e_id;
     if(enemy_id == null) {
@@ -430,10 +474,6 @@ function combatUpdatePlayerHealth(char_id, damage, heal, health, health_id) {
     const heal_val = parseFloat(heal.value) || 0;
     const damage_val = parseFloat(damage.value) || 0;
 
-
-    console.log(health_id);
-
-
     damage.value = '';
     heal.value = '';
 
@@ -460,7 +500,6 @@ function combatUpdateHealth(combat, damage, heal, health, health_id, initiative_
     document.querySelectorAll("."+ health_id).forEach((element) => {
         element.textContent = new_health.toString();
     });
-    console.log('yes');
     saveCombat(combat, initiative_array);
 }
 

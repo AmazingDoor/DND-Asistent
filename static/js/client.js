@@ -138,7 +138,6 @@ socket.on('send_image', data => {
     n = true;
   }
 
-  console.log(n)
   const imageBox = document.createElement("div");
   imageBox.classList.add("image-box");
 
@@ -166,7 +165,6 @@ socket.on('host_update_health', ({result, client_id}) => {
 
 socket.on('host_change_armor_class', ({value}) => {
     const ac_value = document.getElementById('ac-input');
-    console.log(value);
     ac_value.value = value;
 });
 

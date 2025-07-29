@@ -40,7 +40,6 @@ function create_campaign_fail(e) {
 }
 
 function finish_selection() {
-    console.log('wat');
     window.location.href='/host';
 }
 

@@ -381,6 +381,8 @@ body {
 
 .combat-element {
     display: flex;
+    margin-bottom: 15px;
+    border-bottom: 4px solid black;
     width: 100%;
     flex-direction: row;
 }
@@ -388,7 +390,7 @@ body {
 .left-combat {
     display: flex;
     flex-direction: column;
-    width: 90%;
+    width: 100%;
 }
 
 .right-combat {
@@ -467,6 +469,12 @@ body {
 
 .current-turn {
     border: 6px solid gold;
+}
+
+.initiative-list {
+    height: 400px;
+    overflow-y: auto;
+
 }
 
 

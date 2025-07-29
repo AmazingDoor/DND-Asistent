@@ -9,6 +9,9 @@ function initCombatMap(element) {
 
 
 function startCombat(element, initiative_array = []) {
+    if(event) {
+        event.stopPropagation()
+    }
     const start_combat_button = element.querySelector(".start-combat-button");
     const cancel_button = element.querySelector(".cancel-init-button");
     const end_combat_button = element.querySelector(".end-combat-button");
@@ -161,7 +164,6 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
         let ac = null;
         if (type == 'player') {
             health_id = 'player-health-' + id;
-            console.log('#client-' + id);
             const player_tab = document.querySelector('#client-' + id);
             const ac_value = player_tab.querySelector(".ac-input").value;
 
@@ -226,6 +228,9 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
 
 
 function progressCombat(element) {
+    if(event) {
+        event.stopPropagation()
+    }
     const init_list = element.querySelector(".initiative-list");
     const entities = init_list.querySelectorAll(".entity-combat-stats");
     const combat_length = entities.length;
@@ -252,6 +257,10 @@ function highlightInitialTurn(element) {
 }
 
 function endCombat(element) {
+    if(event) {
+        event.stopPropagation()
+    }
+
     initCombatMap(element);
 
     const end_combat_button = element.querySelector(".end-combat-button");
@@ -296,7 +305,6 @@ function saveCombat(combat, initiative_array = []) {
 }
 
 function loadActiveCombat(element, initiative_list, current_turn) {
-    console.log('loadActiveCombat');
     combat_turn.set(element, current_turn);
     startCombat(element, initiative_list);
 }
