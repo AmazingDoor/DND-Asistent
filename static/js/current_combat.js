@@ -20,8 +20,8 @@ function startCombat(element, initiative_array = []) {
     end_combat_button.classList.remove("hidden");
     progress_combat_button.classList.remove("hidden");
 
-    let enemy_inits = [];
-    let player_inits_dict = [];
+    let enemy_inits = {};
+    let player_inits_dict = {};
 
     let turn_order = initiative_array;
 
@@ -193,14 +193,14 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
             const initial_health = initial_enemy.querySelector(".enemy-health-" + id);
             health.textContent = initial_health.textContent;
 
-            update_health_button.onclick = function () { combatUpdateHealth(id, damage_input, heal_input, health, health_id); };
+            update_health_button.onclick = function () { combatUpdateHealth(element, damage_input, heal_input, health, health_id); };
 
             heal_input.addEventListener("change", function(event) {
-                combatUpdateHealth(id, damage_input, heal_input, health, health_id);
+                combatUpdateHealth(element, damage_input, heal_input, health, health_id);
             });
 
             damage_input.addEventListener("change", function(event) {
-                combatUpdateHealth(id, damage_input, heal_input, health, health_id);
+                combatUpdateHealth(element, damage_input, heal_input, health, health_id);
             });
 
         }

@@ -460,6 +460,7 @@ function combatUpdateHealth(combat, damage, heal, health, health_id) {
     document.querySelectorAll("."+ health_id).forEach((element) => {
         element.textContent = new_health.toString();
     });
+    console.log('yes');
     saveCombat(combat);
 }
 
