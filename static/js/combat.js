@@ -1,9 +1,11 @@
 function manageCombat() {
+    //Show or hide the combat GUI
     const combat_div = document.getElementById("combat-div");
     combat_div.classList.toggle("hidden");
 }
 
 function generateCombatId(length = 8) {
+    //Generate an id for the combat to be saved with
   let id = Math.random().toString(36).substr(2, length);
   let combats = document.querySelectorAll(".combat-id");
   combats.forEach((combat) => {
@@ -16,6 +18,10 @@ function generateCombatId(length = 8) {
 }
 
 function createCombat(c_id = null, c=null) {
+    //Create a combat element that will hold all of the enemies
+    //Enemies are stored in the enemy_list
+    //enemy_list is the only thing that gets saved to the global folder
+    //The initiative list holds the initiative and final list of enemies and players
     let name = c;
     if (name === null) {
         name = prompt("Combat Name:");
@@ -144,6 +150,7 @@ function createCombat(c_id = null, c=null) {
 }
 
 function displayContextMenu(combat) {
+    //Creates and shows the rightclick menu for saving to global
     const menu = document.getElementById('customMenu');
     menu.replaceChildren();
     const option_1 = document.createElement("div");
@@ -160,6 +167,7 @@ function displayContextMenu(combat) {
 }
 
 function hideContextMenu() {
+    //remove all children and hide the right click menu
     const menu = document.getElementById('customMenu');
     menu.replaceChildren();
     menu.classList.add("hidden");
@@ -167,6 +175,7 @@ function hideContextMenu() {
 }
 
 function saveCombatGlobal(combat) {
+    //saves the enemy list, id, and name of the combat to a global folder
     const enemies = combat.querySelectorAll(".enemy");
     const combat_name = combat.querySelector(".combat-name").textContent;
     const combat_id = combat.querySelector(".combat-id").textContent;
@@ -185,12 +194,14 @@ function saveCombatGlobal(combat) {
 }
 
 function toggleListObject(list_object, upper, lower) {
+    //Show or hide the list of enemies/players in a combat element
     list_object.classList.toggle("hidden");
     lower.classList.toggle("hidden");
 
 }
 
 function handleCombatHoverEnter(upper, lower, right_combat) {
+    //change the background of the object to a darker color when hovered over
     upper.style.backgroundColor = 'gray';
     lower.style.backgroundColor = 'gray';
     right_combat.style.backgroundColor = 'gray';
@@ -199,6 +210,7 @@ function handleCombatHoverEnter(upper, lower, right_combat) {
 }
 
 function handleCombatHoverExit(upper, lower, right_combat) {
+    //change the background of the object to a lighter color when the mouse leaves
     upper.style.backgroundColor = 'lightgray';
     lower.style.backgroundColor = 'lightgray';
     right_combat.style.backgroundColor = 'lightgray';
@@ -207,6 +219,9 @@ function handleCombatHoverExit(upper, lower, right_combat) {
 
 
 function cancelInitiate(element) {
+    //Set the combat list to the original state from the initiative state
+    //hide and clear the initiative list
+    //unhide the enemy list
     if(event) {
         event.stopPropagation()
     }
@@ -237,6 +252,11 @@ function cancelInitiate(element) {
 }
 
 function initializeCombat(element) {
+    //set the combat element to the initialize state
+    //unhide initialize list
+    //hide enemy list
+    //create enemy initiative elements
+    //create player initiative elements under the enemy elements
     if(event) {
         event.stopPropagation()
     }
@@ -270,6 +290,7 @@ function initializeCombat(element) {
 
 
 function deleteCombat(element) {
+    //deletes the combat and all enemies in the combat
     let c = confirm("Delete combat with all enemies?");
     if (c == true) {
         element.remove();
@@ -279,15 +300,18 @@ function deleteCombat(element) {
 }
 
 function deleteEnemy(element, combat_element) {
+    //delete an enemy from a combat
     element.remove();
     saveCombat(combat_element);
 }
 
 function generateRandomId(length = 8) {
+    //creates a random id for an enemy
   return Math.random().toString(36).substr(2, length);
 }
 
 function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=null, h=null, save=true) {
+    //create an enemy for the enemy_list of the combat element
     if(event) {
         event.stopPropagation()
     }
@@ -422,6 +446,7 @@ function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=
 
 
 function createEnemyInitiative(combat_element, name, h, enemy_id) {
+    //create an enemy initiative element in the initiative list
     const enemy = document.createElement("div");
     const initiative_list = combat_element.querySelector(".initiative-list");
     enemy.classList.add("enemy-initiative");
@@ -517,6 +542,8 @@ function createEnemyInitiative(combat_element, name, h, enemy_id) {
 
 
 function combatUpdatePlayerHealth(char_id, damage, heal, health, health_id) {
+    //finds all instances of the player health id and changes all of them
+    //DOES NOT CLEAR THE INPUTS
     const h = parseFloat(health.textContent) || 0;
     const heal_val = parseFloat(heal.value) || 0;
     const damage_val = parseFloat(damage.value) || 0;
@@ -529,6 +556,8 @@ function combatUpdatePlayerHealth(char_id, damage, heal, health, health_id) {
 }
 
 function combatUpdateHealth(combat, damage, heal, health, health_id, initiative_array = []) {
+    //finds all instances of the health id of enemies and changes all of them
+    //DOES CLEAR THE INPUTS
     const h = parseFloat(health.textContent) || 0;
     const heal_val = parseFloat(heal.value) || 0;
     const damage_val = parseFloat(damage.value) || 0;
@@ -546,10 +575,12 @@ function combatUpdateHealth(combat, damage, heal, health, health_id, initiative_
 }
 
 function loadCombats() {
+    //tells the server to load the saved combats
     socket.emit("load_combats");
 }
 
 function setPlayerHealth(health, char_id) {
+    //finds all instances of the id and sets the number of all of them to a new number
     const health_elements = document.querySelectorAll(".player-health-" + char_id);
     health_elements.forEach((h) => {
         h.textContent = health.toString();
@@ -558,6 +589,7 @@ function setPlayerHealth(health, char_id) {
 
 
 function updatePlayerAC(char_id, new_ac) {
+    //finds each instance of the player ac of that id and changes all of them to new_ac
     const combat_list = document.querySelector(".combat-list");
     const player_inits = combat_list.querySelectorAll(".player-init");
     player_inits.forEach((player_init) => {
@@ -580,6 +612,7 @@ function updatePlayerAC(char_id, new_ac) {
 
 
 function addPlayerInit(combat_element, player_id, player_name, player_health, player_ac) {
+    //creates a player initiative element in the initiative list of the combat element
     const player_init = document.createElement("div");
     const initiative_list = combat_element.querySelector(".initiative-list");
     player_init.classList.add("player-init");
@@ -685,14 +718,17 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
 }
 
 function openImportEncounterOverlay() {
+    //opens the GUI to import from global encounters
     const overlay = document.querySelector(".import-encounter-overlay");
     overlay.classList.remove("hidden");
     socket.emit('populate_import_encounters');
 }
 
+//array to keep track of all selected import options
 let selected_import_options = [];
 
 function addImportOption(id, name) {
+    //create an import option for each saved encounter in the global folder
     const list = document.querySelector(".encounter-list");
     const encounter = document.createElement('div');
     encounter.classList.add('encounter-option');
@@ -714,6 +750,8 @@ function addImportOption(id, name) {
 }
 
 function addImportSelection(encounter_id, encounter) {
+    //add an import to the array if its not already selected
+    //only runs if shift key is held
     if(!selected_import_options.includes(encounter_id)) {
         encounter.classList.add('selected');
         selected_import_options.push(encounter_id);
@@ -727,6 +765,7 @@ function addImportSelection(encounter_id, encounter) {
 }
 
 function setImportSelection(encounter_id, encounter) {
+    //sets the encounter as the only element in the array
     const options = document.querySelectorAll('.encounter-option');
     options.forEach((option) => {option.classList.remove('selected')});
     encounter.classList.add('selected');
@@ -734,12 +773,15 @@ function setImportSelection(encounter_id, encounter) {
 }
 
 function resetImportSelection() {
+    //clears the array
     const options = document.querySelectorAll('.encounter-option');
     options.forEach((option) => {option.classList.remove('selected')});
     selected_import_options = [];
 }
 
 function importSelections() {
+    //tells the server to create a new json file in the campaign for each import that was selected
+    //hides the GUI
     selected_import_options.forEach((id) => {
         socket.emit('import_id', {id: id});
     });
@@ -747,6 +789,7 @@ function importSelections() {
 }
 
 function hideImportOverlay() {
+    //hide the import GUI
     const overlay = document.querySelector(".import-encounter-overlay");
     overlay.classList.add("hidden");
     const list = overlay.querySelector(".encounter-list");
@@ -754,7 +797,7 @@ function hideImportOverlay() {
     list.replaceChildren();
 }
 
-
+//get the list of players, parse the json data, and create elements in the initiative list
 socket.on('add_player_inits', data => {
     const combat_id = data.combat_id;
     const players_data = data.players_data;
@@ -775,7 +818,7 @@ socket.on('add_player_inits', data => {
 });
 
 
-
+//create the combat element for the imported encounter
 socket.on('add_imported_encounter', function ({combat}) {
     const combat_id = combat.id;
     const combat_name = combat.name;
@@ -793,6 +836,7 @@ socket.on('add_imported_encounter', function ({combat}) {
     });
 });
 
+//create the combat elements and enemies in the combat list from saved json
 socket.on("combat_list", function ({combats}) {
     Object.entries(combats).forEach(([combat_id, combat_data]) => {
         const combat_name = combat_data.name;
@@ -818,6 +862,8 @@ socket.on("combat_list", function ({combats}) {
 
 });
 
+
+//set the player initiative when input by the player
 socket.on('player_input_init', data => {
     const combat_list = document.querySelector(".combat-list");
     const combat_id = data.combat_id;
@@ -830,6 +876,7 @@ socket.on('player_input_init', data => {
     player_init_num.value = init;
 });
 
+//add import option from data received from the server
 socket.on('add_import_option', data => {
     const encounter_id = data.encounter_id;
     const name = data.name;
