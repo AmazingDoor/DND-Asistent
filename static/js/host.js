@@ -133,13 +133,13 @@ function updateHealth(c) {
     affected_tabs.forEach((char_id) => {
         const health = document.getElementById(`health-num-${char_id}`);
         const health_val = parseFloat(health.textContent) || 0;
-        const result = health_val - damage_val + heal_val;
-        health.textContent = result.toString();
-        document.getElementById(`heal-input-${char_id}`).value = '';
-        document.getElementById(`damage-input-${char_id}`).value = '';
+        //const result = health_val - damage_val + heal_val;
+        //health.textContent = result.toString();
         combatUpdatePlayerHealth(char_id, damage_input, heal_input, health, "player-health-" + char_id);
         //socket.emit("host_update_health", {result: result, char_id: char_id});
     });
+    heal_input.value = '';
+    damage_input.value  = '';
 }
 
 function loadMessage(message, char_id) {

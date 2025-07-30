@@ -177,14 +177,22 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
             ac.classList.add("player-ac");
             ac.textContent = ac_value;
 
-            update_health_button.onclick = function () { combatUpdatePlayerHealth(id, damage_input, heal_input, health, health_id); };
+            update_health_button.onclick = function () {
+                combatUpdatePlayerHealth(id, damage_input, heal_input, health, health_id);
+                heal_input.value = '';
+                damage_input.value = '';
+            };
 
             heal_input.addEventListener("change", function(event) {
                 combatUpdatePlayerHealth(id, damage_input, heal_input, health, health_id);
+                heal_input.value = '';
+                damage_input.value = '';
             });
 
             damage_input.addEventListener("change", function(event) {
                 combatUpdatePlayerHealth(id, damage_input, heal_input, health, health_id);
+                heal_input.value = '';
+                damage_input.value = '';
             });
 
 

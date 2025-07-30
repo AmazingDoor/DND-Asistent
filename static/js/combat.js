@@ -520,16 +520,11 @@ function combatUpdatePlayerHealth(char_id, damage, heal, health, health_id) {
     const h = parseFloat(health.textContent) || 0;
     const heal_val = parseFloat(heal.value) || 0;
     const damage_val = parseFloat(damage.value) || 0;
-
-    damage.value = '';
-    heal.value = '';
-
     const new_health = h + heal_val - damage_val;
     health.textContent = new_health.toString();
     document.querySelectorAll("." + health_id).forEach((element) => {
         element.textContent = new_health.toString();
     });
-
     socket.emit("host_update_health", {result: new_health, char_id: char_id});
 }
 
@@ -640,7 +635,11 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
 
     const update_health_button = document.createElement("button");
     update_health_button.textContent = "Update";
-    update_health_button.onclick = function () { combatUpdatePlayerHealth(player_id, damage_input, heal_input, health, health_id); };
+    update_health_button.onclick = function () {
+        combatUpdatePlayerHealth(player_id, damage_input, heal_input, health, health_id);
+        heal_input.value = '';
+        damage_input.value = '';
+    };
     health_middle.appendChild(hl);
     health_middle.appendChild(health);
     health_middle.appendChild(update_health_button);
@@ -674,10 +673,14 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
 
     heal_input.addEventListener("change", function(event) {
         combatUpdatePlayerHealth(player_id, damage_input, heal_input, health, health_id);
+        heal_input.value = '';
+        damage_input.value = '';
     });
 
     damage_input.addEventListener("change", function(event) {
         combatUpdatePlayerHealth(player_id, damage_input, heal_input, health, health_id);
+        heal_input.value = '';
+        damage_input.value = '';
     });
 }
 
@@ -774,7 +777,6 @@ socket.on('add_player_inits', data => {
 
 
 socket.on('add_imported_encounter', function ({combat}) {
-    console.log('ran');
     const combat_id = combat.id;
     const combat_name = combat.name;
     const enemy_list = combat.enemy_list;
