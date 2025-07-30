@@ -145,6 +145,7 @@ function createCombat(c_id = null, c=null) {
 
 function displayContextMenu(combat) {
     const menu = document.getElementById('customMenu');
+    menu.replaceChildren();
     const option_1 = document.createElement("div");
     option_1.textContent = "Save to Global";
     option_1.addEventListener('click', function() {saveCombatGlobal(combat)});
@@ -702,7 +703,7 @@ function addImportOption(id, name) {
 
     encounter.addEventListener('click', function(event) {
         if(event.shiftKey) {
-            addImportOption(id, encounter);
+            addImportSelection(id, encounter);
         } else {
             setImportSelection(id, encounter);
         }
