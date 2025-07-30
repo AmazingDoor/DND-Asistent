@@ -739,6 +739,7 @@ function importSelections() {
     selected_import_options.forEach((id) => {
         socket.emit('import_id', {id: id});
     });
+    hideImportOverlay();
 }
 
 function hideImportOverlay() {
@@ -790,7 +791,6 @@ socket.on('add_imported_encounter', function ({combat}) {
 });
 
 socket.on("combat_list", function ({combats}) {
-    console.log(combats);
     Object.entries(combats).forEach(([combat_id, combat_data]) => {
         const combat_name = combat_data.name;
         const enemy_list = combat_data.enemy_list;
