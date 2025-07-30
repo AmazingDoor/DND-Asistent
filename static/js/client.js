@@ -105,7 +105,7 @@ function hide_initiative_overlay() {
     const overlay = document.querySelector(".initiative-input-container");
     overlay.style.display = 'none';
     overlay.querySelector("#init-number").value = 0;
-    overlay.querySelector("#combat-id") = '';
+    overlay.querySelector("#combat-id").textContent = '';
 
 }
 

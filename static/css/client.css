@@ -162,8 +162,8 @@
     }
 
     .initiative-input-background {
-        width: 80dvw;
-        height: 80dvh;
+        width: 20dvw;
+        height: 40dvh;
         background-color: lightgray;
         display: flex;
         flex-direction: column;
@@ -188,6 +188,7 @@
     #init-number {
         font-size: 30px;
         width: 50px;
+        margin-bottom: 5px;
     }
 
 
@@ -315,9 +316,18 @@
     }
 
     #init-number {
-        font-size: 30px;
+        font-size: 60px;
         width: 30%;
         height: auto;
+        margin-bottom: 5px;
+    }
+
+    .initiative-input-background {
+        width: 90dvw;
+        height: 40dvh;
+        background-color: lightgray;
+        display: flex;
+        flex-direction: column;
     }
 
 

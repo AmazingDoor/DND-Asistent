@@ -871,9 +871,14 @@ socket.on('player_input_init', data => {
     const char_id = data.char_id;
     const init = data.init;
     const char_name = data.char_name;
-    const player_init = combat_element.querySelector(".player-" + char_id).parentElement;
-    const player_init_num = player_init.querySelector(".player-init-num");
-    player_init_num.value = init;
+    const player_element_id = combat_element.querySelector(".player-" + char_id);
+    if(player_element_id != null) {
+        const player_init = player_element_id.parentElement;
+        const player_init_num = player_init.querySelector(".player-init-num");
+        player_init_num.value = init;
+    }
+
+
 });
 
 //add import option from data received from the server
