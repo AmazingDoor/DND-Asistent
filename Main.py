@@ -12,6 +12,7 @@ import sys
 import json
 import shutil
 import logging
+import string
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.CRITICAL)
 
@@ -271,6 +272,55 @@ def save_combat(data):
     with open(f'{COMBAT_FOLDER}\\{combat_id}.json', 'w') as json_file:
         all_combat_data = {'name': combat_name, 'enemy_list': enemy_list, 'initiative_array': initiative_array, 'current_turn': current_turn}
         json.dump(all_combat_data, json_file, indent=4)
+
+@socketio.on('save_combat_global')
+def save_combat_global(data):
+    global COMBAT_FOLDER
+    combat_name = data.get('combat_name')
+    enemy_list = data.get('enemy_list')
+    combat_id = data.get('combat_id')
+    cwd = os.getcwd()
+    with open(f'{cwd}\\global\\encounters\\{combat_id}.json', 'w') as json_file:
+        all_combat_data = {'name': combat_name, 'enemy_list': enemy_list}
+        json.dump(all_combat_data, json_file, indent=4)
+
+
+@socketio.on('populate_import_encounters')
+def populate_import_encounters():
+    cwd = os.getcwd()
+    encounters = [f.split(".json")[0] for f in os.listdir(cwd + "\\global\\encounters\\") if f.endswith('.json')]
+    for encounter in encounters:
+        with open(f'{cwd}\\global\\encounters\\{encounter}.json', 'r') as json_file:
+            j = json.load(json_file)
+            name = j.get('name')
+            emit('add_import_option', {'encounter_id': encounter, 'name': name})
+
+@socketio.on('import_id')
+def import_id(data):
+    global COMBAT_FOLDER
+    cwd = os.getcwd()
+    id = data.get('id')
+    with open(f'{cwd}\\global\\encounters\\{id}.json', 'r') as json_file:
+        j = json.load(json_file)
+    j['initiative_array'] = []
+    j['current_turn'] = 0
+
+    new_id = get_unique_id(id)
+    with open(f'{COMBAT_FOLDER}\\{new_id}.json', 'w') as json_file:
+        json.dump(j, json_file, indent=4)
+    j['id'] = new_id
+    emit('add_imported_encounter', {'combat': j})
+
+def get_unique_id(id):
+    combats = [f.split(".json")[0] for f in os.listdir(COMBAT_FOLDER) if f.endswith('.json')]
+    for combat in combats:
+        if combat == id:
+            id = random_string()
+            get_unique_id(id)
+    return id
+def random_string(length = 8):
+    chars = string.ascii_lowercase + string.digits  # base-36 characters
+    return ''.join(random.choices(chars, k=length))
 
 def load_combats():
     global COMBAT_FOLDER

@@ -5,12 +5,15 @@
   <title>Host Page</title>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/host.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/import_overlay.css') }}">
     <script src="{{ url_for('static', filename='js/host.js') }}"></script>
     <script src="{{ url_for('static', filename='js/combat.js') }}"></script>
     <script src="{{ url_for('static', filename='js/current_combat.js') }}"></script>
 
 </head>
 <body>
+    <div id="customMenu" class="hidden">
+    </div>
   <div id="host" class="floating">
       <div class="header-column" id="left">
           <button onclick="manageTraps()">Manage Traps</button>
@@ -31,11 +34,25 @@
       </div>
       <div class="combat-bottom">
           <div class="combat-container">
+              <div class="import-encounter-overlay hidden">
+                <div class="close-button-container">
+                    <button class="close-import-overlay" onclick="hideImportOverlay()">X</button>
+                </div>
+                  <div class="import-body">
+                      <div class="encounter-list">
+                      </div>
+                      <div class="import-button-container">
+                        <button class="import-button" onclick="importSelections()">Import</button>
+                      </div>
+                  </div>
+              </div>
             <div id="combat-list" class="combat-list">
 
             </div>
               <div class="manage-buttons">
                   <button class="manage-button" onclick="createCombat()">Create Combat</button>
+                  <button class="import-encounter-button" onclick="openImportEncounterOverlay()">Import Encounter</button>
+
               </div>
 
           </div>

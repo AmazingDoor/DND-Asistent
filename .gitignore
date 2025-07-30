@@ -2,6 +2,9 @@
 /local/campaigns/*
 !/local/campaigns/.gitkeep
 
+/global/encounters/*
+!/global/encounters/.gitkeep
+
 #Ignore images
 /static/uploads/*
 !/static/uploads/.gitkeep

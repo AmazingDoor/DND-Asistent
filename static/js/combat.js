@@ -128,13 +128,59 @@ function createCombat(c_id = null, c=null) {
     lower.addEventListener('click', function () {toggleListObject(list_object, upper, lower);});
     lower.addEventListener('mouseenter', function() {handleCombatHoverEnter(upper, lower, right_combat)});
     lower.addEventListener('mouseleave', function() {handleCombatHoverExit(upper, lower, right_combat)});
+    lower.addEventListener('contextmenu', function(event) {displayContextMenu(event)});
+
 
     upper.addEventListener('click', function () {toggleListObject(list_object, upper, lower);});
     upper.addEventListener('mouseenter', function() {handleCombatHoverEnter(upper, lower, right_combat)});
     upper.addEventListener('mouseleave', function() {handleCombatHoverExit(upper, lower, right_combat)});
+    upper.addEventListener('contextmenu', function(event) {displayContextMenu(combat_element)});
+
+
+  document.addEventListener('click', function() {hideContextMenu()});
 
     return combat_element;
 
+}
+
+function displayContextMenu(combat) {
+    const menu = document.getElementById('customMenu');
+    const option_1 = document.createElement("div");
+    option_1.textContent = "Save to Global";
+    option_1.addEventListener('click', function() {saveCombatGlobal(combat)});
+    menu.appendChild(option_1);
+    event.preventDefault(); // Prevent default context menu
+
+    // Position and show custom menu
+    menu.classList.remove("hidden");
+    menu.style.top = `${event.clientY}px`;
+    menu.style.left = `${event.clientX}px`;
+    menu.style.display = 'block';
+}
+
+function hideContextMenu() {
+    const menu = document.getElementById('customMenu');
+    menu.replaceChildren();
+    menu.classList.add("hidden");
+
+}
+
+function saveCombatGlobal(combat) {
+    const enemies = combat.querySelectorAll(".enemy");
+    const combat_name = combat.querySelector(".combat-name").textContent;
+    const combat_id = combat.querySelector(".combat-id").textContent;
+    let enemy_list = [];
+    enemies.forEach(enemy => {
+        const enemy_id = enemy.querySelector(".enemy-id-object").textContent;
+        const enemy_name = enemy.querySelector(".enemy-name");
+        //const enemy_ac = enemy.querySelector(".enemy-ac");
+        const health_id = "enemy-health-" + enemy_id;
+        const enemy_health = enemy.querySelector("." + health_id);
+        d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent}};
+        enemy_list.push(d);
+    });
+
+    socket.emit("save_combat_global", {combat_id: combat_id, combat_name: combat_name, enemy_list: enemy_list});
 }
 
 function toggleListObject(list_object, upper, lower) {
@@ -634,6 +680,76 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
     });
 }
 
+function openImportEncounterOverlay() {
+    const overlay = document.querySelector(".import-encounter-overlay");
+    overlay.classList.remove("hidden");
+    socket.emit('populate_import_encounters');
+}
+
+let selected_import_options = [];
+
+function addImportOption(id, name) {
+    const list = document.querySelector(".encounter-list");
+    const encounter = document.createElement('div');
+    encounter.classList.add('encounter-option');
+    const encounter_name = document.createElement('h3');
+    const encounter_id = document.createElement('p');
+    encounter_name.textContent = name;
+    encounter_id.textContent = id;
+    encounter.appendChild(encounter_name);
+    encounter.appendChild(encounter_id);
+    list.appendChild(encounter);
+
+    encounter.addEventListener('click', function(event) {
+        if(event.shiftKey) {
+            addImportOption(id, encounter);
+        } else {
+            setImportSelection(id, encounter);
+        }
+    });
+}
+
+function addImportSelection(encounter_id, encounter) {
+    if(!selected_import_options.includes(encounter_id)) {
+        encounter.classList.add('selected');
+        selected_import_options.push(encounter_id);
+    } else {
+        const index = selected_import_options.indexOf(encounter_id);
+        if(index !== -1) {
+            selected_import_options.splice(index, 1);
+            encounter.classList.remove('selected');
+        }
+    }
+}
+
+function setImportSelection(encounter_id, encounter) {
+    const options = document.querySelectorAll('.encounter-option');
+    options.forEach((option) => {option.classList.remove('selected')});
+    encounter.classList.add('selected');
+    selected_import_options = [encounter_id];
+}
+
+function resetImportSelection() {
+    const options = document.querySelectorAll('.encounter-option');
+    options.forEach((option) => {option.classList.remove('selected')});
+    selected_import_options = [];
+}
+
+function importSelections() {
+    selected_import_options.forEach((id) => {
+        socket.emit('import_id', {id: id});
+    });
+}
+
+function hideImportOverlay() {
+    const overlay = document.querySelector(".import-encounter-overlay");
+    overlay.classList.add("hidden");
+    const list = overlay.querySelector(".encounter-list");
+    resetImportSelection();
+    list.replaceChildren();
+}
+
+
 socket.on('add_player_inits', data => {
     const combat_id = data.combat_id;
     const players_data = data.players_data;
@@ -655,7 +771,26 @@ socket.on('add_player_inits', data => {
 
 
 
+socket.on('add_imported_encounter', function ({combat}) {
+    console.log('ran');
+    const combat_id = combat.id;
+    const combat_name = combat.name;
+    const enemy_list = combat.enemy_list;
+    const combat_element = createCombat(combat_id, combat_name);
+
+    enemy_list.forEach((enemy_object) => {
+        const[enemy_id, enemy] = Object.entries(enemy_object)[0];
+        const name = enemy.enemy_name;
+        const ac = enemy.enemy_ac;
+        const health = enemy.enemy_health;
+        const enemy_list = combat_element.querySelector(".enemy-list");
+        createEnemy(enemy_list, combat_element, enemy_id, name, ac, health, false);
+
+    });
+});
+
 socket.on("combat_list", function ({combats}) {
+    console.log(combats);
     Object.entries(combats).forEach(([combat_id, combat_data]) => {
         const combat_name = combat_data.name;
         const enemy_list = combat_data.enemy_list;
@@ -690,7 +825,10 @@ socket.on('player_input_init', data => {
     const player_init = combat_element.querySelector(".player-" + char_id).parentElement;
     const player_init_num = player_init.querySelector(".player-init-num");
     player_init_num.value = init;
+});
 
-
-
+socket.on('add_import_option', data => {
+    const encounter_id = data.encounter_id;
+    const name = data.name;
+    addImportOption(encounter_id, name);
 });
