@@ -310,7 +310,7 @@ function generateRandomId(length = 8) {
   return Math.random().toString(36).substr(2, length);
 }
 
-function createEnemyHealthSection(h, enemy_id, combat_element) {
+function createEnemyHealthSection(h, enemy_id, combat_element, enemy_max_health) {
     const health_section = document.createElement("div");
     health_section.classList.add("enemy-health-section");
     health_section.classList.add("enemy-health-section-style");
@@ -337,7 +337,7 @@ function createEnemyHealthSection(h, enemy_id, combat_element) {
 
     const max_health = document.createElement('input');
     max_health.type = 'number';
-    max_health.value = '0';
+    max_health.value = enemy_max_health;
     max_health.classList.add('enemy-max-health');
 
     health_middle.appendChild(max_health_label);
@@ -391,7 +391,7 @@ function createEnemyHealthSection(h, enemy_id, combat_element) {
     return [health_section, heal_input, damage_input, health, health_id];
 }
 
-function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=null, h=null, save=true) {
+function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=null, h=null, max_health = 0, save=true) {
     //create an enemy for the enemy_list of the combat element
     if(event) {
         event.stopPropagation()
@@ -433,7 +433,7 @@ function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=
 
 
 
-    const [health_section, heal_input, damage_input, health, health_id] = createEnemyHealthSection(h, enemy_id, combat_element);
+    const [health_section, heal_input, damage_input, health, health_id] = createEnemyHealthSection(h, enemy_id, combat_element, max_health);
 
     const delete_button = document.createElement("button");
     delete_button.textContent = "X";
@@ -535,12 +535,15 @@ function combatUpdateHealth(combat, damage, heal, health, health_id, initiative_
     const h = parseFloat(health.textContent) || 0;
     const heal_val = parseFloat(heal.value) || 0;
     const damage_val = parseFloat(damage.value) || 0;
-
+    const max_health = combat.querySelector('.enemy-max-health').value;
 
     damage.value = '';
     heal.value = '';
 
-    const new_health = h + heal_val - damage_val;
+    let new_health = h + heal_val - damage_val;
+    if (new_health > max_health) {
+        new_health = max_health;
+    }
     health.textContent = new_health.toString();
     document.querySelectorAll("."+ health_id).forEach((element) => {
         element.textContent = new_health.toString();
@@ -823,8 +826,9 @@ socket.on("combat_list", function ({combats}) {
             const name = enemy.enemy_name;
             const ac = enemy.enemy_ac;
             const health = enemy.enemy_health;
+            const enemy_max_health = enemy.max_health;
             const enemy_list = combat_element.querySelector(".enemy-list");
-            createEnemy(enemy_list, combat_element, enemy_id, name, ac, health, false);
+            createEnemy(enemy_list, combat_element, enemy_id, name, ac, health, enemy_max_health, false);
         });
 
 

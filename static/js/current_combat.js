@@ -305,7 +305,9 @@ function saveCombat(combat, initiative_array = []) {
         //const enemy_ac = enemy.querySelector(".enemy-ac");
         const health_id = "enemy-health-" + enemy_id;
         const enemy_health = enemy.querySelector("." + health_id);
-        d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent}};
+        const max_health = enemy.querySelector(".enemy-max-health");
+        const max_health_num = max_health.value;
+        d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent, max_health: max_health_num}};
         enemy_list.push(d);
     });
 
