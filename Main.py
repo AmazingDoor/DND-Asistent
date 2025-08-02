@@ -13,6 +13,7 @@ import json
 import shutil
 import logging
 import string
+
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.CRITICAL)
 
@@ -27,7 +28,6 @@ global TRAPS_FOLDER
 global IMGS_FOLDER
 global COMBAT_FOLDER
 global ID_TO_CLIENT
-
 
 CURRENT_CAMPAIGN = None
 PLAYERS_FOLDER = None
@@ -46,18 +46,18 @@ EARLY_CLIENTS = []
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def handle_exit(signum, frame):
-    #cleanup()
+    # cleanup()
     sys.exit(0)
 
 
 @atexit.register
 def cleanup():
     pass
-    #shutil.rmtree('static/uploads', ignore_errors=True)
+    # shutil.rmtree('static/uploads', ignore_errors=True)
 
 
 @app.route('/upload-image', methods=['POST'])
@@ -76,6 +76,8 @@ def upload_image():
 
 
 global DM_SID
+
+
 @app.route('/')
 def index():
     if not request.args.get('role') == 'host':
@@ -83,13 +85,16 @@ def index():
     else:
         return render_template('select_campaign.html')
 
+
 @app.route('/host')
 def host():
     return render_template('host.html')
 
+
 @app.route('/client')
 def client():
     return render_template('client.html')
+
 
 @app.route('/manage_traps')
 def manage_traps():
@@ -111,7 +116,7 @@ def handle_disconnect():
     global ID_TO_CLIENT
     sid = request.sid
     if sid in clients:
-        #emit('client_disconnected', {'client_id': sid}, broadcast=True)
+        # emit('client_disconnected', {'client_id': sid}, broadcast=True)
         del clients[sid]
     for key in ID_TO_CLIENT.keys():
         if ID_TO_CLIENT.get(key) == sid:
@@ -121,8 +126,8 @@ def handle_disconnect():
         if client.get('sid') == sid:
             del client
 
-def host_init_client_data(data, char_id):
 
+def host_init_client_data(data, char_id):
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         data = json.load(json_file)
         messages = data.get("messages")
@@ -143,7 +148,7 @@ def host_init_client_data(data, char_id):
 
 
 def init_json_data(sid, name, char_id):
-#Load or Create all of the data for each client
+    # Load or Create all of the data for each client
 
     if not os.path.exists(f"{PLAYERS_FOLDER}\\{char_id}.json"):
         char_data = {
@@ -165,25 +170,27 @@ def init_json_data(sid, name, char_id):
         armor_class = data.get("ac")
         max_health = data.get("max_health") if data.get("max_health") is not None else 0
 
-
         for message in messages:
             emit("load_message", {'message': message}, room=sid)
         for img in imgs:
             emit('send_image', {'url': img, 'n': False}, room=sid)
         emit('host_update_health', {'result': health, 'client_id': sid}, room=sid)
         emit('host_change_armor_class', {'value': armor_class}, room=sid)
+        emit('host_update_max_health', {'max_health': max_health}, room=sid)
+
 
 @socketio.on('get_traps_json')
 def get_traps_json():
-    #Server calls this to load the traps file
+    # Server calls this to load the traps file
     with open(f"{TRAPS_FOLDER}\\traps.json", 'r') as json_file:
         j = json.load(json_file)
         emit('load_traps_json', j)
 
+
 @socketio.on('client_ready')
 def client_ready(data):
-    #Makes the client wait until a campaign is selected
-    #Registers the client when ready
+    # Makes the client wait until a campaign is selected
+    # Registers the client when ready
     global EARLY_CLIENTS
     global CURRENT_CAMPAIGN
     sid = request.sid
@@ -195,11 +202,12 @@ def client_ready(data):
     else:
         emit('client_continue', {'name': name, 'char_id': char_id}, room=sid)
 
+
 @socketio.on('register_name')
 def handle_register_name(data):
-    #happens when a connected client selects a character
-    #Keep track of connected clients
-    #Load saved data
+    # happens when a connected client selects a character
+    # Keep track of connected clients
+    # Load saved data
     global PLAYERS_FOLDER
     global ID_TO_CLIENT
     sid = request.sid
@@ -223,7 +231,7 @@ def host_page_load():
     global IPV4
     global PORT
     global PLAYERS_FOLDER
-    #Tell the host to create a tab for the client
+    # Tell the host to create a tab for the client
     txt = str(IPV4) + ':' + str(PORT)
     emit('add_ip_text', {'ip': txt}, room=DM_SID)
     players = [f for f in os.listdir(PLAYERS_FOLDER)]
@@ -236,7 +244,7 @@ def host_page_load():
             host_init_client_data(data, char_id)
     load_combats()
 
-    #old stuff
+    # old stuff
     '''for client in clients:
         c = clients.get(client)
         sid = c.get('sid')
@@ -245,6 +253,7 @@ def host_page_load():
 
         emit('client_name_registered', {'client_id': sid, 'name': name, 'char_id': char_id})
         init_json_data(sid, name, char_id, True)'''
+
 
 @socketio.on('message_to_dm')
 def message_to_dm(data):
@@ -265,6 +274,7 @@ def message_to_dm(data):
             emit('message_to_dm', {'char_id': key, 'message': msg, 'name': clients.get(sid).get('name')}, room=DM_SID)
             break
 
+
 @socketio.on('saveCombat')
 def save_combat(data):
     global COMBAT_FOLDER
@@ -274,8 +284,10 @@ def save_combat(data):
     initiative_array = data.get("initiative_array")
     current_turn = data.get("current_turn")
     with open(f'{COMBAT_FOLDER}\\{combat_id}.json', 'w') as json_file:
-        all_combat_data = {'name': combat_name, 'enemy_list': enemy_list, 'initiative_array': initiative_array, 'current_turn': current_turn}
+        all_combat_data = {'name': combat_name, 'enemy_list': enemy_list, 'initiative_array': initiative_array,
+                           'current_turn': current_turn}
         json.dump(all_combat_data, json_file, indent=4)
+
 
 @socketio.on('save_combat_global')
 def save_combat_global(data):
@@ -299,6 +311,7 @@ def populate_import_encounters():
             name = j.get('name')
             emit('add_import_option', {'encounter_id': encounter, 'name': name})
 
+
 @socketio.on('import_id')
 def import_id(data):
     global COMBAT_FOLDER
@@ -315,6 +328,7 @@ def import_id(data):
     j['id'] = new_id
     emit('add_imported_encounter', {'combat': j})
 
+
 def get_unique_id(id):
     combats = [f.split(".json")[0] for f in os.listdir(COMBAT_FOLDER) if f.endswith('.json')]
     for combat in combats:
@@ -322,9 +336,12 @@ def get_unique_id(id):
             id = random_string()
             get_unique_id(id)
     return id
-def random_string(length = 8):
+
+
+def random_string(length=8):
     chars = string.ascii_lowercase + string.digits  # base-36 characters
     return ''.join(random.choices(chars, k=length))
+
 
 def load_combats():
     global COMBAT_FOLDER
@@ -335,6 +352,7 @@ def load_combats():
             j = json.load(json_file)
         combat_data[combat_id] = j
     emit("combat_list", {"combats": combat_data}, room=DM_SID)
+
 
 @socketio.on("remove_combat")
 def remove_combat(data):
@@ -382,9 +400,10 @@ def message_to_client(data):
 
     emit('private_message', {'from': 'DM', 'message': msg}, room=target_id)
 
+
 @socketio.on('client_update_health')
 def client_update_health(data):
-    #Save new health and sync with the host
+    # Save new health and sync with the host
     char_id = data.get('char_id')
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
         d = json.load(json_file)
@@ -396,9 +415,10 @@ def client_update_health(data):
             emit('client_update_health', {'result': data.get('result'), 'char_id': key}, room=DM_SID)
             break
 
+
 @socketio.on('host_update_health')
 def host_update_health(data):
-    #Save new health and sync with the client
+    # Save new health and sync with the client
     char_id = data.get('char_id')
     target_id = ID_TO_CLIENT.get(char_id)
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
@@ -407,6 +427,7 @@ def host_update_health(data):
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
     emit('host_update_health', {'result': data.get('result')}, room=target_id)
+
 
 def get_ipv4_address():
     try:
@@ -433,8 +454,11 @@ def is_port_available(port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('0.0.0.0', port)) != 0
 
+
 global IPV4
 global PORT
+
+
 def setupServer():
     global IPV4
     global PORT
@@ -449,7 +473,7 @@ def setupServer():
 
 @socketio.on('add_traps')
 def addTraps(traps_data):
-    #Load traps to server list
+    # Load traps to server list
     d = {}
     d["traps"] = traps_data
     with open(f"{TRAPS_FOLDER}\\traps.json", 'w') as json_file:
@@ -457,10 +481,9 @@ def addTraps(traps_data):
         emit('update_traps_list', {'traps_data': d}, room=DM_SID)
 
 
-
 @socketio.on('host_send_image_url')
 def handle_host_image_url(data):
-    #Send an image from the host to the client
+    # Send an image from the host to the client
     url = data.get('url')
     char_id = data.get('char_id')
     target_id = ID_TO_CLIENT.get(char_id)
@@ -475,7 +498,7 @@ def handle_host_image_url(data):
 
 @socketio.on('host_change_armor_class')
 def host_change_armor_class(data):
-    #Save new armor class and sync to client
+    # Save new armor class and sync to client
     char_id = data.get('char_id')
     sid = ID_TO_CLIENT.get(char_id)
     value = data.get('value')
@@ -486,9 +509,10 @@ def host_change_armor_class(data):
         json.dump(d, json_file, indent=4)
     emit('host_change_armor_class', {'value': value}, room=sid)
 
+
 @socketio.on('client_change_armor_class')
 def client_change_armor_class(data):
-    #Save new armor class and sync to host
+    # Save new armor class and sync to host
     value = data.get('value')
     char_id = data.get('char_id')
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
@@ -501,7 +525,7 @@ def client_change_armor_class(data):
 
 @socketio.on('create_campaign')
 def create_campaign(data):
-    #Creates a new save folder for a campaign
+    # Creates a new save folder for a campaign
     name = str(data.get('campaign_name'))
     if name == '':
         emit('create_campaign_fail', {'error': 'no_name'}, room=DM_SID)
@@ -518,10 +542,12 @@ def create_campaign(data):
         assign_folders(name)
         emit('create_campaign_success', room=DM_SID)
 
+
 @socketio.on('get_campaigns')
 def get_campaigns():
-    #Load the saved campaigns
+    # Load the saved campaigns
     emit('return_campaigns', {'campaigns': get_campaigns()}, room=DM_SID)
+
 
 @socketio.on('delete_campaign')
 def delete_campaign(data):
@@ -529,6 +555,7 @@ def delete_campaign(data):
     file_path = os.getcwd() + '\\local\\campaigns\\' + str(name)
     if os.path.exists(file_path):
         shutil.rmtree(file_path)
+
 
 @socketio.on('selected_campaign')
 def selected_campaign(data):
@@ -549,7 +576,8 @@ def player_input_init(data):
     combat_id = data.get('combat_id')
     init = data.get('init')
     char_name = data.get('char_name')
-    emit('player_input_init', {'char_id': char_id, 'combat_id': combat_id, 'init': init, 'char_name': char_name}, room=DM_SID)
+    emit('player_input_init', {'char_id': char_id, 'combat_id': combat_id, 'init': init, 'char_name': char_name},
+         room=DM_SID)
 
 
 @socketio.on('add_player_inits')
@@ -560,7 +588,8 @@ def add_player_inits(data):
     for player in players:
         with open(f'{PLAYERS_FOLDER}\\{player}.json', 'r') as json_file:
             j = json.load(json_file)
-            players_data[player] = {'player_name': j.get('name'), 'player_ac': j.get('ac'), 'player_health': j.get('health')}
+            players_data[player] = {'player_name': j.get('name'), 'player_ac': j.get('ac'),
+                                    'player_health': j.get('health')}
 
     emit('add_player_inits', {'combat_id': combat_id, 'players_data': players_data}, room=DM_SID)
 
@@ -575,11 +604,24 @@ def host_update_max_health(data):
     d["max_health"] = health
     with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
         json.dump(d, json_file, indent=4)
-    emit('host_change_armor_class', {'max_health': health}, room=sid)
+    emit('host_update_max_health', {'max_health': health}, room=sid)
+
+
+@socketio.on('client_update_max_health')
+def client_update_max_health(data):
+    sid = request.sid
+    char_id = data.get('char_id')
+    max_health = data.get('max_health')
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
+        d = json.load(json_file)
+    d["max_health"] = max_health
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
+        json.dump(d, json_file, indent=4)
+    emit('client_update_max_health', {'max_health': max_health, 'char_id': char_id}, room=DM_SID)
 
 
 def assign_folders(name):
-    #Set the paths to the saved data when a campaign is selected
+    # Set the paths to the saved data when a campaign is selected
     global CURRENT_CAMPAIGN
     global PLAYERS_FOLDER
     global TRAPS_FOLDER
@@ -608,6 +650,7 @@ def assign_folders(name):
 def get_campaigns():
     campaigns = os.getcwd() + "\\local\\campaigns"
     return [f for f in os.listdir(campaigns) if os.path.isdir(os.path.join(campaigns, f))]
+
 
 if __name__ == "__main__":
     setupServer()

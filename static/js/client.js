@@ -3,6 +3,11 @@ const socket = io();
 window.onload = function() {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
+
+    const max_health_input = document.querySelector(".max-health");
+    max_health_input.addEventListener('change', function() {
+        clientUpdateMaxHealth(max_health_input.value);
+    });
     selectCharacter();
 }
 function selectCharacter() {
@@ -46,6 +51,12 @@ function updateHealth() {
     const health = document.getElementById("health-num");
     const health_val = parseFloat(health.textContent) || 0;
     const result = health_val - damage_val + heal_val;
+    const max_health = document.querySelector('.max-health').value;
+
+    if (result > max_health) {
+        result = max_health;
+    }
+
     health.textContent = result.toString();
     document.getElementById("heal-input").value = '';
     document.getElementById("damage-input").value = '';
@@ -116,6 +127,21 @@ function submit_init() {
     socket.emit('player_input_init', {char_id: char_id, combat_id: combat_id, init: initiative, char_name: name});
     hide_initiative_overlay();
 }
+
+function clientUpdateMaxHealth() {
+    const max_health_input = document.querySelector(".max-health");
+    socket.emit('client_update_max_health', {max_health: max_health_input.value, char_id: char_id});
+}
+
+function updateMaxHealth(max_health) {
+    const max_health_input = document.querySelector(".max-health");
+    max_health_input.value = max_health;
+}
+
+socket.on('host_update_max_health', data => {
+    const max_health = data.max_health;
+    updateMaxHealth(max_health);
+});
 
 socket.on('load_message', data => {
     loadMessage(data.message);
@@ -190,3 +216,5 @@ document.addEventListener("DOMContentLoaded", function () {
         socket.emit('client_change_armor_class', {value: value, char_id: char_id});
     });
   });
+
+

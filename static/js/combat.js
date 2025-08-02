@@ -886,10 +886,3 @@ socket.on('add_import_option', data => {
     const name = data.name;
     addImportOption(encounter_id, name);
 });
-
-
-socket.on('client_update_max_health', data => {
-    const max_health = data.max_health;
-    const char_id = data.char_id;
-    hostUpdateMaxHealth(max_health, char_id);
-});

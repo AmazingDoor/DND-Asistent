@@ -223,13 +223,14 @@ function updateTrapLists(traps) {
 }
 
 function hostUpdateMaxHealth(health, player_id) {
-    updateMaxHealth(health, player_id);
     socket.emit('host_update_max_health', {health: health, player_id: player_id});
 }
 
 function updateMaxHealth(health, player_id) {
+    console.log(player_id);
     const max_health_instances = document.querySelectorAll('.max-health-' + player_id);
     max_health_instances.forEach((max_health_instance) => {
+        console.log(max_health_instance);
         max_health_instance.value = health;
     });
 }
@@ -471,6 +472,12 @@ socket.on('add_ip_text', data => {
     const txt = `Connect players on: ${ip}`;
     p.textContent = txt;
     div.appendChild(p);
+});
+
+socket.on('client_update_max_health', data => {
+    const max_health = data.max_health;
+    const char_id = data.char_id;
+    updateMaxHealth(max_health, char_id);
 });
 
 
