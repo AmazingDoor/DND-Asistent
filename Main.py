@@ -129,13 +129,14 @@ def host_init_client_data(data, char_id):
         imgs = data.get("imgs")
         health = data.get("health")
         armor_class = data.get("ac")
+        max_health = data.get("max_health") if data.get("max_health") is not None else 0
         for message in messages:
             emit("load_message", {'message': message, 'char_id': char_id}, room=DM_SID)
         for img in imgs:
             emit('load_image', {'url': img, 'char_id': char_id}, room=DM_SID)
         emit('client_update_health', {'result': health, 'char_id': char_id}, room=DM_SID)
         emit('client_change_armor_class', {'char_id': char_id, 'value': armor_class}, room=DM_SID)
-
+        emit('client_update_max_health', {'max_health': max_health, 'char_id': char_id})
     with open(f"{TRAPS_FOLDER}\\traps.json", 'r') as json_file:
         d = json.load(json_file)
         emit('update_traps_list', {'traps_data': d}, room=DM_SID)
@@ -162,6 +163,9 @@ def init_json_data(sid, name, char_id):
         imgs = data.get("imgs")
         health = data.get("health")
         armor_class = data.get("ac")
+        max_health = data.get("max_health") if data.get("max_health") is not None else 0
+
+
         for message in messages:
             emit("load_message", {'message': message}, room=sid)
         for img in imgs:
@@ -563,7 +567,16 @@ def add_player_inits(data):
 
 @socketio.on('host_update_max_health')
 def host_update_max_health(data):
-    pass
+    char_id = data.get('player_id')
+    health = data.get('health')
+    sid = ID_TO_CLIENT.get(char_id)
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'r') as json_file:
+        d = json.load(json_file)
+    d["max_health"] = health
+    with open(f"{PLAYERS_FOLDER}\\{char_id}.json", 'w') as json_file:
+        json.dump(d, json_file, indent=4)
+    emit('host_change_armor_class', {'max_health': health}, room=sid)
+
 
 def assign_folders(name):
     #Set the paths to the saved data when a campaign is selected
