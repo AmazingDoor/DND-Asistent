@@ -587,25 +587,7 @@ function updatePlayerAC(char_id, new_ac) {
     });
 }
 
-
-function addPlayerInit(combat_element, player_id, player_name, player_health, player_ac) {
-    //creates a player initiative element in the initiative list of the combat element
-    const player_init = document.createElement("div");
-    const initiative_list = combat_element.querySelector(".initiative-list");
-    player_init.classList.add("player-init");
-    player_init.classList.add("enemy-style");
-
-    const player_init_name = document.createElement("h3");
-    player_init_name.textContent = player_name;
-    player_init_name.classList.add("player-init-name");
-    player_init_name.classList.add("enemy-name-style");
-
-    const player_id_element = document.createElement("p");
-    player_id_element.textContent = player_id;
-    player_id_element.classList.add("player-id-object");
-    player_id_element.classList.add("player-" + player_id);
-    player_init.appendChild(player_id_element);
-
+function createPlayerHealthSection(player_health_num, player_id, combat_element, player_max_health) {
     const health_section = document.createElement("div");
     health_section.classList.add("enemy-health-section-style");
 
@@ -628,8 +610,8 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
     const health_id = "player-health-" + player_id;
     health.classList.add(health_id);
     health.classList.add("enemy-health-style");
-    if(player_health !== null) {
-        health.textContent = player_health;
+    if(player_health_num !== null) {
+        health.textContent = player_health_num;
     } else {
         health.textContent = "0";
     }
@@ -642,6 +624,23 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
     damage_input.type = "number";
     health_left.appendChild(damage_label);
     health_left.appendChild(damage_input);
+
+    const max_health_label = document.createElement("h3");
+    max_health_label.textContent = "Max Health";
+    max_health_label.classList.add('player-max-health-label');
+    const max_health = document.createElement('input');
+    max_health.type = 'number';
+    max_health.classList.add('player-max-health');
+    const max_health_id = 'max-health-' + player_id;
+    max_health.classList.add(max_health_id);
+    max_health.value = max_health;
+
+    max_health.addEventListener("change", function() {
+        hostUpdateMaxHealth(max_health.value, player_id);
+    });
+
+    health_middle.appendChild(max_health_label);
+    health_middle.appendChild(max_health);
 
     const update_health_button = document.createElement("button");
     update_health_button.textContent = "Update";
@@ -661,6 +660,28 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
     heal_input.type = "number";
     health_right.appendChild(heal_label);
     health_right.appendChild(heal_input);
+    return [health_section, heal_input, damage_input, health, health_id];
+}
+
+
+function addPlayerInit(combat_element, player_id, player_name, player_health, player_ac, player_max_health = 0) {
+    //creates a player initiative element in the initiative list of the combat element
+    const player_init = document.createElement("div");
+    const initiative_list = combat_element.querySelector(".initiative-list");
+    player_init.classList.add("player-init");
+    player_init.classList.add("enemy-style");
+
+    const [health_section, heal_input, damage_input, health, health_id] = createPlayerHealthSection(player_health, player_id, combat_element, player_max_health);
+    const player_init_name = document.createElement("h3");
+    player_init_name.textContent = player_name;
+    player_init_name.classList.add("player-init-name");
+    player_init_name.classList.add("enemy-name-style");
+
+    const player_id_element = document.createElement("p");
+    player_id_element.textContent = player_id;
+    player_id_element.classList.add("player-id-object");
+    player_id_element.classList.add("player-" + player_id);
+    player_init.appendChild(player_id_element);
 
 
     const ac_label = document.createElement("h3");

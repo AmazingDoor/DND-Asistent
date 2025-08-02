@@ -222,6 +222,18 @@ function updateTrapLists(traps) {
     });
 }
 
+function hostUpdateMaxHealth(health, player_id) {
+    updateMaxHealth(health, player_id);
+    socket.emit('host_update_max_health', {health: health, player_id: player_id});
+}
+
+function updateMaxHealth(health, player_id) {
+    const max_health_instances = document.querySelectorAll('.max-health-' + player_id);
+    max_health_instances.forEach((max_health_instance) => {
+        max_health_instance.value = health;
+    });
+}
+
 function createTab(name, char_id) {
   const tabId = `client-${char_id}`;
   //Trying to get rid of this
@@ -265,6 +277,8 @@ function createTab(name, char_id) {
           <input type="number" class="damage-input" id="damage-input-${char_id}" placeholder="Damage Amount"/>
         </div>
         <div class="player-stat-column" id="health">
+          <h3 class="player-max-health-label">Max Health</h3>
+          <input class="player-max-health max-health-${char_id}" type='number'></input>
           <h3>Health</h3>
           <p class="health-num player-health-${char_id}" id="health-num-${char_id}">0</p>
           <button onclick="updateHealth('${char_id}')">Update Health</button>
@@ -327,6 +341,10 @@ toggleBtn.addEventListener("click", () => {
     menu.classList.toggle("hidden");
 });
 
+const max_health_element = document.querySelector('.max-health-' + char_id);
+max_health_element.addEventListener("change", function() {
+    hostUpdateMaxHealth(max_health_element.value, char_id);
+});
 
 document.getElementById(`ac-input-${char_id}`).addEventListener("change", function(event) {
     changeArmorClass(this.value);

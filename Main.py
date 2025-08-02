@@ -560,6 +560,11 @@ def add_player_inits(data):
 
     emit('add_player_inits', {'combat_id': combat_id, 'players_data': players_data}, room=DM_SID)
 
+
+@socketio.on('host_update_max_health')
+def host_update_max_health(data):
+    pass
+
 def assign_folders(name):
     #Set the paths to the saved data when a campaign is selected
     global CURRENT_CAMPAIGN
