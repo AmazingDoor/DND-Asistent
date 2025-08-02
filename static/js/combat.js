@@ -310,6 +310,87 @@ function generateRandomId(length = 8) {
   return Math.random().toString(36).substr(2, length);
 }
 
+function createEnemyHealthSection(h, enemy_id, combat_element) {
+    const health_section = document.createElement("div");
+    health_section.classList.add("enemy-health-section");
+    health_section.classList.add("enemy-health-section-style");
+
+    const health_left = document.createElement("div");
+    health_left.classList.add("enemy-health-inner");
+    health_left.classList.add("enemy-health-inner-style");
+    health_section.appendChild(health_left);
+
+    const health_middle = document.createElement("div");
+    health_middle.classList.add("enemy-health-inner");
+    health_middle.classList.add("enemy-health-inner-style");
+    health_section.appendChild(health_middle);
+
+    const health_right = document.createElement("div");
+    health_right.classList.add("enemy-health-inner");
+    health_right.classList.add("enemy-health-inner-style");
+    health_section.appendChild(health_right);
+
+
+    const max_health_label = document.createElement('p');
+    max_health_label.classList.add('enemy-max-health-label');
+    max_health_label.textContent = "Max Health";
+
+    const max_health = document.createElement('input');
+    max_health.type = 'number';
+    max_health.value = '0';
+    max_health.classList.add('enemy-max-health');
+
+    health_middle.appendChild(max_health_label);
+    health_middle.appendChild(max_health);
+
+
+    let hl = document.createElement("h3");
+    hl.textContent = "Health";
+    hl.classList.add('enemy-health-label');
+    const health = document.createElement("h3");
+    const health_id = "enemy-health-" + enemy_id;
+    health.classList.add(health_id);
+    health.classList.add("enemy-health-style");
+
+    if(h !== null) {
+        health.textContent = h;
+    } else {
+        health.textContent = "0";
+    }
+
+    const damage_label = document.createElement("h3");
+    damage_label.textContent = "Damage";
+    damage_label.classList.add("enemy-damage-label");
+    const damage_input = document.createElement("input");
+    damage_input.classList.add("enemy-damage-input");
+    damage_input.classList.add("enemy-damage-input-style");
+
+    damage_input.type = "number";
+    health_left.appendChild(damage_label);
+    health_left.appendChild(damage_input);
+
+    const update_health_button = document.createElement("button");
+    update_health_button.textContent = "Update";
+    update_health_button.onclick = function () { combatUpdateHealth(combat_element, damage_input, heal_input, health, health_id); };
+    health_middle.appendChild(hl);
+    health_middle.appendChild(health);
+    health_middle.appendChild(update_health_button);
+
+    const heal_label = document.createElement("h3");
+    heal_label.textContent = "Heal";
+    heal_label.classList.add("enemy-heal-label");
+    const heal_input = document.createElement("input");
+    heal_input.classList.add("enemy-heal-input");
+    heal_input.classList.add("enemy-heal-input-style");
+
+    heal_input.type = "number";
+    health_right.appendChild(heal_label);
+    health_right.appendChild(heal_input);
+
+
+    return [health_section, heal_input, damage_input, health, health_id];
+}
+
 function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=null, h=null, save=true) {
     //create an enemy for the enemy_list of the combat element
     if(event) {
@@ -350,71 +431,14 @@ function createEnemy(enemy_list, combat_element, e_id=null, n=null, armor_class=
     ac.classList.add("enemy-ac");
     ac.classList.add("enemy-ac-style");
 
-    const health_section = document.createElement("div");
-    health_section.classList.add("enemy-health-section");
-    health_section.classList.add("enemy-health-section-style");
-
-    const health_left = document.createElement("div");
-    health_left.classList.add("enemy-health-inner");
-    health_left.classList.add("enemy-health-inner-style");
-    health_section.appendChild(health_left);
-
-    const health_middle = document.createElement("div");
-    health_middle.classList.add("enemy-health-inner");
-    health_middle.classList.add("enemy-health-inner-style");
-    health_section.appendChild(health_middle);
-
-    const health_right = document.createElement("div");
-    health_right.classList.add("enemy-health-inner");
-    health_right.classList.add("enemy-health-inner-style");
-    health_section.appendChild(health_right);
 
 
-    const hl = document.createElement("h3");
-    hl.textContent = "Health";
-    const health = document.createElement("h3");
-    const health_id = "enemy-health-" + enemy_id;
-    health.classList.add(health_id);
-    health.classList.add("enemy-health-style");
-
-    if(h !== null) {
-        health.textContent = h;
-    } else {
-        health.textContent = "0";
-    }
-    health.type = "number";
-
+    const [health_section, heal_input, damage_input, health, health_id] = createEnemyHealthSection(h, enemy_id, combat_element);
 
     const delete_button = document.createElement("button");
     delete_button.textContent = "X";
     delete_button.onclick = function () { deleteEnemy(enemy, combat_element); };
 
-    const damage_label = document.createElement("h3");
-    damage_label.textContent = "Damage";
-    const damage_input = document.createElement("input");
-    damage_input.classList.add("enemy-damage-input");
-    damage_input.classList.add("enemy-damage-input-style");
-
-    damage_input.type = "number";
-    health_left.appendChild(damage_label);
-    health_left.appendChild(damage_input);
-
-    const update_health_button = document.createElement("button");
-    update_health_button.textContent = "Update";
-    update_health_button.onclick = function () { combatUpdateHealth(combat_element, damage_input, heal_input, health, health_id); };
-    health_middle.appendChild(hl);
-    health_middle.appendChild(health);
-    health_middle.appendChild(update_health_button);
-
-    const heal_label = document.createElement("h3");
-    heal_label.textContent = "Heal";
-    const heal_input = document.createElement("input");
-    heal_input.classList.add("enemy-heal-input");
-    heal_input.classList.add("enemy-heal-input-style");
-
-    heal_input.type = "number";
-    health_right.appendChild(heal_label);
-    health_right.appendChild(heal_input);
 
     enemy.appendChild(enemy_name);
     enemy.appendChild(health_section);
@@ -464,57 +488,7 @@ function createEnemyInitiative(combat_element, name, h, enemy_id) {
 
 
 
-    const health_section = document.createElement("div");
-    health_section.classList.add("enemy-health-section-style");
-
-    const health_left = document.createElement("div");
-    health_left.classList.add("enemy-health-inner-style");
-    health_section.appendChild(health_left);
-
-    const health_middle = document.createElement("div");
-    health_middle.classList.add("enemy-health-inner-style");
-    health_section.appendChild(health_middle);
-
-    const health_right = document.createElement("div");
-    health_right.classList.add("enemy-health-inner-style");
-    health_section.appendChild(health_right);
-
-
-    const hl = document.createElement("h3");
-    hl.textContent = "Health";
-    const health = document.createElement("h3");
-    const health_id = "enemy-health-" + enemy_id;
-    health.classList.add("enemy-health-style");
-    if(h !== null) {
-        health.textContent = h;
-    } else {
-        health.textContent = "0";
-    }
-    health.type = "number";
-
-    const damage_label = document.createElement("h3");
-    damage_label.textContent = "Damage";
-    const damage_input = document.createElement("input");
-    damage_input.classList.add("enemy-damage-input-style");
-    damage_input.type = "number";
-    health_left.appendChild(damage_label);
-    health_left.appendChild(damage_input);
-
-    const update_health_button = document.createElement("button");
-    update_health_button.textContent = "Update";
-    update_health_button.onclick = function () { combatUpdateHealth(combat_element, damage_input, heal_input, health, health_id); };
-    health_middle.appendChild(hl);
-    health_middle.appendChild(health);
-    health_middle.appendChild(update_health_button);
-
-    const heal_label = document.createElement("h3");
-    heal_label.textContent = "Heal";
-    const heal_input = document.createElement("input");
-    heal_input.classList.add("enemy-heal-input-style");
-    heal_input.type = "number";
-    health_right.appendChild(heal_label);
-    health_right.appendChild(heal_input);
-
+     const [health_section, heal_input, damage_input, health, health_id] = createEnemyHealthSection(h, enemy_id, combat_element);
     const initiative_input = document.createElement("input");
     initiative_input.type = "number";
     initiative_input.classList.add("enemy-init-num");

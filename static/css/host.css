@@ -428,6 +428,7 @@ body {
 
 .enemy-health-section-style {
     display: flex;
+    flex: 1;
     flex-direction: row;
     background: lightgray;
     margin-left: 2px;
@@ -447,12 +448,43 @@ body {
     margin-left: 2px;
 }
 
+
+
+.enemy-max-health {
+    width: 30px;
+}
+
+.enemy-damage-label {
+    margin-top: 80px;
+    margin-bottom: 2px;
+}
+
+.enemy-max-health-label {
+    border-bottom: 1px solid black;
+    margin-bottom: 2px;
+}
+
+.enemy-health-style {
+    margin-top: 2px;
+}
+
+.enemy-health-label {
+    margin-bottom: 2px;
+}
+
+.enemy-heal-label {
+    margin-top: 80px;
+    margin-bottom: 2px;
+}
+
 .enemy-damage-input-style {
     width: 30px;
+    margin-top: 2px
 }
 
 .enemy-heal-input-style {
     width: 30px;
+    margin-top: 2px;
 }
 
 .enemy-id-object {
