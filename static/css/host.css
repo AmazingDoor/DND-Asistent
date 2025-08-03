@@ -451,11 +451,16 @@ body {
 
 
 .enemy-max-health {
-    width: 30px;
+    width: 60px;
 }
 
 .enemy-damage-label {
     margin-top: 80px;
+    margin-bottom: 2px;
+}
+
+.player-damage-label {
+    margin-top 80px;
     margin-bottom: 2px;
 }
 
@@ -464,17 +469,51 @@ body {
     margin-bottom: 2px;
 }
 
+.player-max-health-label {
+    border-bottom: 1px solid black;
+    margin-bottom: 2px;
+    text-align: center;
+}
+
+
+.player-max-health {
+    width: 60px;
+}
 .enemy-health-style {
     margin-top: 2px;
+}
+
+.enemy-health-section-style {
+    max-width: 300px;
 }
 
 .enemy-health-label {
     margin-bottom: 2px;
 }
 
+.player-health-label {
+    margin-bottom: 2px;
+}
+
 .enemy-heal-label {
     margin-top: 80px;
     margin-bottom: 2px;
+}
+
+.player-heal-label {
+    margin-top: 80px;
+    margin-bottom: 2px;
+}
+
+.player-damage-label {
+    margin-top: 80px;
+    margin-bottom: 2px;
+}
+
+.enemy-name-style {
+  width: 100px;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .enemy-damage-input-style {
@@ -528,6 +567,22 @@ body {
 
   #customMenu div:hover {
     background-color: #eee;
+  }
+
+  .initiative-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 0 0 auto;
+    margin-left: 8px;
+  }
+
+  .initiative-label {
+    margin-bottom: 2px;
+  }
+
+  .initiative-input {
+    width: 60px;
   }
 
 

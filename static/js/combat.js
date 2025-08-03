@@ -504,13 +504,26 @@ function createEnemyInitiative(combat_element, name, h, enemy_id) {
     const enemy_max_health = enemy_element.querySelector(".enemy-max-health").value;
 
     const [health_section, heal_input, damage_input, health, health_id] = createEnemyHealthSection(h, enemy_id, combat_element, enemy_max_health);
+
+    const init_container = document.createElement('div');
+    init_container.classList.add('initiative-container');
+
+    const initiative_label = document.createElement("h3");
+    initiative_label.classList.add('initiative-label');
+    initiative_label.textContent = "Initiative"
+
     const initiative_input = document.createElement("input");
     initiative_input.type = "number";
     initiative_input.classList.add("enemy-init-num");
+    initiative_input.classList.add("initiative-input");
+
+
 
     enemy.appendChild(enemy_name);
     enemy.appendChild(health_section);
-    enemy.appendChild(initiative_input);
+    enemy.appendChild(init_container);
+    init_container.appendChild(initiative_label);
+    init_container.appendChild(initiative_input);
     initiative_list.appendChild(enemy);
 
     enemy_name.addEventListener("change", function(event) {
@@ -632,6 +645,7 @@ function createPlayerHealthSection(player_health_num, player_id, combat_element,
 
     const hl = document.createElement("h3");
     hl.textContent = "Health";
+    hl.classList.add('player-health-label');
     const health = document.createElement("h3");
     const health_id = "player-health-" + player_id;
     health.classList.add(health_id);
@@ -645,13 +659,14 @@ function createPlayerHealthSection(player_health_num, player_id, combat_element,
 
     const damage_label = document.createElement("h3");
     damage_label.textContent = "Damage";
+    damage_label.classList.add('player-damage-label');
     const damage_input = document.createElement("input");
     damage_input.classList.add("enemy-damage-input-style");
     damage_input.type = "number";
     health_left.appendChild(damage_label);
     health_left.appendChild(damage_input);
 
-    const max_health_label = document.createElement("h3");
+    const max_health_label = document.createElement("p");
     max_health_label.textContent = "Max Health";
     max_health_label.classList.add('player-max-health-label');
     const max_health = document.createElement('input');
@@ -677,6 +692,7 @@ function createPlayerHealthSection(player_health_num, player_id, combat_element,
 
     const heal_label = document.createElement("h3");
     heal_label.textContent = "Heal";
+    heal_label.classList.add('player-heal-label');
     const heal_input = document.createElement("input");
     heal_input.classList.add("enemy-heal-input-style");
     heal_input.type = "number";
@@ -718,15 +734,25 @@ function addPlayerInit(combat_element, player_id, player_name, player_health, pl
     ac.classList.add("player-ac");
     ac.textContent = player_ac;
 
+    const init_container = document.createElement('div');
+    init_container.classList.add('initiative-container');
+
+    const initiative_label = document.createElement("h3");
+    initiative_label.classList.add('initiative-label');
+    initiative_label.textContent = "Initiative"
+
     const initiative_input = document.createElement("input");
     initiative_input.type = "number";
     initiative_input.classList.add("player-init-num");
+    initiative_input.classList.add("initiative-input");
 
     player_init.appendChild(player_init_name);
     player_init.appendChild(health_section);
     player_init.appendChild(ac_label);
     player_init.appendChild(ac);
-    player_init.appendChild(initiative_input);
+    player_init.appendChild(init_container);
+    init_container.appendChild(initiative_label);
+    init_container.appendChild(initiative_input);
     initiative_list.appendChild(player_init);
 
     heal_input.addEventListener("change", function(event) {
