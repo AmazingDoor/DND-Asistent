@@ -121,55 +121,19 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
         entity_id_element.classList.add('entity' + id);
         entity.appendChild(entity_id_element);
 
-        const health_section = document.createElement("div");
-        health_section.classList.add("enemy-health-section-style");
-
-        const health_left = document.createElement("div");
-        health_left.classList.add("enemy-health-inner-style");
-        health_section.appendChild(health_left);
-
-        const health_middle = document.createElement("div");
-        health_middle.classList.add("enemy-health-inner-style");
-        health_section.appendChild(health_middle);
-
-        const health_right = document.createElement("div");
-        health_right.classList.add("enemy-health-inner-style");
-        health_section.appendChild(health_right);
-
-
-        const hl = document.createElement("h3");
-        hl.tetContent = "Health";
-        const health = document.createElement("h3");
-
-
-        const damage_label = document.createElement("h3");
-        damage_label.textContent = "Damage";
-        const damage_input = document.createElement("input");
-        damage_input.classList.add("enemy-damage-input-style");
-        damage_input.type = "number";
-        health_left.appendChild(damage_label);
-        health_left.appendChild(damage_input);
-
-        const update_health_button = document.createElement("button");
-        update_health_button.textContent = "Update";
-
-        const heal_label = document.createElement("h3");
-        heal_label.textContent = "Heal";
-        const heal_input = document.createElement("input");
-        heal_input.classList.add("enemy-heal-input-style");
-        heal_input.type = "number";
-
         let health_id = null;
         let ac_label = null;
         let ac = null;
+        let health_section = null;
         if (type == 'player') {
-            health_id = 'player-health-' + id;
+
             const player_tab = document.querySelector('#client-' + id);
             const ac_value = player_tab.querySelector(".ac-input").value;
+            const player_health = player_tab.querySelector(".health-num").textContent;
+            const player_max_health = player_tab.querySelector(".player-max-health").value;
 
-
-            health.textContent = player_tab.querySelector(".health-num").textContent;
-
+            const [hs, heal_input, damage_input, health, health_id] = createPlayerHealthSection(player_health, id, element, player_max_health);
+            health_section = hs;
             ac_label = document.createElement("h3");
             ac_label.textContent = "AC: "
 
@@ -177,11 +141,6 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
             ac.classList.add("player-ac");
             ac.textContent = ac_value;
 
-            update_health_button.onclick = function () {
-                combatUpdatePlayerHealth(id, damage_input, heal_input, health, health_id);
-                heal_input.value = '';
-                damage_input.value = '';
-            };
 
             heal_input.addEventListener("change", function(event) {
                 combatUpdatePlayerHealth(id, damage_input, heal_input, health, health_id);
@@ -198,12 +157,13 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
 
 
         } else {
-            health_id = 'enemy-health-' + id;
             const initial_enemy = element.querySelector(".enemy-" + id).parentElement;
             const initial_health = initial_enemy.querySelector(".enemy-health-" + id);
-            health.textContent = initial_health.textContent;
+            const enemy_health = initial_enemy.querySelector(".enemy-health-" + id).textContent;
+            const enemy_max_health = initial_enemy.querySelector(".enemy-max-health").value;
 
-            update_health_button.onclick = function () { combatUpdateHealth(element, damage_input, heal_input, health, health_id, combat_order); };
+            const [hs, heal_input, damage_input, health, health_id] = createEnemyHealthSection(enemy_health, id, element, enemy_max_health);
+            health_section = hs;
 
             heal_input.addEventListener("change", function(event) {
                 combatUpdateHealth(element, damage_input, heal_input, health, health_id, combat_order);
@@ -214,15 +174,6 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
             });
 
         }
-        health.classList.add(health_id);
-
-        health_middle.appendChild(hl);
-        health_middle.appendChild(health);
-        health_middle.appendChild(update_health_button);
-
-        health_right.appendChild(heal_label);
-        health_right.appendChild(heal_input);
-
         entity.appendChild(entity_name);
         entity.appendChild(health_section);
         if(ac_label !== null) {

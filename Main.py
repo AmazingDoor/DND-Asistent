@@ -589,7 +589,7 @@ def add_player_inits(data):
         with open(f'{PLAYERS_FOLDER}\\{player}.json', 'r') as json_file:
             j = json.load(json_file)
             players_data[player] = {'player_name': j.get('name'), 'player_ac': j.get('ac'),
-                                    'player_health': j.get('health')}
+                                    'player_health': j.get('health'), 'max_health': j.get('max_health')}
 
     emit('add_player_inits', {'combat_id': combat_id, 'players_data': players_data}, room=DM_SID)
 

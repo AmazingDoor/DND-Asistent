@@ -223,16 +223,25 @@ function updateTrapLists(traps) {
 }
 
 function hostUpdateMaxHealth(health, player_id) {
+    updateMaxHealth(health, player_id);
     socket.emit('host_update_max_health', {health: health, player_id: player_id});
 }
 
 function updateMaxHealth(health, player_id) {
-    console.log(player_id);
     const max_health_instances = document.querySelectorAll('.max-health-' + player_id);
     max_health_instances.forEach((max_health_instance) => {
-        console.log(max_health_instance);
         max_health_instance.value = health;
     });
+    const health_id = "player-health-" + player_id;
+    const current_health = document.querySelector("." + health_id).textContent;
+
+    if(health  < current_health) {
+         let new_health = health;
+         document.querySelectorAll("." + health_id).forEach((element) => {
+             element.textContent = new_health.toString();
+         });
+         socket.emit("host_update_health", {result: new_health, char_id: player_id});
+    }
 }
 
 function createTab(name, char_id) {
