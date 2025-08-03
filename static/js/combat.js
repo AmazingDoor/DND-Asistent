@@ -186,7 +186,8 @@ function saveCombatGlobal(combat) {
         //const enemy_ac = enemy.querySelector(".enemy-ac");
         const health_id = "enemy-health-" + enemy_id;
         const enemy_health = enemy.querySelector("." + health_id);
-        d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent}};
+        const max_health = enemy.querySelector('.enemy-max-health');
+        d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent, max_health: max_health.value}};
         enemy_list.push(d);
     });
 
@@ -881,8 +882,9 @@ socket.on('add_imported_encounter', function ({combat}) {
         const name = enemy.enemy_name;
         const ac = enemy.enemy_ac;
         const health = enemy.enemy_health;
+        const max_health = enemy.max_health;
         const enemy_list = combat_element.querySelector(".enemy-list");
-        createEnemy(enemy_list, combat_element, enemy_id, name, ac, health, false);
+        createEnemy(enemy_list, combat_element, enemy_id, name, ac, health, max_health, false);
 
     });
 });
