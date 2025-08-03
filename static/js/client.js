@@ -50,7 +50,7 @@ function updateHealth() {
     const damage_val = parseFloat(document.getElementById("damage-input").value || 0);
     const health = document.getElementById("health-num");
     const health_val = parseFloat(health.textContent) || 0;
-    const result = health_val - damage_val + heal_val;
+    let result = health_val - damage_val + heal_val;
     const max_health = document.querySelector('.max-health').value;
 
     if (result > max_health) {

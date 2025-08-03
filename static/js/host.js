@@ -235,7 +235,7 @@ function updateMaxHealth(health, player_id) {
     const health_id = "player-health-" + player_id;
     const current_health = document.querySelector("." + health_id).textContent;
 
-    if(health  < current_health) {
+    if(parseInt(health)  < parseInt(current_health)) {
          let new_health = health;
          document.querySelectorAll("." + health_id).forEach((element) => {
              element.textContent = new_health.toString();
