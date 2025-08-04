@@ -156,7 +156,8 @@ def init_json_data(sid, name, char_id):
             "imgs": [],
             "health": 0,
             "ac": 0,
-            "states_text": ''
+            "states_text": '',
+            "abilities": {"str_num": 0, "dex_num": 0, "con_num": 0, "int_num": 0, "wis_num": 0, "cha_num": 0}
         }
         safe_write_json(char_data, f"{PLAYERS_FOLDER}\\{char_id}.json")
 
@@ -166,7 +167,7 @@ def init_json_data(sid, name, char_id):
     health = data.get("health")
     armor_class = data.get("ac")
     max_health = data.get("max_health") if data.get("max_health") is not None else 0
-
+    emit('load_abilities', {'abilities': data.get('abilities')}, room=sid)
     for message in messages:
         emit("load_message", {'message': message}, room=sid)
     for img in imgs:
@@ -572,6 +573,16 @@ def client_update_max_health(data):
     d["max_health"] = max_health
     safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}.json")
     emit('client_update_max_health', {'max_health': max_health, 'char_id': char_id}, room=DM_SID)
+
+
+@socketio.on('save_abilities')
+def save_abilities(data):
+    char_id = data.get("char_id")
+    abilities = data.get("abilities")
+    j = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}.json")
+    j['abilities'] = abilities
+
+    safe_write_json(j, f"{PLAYERS_FOLDER}\\{char_id}.json")
 
 
 def assign_folders(name):

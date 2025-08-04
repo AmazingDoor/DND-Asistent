@@ -1,26 +1,61 @@
 let socket = null;
 export function setSocket(io) {
     socket = io;
+    socket.on('load_abilities', data => {
+        loadPlayerAbilities(data);
+    });
 }
 
-export function loadPlayerAbilities() {
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    name = sessionStorage.getItem('charName');
+    char_id = sessionStorage.getItem('charId');
+});
+
+
+export function loadPlayerAbilities(data) {
+    const abilities = data.abilities;
+    const str_num = abilities.str_num;
+    const dex_num = abilities.dex_num;
+    const con_num = abilities.con_num;
+    const int_num = abilities.int_num;
+    const wis_num = abilities.wis_num;
+    const cha_num = abilities.cha_num;
+
+    const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
+
+    str_input.value = str_num;
+    dex_input.value = dex_num;
+    con_input.value = con_num;
+    int_input.value = int_num;
+    wis_input.value = wis_num;
+    cha_input.value = cha_num;
+    calculateAbilityModifiers();
+
+
+}
+
+function getInputs () {
+    const str_input = document.querySelector('#strength-input');
+    const dex_input = document.querySelector('#dexterity-input');
+    const con_input = document.querySelector('#constitution-input');
+    const int_input = document.querySelector('#intelligence-input');
+    const wis_input = document.querySelector('#wisdom-input');
+    const cha_input = document.querySelector('#charisma-input');
+    return[str_input, dex_input, con_input, int_input, wis_input, cha_input]
 
 }
 
 export function addEventListeners() {
-const str_input = document.querySelector('#strength-input');
-const dex_input = document.querySelector('#dexterity-input');
-const con_input = document.querySelector('#constitution-input');
-const int_input = document.querySelector('#intelligence-input');
-const wis_input = document.querySelector('#wisdom-input');
-const cha_input = document.querySelector('#charisma-input');
+    const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
 
-str_input.addEventListener('change', function() {calculateStrengthMod()});
-dex_input.addEventListener('change', function() {calculateDexterityMod()});
-con_input.addEventListener('change', function() {calculateConstitutionMod()});
-int_input.addEventListener('change', function() {calculateIntelligenceMod()});
-wis_input.addEventListener('change', function() {calculateWisdomMod()});
-cha_input.addEventListener('change', function() {calculateCharismaMod()});
+    str_input.addEventListener('change', function() {calculateStrengthMod(); saveAbilities()});
+    dex_input.addEventListener('change', function() {calculateDexterityMod(); saveAbilities()});
+    con_input.addEventListener('change', function() {calculateConstitutionMod(); saveAbilities()});
+    int_input.addEventListener('change', function() {calculateIntelligenceMod(); saveAbilities()});
+    wis_input.addEventListener('change', function() {calculateWisdomMod(); saveAbilities()});
+    cha_input.addEventListener('change', function() {calculateCharismaMod(); saveAbilities()});
 
 
 }
@@ -94,3 +129,11 @@ function calculateModifier(i) {
     const new_num = Math.floor((parseInt(num) - 10) / 2);
     return new_num;
 }
+
+function saveAbilities() {
+    const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
+    const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
+    const data = {char_id: char_id, abilities: abilities};
+    socket.emit('save_abilities', data);
+}
+
