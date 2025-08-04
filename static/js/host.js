@@ -1,5 +1,6 @@
 import {setFactorySocket} from './host_scripts/factories/socket_factory.js';
 import {sendMessage, removeNotification, appendMessage} from './host_scripts/message_handler.js';
+import {add_image_to_host} from './host_scripts/image_handler.js';
 const socket = io({ query: { role: "host" } });
 setFactorySocket(socket);
 
@@ -7,31 +8,12 @@ let affected_tabs = [];
 const clientMap = {};
 let clientCount = 0;
 const tabMap = {};
-const charMap = {};
 const clientToTab = {};
 const menuToClientId = new Map();
 
 document.addEventListener("DOMContentLoaded", function () {
     socket.emit('host_page_load');
 });
-
-function load_image(imageUrl, char_id) {
-    const tab = document.getElementById(`client-${char_id}`);
-    add_image_to_host(imageUrl, tab);
-}
-
-function add_image_to_host(imageUrl, tab) {
-    const img_list = tab.querySelector("#img-list");
-    const imageBox = document.createElement("div");
-    imageBox.classList.add("image-box");
-
-    const img = document.createElement("img");
-    img.src = imageUrl;
-    img.alt = "Shared by DM";
-
-    imageBox.appendChild(img);
-    img_list.appendChild(imageBox);
-}
 
 function showTabAndMark(event, char_id, tab_id, button_id) {
     let change_tab = true;
@@ -51,7 +33,7 @@ function showTabAndMark(event, char_id, tab_id, button_id) {
             }
         }
     } else {
-        remove_class_tabs = document.querySelectorAll(".affected-tab");
+        let remove_class_tabs = document.querySelectorAll(".affected-tab");
         remove_class_tabs.forEach((tab) => {
             tab.classList.remove('affected-tab');
         });
@@ -192,8 +174,6 @@ function createTab(name, char_id) {
   //Trying to get rid of this
   clientMap[char_id] = tabId;
   tabMap[tabId] = char_id;
-  //Trying to get rid of this
-  //charMap[client_id] = char_id;
 
   // Create tab button
   const tabButton = document.createElement('button');
@@ -336,7 +316,8 @@ if (file && file.type.startsWith('image/')) {
     // Emit this URL to clients via socket
     affected_tabs.forEach((c) => {
         let t = document.getElementById(clientMap[c]);
-        socket.emit('host_send_image_url', { url: imageUrl, char_id: char_id });
+        let id = clientMap[c].replace("client-", "");
+        socket.emit('host_send_image_url', { url: imageUrl, char_id: id });
         add_image_to_host(imageUrl, t);
     });
   })
@@ -361,11 +342,7 @@ socket.on('host_load_client_data', ({name, char_id}) => {
     createTab(name, char_id);
 });
 
-socket.on('load_image', data => {
-    const imageUrl = data.url;
-    const char_id = data.char_id;
-    load_image(imageUrl, char_id);
-});
+
 
 //I don't think this is used right now.
   socket.on('client_disconnected', ({ client_id }) => {
