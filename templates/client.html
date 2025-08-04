@@ -6,6 +6,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/client.css') }}">
   <script src="{{ url_for('static', filename='js/character_id.js') }}"></script>
   <script src="{{ url_for('static', filename='js/client.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/client.js') }}"></script>
+
 
 </head>
 <body>
@@ -55,7 +57,46 @@
           <div class="armor-class-div">
             <p id="armor-class-text">Armor Class: </p>
             <input type="number" id="ac-input">
+            <p id="speed-text">Speed: </p>
+            <input type="number" id="speed-input">
+            <p id="initiative-modifier-text">Initiative: </p>
+            <input type="number" id="initiative-modifier-input">
           </div>
+        </div>
+        <div id="ability-container">
+          <table>
+            <tr>
+              <td>Strength(STR): </td>
+              <td><input type="number" id="strength-input"></td>
+              <td id="strength-modifier"></td>
+            </tr>
+            <tr>
+              <td>Dexterity(DEX): </td>
+              <td><input type="number" id="dexterity-input"></td>
+              <td id="dexterity-modifier"></td>
+            </tr>
+            <tr>
+              <td>Constitution(CON): </td>
+              <td><input type="number" id="constitution-input"></td>
+              <td id="constitution-modifier"></td>
+            </tr>
+            <tr>
+              <td>Intelligence(INT): </td>
+              <td><input type="number" id="intelligence-input"></td>
+              <td id="intelligence-modifier"></td>
+            </tr>
+            <tr>
+              <td>Wisdom(WIS): </td>
+              <td><input type="number" id="wisdom-input"></td>
+              <td id="wisdom-modifier"></td>
+            </tr>
+            <tr>
+              <td>Charisma(CHA): </td>
+              <td><input type="number" id="charisma-input"></td>
+              <td id="charisma-modifier"></td>
+            </tr>
+          </table>
+
         </div>
       </div>
     </div>
