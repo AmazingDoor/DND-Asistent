@@ -1,6 +1,10 @@
+import {setFactorySocket} from './client_scripts/factories/socket_factory.js';
 const socket = io();
+setFactorySocket(socket);
 
-window.onload = function() {
+import {loadPlayerAbilities, addEventListeners, calculateAbilityModifiers} from './client_scripts/ability_handler.js';
+
+document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
 
@@ -9,7 +13,9 @@ window.onload = function() {
         clientUpdateMaxHealth(max_health_input.value);
     });
     selectCharacter();
-}
+    addEventListeners();
+});
+
 function selectCharacter() {
     socket.emit('register_name', { name, char_id });
 }

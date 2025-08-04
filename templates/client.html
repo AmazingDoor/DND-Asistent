@@ -5,8 +5,7 @@
   <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/client.css') }}">
   <script src="{{ url_for('static', filename='js/character_id.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/client.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/client.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='js/client.js') }}"></script>
 
 
 </head>
@@ -68,32 +67,32 @@
             <tr>
               <td>Strength(STR): </td>
               <td><input type="number" id="strength-input"></td>
-              <td id="strength-modifier"></td>
+              <td id="strength-modifier">(0)</td>
             </tr>
             <tr>
               <td>Dexterity(DEX): </td>
               <td><input type="number" id="dexterity-input"></td>
-              <td id="dexterity-modifier"></td>
+              <td id="dexterity-modifier">(0)</td>
             </tr>
             <tr>
               <td>Constitution(CON): </td>
               <td><input type="number" id="constitution-input"></td>
-              <td id="constitution-modifier"></td>
+              <td id="constitution-modifier">(0)</td>
             </tr>
             <tr>
               <td>Intelligence(INT): </td>
               <td><input type="number" id="intelligence-input"></td>
-              <td id="intelligence-modifier"></td>
+              <td id="intelligence-modifier">(0)</td>
             </tr>
             <tr>
               <td>Wisdom(WIS): </td>
               <td><input type="number" id="wisdom-input"></td>
-              <td id="wisdom-modifier"></td>
+              <td id="wisdom-modifier">(0)</td>
             </tr>
             <tr>
               <td>Charisma(CHA): </td>
               <td><input type="number" id="charisma-input"></td>
-              <td id="charisma-modifier"></td>
+              <td id="charisma-modifier">(0)</td>
             </tr>
           </table>
 
