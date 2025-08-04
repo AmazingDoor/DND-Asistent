@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Host Page</title>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/host.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/import_overlay.css') }}">
-    <script src="{{ url_for('static', filename='js/host.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/host.js') }}"></script>
     <script src="{{ url_for('static', filename='js/combat.js') }}"></script>
     <script src="{{ url_for('static', filename='js/current_combat.js') }}"></script>
 

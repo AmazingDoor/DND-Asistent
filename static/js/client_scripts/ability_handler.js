@@ -7,7 +7,6 @@ export function setSocket(io) {
 }
 
 
-
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
@@ -32,8 +31,6 @@ export function loadPlayerAbilities(data) {
     wis_input.value = wis_num;
     cha_input.value = cha_num;
     calculateAbilityModifiers();
-
-
 }
 
 function getInputs () {
@@ -44,7 +41,6 @@ function getInputs () {
     const wis_input = document.querySelector('#wisdom-input');
     const cha_input = document.querySelector('#charisma-input');
     return[str_input, dex_input, con_input, int_input, wis_input, cha_input]
-
 }
 
 export function addEventListeners() {
@@ -56,8 +52,6 @@ export function addEventListeners() {
     int_input.addEventListener('change', function() {calculateIntelligenceMod(); saveAbilities()});
     wis_input.addEventListener('change', function() {calculateWisdomMod(); saveAbilities()});
     cha_input.addEventListener('change', function() {calculateCharismaMod(); saveAbilities()});
-
-
 }
 
 export function calculateAbilityModifiers() {
@@ -74,7 +68,6 @@ function calculateStrengthMod() {
     const num = document.querySelector('#strength-modifier');
     const new_num = calculateModifier(i);
     setModText(num, new_num);
-
 }
 
 function calculateDexterityMod() {
@@ -82,8 +75,6 @@ function calculateDexterityMod() {
     const num = document.querySelector('#dexterity-modifier');
     const new_num = calculateModifier(i);
     setModText(num, new_num);
-
-
 }
 
 function calculateConstitutionMod() {
@@ -91,8 +82,6 @@ function calculateConstitutionMod() {
     const num = document.querySelector('#constitution-modifier');
     const new_num = calculateModifier(i);
     setModText(num, new_num);
-
-
 }
 
 function calculateIntelligenceMod() {
@@ -100,7 +89,6 @@ function calculateIntelligenceMod() {
     const num = document.querySelector('#intelligence-modifier');
     const new_num = calculateModifier(i);
     setModText(num, new_num);
-
 }
 
 function calculateWisdomMod() {
@@ -108,8 +96,6 @@ function calculateWisdomMod() {
     const num = document.querySelector('#wisdom-modifier');
     const new_num = calculateModifier(i);
     setModText(num, new_num);
-
-
 }
 
 function calculateCharismaMod() {
@@ -117,7 +103,6 @@ function calculateCharismaMod() {
     const num = document.querySelector('#charisma-modifier');
     const new_num = calculateModifier(i);
     setModText(num, new_num);
-
 }
 
 function setModText(mod, num) {

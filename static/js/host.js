@@ -1,7 +1,11 @@
+import {setFactorySocket} from './host_scripts/factories/socket_factory.js';
+import {sendMessage, removeNotification, appendMessage} from './host_scripts/message_handler.js';
 const socket = io({ query: { role: "host" } });
+setFactorySocket(socket);
+
+let affected_tabs = [];
 const clientMap = {};
 let clientCount = 0;
-let affected_tabs = [];
 const tabMap = {};
 const charMap = {};
 const clientToTab = {};
@@ -11,46 +15,10 @@ document.addEventListener("DOMContentLoaded", function () {
     socket.emit('host_page_load');
 });
 
-
-function sendMessage(active_client) {
-    const msg = document.getElementById(`client-${active_client}`).querySelector('#msg').value;
-    affected_tabs.forEach((char_id) => {
-        const tab = document.getElementById(`client-${char_id}`);
-        if (!msg) return;
-        socket.emit("message_to_client", {message: msg, char_id: char_id});
-        appendMessage("You", char_id, msg);
-        tab.querySelector('#msg').value = '';
-    });
-
-}
-
-function addNotification(char_id, tab_id) {
-    const b = document.getElementById(`tab-btn-${char_id}`);
-    const active_button = document.querySelector('.tab.active');
-    if(active_button) {
-        if (active_button.id == `tab-btn-${char_id}`) {
-            return;
-        }
-    }
-    if (b.style.backgroundColor === "white") {
-        b.style.backgroundColor = "red"
-    }
-
-}
-
-function removeNotification(char_id) {
-    const b = document.getElementById(`tab-btn-${char_id}`);
-    if (b.style.backgroundColor === "red") {
-        b.style.backgroundColor = "white"
-    }
-
-}
-
 function load_image(imageUrl, char_id) {
     const tab = document.getElementById(`client-${char_id}`);
     add_image_to_host(imageUrl, tab);
 }
-
 
 function add_image_to_host(imageUrl, tab) {
     const img_list = tab.querySelector("#img-list");
@@ -107,17 +75,6 @@ function showTab(tabId) {
     });
 }
 
-function appendMessage(from, char_id, message) {
-    const tab = document.getElementById(`client-${char_id}`);
-    const chat = tab.querySelector('#chat');
-
-    const line = document.createElement("p");
-    line.innerHTML = `<strong>${from}:</strong> ${message}`;
-    chat.appendChild(line);
-    chat.scrollTop = chat.scrollHeight;
-}
-
-
 function changeArmorClass(value) {
     affected_tabs.forEach((char_id) => {
         updateArmorClass(char_id, value);
@@ -142,21 +99,7 @@ function updateHealth(c) {
     damage_input.value  = '';
 }
 
-function loadMessage(message, char_id) {
-    const tab = document.getElementById(`client-${char_id}`);
-    const chat = tab.querySelector('#chat');
-    const line = document.createElement("p");
 
-    const index = message.indexOf(":");
-    let from = message.slice(0, index);
-    if (from === "DM") {
-        from = "You"
-    }
-    const msg = message.slice(index + 1);
-    line.innerHTML = `<strong>${from}:</strong> ${msg}`;
-    chat.appendChild(line);
-    chat.scrollTop = chat.scrollHeight;
-}
 
 function manageTraps() {
 window.location.href='/manage_traps';
@@ -317,7 +260,7 @@ function createTab(name, char_id) {
             <div id="chat"></div>
             <div id="input-area">
               <input id="msg" placeholder="Message" autocomplete="off" />
-              <button onclick="sendMessage(${char_id})">Send</button>
+              <button onclick="sendMessage(${char_id}, ${affected_tabs})">Send</button>
             </div>
           </div>
       </div>
@@ -332,7 +275,7 @@ const dropArea = document.getElementById(`drop-area-${char_id}`);
 const tab = document.getElementById(`client-${tabMap[tabId]}`);
 tab.querySelector("#msg").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
-        sendMessage(char_id);
+        sendMessage(char_id, affected_tabs);
     }
 });
 dropArea.addEventListener('dragover', (e) => {
@@ -424,10 +367,6 @@ socket.on('load_image', data => {
     load_image(imageUrl, char_id);
 });
 
-socket.on('load_message', data => {
-    loadMessage(data.message, data.char_id);
-});
-
 //I don't think this is used right now.
   socket.on('client_disconnected', ({ client_id }) => {
 const tabId = `client-${client_id}`;
@@ -450,12 +389,6 @@ if (remainingTabs.length > 0) {
 } else {
   document.querySelectorAll('.tab-content').forEach(div => div.classList.remove('active'));
 }});
-
-
-socket.on('message_to_dm', ({char_id, message, name}) => {
-    addNotification(char_id);
-    appendMessage(name, char_id, message);
-});
 
 socket.on('client_update_health', ({result, char_id}) => {
     //const health = document.getElementById(`health-num-${char_id}`);
