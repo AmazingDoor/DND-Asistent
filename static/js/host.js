@@ -1,15 +1,16 @@
 import {setFactorySocket} from './host_scripts/factories/socket_factory.js';
+import {setAffectedTabs, getAffectedTabs, spliceAffectedTabs, addAffectedTab} from './host_scripts/factories/active_tabs_factory.js';
+import {setMenuToClient} from './host_scripts/factories/menu_to_client_factory.js';
+
 import {sendMessage, removeNotification, appendMessage} from './host_scripts/message_handler.js';
 import {add_image_to_host} from './host_scripts/image_handler.js';
 const socket = io({ query: { role: "host" } });
 setFactorySocket(socket);
 
-let affected_tabs = [];
 const clientMap = {};
 let clientCount = 0;
 const tabMap = {};
 const clientToTab = {};
-const menuToClientId = new Map();
 
 document.addEventListener("DOMContentLoaded", function () {
     socket.emit('host_page_load');
@@ -20,15 +21,15 @@ function showTabAndMark(event, char_id, tab_id, button_id) {
     if(event.shiftKey) {
         let active_tab = document.querySelector(".tab.active");
         if (active_tab.id !== button_id) {
-            if(affected_tabs.includes(char_id)) {
-                let index = affected_tabs.indexOf(char_id);
+            if(getAffectedTabs().includes(char_id)) {
+                let index = getAffectedTabs.indexOf(char_id);
                 if (index !== -1) {
-                    affected_tabs.splice(index, 1);
+                    spliceAffectedTabs(index);
                     document.getElementById(button_id).classList.remove("affected-tab");
                     change_tab = false;
                 }
             } else {
-                affected_tabs.push(char_id);
+                addAffectedTab(char_id);
                 document.getElementById(button_id).classList.add("affected-tab");
             }
         }
@@ -38,7 +39,8 @@ function showTabAndMark(event, char_id, tab_id, button_id) {
             tab.classList.remove('affected-tab');
         });
         document.getElementById(button_id).classList.add("affected-tab");
-        affected_tabs = [char_id];
+        const tabs = [char_id];
+        setAffectedTabs(tabs);
     }
 
     removeNotification(char_id);
@@ -58,7 +60,7 @@ function showTab(tabId) {
 }
 
 function changeArmorClass(value) {
-    affected_tabs.forEach((char_id) => {
+    getAffectedTabs().forEach((char_id) => {
         updateArmorClass(char_id, value);
         socket.emit("host_change_armor_class", {value: value, char_id: char_id})
     });
@@ -69,7 +71,7 @@ function updateHealth(c) {
     const damage_input = document.getElementById(`damage-input-${c}`);
     const heal_val = parseFloat(heal_input.value) || 0;
     const damage_val = parseFloat(damage_input.value || 0);
-    affected_tabs.forEach((char_id) => {
+    getAffectedTabs().forEach((char_id) => {
         const health = document.getElementById(`health-num-${char_id}`);
         const health_val = parseFloat(health.textContent) || 0;
         //const result = health_val - damage_val + heal_val;
@@ -81,70 +83,11 @@ function updateHealth(c) {
     damage_input.value  = '';
 }
 
-
-
-function manageTraps() {
-window.location.href='/manage_traps';
-}
-
-function sendTrapMessage(text) {
-    affected_tabs.forEach((char_id) => {
-        socket.emit("message_to_client", {message: text, char_id: char_id});
-        appendMessage("You", char_id, text);
-    });
-}
-
 function updateArmorClass(char_id, value) {
     const ac_input = document.getElementById(`ac-input-${char_id}`);
     ac_input.value = value;
     updatePlayerAC(char_id, value);
 
-}
-
-function updateTrapLists(traps) {
-    document.querySelectorAll(".trap-element").forEach((element) => {
-        element.remove();
-    });
-    const elements = document.querySelectorAll(".trap-menu");
-    elements.forEach((element) => {
-        traps.forEach((trap) => {
-            const link = document.createElement("a");
-            link.textContent = trap.trap_name;
-            link.href = "#";
-            link.classList.add("trap-element");
-
-            link.addEventListener("click", (e) => {
-                e.preventDefault();
-                sendTrapMessage(trap.trap_text, menuToClientId.get(element));
-            });
-///////////////////////////////
-            let hoverText;
-
-            link.addEventListener('mouseenter', () => {
-              hoverText = document.createElement('div');
-              hoverText.classList.add('hover-text');
-              hoverText.textContent = trap.trap_text;
-              document.body.appendChild(hoverText);
-            });
-
-            link.addEventListener('mousemove', (e) => {
-              if (hoverText) {
-                hoverText.style.left = (e.clientX + 15) + 'px';
-                hoverText.style.top = (e.clientY + 15) + 'px';
-              }
-            });
-
-            link.addEventListener('mouseleave', () => {
-              if (hoverText) {
-                document.body.removeChild(hoverText);
-                hoverText = null;
-              }
-            });
-/////////////////////////////////////////////////////////
-            link.textContent = trap.trap_name;
-            element.appendChild(link);
-        });
-    });
 }
 
 function hostUpdateMaxHealth(health, player_id) {
@@ -184,6 +127,8 @@ function createTab(name, char_id) {
   tabButton.style.backgroundColor = "white";
   tabButton.onclick = (event) => showTabAndMark(event, char_id, tabId, tabButton.id);
   document.getElementById('tab-bar').appendChild(tabButton);
+
+  const returned_tabs = getAffectedTabs();
 
   // Create tab content
   const tabContent = document.createElement('div');
@@ -240,7 +185,7 @@ function createTab(name, char_id) {
             <div id="chat"></div>
             <div id="input-area">
               <input id="msg" placeholder="Message" autocomplete="off" />
-              <button onclick="sendMessage(${char_id}, ${affected_tabs})">Send</button>
+              <button onclick="sendMessage(${char_id}, ${returned_tabs})">Send</button>
             </div>
           </div>
       </div>
@@ -249,13 +194,13 @@ function createTab(name, char_id) {
 document.getElementById('tab-contents').appendChild(tabContent);
 
 const m = document.getElementById(`menu-${char_id}`);
-menuToClientId.set(m, char_id);
+setMenuToClient(m, char_id);
 
 const dropArea = document.getElementById(`drop-area-${char_id}`);
 const tab = document.getElementById(`client-${tabMap[tabId]}`);
 tab.querySelector("#msg").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
-        sendMessage(char_id, affected_tabs);
+        sendMessage(char_id, getAffectedTabs());
     }
 });
 dropArea.addEventListener('dragover', (e) => {
@@ -314,7 +259,7 @@ if (file && file.type.startsWith('image/')) {
   .then(data => {
     const imageUrl = data.url;
     // Emit this URL to clients via socket
-    affected_tabs.forEach((c) => {
+    getAffectedTabs.forEach((c) => {
         let t = document.getElementById(clientMap[c]);
         let id = clientMap[c].replace("client-", "");
         socket.emit('host_send_image_url', { url: imageUrl, char_id: id });
@@ -329,7 +274,8 @@ if (file && file.type.startsWith('image/')) {
   // Auto-select first client
   if (++clientCount === 1) {
     tabButton.classList.add("affected-tab");
-    affected_tabs = [char_id];
+    const t = [char_id];
+    setAffectedTabs(t);
     showTab(tabId);
   }
 }
@@ -377,12 +323,6 @@ socket.on('client_change_armor_class', ({char_id, value}) => {
     updateArmorClass(char_id, value);
 });
 
-
-socket.on('update_traps_list', data => {
-    const traps_data = data.traps_data;
-    const traps = traps_data.traps;
-    updateTrapLists(traps);
-});
 
 socket.on('add_ip_text', data => {
     const ip = data.ip;
