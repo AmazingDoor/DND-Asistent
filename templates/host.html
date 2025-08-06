@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/host.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/import_overlay.css') }}">
     <script type="module" src="{{ url_for('static', filename='js/host.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/combat.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/current_combat.js') }}"></script>
+    <<script type="module" src="{{ url_for('static', filename='js/combat.js') }}"></script>
+   <!-- <script src="{{ url_for('static', filename='js/current_combat.js') }}"></script> -->
 
 </head>
 <body>
@@ -17,7 +17,7 @@
   <div id="host" class="floating">
       <div class="header-column" id="left">
           <button id="manage-traps-button">Manage Traps</button>
-          <button onclick="manageCombat()">Combat</button>
+          <button id="manageCombatButton">Combat</button>
       </div>
       <div class="header-column" id="center">
         <header>Host</header>
@@ -30,7 +30,7 @@
   <div class="tabs floating" id="tab-bar"></div>
   <div id="combat-div" class="floating hidden">
       <div id="close-button">
-        <button onclick="manageCombat()">X</button>
+        <button id="close-combat-overlay-button">X</button>
       </div>
       <div class="combat-bottom">
           <div class="combat-container">
@@ -50,7 +50,7 @@
 
             </div>
               <div class="manage-buttons">
-                  <button class="manage-button" onclick="createCombat()">Create Combat</button>
+                  <button class="manage-button" id="create-combat-button">Create Combat</button>
                   <button class="import-encounter-button" onclick="openImportEncounterOverlay()">Import Encounter</button>
 
               </div>

@@ -4,6 +4,9 @@ import {setMenuToClient} from './host_scripts/factories/menu_to_client_factory.j
 
 import {sendMessage, removeNotification, appendMessage} from './host_scripts/message_handler.js';
 import {add_image_to_host} from './host_scripts/image_handler.js';
+import {combatUpdatePlayerHealth, setPlayerHealth} from './host_scripts/combat/health_handler.js';
+import {updatePlayerAC, manageCombat} from './combat.js';
+import {updateMaxHealth, hostUpdateMaxHealth} from './host_scripts/combat/health_section_builder.js';
 const socket = io({ query: { role: "host" } });
 setFactorySocket(socket);
 
@@ -14,6 +17,8 @@ const clientToTab = {};
 
 document.addEventListener("DOMContentLoaded", function () {
     socket.emit('host_page_load');
+    document.querySelector("#manageCombatButton").addEventListener("click", function() {manageCombat()});
+    document.querySelector("#close-combat-overlay-button").addEventListener("click", function() {manageCombat()});
 });
 
 function showTabAndMark(event, char_id, tab_id, button_id) {
@@ -88,28 +93,6 @@ function updateArmorClass(char_id, value) {
     ac_input.value = value;
     updatePlayerAC(char_id, value);
 
-}
-
-function hostUpdateMaxHealth(health, player_id) {
-    updateMaxHealth(health, player_id);
-    socket.emit('host_update_max_health', {health: health, player_id: player_id});
-}
-
-function updateMaxHealth(health, player_id) {
-    const max_health_instances = document.querySelectorAll('.max-health-' + player_id);
-    max_health_instances.forEach((max_health_instance) => {
-        max_health_instance.value = health;
-    });
-    const health_id = "player-health-" + player_id;
-    const current_health = document.querySelector("." + health_id).textContent;
-
-    if(parseInt(health)  < parseInt(current_health)) {
-         let new_health = health;
-         document.querySelectorAll("." + health_id).forEach((element) => {
-             element.textContent = new_health.toString();
-         });
-         socket.emit("host_update_health", {result: new_health, char_id: player_id});
-    }
 }
 
 function createTab(name, char_id) {
@@ -338,6 +321,8 @@ socket.on('client_update_max_health', data => {
     const char_id = data.char_id;
     updateMaxHealth(max_health, char_id);
 });
+
+
 
 
 

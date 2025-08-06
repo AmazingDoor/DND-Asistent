@@ -205,6 +205,10 @@ socket.on('initialize_combat', ({combat_id}) => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+      console.log('ran');
+      document.querySelector("#submit-init-button").addEventListener("click", function() {submit_init();});
+      document.querySelector("#hide-init-overlay-button").addEventListener("click", function() {hide_initiative_overlay();});
+
       document.getElementById("heal-input").addEventListener("change", function(event) {
         updateHealth();
       });
