@@ -139,6 +139,16 @@
         width: 50px;
     }
 
+    #speed-input {
+        font-size: 18px;
+        width: 50px;
+    }
+
+    #initiative-modifier-input {
+        font-size: 18px;
+        width: 50px;
+    }
+
     #mobile-buttons {
         display: none;
     }
@@ -283,10 +293,77 @@
         font-size: 75px;
     }
 
-    #ac-input {
+    .armor-class-div {
+        flex-direction: column;
+    }
+
+    #armor-class-text: {
+        margin-bottom: 2px;
+    }
+
+    #ability-container {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .max-health-label {
+        text-align: center;
+    }
+
+    .max-health {
         font-size: 100px;
         width: 200px;
     }
+
+    #health-label {
+        margin-bottom: 2px;
+        padding-bottom: 0px;
+    }
+
+    #health-num {
+        padding-top: 0px;
+        margin-top 0px;
+        margin-bottom: 2px;
+    }
+
+    #ac-input {
+        font-size: 100px;
+        width: 200px;
+        margin-bottom: 2px;
+    }
+
+    #speed-text {
+        margin-bottom: 2px;
+    }
+
+    #speed-input {
+        font-size: 100px;
+        width: 200px;
+        margin-bottom: 2px;
+    }
+
+    #initiative-modifier-text {
+        margin-bottom: 2px;
+    }
+
+    #initiative-modifier-input {
+        font-size: 100px;
+        width: 200px;
+    }
+
+    .ability-title {
+        font-size: 100px;
+    }
+
+    .ability-input {
+        font-size: 100px;
+        width: 200px;
+    }
+
+    .ability-modifier {
+        font-size: 100px;
+    }
+
 
     #mobile-buttons {
         padding: 5px;

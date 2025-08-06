@@ -205,7 +205,8 @@ socket.on('initialize_combat', ({combat_id}) => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-      console.log('ran');
+      document.querySelector("#toggle-imgs").addEventListener("click", function() {toggleImages()});
+      document.querySelector("#toggle-chat").addEventListener("click", function() {toggleChat()});
       document.querySelector("#submit-init-button").addEventListener("click", function() {submit_init();});
       document.querySelector("#hide-init-overlay-button").addEventListener("click", function() {hide_initiative_overlay();});
 
