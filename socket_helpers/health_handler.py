@@ -29,3 +29,25 @@ def host_update_health(data):
     safe_write_json(d, f"{get_players_folder()}\\{char_id}.json")
     emit('host_update_health', {'result': data.get('result')}, room=target_id)
 
+@socketio.on('host_update_max_health')
+def host_update_max_health(data):
+    PLAYERS_FOLDER = get_players_folder()
+    char_id = data.get('player_id')
+    health = data.get('health')
+    sid = ID_TO_CLIENT.get(char_id)
+    d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}.json")
+    d["max_health"] = health
+    safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}.json")
+    emit('host_update_max_health', {'max_health': health}, room=sid)
+
+
+@socketio.on('client_update_max_health')
+def client_update_max_health(data):
+    PLAYERS_FOLDER = get_players_folder()
+    DM_SID = get_dm_sid()
+    char_id = data.get('char_id')
+    max_health = data.get('max_health')
+    d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}.json")
+    d["max_health"] = max_health
+    safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}.json")
+    emit('client_update_max_health', {'max_health': max_health, 'char_id': char_id}, room=DM_SID)

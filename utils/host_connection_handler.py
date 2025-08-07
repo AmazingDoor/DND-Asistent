@@ -6,3 +6,4 @@ def get_dm_sid():
 def set_dm_sid(sid):
     global DM_SID
     DM_SID = sid
+
