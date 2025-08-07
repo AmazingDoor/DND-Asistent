@@ -169,7 +169,7 @@ function buildFinalCombatList(initiative_list, combat_order, element) {
             const enemy_health = initial_enemy.querySelector(".enemy-health-" + id).textContent;
             const enemy_max_health = initial_enemy.querySelector(".enemy-max-health").value;
 
-            const [hs, heal_input, damage_input, health, health_id] = createEnemyHealthSection(enemy_health, id, element, enemy_max_health);
+            const [hs, heal_input, damage_input, health, health_id] = createEnemyHealthSection(enemy_health, id, element, enemy_max_health, combat_order);
             health_section = hs;
 
             heal_input.addEventListener("change", function(event) {

@@ -6,7 +6,7 @@ export function setSocket(io) {
     socket = io;
 }
 
-export function createEnemyHealthSection(h, enemy_id, combat_element, enemy_max_health = 0) {
+export function createEnemyHealthSection(h, enemy_id, combat_element, enemy_max_health = 0, combat_order = []) {
     const health_section = document.createElement("div");
     health_section.classList.add("enemy-health-section-" + enemy_id);
     health_section.classList.add("enemy-health-section");
@@ -91,12 +91,12 @@ export function createEnemyHealthSection(h, enemy_id, combat_element, enemy_max_
             const health_num = section.querySelector(".enemy-health-num");
 
             max_health_input.value = max_health.value;
-            if(max_health.value < health_num.textContent) {
+            if(max_health.value < parseInt(health_num.textContent)) {
                 health_num.textContent = max_health.value.toString();
             }
         });
 
-        saveCombat(combat_element);
+        saveCombat(combat_element, combat_order);
     });
 
     return [health_section, heal_input, damage_input, health, health_id];
