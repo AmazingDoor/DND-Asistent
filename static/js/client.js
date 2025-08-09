@@ -1,4 +1,6 @@
 import {setFactorySocket} from './client_scripts/factories/socket_factory.js';
+import './client_scripts/character_sheet_tab_handler.js';
+import './client_scripts/utils/dropdown_handler.js';
 const socket = io();
 setFactorySocket(socket);
 

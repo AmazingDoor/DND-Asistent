@@ -1,3 +1,4 @@
+import './class_stats_handler.js';
 let socket = null;
 export function setSocket(io) {
     socket = io;
@@ -64,45 +65,86 @@ export function calculateAbilityModifiers() {
 }
 
 function calculateStrengthMod() {
-    const i = document.querySelector('#strength-input');
-    const num = document.querySelector('#strength-modifier');
-    const new_num = calculateModifier(i);
-    setModText(num, new_num);
+
+    const itp = document.querySelector('#strength-input');
+    const inputs = document.querySelectorAll('.strength-modifier');
+    const num = itp.value;
+
+    inputs.forEach((i) => {
+        const new_num = calculateModifier(itp);
+        setModText(i, new_num);
+    });
+
+    document.querySelector('#strength-num').textContent = num.toString();
+
+
 }
 
 function calculateDexterityMod() {
-    const i = document.querySelector('#dexterity-input');
-    const num = document.querySelector('#dexterity-modifier');
-    const new_num = calculateModifier(i);
-    setModText(num, new_num);
+    const itp = document.querySelector('#dexterity-input');
+    const inputs = document.querySelectorAll('.dexterity-modifier');
+    const num = itp.value;
+
+
+    inputs.forEach((i) => {
+        const new_num = calculateModifier(itp);
+        setModText(i, new_num);
+    });
+
+    document.querySelector('#dexterity-num').textContent = num.toString();
+
 }
 
 function calculateConstitutionMod() {
-    const i = document.querySelector('#constitution-input');
-    const num = document.querySelector('#constitution-modifier');
-    const new_num = calculateModifier(i);
-    setModText(num, new_num);
+    const itp = document.querySelector('#constitution-input');
+    const inputs = document.querySelectorAll('.constitution-modifier');
+    const num = itp.value;
+
+    inputs.forEach((i) => {
+        const new_num = calculateModifier(itp);
+        setModText(i, new_num);
+    });
+    document.querySelector('#constitution-num').textContent = num.toString();
+
 }
 
 function calculateIntelligenceMod() {
-    const i = document.querySelector('#intelligence-input');
-    const num = document.querySelector('#intelligence-modifier');
-    const new_num = calculateModifier(i);
-    setModText(num, new_num);
+    const itp = document.querySelector('#intelligence-input');
+    const inputs = document.querySelectorAll('.intelligence-modifier');
+    const num = itp.value;
+
+    inputs.forEach((i) => {
+        const new_num = calculateModifier(itp);
+        setModText(i, new_num);
+    });
+    document.querySelector('#intelligence-num').textContent = num.toString();
+
 }
 
 function calculateWisdomMod() {
-    const i = document.querySelector('#wisdom-input');
-    const num = document.querySelector('#wisdom-modifier');
-    const new_num = calculateModifier(i);
-    setModText(num, new_num);
+    const itp = document.querySelector('#wisdom-input');
+    const inputs = document.querySelectorAll('.wisdom-modifier');
+    const num = itp.value;
+
+    inputs.forEach((i) => {
+        const new_num = calculateModifier(itp);
+        setModText(i, new_num);
+    });
+    document.querySelector('#wisdom-num').textContent = num.toString();
+
 }
 
 function calculateCharismaMod() {
-    const i = document.querySelector('#charisma-input');
-    const num = document.querySelector('#charisma-modifier');
-    const new_num = calculateModifier(i);
-    setModText(num, new_num);
+    const itp = document.querySelector('#charisma-input');
+    const inputs = document.querySelectorAll('.charisma-modifier');
+    const num = itp.value;
+
+    inputs.forEach((i) => {
+        const new_num = calculateModifier(itp);
+        setModText(i, new_num);
+    });
+    document.querySelector('#charisma-num').textContent = num.toString();
+
 }
 
 function setModText(mod, num) {

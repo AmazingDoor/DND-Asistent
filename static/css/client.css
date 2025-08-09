@@ -201,6 +201,139 @@
         margin-bottom: 5px;
     }
 
+    .character-sheet-tabs {
+        z-index: 1;
+        background: 'white';
+    }
+
+    .tablinks p {
+        padding-left: 2px;
+        padding-right: 2px;
+        cursor: default;
+    }
+
+    .tablinks {
+        background-color: lightgray;
+        height: 20px;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        align-items: center;
+        justify-content: center;
+        background-color: lightgray;
+        flex-grow: 0;
+        margin-top: 4px;
+    }
+
+    .tablinks-filler {
+        display: flex;
+        width: 100%;
+        border-bottom: 1px solid black;
+    }
+
+    .tablinks:hover {
+        background-color: gray;
+    }
+
+    .tablinks.selected-tab {
+        border-bottom: none;
+        background-color: white;
+    }
+
+.character-sheet-overlay-container {
+    background: white;
+    border: 2px solid black;
+    height: 100dvh;
+    position: fixed;
+    width: 50dvh;
+    z-index: 999;
+    right: 0px;
+}
+
+.character-sheet-tabs {
+    display: flex;
+    flex-direction: row;
+}
+
+.tablinks p {
+    text-align-center;
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+}
+
+.class-selection {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.dropdown-head {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 1px solid black;
+    cursor: default;
+    min-width: 100px;
+    padding-bottom: 0px;
+    flex-grow: 0;
+    flex-direction: column;
+}
+
+.selected-class {
+    white-space: nowrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: default;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+
+}
+
+.dropdown-head:hover {
+    background-color: lightgray;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.dropdown-content {
+  width: 100%;
+  position: absolute;
+  background-color: #f1f1f1;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content div {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: default;
+    width: 100%;
+}
+
+.dropdown-content div:hover {
+    background-color: lightgray;
+}
+
+.dropdown-content.hidden {
+    display: none; !important
+}
+
+.character-sheet-tab-contents.hidden {
+    display: none;
+}
+
 
 @media (max-width: 1000px) {
 
