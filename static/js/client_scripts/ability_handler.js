@@ -1,3 +1,6 @@
+import {getSavingThrows} from './class_stats_handler.js';
+import {getProfs} from './utils/class_stats_handler/profs_mapper.js';
+
 let socket = null;
 export function setSocket(io) {
     socket = io;
@@ -30,7 +33,7 @@ export function loadPlayerAbilities(data) {
     int_input.value = int_num;
     wis_input.value = wis_num;
     cha_input.value = cha_num;
-    calculateAbilityModifiers();
+    //calculateAbilityModifiers();
 }
 
 export function getInputs () {
@@ -46,12 +49,12 @@ export function getInputs () {
 export function addEventListeners() {
     const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
 
-    str_input.addEventListener('change', function() {calculateStrengthMod(); saveAbilities()});
-    dex_input.addEventListener('change', function() {calculateDexterityMod(); saveAbilities()});
-    con_input.addEventListener('change', function() {calculateConstitutionMod(); saveAbilities()});
-    int_input.addEventListener('change', function() {calculateIntelligenceMod(); saveAbilities()});
-    wis_input.addEventListener('change', function() {calculateWisdomMod(); saveAbilities()});
-    cha_input.addEventListener('change', function() {calculateCharismaMod(); saveAbilities()});
+    str_input.addEventListener('change', function() {calculateStrengthMod(); saveAbilities(); updateModifiers();});
+    dex_input.addEventListener('change', function() {calculateDexterityMod(); saveAbilities(); updateModifiers();});
+    con_input.addEventListener('change', function() {calculateConstitutionMod(); saveAbilities(); updateModifiers();});
+    int_input.addEventListener('change', function() {calculateIntelligenceMod(); saveAbilities(); updateModifiers();});
+    wis_input.addEventListener('change', function() {calculateWisdomMod(); saveAbilities(); updateModifiers();});
+    cha_input.addEventListener('change', function() {calculateCharismaMod(); saveAbilities(); updateModifiers();});
 }
 
 export function calculateAbilityModifiers() {
@@ -61,6 +64,8 @@ export function calculateAbilityModifiers() {
     calculateIntelligenceMod();
     calculateWisdomMod();
     calculateCharismaMod();
+    updateModifiers();
+
 }
 
 function calculateStrengthMod() {
@@ -147,5 +152,37 @@ function saveAbilities() {
     const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
     const data = {char_id: char_id, abilities: abilities};
     socket.emit('save_abilities', data);
+}
+
+export function updateModifiers() {
+    const num = 1;
+    const str_mod = document.querySelector("#strength-mod");
+    const dex_mod = document.querySelector("#dexterity-mod");
+    const con_mod = document.querySelector("#constitution-mod");
+    const int_mod = document.querySelector("#intelligence-mod");
+    const wis_mod = document.querySelector("#wisdom-mod");
+    const cha_mod = document.querySelector("#charisma-mod");
+    const saving_throws = getProfs().saving_throws;
+    saving_throws.forEach((saving_throw) => {
+        switch (saving_throw) {
+            case "Strength":
+                setModText(str_mod, parseInt(str_mod.textContent.replace(/[()]/g, "")) + num);
+                break;
+            case "Dexterity":
+                setModText(dex_mod, parseInt(dex_mod.textContent.replace(/[()]/g, "")) + num);
+                break;
+            case "Constitution":
+                setModText(con_mod, parseInt(con_mod.textContent.replace(/[()]/g, "")) + num);
+                break;
+            case "Intelligence":
+                setModText(int_mod, parseInt(int_mod.textContent.replace(/[()]/g, "")) + num);
+                break;
+            case "Wisdom":
+                setModText(wis_mod, parseInt(wis_mod.textContent.replace(/[()]/g, "")) + num);
+                break;
+            case "Charisma":
+                setModText(cha_mod, parseInt(cha_mod.textContent.replace(/[()]/g, "")) + num);
+        }
+    });
 }
 

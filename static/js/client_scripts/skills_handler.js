@@ -1,7 +1,7 @@
-import {getSkills, getSavingThrows} from './class_stats_handler.js';
-import {addEventListeners, getInputs} from './ability_handler.js';
-import {addEventListeners as addClassStatsEventListeners, loadPlayerClass} from './class_stats_handler.js';
-
+import {getInputs} from './ability_handler.js';
+import {loadPlayerClass, getSkills, getSavingThrows} from './class_stats_handler.js';
+import {calculateSkills, calculateModifier} from './utils/skills_handler/skill_calculator.js';
+import {addEventListeners} from './utils/skills_handler/event_listener_handler.js';
 let socket = null;
 
 export function setSocket(io) {
@@ -10,7 +10,6 @@ export function setSocket(io) {
 
 document.addEventListener("DOMContentLoaded", () => {
     addSkillsEventListeners();
-    addClassStatsEventListeners(updateSkills);
     socket.on('load_player_class', (data) => {
         loadPlayerClass(data, updateSkills);
     });
@@ -18,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function addSkillsEventListeners() {
-    addEventListeners();
+    addEventListeners(updateSkills);
     const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
     str_input.addEventListener('change', function() {updateSkills();});
     dex_input.addEventListener('change', function() {updateSkills();});
@@ -29,102 +28,23 @@ function addSkillsEventListeners() {
 
 }
 
+
+
 function updateSkills() {
     const skills = getSkills();
     const proficiencies = getSavingThrows();
-    const player_level_mod_num = 1;
 
-    let str_mod = parseInt(document.querySelector('.strength-modifier').textContent.replace('(', '').replace(')', ''));
-    let dex_mod = parseInt(document.querySelector('.dexterity-modifier').textContent.replace('(', '').replace(')', ''));
-    let con_mod = parseInt(document.querySelector('.constitution-modifier').textContent.replace('(', '').replace(')', ''));
-    let int_mod = parseInt(document.querySelector('.intelligence-modifier').textContent.replace('(', '').replace(')', ''));
-    let wis_mod = parseInt(document.querySelector('.wisdom-modifier').textContent.replace('(', '').replace(')', ''));
-    let cha_mod = parseInt(document.querySelector('.charisma-modifier').textContent.replace('(', '').replace(')', ''));
+    let str_mod = calculateModifier(document.querySelector('#strength-input').value);
+    let dex_mod = calculateModifier(document.querySelector('#dexterity-input').value);
+    let con_mod = calculateModifier(document.querySelector('#constitution-input').value);
+    let int_mod = calculateModifier(document.querySelector('#intelligence-input').value);
+    let wis_mod = calculateModifier(document.querySelector('#wisdom-input').value);
+    let cha_mod = calculateModifier(document.querySelector('#charisma-input').value);
 
-    let athletics_skill = 0,
-    acrobatics_skill = 0,
-    sleight_of_hand_skill = 0,
-    stealth_skill = 0,
-    arcana_skill = 0,
-    history_skill = 0,
-    investigation_skill = 0,
-    nature_skill = 0,
-    religion_skill = 0,
-    animal_handling_skill = 0,
-    insight_skill = 0,
-    medicine_skill = 0,
-    perception_skill = 0,
-    survival_skill = 0,
-    deception_skill = 0,
-    intimidation_skill = 0,
-    performance_skill = 0,
-    persuasion_skill = 0;
-
-    if (skills.length > 0) {
-        skills.forEach(skill => {
-            switch(skill) {
-                case "Athletics":
-                    athletics_skill = player_level_mod_num;
-                    break;
-                case "Acrobatics":
-                    acrobatics_skill = player_level_mod_num;
-                    break;
-                case "Sleight of Hand":
-                    sleight_of_hand_skill = player_level_mod_num;
-                    break;
-                case "Stealth":
-                    stealth_skill = player_level_mod_num;
-                    break;
-                case "Constitution":
-                    constitution_skill = player_level_mod_num;
-                    break;
-                case "Arcana":
-                    arcana_skill = player_level_mod_num;
-                    break;
-                case "History":
-                    history_skill = player_level_mod_num;
-                    break;
-                case "Investigation":
-                    investigation_skill = player_level_mod_num;
-                    break;
-                case "Nature":
-                    nature_skill = player_level_mod_num;
-                    break;
-                case "Religion":
-                    religion_skill = player_level_mod_num;
-                    break;
-                case "Animal Handling":
-                    animal_handling_skill = player_level_mod_num;
-                    break;
-                case "Insight":
-                    insight_skill = player_level_mod_num;
-                    break;
-                case "Medicine":
-                    medicine_skill = player_level_mod_num;
-                    break;
-                case "Perception":
-                    perception_skill = player_level_mod_num;
-                    break;
-                case "Survival":
-                    survival_skill = player_level_mod_num;
-                    break;
-                case "Deception":
-                    deception_skill = player_level_mod_num;
-                    break;
-                case "Intimidation":
-                    intimidation_skill = player_level_mod_num;
-                    break;
-                case "Performance":
-                    perception_skill = player_level_mod_num;
-                    break;
-                case "Persuasion":
-                    persuasion_skill = player_level_mod_num;
-                    break;
-                default:
-                break;
-            }
-        });
-    }
+    const [athletics_skill, acrobatics_skill, sleight_of_hand_skill, stealth_skill, arcana_skill,
+    history_skill, investigation_skill, nature_skill, religion_skill, animal_handling_skill,
+    insight_skill, medicine_skill, perception_skill, survival_skill, deception_skill, intimidation_skill, performance_skill,
+    persuasion_skill] = calculateSkills(skills, proficiencies);
 
     const athletics = document.querySelector("#athletics-num");
     const acrobatics = document.querySelector("#acrobatics-num");

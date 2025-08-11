@@ -2,8 +2,10 @@ let socket = null;
 import * as class_proficiencies from './../shared/class_proficiencies.js';
 import {linkDropdown} from './utils/dropdown_handler.js';
 import {addClassSkillEventListeners} from './class_skill_handler.js';
-let profs = {};
+import {setProfs, getProfs} from './utils/class_stats_handler/profs_mapper.js';
+import {updateModifiers, calculateAbilityModifiers} from './ability_handler.js';
 
+let profs;
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
@@ -17,7 +19,10 @@ export function addEventListeners(updateSkills) {
     const class_options = [...document.querySelector(".class-options").children];
     const head = document.querySelector(".class-selector");
     class_options.forEach((option) => {
-        option.addEventListener("click", function () {addClickListener(option, head, updateSkills)});
+        option.addEventListener("click", function () {
+        addClickListener(option, head, updateSkills)
+        updateSkills();
+        });
     });
 }
 
@@ -40,7 +45,9 @@ function addClickListener(option, head, updateSkills) {
 }
 
 function buildClassStatSection(c, updateSkills, active_skills = []) {
-    profs = getProfs(c);
+    setProfs(c);
+    profs = getProfs();
+    calculateAbilityModifiers();
     if (Object.keys(profs).length === 0) {
         return;
     }
@@ -117,7 +124,6 @@ function createSkillSelections(skill_count, skills, active_skills, updateSkills)
     const d = document.querySelector('.class-skills-div');
     removeSkills();
     const skill_names = active_skills[1] || [];
-    console.log(skill_names)
     for (let i = 0; i < skill_count; i++) {
         let skill_text = "Select Skill";
         if (skill_names.length > 0) {
@@ -155,53 +161,6 @@ function removeSkills() {
     const d = document.querySelector('.class-skills-div');
     d.innerHTML = '';
 
-}
-
-function getProfs(c) {
-    let profs;
-
-    switch (c) {
-    case "Barbarian":
-        profs = class_proficiencies.barbarian;
-        break;
-    case "Bard":
-        profs = class_proficiencies.bard;
-        break;
-    case "Cleric":
-        profs = class_proficiencies.cleric;
-        break;
-    case "Druid":
-        profs = class_proficiencies.druid;
-        break;
-    case "Fighter":
-        profs = class_proficiencies.fighter;
-        break;
-    case "Monk":
-        profs = class_proficiencies.monk;
-        break;
-    case "Paladin":
-        profs = class_proficiencies.paladin;
-        break;
-    case "Ranger":
-        profs = class_proficiencies.ranger;
-        break;
-    case "Rogue":
-        profs = class_proficiencies.rogue;
-        break;
-    case "Sourcerer":
-        profs = class_proficiencies.sorcerer;
-        break;
-    case "Warlock":
-        profs = class_proficiencies.warlock;
-        break;
-    case "Wizard":
-        profs = class_proficiencies.wizard;
-        break;
-    default:
-        profs = {};
-        break;
-    }
-    return profs;
 }
 
 export function getSkills() {
