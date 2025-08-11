@@ -4,6 +4,13 @@ export function setSocket(io) {
     socket = io;
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    addEventListeners();
+    document.querySelector('.import-encounter-button').addEventListener("click", function() {openImportEncounterOverlay()});
+    document.querySelector('.import-button').addEventListener('click', function() {importSelections()});
+    document.querySelector('.close-import-overlay').addEventListener('click', function() {hideImportOverlay()});
+});
+
 export function saveCombatGlobal(combat) {
     //saves the enemy list, id, and name of the combat to a global folder
     const enemies = combat.querySelectorAll(".enemy");
@@ -17,7 +24,7 @@ export function saveCombatGlobal(combat) {
         const health_id = "enemy-health-" + enemy_id;
         const enemy_health = enemy.querySelector("." + health_id);
         const max_health = enemy.querySelector('.enemy-max-health');
-        d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent, max_health: max_health.value}};
+        let d = {[enemy_id]:{enemy_name: enemy_name.value, enemy_ac: 0, enemy_health: enemy_health.textContent, max_health: max_health.value}};
         enemy_list.push(d);
     });
 

@@ -1,8 +1,7 @@
-import {saveCombatGlobal, displayContextMenu} from './save_combat_global_handler.js';
+import {saveCombatGlobal, displayContextMenu, hideContextMenu} from './save_combat_global_handler.js';
 import {cancelInitiate, initializeCombat} from './combat_initializer.js';
 import {initCombatMap, startCombat, progressCombat, endCombat, loadActiveCombat} from './current_combat.js';
 import {createEnemy} from './enemy_builder.js';
-import {hideContextMenu} from './save_combat_global_handler.js';
 let socket = null;
 
 export function setSocket(io) {
@@ -127,7 +126,7 @@ export function createCombat(c_id = null, c=null) {
     lower.addEventListener('click', function () {toggleListObject(list_object, upper, lower);});
     lower.addEventListener('mouseenter', function() {handleCombatHoverEnter(upper, lower, right_combat)});
     lower.addEventListener('mouseleave', function() {handleCombatHoverExit(upper, lower, right_combat)});
-    lower.addEventListener('contextmenu', function(event) {displayContextMenu(event)});
+    lower.addEventListener('contextmenu', function(event) {displayContextMenu(combat_element)});
 
 
     upper.addEventListener('click', function () {toggleListObject(list_object, upper, lower);});
