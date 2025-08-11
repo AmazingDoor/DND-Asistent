@@ -1,6 +1,6 @@
 import './class_stats_handler.js';
 import './ability_handler.js';
-
+import './skills_handler.js'
 document.addEventListener("DOMContentLoaded", () => {
     const tabs = document.querySelectorAll('.tablinks');
     tabs.forEach((tab) => {

@@ -3,7 +3,7 @@ export const barbarian = {
     weapons: ["Simple Weapons", "Martial Weapons"],
     armor: ["Light Armor", "Medium Armor", "Shields"],
     tools: [],
-    skills: [2, ["Animal Handling, Athletics, Intimidation, Nature, Perception, Survival"]],
+    skills: [2, ["Animal Handling", "Athletics", "Intimidation", "Nature", "Perception", "Survival"]]
 }
 
 export const bard = {

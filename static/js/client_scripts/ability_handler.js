@@ -1,4 +1,3 @@
-import './class_stats_handler.js';
 let socket = null;
 export function setSocket(io) {
     socket = io;
@@ -34,7 +33,7 @@ export function loadPlayerAbilities(data) {
     calculateAbilityModifiers();
 }
 
-function getInputs () {
+export function getInputs () {
     const str_input = document.querySelector('#strength-input');
     const dex_input = document.querySelector('#dexterity-input');
     const con_input = document.querySelector('#constitution-input');
@@ -75,9 +74,6 @@ function calculateStrengthMod() {
         setModText(i, new_num);
     });
 
-    document.querySelector('#strength-num').textContent = num.toString();
-
-
 }
 
 function calculateDexterityMod() {
@@ -90,9 +86,6 @@ function calculateDexterityMod() {
         const new_num = calculateModifier(itp);
         setModText(i, new_num);
     });
-
-    document.querySelector('#dexterity-num').textContent = num.toString();
-
 }
 
 function calculateConstitutionMod() {
@@ -104,8 +97,6 @@ function calculateConstitutionMod() {
         const new_num = calculateModifier(itp);
         setModText(i, new_num);
     });
-    document.querySelector('#constitution-num').textContent = num.toString();
-
 }
 
 function calculateIntelligenceMod() {
@@ -117,8 +108,6 @@ function calculateIntelligenceMod() {
         const new_num = calculateModifier(itp);
         setModText(i, new_num);
     });
-    document.querySelector('#intelligence-num').textContent = num.toString();
-
 }
 
 function calculateWisdomMod() {
@@ -130,8 +119,6 @@ function calculateWisdomMod() {
         const new_num = calculateModifier(itp);
         setModText(i, new_num);
     });
-    document.querySelector('#wisdom-num').textContent = num.toString();
-
 }
 
 function calculateCharismaMod() {
@@ -143,8 +130,6 @@ function calculateCharismaMod() {
         const new_num = calculateModifier(itp);
         setModText(i, new_num);
     });
-    document.querySelector('#charisma-num').textContent = num.toString();
-
 }
 
 function setModText(mod, num) {

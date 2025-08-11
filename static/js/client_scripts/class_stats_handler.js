@@ -1,20 +1,46 @@
+let socket = null;
 import * as class_proficiencies from './../shared/class_proficiencies.js';
 import {linkDropdown} from './utils/dropdown_handler.js';
+import {addClassSkillEventListeners} from './class_skill_handler.js';
+let profs = {};
+
 document.addEventListener("DOMContentLoaded", () => {
+    name = sessionStorage.getItem('charName');
+    char_id = sessionStorage.getItem('charId');
+});
+
+export function setSocket(io) {
+    socket = io;
+}
+
+export function addEventListeners(updateSkills) {
     const class_options = [...document.querySelector(".class-options").children];
     const head = document.querySelector(".class-selector");
     class_options.forEach((option) => {
-        option.addEventListener("click", function () {addClickListener(option, head)});
+        option.addEventListener("click", function () {addClickListener(option, head, updateSkills)});
     });
-});
-
-function addClickListener(option, head) {
-    head.querySelector('.selected-class').textContent = option.textContent;
-    buildClasStatSection(option.textContent);
 }
 
-function buildClasStatSection(c) {
-    const profs = getProfs(c);
+export function loadPlayerClass(data, updateSkills) {
+    const class_name = data.class_name;
+    const skills = data.player_skills;
+    document.querySelector('.selected-class').textContent = class_name;
+    buildClassStatSection(class_name, updateSkills, skills);
+    updateSkills();
+}
+
+function addClickListener(option, head, updateSkills) {
+    head.querySelector('.selected-class').textContent = option.textContent;
+    buildClassStatSection(option.textContent, updateSkills);
+    const skills = getSkills();
+    const skill_array = [skills.length, skills];
+    updateSkills();
+    socket.emit('save_player_class', {class_name: option.textContent, skills: skill_array, char_id: char_id});
+
+}
+
+function buildClassStatSection(c, updateSkills, active_skills = []) {
+    profs = getProfs(c);
     if (Object.keys(profs).length === 0) {
         return;
     }
@@ -29,7 +55,7 @@ function buildClasStatSection(c) {
     createWeapons(weapons)
     createArmor(armor)
     createTools(tools)
-    createSkillSelections(skill_count, skills)
+    createSkillSelections(skill_count, skills, active_skills, updateSkills)
 
 
 }
@@ -87,16 +113,23 @@ function createTools(tools) {
     document.querySelector('.tools-display').textContent = str;
 }
 
-function createSkillSelections(skill_count, skills) {
-    console.log(skills);
+function createSkillSelections(skill_count, skills, active_skills, updateSkills) {
     const d = document.querySelector('.class-skills-div');
     removeSkills();
+    const skill_names = active_skills[1] || [];
+    console.log(skill_names)
     for (let i = 0; i < skill_count; i++) {
+        let skill_text = "Select Skill";
+        if (skill_names.length > 0) {
+            if (skill_names[i] !== undefined) {
+                skill_text = skill_names[i];
+            }
+        }
         let skill_div = document.createElement('div');
         skill_div.classList.add('skill-selection');
         skill_div.classList.add('dropdown-head');
         skill_div.innerHTML = `
-            <p>Select Skill</p>
+            <p>${skill_text}</p>
             <div class="dropdown">
                 <div class="skill-dropdown dropdown-content hidden">
                 </div>
@@ -113,6 +146,7 @@ function createSkillSelections(skill_count, skills) {
         });
         skill_div.appendChild(dropdown);
         linkDropdown(skill_div);
+        addClassSkillEventListeners(updateSkills, getSkills);
     }
 
 }
@@ -168,4 +202,22 @@ function getProfs(c) {
         break;
     }
     return profs;
+}
+
+export function getSkills() {
+    const skills_container = document.querySelector('.class-skills-div');
+    const skills = skills_container.querySelectorAll('.dropdown-head') || [];
+    const skill_names = []
+    skills.forEach((skill) => {
+        const skill_text = skill.querySelector('p').textContent;
+        if(skill_text !== "Select Skill") {
+            skill_names.push(skill_text);
+        }
+    });
+
+    return skill_names;
+}
+
+export function getSavingThrows() {
+    return profs.saving_throws;
 }

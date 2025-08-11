@@ -1,6 +1,7 @@
 from utils.socket_factory import socketio, emit
 from utils.file_manager import get_players_folder
 from utils.safe_json import safe_write_json, safe_read_json
+from utils.class_stats_manager import load_player_class
 import os
 
 
@@ -33,3 +34,4 @@ def init_json_data(sid, name, char_id):
     emit('host_update_health', {'result': health, 'client_id': sid}, room=sid)
     emit('host_change_armor_class', {'value': armor_class}, room=sid)
     emit('host_update_max_health', {'max_health': max_health}, room=sid)
+    load_player_class(char_id, sid)

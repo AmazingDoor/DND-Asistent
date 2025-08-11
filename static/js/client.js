@@ -4,7 +4,7 @@ import './client_scripts/utils/dropdown_handler.js';
 const socket = io();
 setFactorySocket(socket);
 
-import {loadPlayerAbilities, addEventListeners, calculateAbilityModifiers} from './client_scripts/ability_handler.js';
+import {loadPlayerAbilities, calculateAbilityModifiers} from './client_scripts/ability_handler.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         clientUpdateMaxHealth(max_health_input.value);
     });
     selectCharacter();
-    addEventListeners();
+    //addEventListeners();
 });
 
 function selectCharacter() {

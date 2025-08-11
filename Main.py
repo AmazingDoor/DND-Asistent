@@ -23,6 +23,7 @@ import utils.campaign_manager
 import utils.traps_manager
 import utils.global_encounter_manager
 import utils.combat_manager
+import utils.class_stats_manager
 import socket_helpers.ability_handler
 import socket_helpers.ac_handler
 import socket_helpers.health_handler
