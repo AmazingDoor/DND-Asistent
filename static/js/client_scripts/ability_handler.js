@@ -156,6 +156,14 @@ function saveAbilities() {
 
 export function updateModifiers() {
     const num = 1;
+
+    const str_input = document.querySelector("#strength-input");
+    const dex_input = document.querySelector("#dexterity-input");
+    const con_input = document.querySelector("#constitution-input");
+    const int_input = document.querySelector("#intelligence-input");
+    const wis_input = document.querySelector("#wisdom-input");
+    const cha_input = document.querySelector("#charisma-input");
+
     const str_mod = document.querySelector("#strength-mod");
     const dex_mod = document.querySelector("#dexterity-mod");
     const con_mod = document.querySelector("#constitution-mod");
@@ -166,22 +174,22 @@ export function updateModifiers() {
     saving_throws.forEach((saving_throw) => {
         switch (saving_throw) {
             case "Strength":
-                setModText(str_mod, parseInt(str_mod.textContent.replace(/[()]/g, "")) + num);
+                setModText(str_mod, calculateModifier(str_input) + num);
                 break;
             case "Dexterity":
-                setModText(dex_mod, parseInt(dex_mod.textContent.replace(/[()]/g, "")) + num);
+                setModText(dex_mod, calculateModifier(dex_input) + num);
                 break;
             case "Constitution":
-                setModText(con_mod, parseInt(con_mod.textContent.replace(/[()]/g, "")) + num);
+                setModText(con_mod, calculateModifier(con_input) + num);
                 break;
             case "Intelligence":
-                setModText(int_mod, parseInt(int_mod.textContent.replace(/[()]/g, "")) + num);
+                setModText(int_mod, calculateModifier(int_input) + num);
                 break;
             case "Wisdom":
-                setModText(wis_mod, parseInt(wis_mod.textContent.replace(/[()]/g, "")) + num);
+                setModText(wis_mod, calculateModifier(wis_input) + num);
                 break;
             case "Charisma":
-                setModText(cha_mod, parseInt(cha_mod.textContent.replace(/[()]/g, "")) + num);
+                setModText(cha_mod, calculateModifier(cha_input) + num);
         }
     });
 }
