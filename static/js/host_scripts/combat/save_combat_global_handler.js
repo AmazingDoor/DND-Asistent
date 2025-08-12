@@ -6,9 +6,6 @@ export function setSocket(io) {
 
 document.addEventListener("DOMContentLoaded", function () {
     addEventListeners();
-    document.querySelector('.import-encounter-button').addEventListener("click", function() {openImportEncounterOverlay()});
-    document.querySelector('.import-button').addEventListener('click', function() {importSelections()});
-    document.querySelector('.close-import-overlay').addEventListener('click', function() {hideImportOverlay()});
 });
 
 export function saveCombatGlobal(combat) {
@@ -144,4 +141,7 @@ function addEventListeners() {
         const name = data.name;
         addImportOption(encounter_id, name);
     });
+    document.querySelector('.import-encounter-button').addEventListener("click", function() {openImportEncounterOverlay()});
+    document.querySelector('.import-button').addEventListener('click', function() {importSelections()});
+    document.querySelector('.close-import-overlay').addEventListener('click', function() {hideImportOverlay()});
 }
