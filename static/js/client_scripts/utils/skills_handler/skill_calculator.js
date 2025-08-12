@@ -1,7 +1,8 @@
+import {getProficiencyBonus} from './../../player_level_handler.js';
 
 export function calculateSkills(skills, proficiencies) {
 
-    const player_level_mod_num = 1;
+    const player_level_mod_num = getProficiencyBonus();
 
     let athletics_skill = 0,
     acrobatics_skill = 0,

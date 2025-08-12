@@ -1,6 +1,6 @@
 import {getSavingThrows} from './class_stats_handler.js';
 import {getProfs} from './utils/class_stats_handler/profs_mapper.js';
-
+import {getProficiencyBonus} from './player_level_handler.js';
 let socket = null;
 export function setSocket(io) {
     socket = io;
@@ -155,7 +155,7 @@ function saveAbilities() {
 }
 
 export function updateModifiers() {
-    const num = 1;
+    const num = getProficiencyBonus();
 
     const str_input = document.querySelector("#strength-input");
     const dex_input = document.querySelector("#dexterity-input");
