@@ -4,7 +4,7 @@ import {linkDropdown} from './utils/dropdown_handler.js';
 import {addClassSkillEventListeners} from './class_skill_handler.js';
 import {setProfs, getProfs} from './utils/class_stats_handler/profs_mapper.js';
 import {updateModifiers, calculateAbilityModifiers} from './ability_handler.js';
-
+import {buildSpellSection} from './class_spell_section_handler.js';
 let profs;
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -22,6 +22,7 @@ export function addEventListeners(updateSkills) {
         option.addEventListener("click", function () {
         addClickListener(option, head, updateSkills)
         updateSkills();
+        buildSpellSection(option.textContent);
         });
     });
 }

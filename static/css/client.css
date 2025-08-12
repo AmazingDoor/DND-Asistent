@@ -251,6 +251,14 @@
     right: 0px;
 }
 
+.character-sheet-overlay {
+    height: 100%;
+}
+
+.character-sheet-data-container {
+    height: 100%;
+}
+
 .character-sheet-tabs {
     display: flex;
     flex-direction: row;
@@ -328,6 +336,11 @@
 
 .dropdown-content.hidden {
     display: none; !important
+}
+
+.character-sheet-tab-contents {
+    height: 90%;
+    overflow-y: auto;
 }
 
 .character-sheet-tab-contents.hidden {
