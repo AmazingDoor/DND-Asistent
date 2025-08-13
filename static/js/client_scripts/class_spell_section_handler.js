@@ -6,7 +6,7 @@ import {ranger} from './../shared/spell_lists/ranger.js';
 import {sorcerer} from './../shared/spell_lists/sorcerer.js';
 import {warlock} from './../shared/spell_lists/warlock.js';
 import {wizard} from './../shared/spell_lists/wizard.js';
-import {full_caster} from './../shared/spell_caster_slot_map.js';
+import {full_caster, half_caster, third_caster, warlock_pact_magic, getMagicSlots} from './../shared/spell_caster_slot_map.js';
 import {getPlayerLevel} from './player_level_handler.js';
 import {linkDropdown} from './utils/dropdown_handler.js';
 import {getClassSpells, getSpellData} from './../shared/spell_data_filterer.js';
@@ -31,7 +31,9 @@ export function buildSpellSection(class_name, saved_spells = [], saved_cantrips 
     const [cantrips, spells] = getClassSpells(class_name);
     if(spells === undefined) {return;}
     const player_level = getPlayerLevel();
-    const spell_slot_map = full_caster.spell_slots[player_level - 1];
+    const spell_slots = getMagicSlots(class_name);
+    if(spell_slots.length <= 0) {return;}
+    const spell_slot_map = spell_slots.spell_slots[player_level - 1];
 
     buildSpells(spell_slot_map, player_level, spells, saved_spells);
 
@@ -87,9 +89,11 @@ function buildSpells(spell_slot_map, player_level, spells, saved_spells) {
     spell_div.innerHTML = '';
     let i = 1;
     spell_slot_map.forEach((spell_level_count) => {
-        const spell_level_label = document.createElement('p');
-        spell_level_label.textContent = "Level " + i.toString() + " Slots";
-        spell_div.appendChild(spell_level_label);
+        if (spell_level_count !== 0) {
+            const spell_level_label = document.createElement('p');
+            spell_level_label.textContent = "Level " + i.toString() + " Slots";
+            spell_div.appendChild(spell_level_label);
+        }
         const spell_container = document.createElement('div');
         spell_container.classList.add('spell-container');
         spell_container.id = "level-" + i.toString() + "-spell-container";
