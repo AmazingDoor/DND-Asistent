@@ -14,3 +14,4 @@ export function linkDropdown(dropdown) {
         content.classList.toggle("hidden");
     });
 }
+

@@ -6,7 +6,6 @@ import os
 
 
 def init_json_data(sid, name, char_id):
-    print('init clients')
     # Load or Create all of the data for each client
     PLAYERS_FOLDER = get_players_folder()
     if not os.path.exists(f"{PLAYERS_FOLDER}\\{char_id}.json"):
