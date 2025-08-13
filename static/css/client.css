@@ -401,6 +401,35 @@
     display: none;
 }
 
+.player-stats-display-tabs {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.player-display-tablink {
+    background-color: lightgray;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    cursor: default;
+}
+
+.player-display-tablink:hover {
+    background-color: gray;
+}
+
+.player-display-tablink.selected-tab {
+    background-color: white;
+    border-bottom: none;
+}
+
+
 
 @media (max-width: 1000px) {
 

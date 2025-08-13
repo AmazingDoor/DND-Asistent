@@ -186,11 +186,12 @@
 
       <!-- PLAYER STATS DISPLAY TABS -->
         <div class="player-stats-display-tabs">
-          <div class="player-display-tablink">Skills/Abilities</div>
+          <div class="player-display-tablink selected-tab" id="skill-ability-tab">Skills/Abilities</div>
+          <div class="player-display-tablink" id="combat-tab">Combat</div>
           <div class="tablinks-filler"></div>
         </div>
         <div class="player-stats-display-pages">
-          <div id="skill-ability-container">
+          <div class="player-stats-display-page" id="skill-ability-container">
             <table class="skills-table">
               <thead>
                 <tr>
@@ -309,6 +310,9 @@
                 <td class="ability-modifier charisma-modifier charisma-modifier-usable">(0)</td>
               </tr>
             </table>
+          </div>
+          <div class="player-stats-display-page hidden" id="combat-container">
+            <p>Combat</p>
           </div>
         </div>
         <!-- END PLAYER STATS TABS -->
