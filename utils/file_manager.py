@@ -40,4 +40,9 @@ def assign_folders(name):
             "traps": []
         }
         safe_write_json(traps_data, f"{TRAPS_FOLDER}\\traps.json")
+    if not os.path.exists(f"{PLAYERS_FOLDER}"):
+        os.mkdir(f"{PLAYERS_FOLDER}")
+    if not os.path.exists(f"{COMBAT_FOLDER}"):
+        os.mkdir(f"{COMBAT_FOLDER}")
+
     return CURRENT_CAMPAIGN, PLAYERS_FOLDER, TRAPS_FOLDER, IMGS_FOLDER, COMBAT_FOLDER

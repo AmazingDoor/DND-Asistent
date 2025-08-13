@@ -6,6 +6,7 @@ import os
 
 
 def init_json_data(sid, name, char_id):
+    print('init clients')
     # Load or Create all of the data for each client
     PLAYERS_FOLDER = get_players_folder()
     if not os.path.exists(f"{PLAYERS_FOLDER}\\{char_id}.json"):
@@ -25,6 +26,9 @@ def init_json_data(sid, name, char_id):
     imgs = data.get("imgs")
     health = data.get("health")
     armor_class = data.get("ac")
+    spells = data.get('spells') if data.get('spells') else []
+    cantrips = data.get('cantrips') if data.get('cantrips') else []
+    class_name = data.get('class_name') if data.get('class_name') else ''
     max_health = data.get("max_health") if data.get("max_health") is not None else 0
     emit('load_abilities', {'abilities': data.get('abilities')}, room=sid)
     for message in messages:
@@ -35,3 +39,4 @@ def init_json_data(sid, name, char_id):
     emit('host_change_armor_class', {'value': armor_class}, room=sid)
     emit('host_update_max_health', {'max_health': max_health}, room=sid)
     load_player_class(char_id, sid)
+    emit('load_spells', {'class_name': class_name, 'spells': spells, 'cantrips': cantrips})

@@ -1,5 +1,5 @@
 export const full_caster = {
-slots:[[2],
+    spell_slots:[[2],
     [3],
     [4, 2],
     [4, 3],

@@ -201,6 +201,58 @@
         margin-bottom: 5px;
     }
 
+    #skill-ability-container {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    table {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    tr td{
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+    }
+
+    p {
+        margin-top: 0px;
+        margin-bottom: 2px;
+    }
+
+    h3 {
+        margin-top: 0px;
+        margin-bottom: 2px;
+    }
+
+    .spell-option {
+        border-bottom: 4px solid gray;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .spell-data-container p{
+        font-weight: normal;
+    }
+
+    .spell-description-container {
+        width: 90%;
+        background-color: white;
+        border: 1px solid black;
+        margin-bottom: 4px;
+    }
+
+    .spell-description-container:hover {
+        background-color: white; !important
+    }
+
+    .spell-description {
+        background-color: white;
+        font-size: 12px;
+    }
+
     .character-sheet-tabs {
         z-index: 1;
         background: 'white';
@@ -318,6 +370,8 @@
   width: 100%;
   position: absolute;
   background-color: #f1f1f1;
+  max-height: 400px;
+  overflow-y: auto;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
 }

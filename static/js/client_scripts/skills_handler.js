@@ -65,23 +65,31 @@ function updateSkills() {
     const performance = document.querySelector("#performance-num");
     const persuasion = document.querySelector("#persuasion-num");
 
-    athletics.textContent = (str_mod + athletics_skill).toString();
-    acrobatics.textContent = (dex_mod + acrobatics_skill).toString();
-    sleight.textContent = (dex_mod + sleight_of_hand_skill).toString();
-    stealth.textContent = (dex_mod + stealth_skill).toString();
-    arcana.textContent = (int_mod + arcana_skill).toString();
-    history.textContent = (int_mod + history_skill).toString();
-    investigation.textContent = (int_mod + investigation_skill).toString();
-    nature.textContent = (int_mod + nature_skill).toString();
-    religion.textContent = (int_mod + religion_skill).toString();
-    animal_handling.textContent = (wis_mod + animal_handling_skill).toString();
-    insight.textContent = (wis_mod + insight_skill).toString();
-    medicine.textContent = (wis_mod + medicine_skill).toString();
-    perception.textContent = (wis_mod + perception_skill).toString();
-    survival.textContent = (wis_mod + survival_skill).toString();
-    deception.textContent = (cha_mod + deception_skill).toString();
-    intimidation.textContent = (cha_mod + intimidation_skill).toString();
-    performance.textContent = (cha_mod + performance_skill).toString();
-    persuasion.textContent = (cha_mod + persuasion_skill).toString();
+    athletics.textContent = signNumber(str_mod + athletics_skill);
+    acrobatics.textContent = signNumber(dex_mod + acrobatics_skill);
+    sleight.textContent = signNumber(dex_mod + sleight_of_hand_skill);
+    stealth.textContent = signNumber(dex_mod + stealth_skill);
+    arcana.textContent = signNumber(int_mod + arcana_skill);
+    history.textContent = signNumber(int_mod + history_skill);
+    investigation.textContent = signNumber(int_mod + investigation_skill);
+    nature.textContent = signNumber(int_mod + nature_skill);
+    religion.textContent = signNumber(int_mod + religion_skill);
+    animal_handling.textContent = signNumber(wis_mod + animal_handling_skill);
+    insight.textContent = signNumber(wis_mod + insight_skill);
+    medicine.textContent = signNumber(wis_mod + medicine_skill);
+    perception.textContent = signNumber(wis_mod + perception_skill);
+    survival.textContent = signNumber(wis_mod + survival_skill);
+    deception.textContent = signNumber(cha_mod + deception_skill);
+    intimidation.textContent = signNumber(cha_mod + intimidation_skill);
+    performance.textContent = signNumber(cha_mod + performance_skill);
+    persuasion.textContent = signNumber(cha_mod + persuasion_skill);
+}
+
+function signNumber(num) {
+    if(num >= 0) {
+        return "+" + num.toString();
+    } else {
+        return num.toString();
+    }
 }
 

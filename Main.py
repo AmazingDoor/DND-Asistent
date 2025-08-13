@@ -29,6 +29,7 @@ import socket_helpers.ac_handler
 import socket_helpers.health_handler
 import socket_helpers.image_handler
 import socket_helpers.message_handler
+import socket_helpers.spell_handler
 
 DM_SID = None
 

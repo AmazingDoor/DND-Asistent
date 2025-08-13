@@ -30,7 +30,7 @@ export function setProfs(p) {
     case "Rogue":
         profs = class_proficiencies.rogue;
         break;
-    case "Sourcerer":
+    case "Sorcerer":
         profs = class_proficiencies.sorcerer;
         break;
     case "Warlock":

@@ -42,32 +42,32 @@
             <tr>
               <td class="ability-title">STR: </td>
               <td><input class="ability-input" type="number" id="strength-input"></td>
-              <td class="ability-modifier strength-modifier" id="strength-mod">(0)</td>
+              <td class="ability-modifier strength-modifier strength-modifier-usable" id="strength-mod">(0)</td>
             </tr>
             <tr>
               <td class="ability-title">DEX: </td>
               <td><input class="ability-input" type="number" id="dexterity-input"></td>
-              <td class="ability-modifier dexterity-modifier" id="dexterity-mod">(0)</td>
+              <td class="ability-modifier dexterity-modifier dexterity-modifier-usable" id="dexterity-mod">(0)</td>
             </tr>
             <tr>
               <td class="ability-title">CON: </td>
               <td class="ability-input"><input class="ability-input" type="number" id="constitution-input"></td>
-              <td class="ability-modifier constitution-modifier" id="constitution-mod">(0)</td>
+              <td class="ability-modifier constitution-modifier constitution-modifier-usable" id="constitution-mod">(0)</td>
             </tr>
             <tr>
               <td class="ability-title">INT: </td>
               <td class="ability-input"><input class="ability-input" type="number" id="intelligence-input"></td>
-              <td class="ability-modifier intelligence-modifier" id="intelligence-mod">(0)</td>
+              <td class="ability-modifier intelligence-modifier intelligence-modifier-usable" id="intelligence-mod">(0)</td>
             </tr>
             <tr>
               <td class="ability-title">WIS: </td>
               <td class="ability-input"><input class="ability-input" type="number" id="wisdom-input"></td>
-              <td class="ability-modifier wisdom-modifier" id="wisdom-mod">(0)</td>
+              <td class="ability-modifier wisdom-modifier  wisdom-modifier-usable" id="wisdom-mod">(0)</td>
             </tr>
             <tr>
               <td class="ability-title">CHA: </td>
               <td class="ability-input"><input class="ability-input" type="number" id="charisma-input"></td>
-              <td class="ability-modifier charisma-modifier" id="charisma-mod">(0)</td>
+              <td class="ability-modifier charisma-modifier charisma-modifier-usable" id="charisma-mod">(0)</td>
             </tr>
           </table>
         </div>
@@ -87,7 +87,7 @@
                   <div class="paladin-option">Paladin</div>
                   <div class="ranger-option">Ranger</div>
                   <div class="rogue-option">Rogue</div>
-                  <div class="sourcerer-option">Sourcerer</div>
+                  <div class="sourcerer-option">Sorcerer</div>
                   <div class="warlock-option">Warlock</div>
                   <div class="wizard-option">Wizard</div>
                   <div class="default-option">Select Class</div>
@@ -183,8 +183,13 @@
             <input type="number" id="initiative-modifier-input">
           </div>
         </div>
-        <div id="skill-container">
-          <table>
+        <div id="skill-ability-container">
+          <table class="skills-table">
+            <thead>
+              <tr>
+                <th>Skills</th>
+              </tr>
+            </thead>
             <tr>
               <td class="skill-title">Athletics(STR): </td>
               <td><h3 id="athletics-num"></h3></td>
@@ -256,6 +261,45 @@
             <tr>
               <td class="skill-title">Persuasion(CHA): </td>
               <td><h3 id="persuasion-num"></h3></td>
+            </tr>
+          </table>
+          <table class="ability-table">
+            <thead>
+              <tr>
+                <th>
+                  Abilities
+                </th>
+              </tr>
+            </thead>
+            <tr>
+              <td class="ability-title">STR: </td>
+              <td><h3 class="strength-num"></h3></td>
+              <td class="ability-modifier strength-modifier strength-modifier-usable">(0)</td>
+            </tr>
+            <tr>
+              <td class="ability-title">DEX: </td>
+              <td><h3 class="dexterity-num"></h3></td>
+              <td class="ability-modifier dexterity-modifier dexterity-modifier-usable">(0)</td>
+            </tr>
+            <tr>
+              <td class="ability-title">CON: </td>
+              <td><h3 class="constitution-num"></h3></td>
+              <td class="ability-modifier constitution-modifier constitution-modifier-usable">(0)</td>
+            </tr>
+            <tr>
+              <td class="ability-title">INT: </td>
+              <td><h3 class="intelligence-num"></h3></td>
+              <td class="ability-modifier intelligence-modifier intelligence-modifier-usable">(0)</td>
+            </tr>
+            <tr>
+              <td class="ability-title">WIS: </td>
+              <td><h3 class="wisdom-num"></h3></td>
+              <td class="ability-modifier wisdom-modifier wisdom-modifier-usable">(0)</td>
+            </tr>
+            <tr>
+              <td class="ability-title">CHA: </td>
+              <td><h3 class="charisma-num"></h3></td>
+              <td class="ability-modifier charisma-modifier charisma-modifier-usable">(0)</td>
             </tr>
           </table>
         </div>

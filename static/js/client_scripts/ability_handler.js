@@ -73,6 +73,7 @@ function calculateStrengthMod() {
     const itp = document.querySelector('#strength-input');
     const inputs = document.querySelectorAll('.strength-modifier');
     const num = itp.value;
+    document.querySelector(".strength-num").textContent = num.toString();
 
     inputs.forEach((i) => {
         const new_num = calculateModifier(itp);
@@ -85,7 +86,7 @@ function calculateDexterityMod() {
     const itp = document.querySelector('#dexterity-input');
     const inputs = document.querySelectorAll('.dexterity-modifier');
     const num = itp.value;
-
+    document.querySelector(".dexterity-num").textContent = num.toString();
 
     inputs.forEach((i) => {
         const new_num = calculateModifier(itp);
@@ -97,6 +98,7 @@ function calculateConstitutionMod() {
     const itp = document.querySelector('#constitution-input');
     const inputs = document.querySelectorAll('.constitution-modifier');
     const num = itp.value;
+    document.querySelector(".constitution-num").textContent = num.toString();
 
     inputs.forEach((i) => {
         const new_num = calculateModifier(itp);
@@ -108,6 +110,7 @@ function calculateIntelligenceMod() {
     const itp = document.querySelector('#intelligence-input');
     const inputs = document.querySelectorAll('.intelligence-modifier');
     const num = itp.value;
+    document.querySelector(".intelligence-num").textContent = num.toString();
 
     inputs.forEach((i) => {
         const new_num = calculateModifier(itp);
@@ -119,6 +122,7 @@ function calculateWisdomMod() {
     const itp = document.querySelector('#wisdom-input');
     const inputs = document.querySelectorAll('.wisdom-modifier');
     const num = itp.value;
+    document.querySelector(".wisdom-num").textContent = num.toString();
 
     inputs.forEach((i) => {
         const new_num = calculateModifier(itp);
@@ -130,6 +134,7 @@ function calculateCharismaMod() {
     const itp = document.querySelector('#charisma-input');
     const inputs = document.querySelectorAll('.charisma-modifier');
     const num = itp.value;
+    document.querySelector(".charisma-num").textContent = num.toString();
 
     inputs.forEach((i) => {
         const new_num = calculateModifier(itp);
@@ -138,7 +143,11 @@ function calculateCharismaMod() {
 }
 
 function setModText(mod, num) {
-    mod.textContent = "(" + num.toString() + ")";
+    let sign = "";
+    if (num >= 0) {
+        sign = "+";
+    }
+    mod.textContent = "(" + sign + num.toString() + ")";
 }
 
 function calculateModifier(i) {
@@ -164,32 +173,44 @@ export function updateModifiers() {
     const wis_input = document.querySelector("#wisdom-input");
     const cha_input = document.querySelector("#charisma-input");
 
-    const str_mod = document.querySelector("#strength-mod");
-    const dex_mod = document.querySelector("#dexterity-mod");
-    const con_mod = document.querySelector("#constitution-mod");
-    const int_mod = document.querySelector("#intelligence-mod");
-    const wis_mod = document.querySelector("#wisdom-mod");
-    const cha_mod = document.querySelector("#charisma-mod");
-    const saving_throws = getProfs().saving_throws;
+    const str_mods = document.querySelectorAll(".strength-modifier-usable");
+    const dex_mods = document.querySelectorAll(".dexterity-modifier-usable");
+    const con_mods = document.querySelectorAll(".constitution-modifier-usable");
+    const int_mods = document.querySelectorAll(".intelligence-modifier-usable");
+    const wis_mods = document.querySelectorAll(".wisdom-modifier-usable");
+    const cha_mods = document.querySelectorAll(".charisma-modifier-usable");
+    const saving_throws = getProfs().saving_throws || [];
     saving_throws.forEach((saving_throw) => {
         switch (saving_throw) {
             case "Strength":
-                setModText(str_mod, calculateModifier(str_input) + num);
+                str_mods.forEach((str_mod) => {
+                    setModText(str_mod, calculateModifier(str_input) + num);
+                });
                 break;
             case "Dexterity":
-                setModText(dex_mod, calculateModifier(dex_input) + num);
+                dex_mods.forEach((dex_mod) => {
+                    setModText(dex_mod, calculateModifier(dex_input) + num);
+                });
                 break;
             case "Constitution":
-                setModText(con_mod, calculateModifier(con_input) + num);
+                con_mods.forEach((con_mod) => {
+                    setModText(con_mod, calculateModifier(con_input) + num);
+                });
                 break;
             case "Intelligence":
-                setModText(int_mod, calculateModifier(int_input) + num);
+                int_mods.forEach((int_mod) => {
+                    setModText(int_mod, calculateModifier(int_input) + num);
+                });
                 break;
             case "Wisdom":
-                setModText(wis_mod, calculateModifier(wis_input) + num);
+                wis_mods.forEach((wis_mod) => {
+                    setModText(wis_mod, calculateModifier(wis_input) + num);
+                });
                 break;
             case "Charisma":
-                setModText(cha_mod, calculateModifier(cha_input) + num);
+                cha_mods.forEach((cha_mod) => {
+                    setModText(cha_mod, calculateModifier(cha_input) + num);
+                });
         }
     });
 }
