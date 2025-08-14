@@ -429,7 +429,43 @@
     border-bottom: none;
 }
 
+.actions-display div p {
+    margin-left: 2px
 
+}
+
+.actions-display div {
+    background-color: rgb(240, 240, 240);
+    border: 3px inset black;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+
+
+.race-selection {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 4px;
+    border-bottom: 2px solid black;
+    padding-bottom: 2px;
+}
+
+.race-size-speed {
+    display: flex;
+    flex-direction: row;
+}
+
+.race-size-speed div {
+    display: flex;
+    flex-direction: row;
+    margin-right: 6px;
+}
+
+.race-size-speed div p {
+    font-size: 20px;
+}
 
 @media (max-width: 1000px) {
 

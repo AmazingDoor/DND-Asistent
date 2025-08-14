@@ -123,10 +123,10 @@
         <div class="race-stats character-sheet-tab-contents hidden" id="race-tab-contents">
           <div class="race-selection">
             <h3>Race: </h3>
-            <div class="class-selector dropdown-head">
-              <p class="selected-class">Select Race</p>
+            <div class="race-selector dropdown-head">
+              <p class="selected-race">Select Race</p>
               <div class="dropdown">
-                <div class="class-options dropdown-content hidden">
+                <div class="race-options dropdown-content hidden">
                   <div>Human</div>
                   <div>Elf</div>
                   <div>Dwarf</div>
@@ -140,6 +140,33 @@
               </div>
             </div>
           </div>
+          <div class="race-abilities">
+              <h3>Abilities </h3>
+              <table class="race-abilities-table">
+              </table>
+          </div>
+          <div class="race-size-speed">
+            <div>
+              <h3>Size: </h3>
+              <p>0</p>
+            </div>
+            <div>
+              <h3>Speed: </h3>
+              <p>0</p>
+            </div>
+          </div>
+          <div class="race-traits">
+            <h3>Traits</h3>
+            <div class="trait-list">
+            </div>
+          </div>
+          <div class="race-languages">
+            <h3>Languages</h3>
+            <div class="language-list">
+
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -317,7 +344,7 @@
             <div class="spells-display">
             </div>
             <div class="actions-display">
-              <h3>Actions</h3>
+              <h3>Actions (1 per Turn)</h3>
               <div class="action-list">
                 <p><b>Attack: </b>Make a melee or ranged weapon attack</p>
                 <p><b>Cast a Spell: </b>Cast a spell with a casting time of 1 action</p>
@@ -329,6 +356,17 @@
                 <p><b>Ready: </b>Prepare a reaction to do something later in the round</p>
                 <p><b>Search: </b>Look for something</p>
                 <p><b>Use Object: </b>Interact with an item</p>
+              </div>
+              <h3>Movement (1 per Turn)</h3>
+              <div class="movement-list">
+                <p><b>Move: </b>Move up to your speed broken up however you want between actions</p>
+              </div>
+              <h3>Bonus Action (1 per Turn)</h3>
+              <div class="bonus-action-list">
+              </div>
+              <h3>Reaction (1 per Round)</h3>
+              <div class="reaction-list">
+                <p><b>Opportunity Attack: </b>Make a melee attack if a creature leaves your melee reach without disengaging</p>
               </div>
             </div>
           </div>

@@ -30,7 +30,12 @@ export function addEventListeners(updateSkills) {
 export function loadPlayerClass(data, updateSkills) {
     const class_name = data.class_name;
     const skills = data.player_skills;
-    document.querySelector('.selected-class').textContent = class_name;
+    if (class_name !== null) {
+        document.querySelector('.selected-class').textContent = class_name;
+    } else {
+        document.querySelector('.selected-class').textContent = "Select Class";
+
+    }
     buildClassStatSection(class_name, updateSkills, skills);
     updateSkills();
 }
