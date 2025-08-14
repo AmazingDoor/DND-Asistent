@@ -89,7 +89,8 @@ function signNumber(num) {
     if(num >= 0) {
         return "+" + num.toString();
     } else {
-        return num.toString();
+        const positive_num = Math.abs(num);
+        return "-" + positive_num.toString();
     }
 }
 
