@@ -5,10 +5,14 @@ export function calculateSkills(skills, proficiencies, race_skills) {
         race_skills = [];
     }
 
-    let chosen_skills = [...document.querySelectorAll('.language-selector')];
-    console.log(chosen_skills);
-    chosen_skills = chosen_skills.filter(s => s !== "Select Language");
-
+    let chosen_skill_objects = [...document.querySelectorAll('.selected-skill')];
+    let chosen_skills = [];
+    chosen_skill_objects.forEach((o) => {
+        const txt = o.textContent;
+        if (txt !== "Select Skill") {
+            chosen_skills.push(txt);
+        }
+    });
     race_skills = race_skills.concat(chosen_skills);
 
     if (skills === undefined) {

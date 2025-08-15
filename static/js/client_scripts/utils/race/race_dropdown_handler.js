@@ -24,6 +24,6 @@ export function addEventListeners(updateSkills) {
 function clickEvent(dropdown_text, option, updateSkills) {
     dropdown_text.textContent = option.textContent;
     setRace(option.textContent);
-    buildRaceSection(option.textContent);
+    buildRaceSection(option.textContent, updateSkills);
     updateSkills();
 }

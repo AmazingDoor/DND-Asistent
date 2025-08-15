@@ -1,13 +1,14 @@
 import {linkDropdown} from './../dropdown_handler.js';
+import{addEventListeners} from './../race/race_skill_dropdown_handler.js';
 
-export function createSkillDropdown(parent_element) {
+export function createSkillDropdown(parent_element, updateSkills) {
     const head = document.createElement('div');
     head.classList.add('skill-selector');
     head.classList.add('dropdown-head');
     head.innerHTML = `
         <p class="selected-skill">Select Skill</p>
         <div class="dropdown">
-            <div class="language-options dropdown-content hidden">
+            <div class="skill-options dropdown-content hidden">
                 <div>Athletics</div>
                 <div>Acrobatics</div>
                 <div>Sleight of Hand</div>
@@ -30,4 +31,5 @@ export function createSkillDropdown(parent_element) {
         </div>`;
     parent_element.appendChild(head);
     linkDropdown(head);
+    addEventListeners(head, updateSkills);
 }
