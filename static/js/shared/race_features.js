@@ -142,7 +142,7 @@ export const half_elf = {
   speed: 30,
   features: ["Darkvision", "Fey Ancestry", "Skill Versatility (2 skills)"],
   languages: [["Common", "Elvish"], 1],
-  skills: ["Any", "Any"], // 2 skills of choice
+  skills: ["Any", "Any"],
   cantrips: 0,
   spells: 0,
 };

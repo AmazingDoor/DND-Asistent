@@ -1,10 +1,15 @@
 import {getProficiencyBonus} from './../../player_level_handler.js';
 
 export function calculateSkills(skills, proficiencies, race_skills) {
-    console.log(race_skills);
     if(race_skills === undefined) {
         race_skills = [];
     }
+
+    let chosen_skills = [...document.querySelectorAll('.language-selector')];
+    console.log(chosen_skills);
+    chosen_skills = chosen_skills.filter(s => s !== "Select Language");
+
+    race_skills = race_skills.concat(chosen_skills);
 
     if (skills === undefined) {
         skills = [];
@@ -12,7 +17,7 @@ export function calculateSkills(skills, proficiencies, race_skills) {
     if (race_skills.length > 0) {
         race_skills.forEach((skill) => {
             if (skills.includes(skill)) {
-                race_skills = race_skills.filter(s => s !== skill);
+                race_skills = race_skills.filter(s => s !== skill && s !== "Any");
             }
         });
     }

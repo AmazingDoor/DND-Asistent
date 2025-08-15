@@ -1,5 +1,8 @@
 import {getRaceData} from './race_mapper.js';
-
+import {linkDropdown} from './../dropdown_handler.js';
+import {createAbilityDropdown} from './../dropdown_builders/ability_dropdown_builder.js';
+import {createLanguageDropdown} from './../dropdown_builders/language_dropdown_builder.js';
+import {createSkillDropdown} from './../dropdown_builders/skill_dropdown_builder.js';
 export function buildRaceSection(race_name) {
     const race_data = getRaceData(race_name);
     if(race_data === undefined || race_data === null) {return;}
@@ -8,8 +11,7 @@ export function buildRaceSection(race_name) {
     setSpeed(race_data.speed);
     createTraits(race_data.features);
     createLanguages(race_data.languages);
-    createWeapons(race_data.weapons);
-    create
+    createSkills(race_data.skills);
 }
 
 function createAbilities(abilities) {
@@ -54,4 +56,30 @@ function createLanguages(languages) {
         language_list.appendChild(t);
     });
 
+    for (let i = 0; i < language_choices; i++) {
+        createLanguageDropdown(language_list);
+    }
+
+
 }
+
+function createSkills(skills) {
+    const skill_list = document.querySelector('.skill-list');
+    skill_list.innerHTML = '';
+    let selectable = 0;
+    skills.forEach((skill) => {
+        if(skill !== "Any") {
+            const t = document.createElement('p');
+            t.textContent = skill;
+            skill_list.appendChild(t);
+        } else {
+            selectable++;
+        }
+    });
+
+    for (let i = 0; i < selectable; i++) {
+        createSkillDropdown(skill_list);
+    }
+}
+
+
