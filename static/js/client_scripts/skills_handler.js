@@ -2,6 +2,7 @@ import {getInputs} from './ability_handler.js';
 import {loadPlayerClass, getSkills, getSavingThrows} from './class_stats_handler.js';
 import {calculateSkills, calculateModifier} from './utils/skills_handler/skill_calculator.js';
 import {addEventListeners} from './utils/skills_handler/event_listener_handler.js';
+import {getRaceData} from './utils/race/race_mapper.js';
 let socket = null;
 
 export function setSocket(io) {
@@ -33,6 +34,11 @@ function addSkillsEventListeners() {
 function updateSkills() {
     const skills = getSkills();
     const proficiencies = getSavingThrows();
+    const race_data = getRaceData();
+    let race_skills = [];
+    if (race_data !== null) {
+        race_skills = race_data.skills;
+    }
 
     let str_mod = calculateModifier(document.querySelector('#strength-input').value);
     let dex_mod = calculateModifier(document.querySelector('#dexterity-input').value);
@@ -44,7 +50,7 @@ function updateSkills() {
     const [athletics_skill, acrobatics_skill, sleight_of_hand_skill, stealth_skill, arcana_skill,
     history_skill, investigation_skill, nature_skill, religion_skill, animal_handling_skill,
     insight_skill, medicine_skill, perception_skill, survival_skill, deception_skill, intimidation_skill, performance_skill,
-    persuasion_skill] = calculateSkills(skills, proficiencies);
+    persuasion_skill] = calculateSkills(skills, proficiencies, race_skills);
 
     const athletics = document.querySelector("#athletics-num");
     const acrobatics = document.querySelector("#acrobatics-num");

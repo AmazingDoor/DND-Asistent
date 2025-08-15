@@ -1,7 +1,22 @@
 import {getProficiencyBonus} from './../../player_level_handler.js';
 
-export function calculateSkills(skills, proficiencies) {
+export function calculateSkills(skills, proficiencies, race_skills) {
+    console.log(race_skills);
+    if(race_skills === undefined) {
+        race_skills = [];
+    }
 
+    if (skills === undefined) {
+        skills = [];
+    }
+    if (race_skills.length > 0) {
+        race_skills.forEach((skill) => {
+            if (skills.includes(skill)) {
+                race_skills = race_skills.filter(s => s !== skill);
+            }
+        });
+    }
+    const all_skills = skills.concat(race_skills);
     const player_level_mod_num = getProficiencyBonus();
 
     let athletics_skill = 0,
@@ -23,8 +38,8 @@ export function calculateSkills(skills, proficiencies) {
     performance_skill = 0,
     persuasion_skill = 0;
 
-    if (skills.length > 0) {
-        skills.forEach(skill => {
+    if (all_skills.length > 0) {
+        all_skills.forEach(skill => {
             switch(skill) {
                 case "Athletics":
                     athletics_skill = player_level_mod_num;
