@@ -1,8 +1,9 @@
 import {linkDropdown} from './../dropdown_handler.js';
+import {addEventListeners} from './../race/race_ability_dropdown_handler.js';
 
-export function createAbilityDropdown(parent_element, updateSkills) {
-    head = document.createElement('div');
-    head.cassList.add('ability-selector');
+export function createAbilityDropdown(parent_element, updateModifiers) {
+    const head = document.createElement('div');
+    head.classList.add('ability-selector');
     head.classList.add('dropdown-head');
     head.innerHTML = `
     <p class="selected-ability">Select Ability</p>
@@ -18,4 +19,5 @@ export function createAbilityDropdown(parent_element, updateSkills) {
     </div>`;
     parent_element.appendChild(head);
     linkDropdown(head);
+    addEventListeners(head, updateModifiers);
 }

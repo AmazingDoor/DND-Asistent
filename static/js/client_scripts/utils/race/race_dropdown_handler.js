@@ -10,20 +10,21 @@ export function setSocket(io) {
     socket = io;
 }
 
-export function addEventListeners(updateSkills) {
+export function addEventListeners(updateSkills, updateModifiers) {
     const dropdown_head = document.querySelector('.race-selector');
     const dropdown_text = dropdown_head.querySelector('p');
     const race_options = [...document.querySelector('.race-options').children];
     race_options.forEach((option) => {
         option.addEventListener('click', function() {
-            clickEvent(dropdown_text, option, updateSkills)
+            clickEvent(dropdown_text, option, updateSkills, updateModifiers)
         });
     });
 }
 
-function clickEvent(dropdown_text, option, updateSkills) {
+function clickEvent(dropdown_text, option, updateSkills, updateModifiers) {
     dropdown_text.textContent = option.textContent;
     setRace(option.textContent);
-    buildRaceSection(option.textContent, updateSkills);
+    buildRaceSection(option.textContent, updateSkills, updateModifiers);
     updateSkills();
+    updateModifiers();
 }

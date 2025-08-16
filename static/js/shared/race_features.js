@@ -137,7 +137,7 @@ export const rock_gnome = {
 };
 
 export const half_elf = {
-  abilities: { cha: 2, any: 1, any: 1 },
+  abilities: { cha: 2, any: [1, 1] },
   size: "Medium",
   speed: 30,
   features: ["Darkvision", "Fey Ancestry", "Skill Versatility (2 skills)"],

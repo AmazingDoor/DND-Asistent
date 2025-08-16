@@ -1,4 +1,4 @@
-import {getInputs} from './ability_handler.js';
+import {getInputs, updateModifiers} from './ability_handler.js';
 import {loadPlayerClass, getSkills, getSavingThrows} from './class_stats_handler.js';
 import {calculateSkills, calculateModifier} from './utils/skills_handler/skill_calculator.js';
 import {addEventListeners} from './utils/skills_handler/event_listener_handler.js';
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function addSkillsEventListeners() {
-    addEventListeners(updateSkills);
+    addEventListeners(updateSkills, updateModifiers);
     const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
     str_input.addEventListener('change', function() {updateSkills();});
     dex_input.addEventListener('change', function() {updateSkills();});

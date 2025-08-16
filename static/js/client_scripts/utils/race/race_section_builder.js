@@ -3,10 +3,11 @@ import {linkDropdown} from './../dropdown_handler.js';
 import {createAbilityDropdown} from './../dropdown_builders/ability_dropdown_builder.js';
 import {createLanguageDropdown} from './../dropdown_builders/language_dropdown_builder.js';
 import {createSkillDropdown} from './../dropdown_builders/skill_dropdown_builder.js';
-export function buildRaceSection(race_name, updateSkills) {
+
+export function buildRaceSection(race_name, updateSkills, updateModifiers) {
     const race_data = getRaceData(race_name);
     if(race_data === undefined || race_data === null) {return;}
-    createAbilities(race_data.abilities);
+    createAbilities(race_data.abilities, updateModifiers);
     setSize(race_data.size);
     setSpeed(race_data.speed);
     createTraits(race_data.features);
@@ -14,9 +15,33 @@ export function buildRaceSection(race_name, updateSkills) {
     createSkills(race_data.skills, updateSkills);
 }
 
-function createAbilities(abilities) {
+function createAbilities(abilities, updateModifiers) {
     const abilities_table = document.querySelector('.race-abilities-table');
-    abilities_table.innerHTML = ''
+    abilities_table.innerHTML = '';
+    for (const ability in abilities) {
+        if(ability !== "any") {
+            const row = document.createElement('tr');
+            const ability_name = document.createElement('td');
+            ability_name.textContent = getFullAbilityName(ability);
+            row.appendChild(ability_name);
+            const ability_value = document.createElement('td');
+            ability_value.textContent = "+" + abilities[ability].toString();
+            row.appendChild(ability_value);
+            abilities_table.appendChild(row);
+        } else {
+            const values = abilities[ability];
+            values.forEach((value) => {
+                const row = document.createElement('tr');
+                const dropdown_container = document.createElement('td');
+                createAbilityDropdown(dropdown_container, updateModifiers);
+                row.appendChild(dropdown_container);
+                const value_container = document.createElement('td');
+                value_container.textContent = "+" + value.toString();
+                row.appendChild(value_container);
+                abilities_table.appendChild(row);
+            });
+        }
+    }
 
 }
 
@@ -80,6 +105,20 @@ function createSkills(skills, updateSkills) {
     for (let i = 0; i < selectable; i++) {
         createSkillDropdown(skill_list, updateSkills);
     }
+
+}
+
+function getFullAbilityName(ability) {
+    const ability_names = {
+        str: "Strength",
+        dex: "Dexterity",
+        con: "Constitution",
+        int: "Intelligence",
+        wis: "Wisdom",
+        cha: "Charisma"
+    }
+
+    return ability_names[ability];
 }
 
 
