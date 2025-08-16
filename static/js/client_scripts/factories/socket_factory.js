@@ -6,6 +6,7 @@ import {setSocket as setClassSpellSectionHandlerSocket} from './../class_spell_s
 import {setSocket as setRaceDropdownHandlerSocket} from './../utils/race/race_dropdown_handler.js';
 import {setSocket as setRaceSkillDropdownHandlerSocket} from './../utils/race/race_skill_dropdown_handler.js';
 import {setSocket as setRaceAbilityDropdownHandlerSocket} from './../utils/race/race_ability_dropdown_handler.js';
+import {setSocket as setRaceLanguageDropdownSocket} from './../utils/race/race_language_dropdown.js';
 
 export let socket = null;
 
@@ -19,6 +20,7 @@ export function setFactorySocket(io) {
     setRaceDropdownHandlerSocket(io);
     setRaceSkillDropdownHandlerSocket(io);
     setRaceAbilityDropdownHandlerSocket(io);
+    setRaceLanguageDropdownSocket(io);
 }
 
 export function getSocket() {

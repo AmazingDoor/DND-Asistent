@@ -32,4 +32,9 @@ def save_race_abilities(data):
 
 @socketio.on('save_race_languages')
 def save_race_languages(data):
-    pass
+    players_folder = get_players_folder()
+    char_id = data.get('char_id')
+    languages = data.get('race_languages')
+    j = safe_read_json(f'{players_folder}\\{char_id}.json')
+    j['race_languages'] = languages
+    safe_write_json(j, f'{players_folder}\\{char_id}.json')
