@@ -180,7 +180,6 @@ export function updateModifiers() {
         const table_datas = row.querySelectorAll("td");
         const modifier = parseInt(table_datas[1].textContent.replace("+", ""));
         all_abilities[ability.textContent] = modifier;
-        console.log('b');
     });
 
     let race_str_mod = 0;
@@ -198,11 +197,8 @@ export function updateModifiers() {
     let cha_bonus = 0;
 
 
-    console.log(all_abilities);
 
     for (const ability in all_abilities) {
-        console.log(ability);
-        console.log(ability.toString());
         switch(ability.toString()) {
             case "str":
             case "Strength":
@@ -225,15 +221,12 @@ export function updateModifiers() {
                 race_wis_mod = all_abilities[ability];
                 break;
             case "cha":
-                console.log('a');
             case "Charisma":
-                console.log('c');
                 race_cha_mod = all_abilities[ability];
                 break;
         }
     }
 
-    console.log(race_str_mod);
 
 
     const str_input = document.querySelector("#strength-input");

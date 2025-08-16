@@ -30,6 +30,7 @@ import socket_helpers.health_handler
 import socket_helpers.image_handler
 import socket_helpers.message_handler
 import socket_helpers.spell_handler
+import socket_helpers.race_saver
 
 DM_SID = None
 

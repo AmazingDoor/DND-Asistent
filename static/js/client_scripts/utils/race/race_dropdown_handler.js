@@ -27,4 +27,5 @@ function clickEvent(dropdown_text, option, updateSkills, updateModifiers) {
     buildRaceSection(option.textContent, updateSkills, updateModifiers);
     updateSkills();
     updateModifiers();
+    socket.emit('save_race', {race_name: option.textContent, char_id: char_id});
 }
