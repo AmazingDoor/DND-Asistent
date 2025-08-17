@@ -1,5 +1,4 @@
 import {getSavingThrows} from './class_stats_handler.js';
-import {getProfs} from './utils/class_stats_handler/profs_mapper.js';
 import {getProficiencyBonus} from './player_level_handler.js';
 import {getRaceData} from './utils/race/race_mapper.js';
 let socket = null;

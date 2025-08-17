@@ -1,5 +1,5 @@
-import {setRace} from './race_mapper.js';
-import {buildRaceSection} from './race_section_builder.js';
+import {setRace} from './../mappers/race_mapper.js';
+import {buildRaceSection} from './../page_builders/race_builder.js';
 let socket = null;
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');

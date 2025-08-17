@@ -1,21 +1,17 @@
-import {getRaceData} from './race_mapper.js';
-import {linkDropdown} from './../dropdown_handler.js';
-import {createAbilityDropdown} from './../dropdown_builders/ability_dropdown_builder.js';
-import {createLanguageDropdown} from './../dropdown_builders/language_dropdown_builder.js';
-import {createSkillDropdown} from './../dropdown_builders/skill_dropdown_builder.js';
+import * as character_data_handler from './../character_data_handler.js';
 
-/*export function buildRaceSection(race_name, updateSkills, updateModifiers) {
+export function buildRaceSection(race_name) {
     const race_data = getRaceData(race_name);
     if(race_data === undefined || race_data === null) {return;}
-    createAbilities(race_data.abilities, updateModifiers);
+    createAbilities(race_data.abilities);
     setSize(race_data.size);
     setSpeed(race_data.speed);
     createTraits(race_data.features);
     createLanguages(race_data.languages);
-    createSkills(race_data.skills, updateSkills);
-}*/
+    createSkills(race_data.skills);
+}
 
-/*function createAbilities(abilities, updateModifiers) {
+function createAbilities(abilities) {
     const abilities_table = document.querySelector('.race-abilities-table');
     abilities_table.innerHTML = '';
     for (const ability in abilities) {
@@ -33,7 +29,7 @@ import {createSkillDropdown} from './../dropdown_builders/skill_dropdown_builder
             values.forEach((value) => {
                 const row = document.createElement('tr');
                 const dropdown_container = document.createElement('td');
-                createAbilityDropdown(dropdown_container, updateModifiers);
+                createAbilityDropdown(dropdown_container);
                 row.appendChild(dropdown_container);
                 const value_container = document.createElement('td');
                 value_container.textContent = "+" + value.toString();
@@ -88,7 +84,7 @@ function createLanguages(languages) {
 
 }
 
-function createSkills(skills, updateSkills) {
+function createSkills(skills) {
     const skill_list = document.querySelector('.skill-list');
     skill_list.innerHTML = '';
     let selectable = 0;
@@ -103,7 +99,7 @@ function createSkills(skills, updateSkills) {
     });
 
     for (let i = 0; i < selectable; i++) {
-        createSkillDropdown(skill_list, updateSkills);
+        createSkillDropdown(skill_list);
     }
 
 }
@@ -119,6 +115,4 @@ function getFullAbilityName(ability) {
     }
 
     return ability_names[ability];
-}*/
-
-
+}

@@ -1,12 +1,12 @@
-import {setCharacterClassSkills} from './../character_data_handler.js';
-import {setProfs, getProfs} from './../mappers/profs_mapper.js';
+import * as character_data_handler from './../character_data_handler.js';
+import {setClass, getClassData} from './../mappers/class_mapper.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
 });
 let socket = null;
-let profs;
+let class_data;
 export function setSocket(io) {
     socket = io;
 }
@@ -54,16 +54,18 @@ function getSkills() {
 
 function buildClassStatSection(c, active_skills = []) {
     setProfs(c);
-    profs = getProfs();
-    if (Object.keys(profs).length === 0) {
+    class_data = getClassData();
+    if (Object.keys(class_data).length === 0) {
         return;
     }
-    const saving_throws = profs.saving_throws;
-    const weapons = profs.weapons;
-    const armor = profs.armor;
-    const tools = profs.tools;
-    const skill_count = profs.skills[0];
-    const skills = profs.skills[1];
+    const saving_throws = class_data.saving_throws;
+    const weapons = class_data.weapons;
+    const armor = class_data.armor;
+    const tools = class_data.tools;
+    const skill_count = class_data.skills[0];
+    const skills = class_data.skills[1];
+
+    character_data_handler.setClassSkills(class_data.skills);
 
     createSavingThrows(saving_throws)
     createWeapons(weapons)

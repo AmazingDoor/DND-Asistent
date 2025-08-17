@@ -2,7 +2,6 @@ let socket = null;
 import * as class_proficiencies from './../shared/class_proficiencies.js';
 import {linkDropdown} from './utils/dropdown_handler.js';
 import {addClassSkillEventListeners} from './class_skill_handler.js';
-import {setProfs, getProfs} from './utils/class_stats_handler/profs_mapper.js';
 import {updateModifiers, calculateAbilityModifiers} from './ability_handler.js';
 import {buildSpellSection} from './class_spell_section_handler.js';
 let profs;

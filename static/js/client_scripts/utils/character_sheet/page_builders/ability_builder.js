@@ -1,10 +1,19 @@
 import * as ability_calculator from './../calculators/ability_calculator.js';
-import setCharacterAbilities from './../character_data_handler.js';
+import {setCharacterAbilities} from './../character_data_handler.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
+
 });
+
+let socket = null;
+export function setSocket(io) {
+    socket = io;
+    socket.on('build_character_abilities', data => {
+        buildCharacterAbilities(data);
+    });
+}
 
 export function buildCharacterAbilities(data) {
     const abilities = data.abilities;
@@ -18,7 +27,6 @@ export function buildCharacterAbilities(data) {
     const int_num = abilities.int_num;
     const wis_num = abilities.wis_num;
     const cha_num = abilities.cha_num;
-
 
     const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
 
@@ -34,12 +42,12 @@ export function buildCharacterAbilities(data) {
 function addEventListeners() {
     const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
 
-    str_input.addEventListener('change', function() {calculateStrengthMod(); saveAbilities(); updateModifiers();});
-    dex_input.addEventListener('change', function() {calculateDexterityMod(); saveAbilities(); updateModifiers();});
-    con_input.addEventListener('change', function() {calculateConstitutionMod(); saveAbilities(); updateModifiers();});
-    int_input.addEventListener('change', function() {calculateIntelligenceMod(); saveAbilities(); updateModifiers();});
-    wis_input.addEventListener('change', function() {calculateWisdomMod(); saveAbilities(); updateModifiers();});
-    cha_input.addEventListener('change', function() {calculateCharismaMod(); saveAbilities(); updateModifiers();});
+    str_input.addEventListener('change', function() {const mod_num = ability_calculator.calculateStrengthMod(); const mod = document.querySelector('#strength-mod'); setModText(mod, mod_num); saveAbilities();});
+    dex_input.addEventListener('change', function() {const mod_num = ability_calculator.calculateDexterityMod(); const mod = document.querySelector('#dexterity-mod'); setModText(mod, mod_num); saveAbilities();});
+    con_input.addEventListener('change', function() {const mod_num = ability_calculator.calculateConstitutionMod(); const mod = document.querySelector('#constitution-mod'); setModText(mod, mod_num); saveAbilities();});
+    int_input.addEventListener('change', function() {const mod_num = ability_calculator.calculateIntelligenceMod(); const mod = document.querySelector('#intelligence-mod'); setModText(mod, mod_num); saveAbilities();});
+    wis_input.addEventListener('change', function() {const mod_num = ability_calculator.calculateWisdomMod(); const mod = document.querySelector('#wisdom-mod'); setModText(mod, mod_num); saveAbilities();});
+    cha_input.addEventListener('change', function() {const mod_num = ability_calculator.calculateCharismaMod(); const mod = document.querySelector('#charisma-mod'); setModText(mod, mod_num); saveAbilities();});
 }
 
 function getInputs () {
@@ -53,12 +61,12 @@ function getInputs () {
 }
 
 function setModTexts() {
-    const str_mod = document.querySelectorAll('#strength-mod');
-    const dex_mod = document.querySelectorAll('#dexterity-mod');
-    const con_mod = document.querySelectorAll('#constitution-mod');
-    const int_mod = document.querySelectorAll('#intelligence-mod');
-    const wis_mod = document.querySelectorAll('#wisdom-mod');
-    const cha_mod = document.querySelectorAll('#charisma-mod');
+    const str_mod = document.querySelector('#strength-mod');
+    const dex_mod = document.querySelector('#dexterity-mod');
+    const con_mod = document.querySelector('#constitution-mod');
+    const int_mod = document.querySelector('#intelligence-mod');
+    const wis_mod = document.querySelector('#wisdom-mod');
+    const cha_mod = document.querySelector('#charisma-mod');
 
     setModText(str_mod, ability_calculator.calculateStrengthMod());
     setModText(dex_mod, ability_calculator.calculateDexterityMod());
@@ -71,6 +79,7 @@ function setModTexts() {
 }
 
 function setModText(mod, num) {
+    console.log(mod);
     let sign = "";
     if (num >= 0) {
         sign = "+";

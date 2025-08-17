@@ -9,13 +9,13 @@ export function setSocket(io) {
     socket = io;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+/*document.addEventListener("DOMContentLoaded", () => {
     addSkillsEventListeners();
     socket.on('load_player_class', (data) => {
         loadPlayerClass(data, updateSkills);
     });
 
-});
+});*/
 
 function addSkillsEventListeners() {
     addEventListeners(updateSkills, updateModifiers);
