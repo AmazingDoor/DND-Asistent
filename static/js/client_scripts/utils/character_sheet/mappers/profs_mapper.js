@@ -1,4 +1,4 @@
-import * as class_proficiencies from './../../../shared/class_proficiencies.js';
+import * as class_proficiencies from './../../../../shared/class_proficiencies.js';
 let profs = {};
 
 export function setProfs(p) {

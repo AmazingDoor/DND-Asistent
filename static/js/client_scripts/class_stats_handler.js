@@ -15,7 +15,7 @@ export function setSocket(io) {
     socket = io;
 }
 
-export function addEventListeners(updateSkills) {
+/*export function addEventListeners(updateSkills) {
     const class_options = [...document.querySelector(".class-options").children];
     const head = document.querySelector(".class-selector");
     class_options.forEach((option) => {
@@ -25,9 +25,9 @@ export function addEventListeners(updateSkills) {
         buildSpellSection(option.textContent);
         });
     });
-}
+}*/
 
-export function loadPlayerClass(data, updateSkills) {
+/*export function loadPlayerClass(data, updateSkills) {
     const class_name = data.class_name;
     const skills = data.player_skills;
     if (class_name !== null) {
@@ -38,9 +38,9 @@ export function loadPlayerClass(data, updateSkills) {
     }
     buildClassStatSection(class_name, updateSkills, skills);
     updateSkills();
-}
+}*/
 
-function addClickListener(option, head, updateSkills) {
+/*function addClickListener(option, head, updateSkills) {
     head.querySelector('.selected-class').textContent = option.textContent;
     buildClassStatSection(option.textContent, updateSkills);
     const skills = getSkills();
@@ -48,9 +48,9 @@ function addClickListener(option, head, updateSkills) {
     updateSkills();
     socket.emit('save_player_class', {class_name: option.textContent, skills: skill_array, char_id: char_id});
 
-}
+} */
 
-function buildClassStatSection(c, updateSkills, active_skills = []) {
+/*function buildClassStatSection(c, updateSkills, active_skills = []) {
     setProfs(c);
     profs = getProfs();
     calculateAbilityModifiers();
@@ -71,117 +71,9 @@ function buildClassStatSection(c, updateSkills, active_skills = []) {
     createSkillSelections(skill_count, skills, active_skills, updateSkills)
 
 
-}
+}*/
 
-function createSavingThrows(saving_throws) {
-    const count = saving_throws.length;
-    let str = '';
-    for (let i = 0; i < count; i++) {
-        str = str + saving_throws[i];
-        if(i < count - 1) {
-            str = str + ', ';
-        }
-    }
 
-    document.querySelector('.saving-throw-display').textContent = str;
-
-}
-
-function createWeapons(weapons) {
-    const count = weapons.length;
-    let str = '';
-    for (let i = 0; i < count; i++) {
-        str = str + weapons[i];
-        if(i < count - 1) {
-            str = str + ', ';
-        }
-    }
-
-    document.querySelector('.weapons-display').textContent = str;
-}
-
-function createArmor(armor) {
-    const count = armor.length;
-    let str = '';
-    for (let i = 0; i < count; i++) {
-        str = str + armor[i];
-        if(i < count - 1) {
-            str = str + ', ';
-        }
-    }
-
-    document.querySelector('.armor-display').textContent = str;
-}
-
-function createTools(tools) {
-    const count = tools.length;
-    let str = '';
-    for (let i = 0; i < count; i++) {
-        str = str + tools[i];
-        if(i < count - 1) {
-            str = str + ', ';
-        }
-    }
-
-    document.querySelector('.tools-display').textContent = str;
-}
-
-function createSkillSelections(skill_count, skills, active_skills, updateSkills) {
-    const d = document.querySelector('.class-skills-div');
-    removeSkills();
-    const skill_names = active_skills[1] || [];
-    for (let i = 0; i < skill_count; i++) {
-        let skill_text = "Select Skill";
-        if (skill_names.length > 0) {
-            if (skill_names[i] !== undefined) {
-                skill_text = skill_names[i];
-            }
-        }
-        let skill_div = document.createElement('div');
-        skill_div.classList.add('skill-selection');
-        skill_div.classList.add('dropdown-head');
-        skill_div.innerHTML = `
-            <p>${skill_text}</p>
-            <div class="dropdown">
-                <div class="skill-dropdown dropdown-content hidden">
-                </div>
-            </div>
-        `;
-
-        d.appendChild(skill_div);
-        const dropdown = skill_div.querySelector('.dropdown-content');
-        skills.forEach((skill) => {
-            let option = document.createElement('div');
-            option.classList.add('skill-option');
-            option.textContent = skill;
-            dropdown.appendChild(option);
-        });
-        skill_div.appendChild(dropdown);
-        linkDropdown(skill_div);
-        addClassSkillEventListeners(updateSkills, getSkills);
-    }
-
-}
-
-function removeSkills() {
-    const d = document.querySelector('.class-skills-div');
-    d.innerHTML = '';
-
-}
-
-export function getSkills() {
-    const skills_container = document.querySelector('.class-skills-div');
-    const skills = skills_container.querySelectorAll('.dropdown-head') || [];
-    const skill_names = []
-    skills.forEach((skill) => {
-        const skill_text = skill.querySelector('p').textContent;
-        if(skill_text !== "Select Skill") {
-            skill_names.push(skill_text);
-        }
-    });
-
-    return skill_names;
-}
 
 export function getSavingThrows() {
     return profs.saving_throws;

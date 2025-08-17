@@ -16,36 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
     char_id = sessionStorage.getItem('charId');
 });
 
-
-export function loadPlayerAbilities(data) {
-    const abilities = data.abilities;
-    const str_num = abilities.str_num;
-    const dex_num = abilities.dex_num;
-    const con_num = abilities.con_num;
-    const int_num = abilities.int_num;
-    const wis_num = abilities.wis_num;
-    const cha_num = abilities.cha_num;
-
-    const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
-
-    str_input.value = str_num;
-    dex_input.value = dex_num;
-    con_input.value = con_num;
-    int_input.value = int_num;
-    wis_input.value = wis_num;
-    cha_input.value = cha_num;
-}
-
-export function getInputs () {
-    const str_input = document.querySelector('#strength-input');
-    const dex_input = document.querySelector('#dexterity-input');
-    const con_input = document.querySelector('#constitution-input');
-    const int_input = document.querySelector('#intelligence-input');
-    const wis_input = document.querySelector('#wisdom-input');
-    const cha_input = document.querySelector('#charisma-input');
-    return[str_input, dex_input, con_input, int_input, wis_input, cha_input]
-}
-
 export function addEventListeners() {
     const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
 
@@ -68,93 +38,11 @@ export function calculateAbilityModifiers() {
 
 }
 
-function calculateStrengthMod() {
 
-    const itp = document.querySelector('#strength-input');
-    const inputs = document.querySelectorAll('.strength-modifier');
-    const num = itp.value;
-    document.querySelector(".strength-num").textContent = num.toString();
 
-    inputs.forEach((i) => {
-        const new_num = calculateModifier(itp);
-        setModText(i, new_num);
-    });
 
-}
 
-function calculateDexterityMod() {
-    const itp = document.querySelector('#dexterity-input');
-    const inputs = document.querySelectorAll('.dexterity-modifier');
-    const num = itp.value;
-    document.querySelector(".dexterity-num").textContent = num.toString();
 
-    inputs.forEach((i) => {
-        const new_num = calculateModifier(itp);
-        setModText(i, new_num);
-    });
-}
-
-function calculateConstitutionMod() {
-    const itp = document.querySelector('#constitution-input');
-    const inputs = document.querySelectorAll('.constitution-modifier');
-    const num = itp.value;
-    document.querySelector(".constitution-num").textContent = num.toString();
-
-    inputs.forEach((i) => {
-        const new_num = calculateModifier(itp);
-        setModText(i, new_num);
-    });
-}
-
-function calculateIntelligenceMod() {
-    const itp = document.querySelector('#intelligence-input');
-    const inputs = document.querySelectorAll('.intelligence-modifier');
-    const num = itp.value;
-    document.querySelector(".intelligence-num").textContent = num.toString();
-
-    inputs.forEach((i) => {
-        const new_num = calculateModifier(itp);
-        setModText(i, new_num);
-    });
-}
-
-function calculateWisdomMod() {
-    const itp = document.querySelector('#wisdom-input');
-    const inputs = document.querySelectorAll('.wisdom-modifier');
-    const num = itp.value;
-    document.querySelector(".wisdom-num").textContent = num.toString();
-
-    inputs.forEach((i) => {
-        const new_num = calculateModifier(itp);
-        setModText(i, new_num);
-    });
-}
-
-function calculateCharismaMod() {
-    const itp = document.querySelector('#charisma-input');
-    const inputs = document.querySelectorAll('.charisma-modifier');
-    const num = itp.value;
-    document.querySelector(".charisma-num").textContent = num.toString();
-
-    inputs.forEach((i) => {
-        const new_num = calculateModifier(itp);
-        setModText(i, new_num);
-    });
-}
-
-function setModText(mod, num) {
-    let sign = "";
-    if (num >= 0) {
-        sign = "+";
-    }
-    mod.textContent = "(" + sign + num.toString() + ")";
-}
-
-function calculateModifier(i) {
-    const num = i.value;
-    const new_num = Math.floor((parseInt(num) - 10) / 2);
-    return new_num;
-}
 
 function saveAbilities() {
     const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
