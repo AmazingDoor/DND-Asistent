@@ -1,4 +1,4 @@
-let player_level = 1;
+let player_level = 20;
 
 export function getPlayerLevel() {
     return player_level;
