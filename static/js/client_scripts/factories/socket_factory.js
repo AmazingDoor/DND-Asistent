@@ -1,8 +1,4 @@
-//import {setSocket as setAbilityHandlerSocket} from './../ability_handler.js'
-//import {setSocket as setClassStatsHandlerSocket} from './../class_stats_handler.js';
-//import {setSocket as setSkillsHandlerSocket} from './../skills_handler.js';
-//import {setSocket as setClassSkillHandlerSocket} from './../class_skill_handler.js';
-import {setSocket as setClassSpellSectionHandlerSocket} from './../class_spell_section_handler.js';
+import {setSocket as setClassSpellSectionBuilderSocket} from './../utils/character_sheet/page_builders/sub_builders/class_spell_section_builder.js';
 import {setSocket as setRaceDropdownHandlerSocket} from './../utils/character_sheet/dropdown_handlers/race_dropdown_handler.js';
 import {setSocket as setRaceSkillDropdownHandlerSocket} from './../utils/character_sheet/dropdown_handlers/race_skill_dropdown_handler.js';
 import {setSocket as setRaceAbilityDropdownHandlerSocket} from './../utils/character_sheet/dropdown_handlers/race_ability_dropdown_handler.js';
@@ -19,7 +15,7 @@ export let socket = null;
 
 export function setFactorySocket(io) {
     socket = io;
-    setClassSpellSectionHandlerSocket(io);
+    setClassSpellSectionBuilderSocket(io);
     setRaceDropdownHandlerSocket(io);
     setRaceSkillDropdownHandlerSocket(io);
     setRaceAbilityDropdownHandlerSocket(io);

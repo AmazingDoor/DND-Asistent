@@ -21,7 +21,7 @@ def save_player_skills(data):
     skills = data.get('skills')
     char_id = data.get('char_id')
     player_data = safe_read_json(f'{players_folder}\\{char_id}.json')
-    player_data['player_skills'] = skills
+    player_data['class_skills'] = skills
     safe_write_json(player_data, f'{players_folder}\\{char_id}.json')
 
 
@@ -29,13 +29,13 @@ def load_player_class(char_id, sid):
     players_folder = get_players_folder()
     player_data = safe_read_json(f'{players_folder}\\{char_id}.json')
     class_name = player_data.get('class_name')
-    if player_data.get('player_skills') is None:
-        player_data['player_skills'] = [0, []]
+    if player_data.get('class_skills') is None:
+        player_data['class_skills'] = [0, []]
         safe_write_json(player_data, f'{players_folder}\\{char_id}.json')
-    player_skills = player_data.get('player_skills')
-    emit('load_player_class', {'class_name': class_name, 'player_skills': player_skills}, room=sid)
+    player_skills = player_data.get('class_skills')
+    emit('build_character_class', {'class_name': class_name, 'class_skills': player_skills}, room=sid)
 
 
 def reset_player_skills(data):
-    data['player_skills'] = [0, []]
+    data['class_skills'] = [0, []]
     return data

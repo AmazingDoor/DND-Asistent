@@ -1,26 +1,21 @@
-let socket = null;
-
-export function setSocket(io) {
-    socket = io;
-}
+import * as character_data_handler from './../character_data_handler.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
 });
 
-export function addClassSkillEventListeners(updateSkills, getSkills) {
+export function addClassSkillEventListeners(socket, setSkills) {
     const skills_container = document.querySelector('.class-skills-div');
     const skill_heads = skills_container.querySelectorAll('.dropdown-head') || [];
     skill_heads.forEach((skill_head) => {
         const skill_options = skill_head.querySelectorAll('.skill-option');
         skill_options.forEach((option) => {
-            option.addEventListener('click', function () {
+            option.addEventListener('click', function() {
                 changeHeadText(skill_head, option);
-                updateSkills();
-                const skills = getSkills();
-                const skill_array = [skills.length, skills];
-                socket.emit('save_player_skills', {skills: skill_array, char_id: char_id});
+                setSkills();
+                const skills = character_data_handler.getClassSkills();
+                socket.emit('save_player_skills', {skills: skills, char_id: char_id});
             });
         });
     });

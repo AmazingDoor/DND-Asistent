@@ -1,5 +1,8 @@
 import * as character_data_handler from './../character_data_handler.js';
 import {setClass, getClassData} from './../mappers/class_mapper.js';
+import {linkDropdown} from './../../dropdown_handler.js';
+import {addClassSkillEventListeners} from './../dropdown_handlers/class_skill_handler.js';
+import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -9,17 +12,22 @@ let socket = null;
 let class_data;
 export function setSocket(io) {
     socket = io;
+    socket.on('build_character_class', data => {
+        buildCharacterClass(data);
+    });
 }
 
 export function buildCharacterClass(data) {
+    const class_name = data.class_name;
+    const skills = data.class_skills;
+
     const class_options = [...document.querySelector(".class-options").children];
     const head = document.querySelector(".class-selector");
     class_options.forEach((option) => {
         option.addEventListener("click", function() {clickEvent(option, head)});
-    })
+    });
 
-    const class_name = data.class_name;
-    const skills = data.player_skills;
+
     if (class_name !== null) {
         document.querySelector('.selected-class').textContent = class_name;
     } else {
@@ -27,33 +35,37 @@ export function buildCharacterClass(data) {
 
     }
     buildClassStatSection(class_name, skills);
+    buildSpellSection(class_name);
+
 
 }
 
 function clickEvent(option, head) {
     head.querySelector('.selected-class').textContent = option.textContent;
     buildClassStatSection(option.textContent);
-    const skills = getSkills();
-    const skill_array = [skills.length, skills];
+    setSkills()
+    const skill_array = character_data_handler.getClassSkills();
+    socket.emit('save_spells', {char_id: char_id, spells: [], cantrips: []})
     socket.emit('save_player_class', {class_name: option.textContent, skills: skill_array, char_id: char_id});
 }
 
-function getSkills() {
+function setSkills() {
     const skills_container = document.querySelector('.class-skills-div');
     const skills = skills_container.querySelectorAll('.dropdown-head') || [];
-    const skill_names = []
+    const skill_names = [];
     skills.forEach((skill) => {
         const skill_text = skill.querySelector('p').textContent;
+
         if(skill_text !== "Select Skill") {
             skill_names.push(skill_text);
         }
     });
 
-    return skill_names;
+    character_data_handler.setClassSkills([skill_names.length, skill_names]);
 }
 
 function buildClassStatSection(c, active_skills = []) {
-    setProfs(c);
+    setClass(c);
     class_data = getClassData();
     if (Object.keys(class_data).length === 0) {
         return;
@@ -159,7 +171,7 @@ function createSkillSelections(skill_count, skills, active_skills, updateSkills)
         });
         skill_div.appendChild(dropdown);
         linkDropdown(skill_div);
-        addClassSkillEventListeners(updateSkills, getSkills);
+        addClassSkillEventListeners(socket, setSkills);
     }
 
 }

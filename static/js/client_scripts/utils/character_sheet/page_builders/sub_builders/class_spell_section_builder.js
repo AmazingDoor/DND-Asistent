@@ -1,15 +1,15 @@
-import {bard} from './../shared/spell_lists/bard.js';
-import {cleric} from './../shared/spell_lists/cleric.js';
-import {druid} from './../shared/spell_lists/druid.js';
-import {paladin} from './../shared/spell_lists/paladin.js';
-import {ranger} from './../shared/spell_lists/ranger.js';
-import {sorcerer} from './../shared/spell_lists/sorcerer.js';
-import {warlock} from './../shared/spell_lists/warlock.js';
-import {wizard} from './../shared/spell_lists/wizard.js';
-import {full_caster, half_caster, third_caster, warlock_pact_magic, getMagicSlots} from './../shared/spell_caster_slot_map.js';
-import {getPlayerLevel} from './player_level_handler.js';
-import {linkDropdown} from './utils/dropdown_handler.js';
-import {getClassSpells, getSpellData} from './../shared/spell_data_filterer.js';
+import {bard} from './../../../../../shared/spell_lists/bard.js';
+import {cleric} from './../../../../../shared/spell_lists/cleric.js';
+import {druid} from './../../../../../shared/spell_lists/druid.js';
+import {paladin} from './../../../../../shared/spell_lists/paladin.js';
+import {ranger} from './../../../../../shared/spell_lists/ranger.js';
+import {sorcerer} from './../../../../../shared/spell_lists/sorcerer.js';
+import {warlock} from './../../../../../shared/spell_lists/warlock.js';
+import {wizard} from './../../../../../shared/spell_lists/wizard.js';
+import {full_caster, half_caster, third_caster, warlock_pact_magic, getMagicSlots} from './../../../../../shared/spell_caster_slot_map.js';
+import {getPlayerLevel} from './../../../../player_level_handler.js';
+import {linkDropdown} from './../../../dropdown_handler.js';
+import {getClassSpells, getSpellData} from './../../../../../shared/spell_data_filterer.js';
 let socket = null;
 export function setSocket(io) {
     socket = io;
