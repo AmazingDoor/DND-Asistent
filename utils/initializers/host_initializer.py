@@ -6,19 +6,17 @@ from utils.combat_manager import load_combats
 import os
 
 IPV4 = None
-PORT = None
 
-def set_ip_and_port(ip, port):
-    global IPV4, PORT
+def set_ip_and_port(ip):
+    global IPV4
     IPV4 = ip
-    PORT = port
 
 @socketio.on('host_page_load')
 def host_page_load():
     DM_SID = get_dm_sid()
     PLAYERS_FOLDER = get_players_folder()
     # Tell the host to create a tab for the client
-    txt = str(IPV4) + ':' + str(PORT)
+    txt = str(IPV4)
     emit('add_ip_text', {'ip': txt}, room=DM_SID)
     players = [f for f in os.listdir(PLAYERS_FOLDER)]
     for player in players:

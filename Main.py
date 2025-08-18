@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify  # request is from flask
 from utils.socket_factory import socketio, emit
+from pyngrok import ngrok
 import os
 from werkzeug.utils import secure_filename
 from utils.safe_json import safe_read_json, safe_write_json
@@ -144,19 +145,29 @@ def is_port_available(port):
 global IPV4
 global PORT
 
-
+def print_instructions():
+    print("NGROC_AUTHTOKEN environment variable not found")
+    print("To get a free ngrok authtoken, sign up at: http://dashboard.ngrok.com/get-started")
+    print("Use the token provided in one of these commands in the terminal")
+    print("Linux/macOS: export NGROK_AUTHTOKEN=\"Your Token Here\"")
+    print("Windows: setx NGROK_AUTHTOKEN \"Your Token Here\"")
 def setupServer():
     global IPV4
     global PORT
-    IPV4 = get_ipv4_address()
-    host = "0.0.0.0"
+    #IPV4 = get_ipv4_address()
+    host = "127.0.0.1"
     PORT = find_available_port()
-    set_ip_and_port(IPV4, PORT)
-    print(f"Clients connect to: {IPV4}:{PORT}")
-    url = f"http://{IPV4}:{PORT}?role=host"
-    webbrowser.open(url)
-    socketio.run(app, host=host, port=PORT, allow_unsafe_werkzeug=True)
-
+    token = os.getenv("NGROK_AUTHTOKEN")
+    if token:
+        ngrok.set_auth_token(token)
+        IPV4 = ngrok.connect(str(PORT), auth="dnd:Password")
+        set_ip_and_port(IPV4.public_url)
+        print(f"Clients connect to: {IPV4.public_url}")
+        url = f"{IPV4.public_url}?role=host"
+        webbrowser.open(url)
+        socketio.run(app, host=host, port=PORT, allow_unsafe_werkzeug=True)
+    else:
+        print_instructions()
 
 
 if __name__ == "__main__":
