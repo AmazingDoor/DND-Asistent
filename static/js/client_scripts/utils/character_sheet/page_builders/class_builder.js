@@ -3,6 +3,7 @@ import {setClass, getClassData} from './../mappers/class_mapper.js';
 import {linkDropdown} from './../../dropdown_handler.js';
 import {addClassSkillEventListeners} from './../dropdown_handlers/class_skill_handler.js';
 import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
+import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -35,17 +36,25 @@ export function buildCharacterClass(data) {
 
     }
     buildClassStatSection(class_name, skills);
-    buildSpellSection(class_name);
+    if (class_name !== "Wizard") {
+        buildSpellSection(class_name);
+    }
 
 
 }
 
 function clickEvent(option, head) {
     head.querySelector('.selected-class').textContent = option.textContent;
+    socket.emit('save_spells', {char_id: char_id, spells: [], cantrips: []})
     buildClassStatSection(option.textContent);
+    character_data_handler.setClassPreparedSpells([]);
+    if(option.textContent !== "Wizard") {
+        buildSpellSection(option.textContent);
+    }
     setSkills()
     const skill_array = character_data_handler.getClassSkills();
-    socket.emit('save_spells', {char_id: char_id, spells: [], cantrips: []})
+    updateSkills();
+    updateAbilities();
     socket.emit('save_player_class', {class_name: option.textContent, skills: skill_array, char_id: char_id});
 }
 

@@ -157,6 +157,7 @@ def setupServer():
     #IPV4 = get_ipv4_address()
     host = "127.0.0.1"
     PORT = find_available_port()
+    print(PORT)
     token = os.getenv("NGROK_AUTHTOKEN")
     if token:
         ngrok.set_auth_token(token)

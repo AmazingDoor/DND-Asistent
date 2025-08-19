@@ -9,7 +9,9 @@ import {wizard} from './../../../../../shared/spell_lists/wizard.js';
 import {full_caster, half_caster, third_caster, warlock_pact_magic, getMagicSlots} from './../../../../../shared/spell_caster_slot_map.js';
 import {getPlayerLevel} from './../../../../player_level_handler.js';
 import {linkDropdown} from './../../../dropdown_handler.js';
-import {getClassSpells, getSpellData} from './../../../../../shared/spell_data_filterer.js';
+import {getClassSpells, getSpellData, getPreparedSpellCount} from './../../../../../shared/spell_data_filterer.js';
+import {getClassName} from './../../mappers/class_mapper.js';
+import {setClassPreparedSpells, getClassPreparedSpells} from './../../character_data_handler.js';
 let socket = null;
 export function setSocket(io) {
     socket = io;
@@ -23,19 +25,21 @@ document.addEventListener("DOMContentLoaded", function() {
         const saved_spells = data.spells;
         const saved_cantrips = data.cantrips;
         const class_name = data.class_name;
-        buildSpellSection(class_name, saved_spells, saved_cantrips);
+        setClassPreparedSpells(saved_spells);
+        //buildSpellSection(class_name, saved_spells, saved_cantrips);
     });
 });
 
 export function buildSpellSection(class_name, saved_spells = [], saved_cantrips = []) {
     const [cantrips, spells] = getClassSpells(class_name);
-    if(spells === undefined) {return;}
     const player_level = getPlayerLevel();
     const spell_slots = getMagicSlots(class_name);
-    if(spell_slots.length <= 0) {return;}
-    const spell_slot_map = spell_slots.spell_slots[player_level - 1];
+    const spell_slot_map = spell_slots[player_level - 1] || [];
+    const max_spell_level = spell_slot_map.length;
 
-    buildSpells(spell_slot_map, player_level, spells, saved_spells);
+    saved_spells = getClassPreparedSpells();
+
+    buildSpells(spell_slot_map, player_level, spells, saved_spells, class_name, max_spell_level);
 
     saveSpells();
 
@@ -68,27 +72,111 @@ function findHighestPlayerLevelAvailable(d, level) {
 }
 
 export function saveSpells() {
-    let cantrips = [];
-    let spells = [];
-    const spell_containers = document.querySelectorAll('.spell-container');
-    spell_containers.forEach((container) => {
-        let same_level_spells = [];
+    let class_name = getClassName();
+    if(class_name !== "Wizard") {
+        let cantrips = [];
+        let spells = [];
+        const container = document.querySelector('.spell-container');
         const selected_spells = container.querySelectorAll('.spell-selector');
         selected_spells.forEach((spell) => {
             const spell_name = spell.querySelector('p').textContent;
-            same_level_spells.push(spell_name);
+            spells.push(spell_name);
         });
-        spells.push(same_level_spells);
-    });
 
-    socket.emit('save_spells', {char_id: char_id, spells: spells, cantrips: cantrips})
+        socket.emit('save_spells', {char_id: char_id, spells: spells, cantrips: cantrips})
+    }
 }
 
-function buildSpells(spell_slot_map, player_level, spells, saved_spells) {
+function buildSpells(spell_slot_map, player_level, spells, saved_spells, class_name, max_spell_level) {
     const spell_div = document.querySelector('.class-spell-div');
     spell_div.innerHTML = '';
-    let i = 1;
-    spell_slot_map.forEach((spell_level_count) => {
+    const prepared_spell_count = getPreparedSpellCount(class_name);
+    const spell_container = document.createElement('div');
+    spell_container.classList.add("spell-container");
+    spell_div.appendChild(spell_container);
+    for (let e = 0; e < prepared_spell_count; e++) {
+        const spell_dropdown_head = document.createElement('div');
+        spell_dropdown_head.classList.add('dropdown-head');
+        spell_dropdown_head.classList.add('spell-selector');
+        const head_text = document.createElement('p');
+        let t = "Select Spell";
+        if(e in saved_spells) {
+            t = saved_spells[e];
+        }
+
+        head_text.textContent = t;
+        spell_dropdown_head.appendChild(head_text);
+
+        const d = document.createElement('div');
+        d.classList.add('dropdown');
+        spell_dropdown_head.appendChild(d);
+
+        const spell_dropdown = document.createElement('div');
+        spell_dropdown.classList.add('spell-options');
+        spell_dropdown.classList.add('dropdown-content');
+        spell_dropdown.classList.add('hidden');
+        d.appendChild(spell_dropdown);
+
+        spells.forEach((spell) => {
+            if(spell.level <= max_spell_level) {
+                const name = spell.name;
+                const spell_option = document.createElement('div');
+                spell_option.classList.add('spell-option');
+                const spell_option_text = document.createElement('p');
+                spell_option_text.textContent = name;
+                spell_option.appendChild(spell_option_text);
+                spell_dropdown.appendChild(spell_option);
+
+                spell_option.addEventListener("click", function() {spellOptionClickEvent(spell_dropdown_head, spell_option_text)});
+
+                const spell_data_container = document.createElement('div');
+                spell_data_container.classList.add('spell-data-container');
+                spell_option.appendChild(spell_data_container);
+
+                const spell_description_container = document.createElement('div');
+                spell_description_container.classList.add('spell-description-container');
+                spell_data_container.appendChild(spell_description_container);
+
+                const spell_description = document.createElement('p');
+                spell_description.classList.add('spell-description');
+                spell_description.textContent = spell.desc;
+                spell_description_container.appendChild(spell_description);
+
+                if ('dc' in spell) {
+                    const die = document.createElement('p');
+                    die.classList.add('dc-text');
+                    die.textContent = "DC: " + spell.dc.dc_type.name;
+                    spell_data_container.appendChild(die);
+                }
+
+                if ('damage' in spell) {
+                    if ('damage_at_character_level' in spell.damage) {
+                        let spell_level = findHighestCharacterLevelAvailable(spell.damage.damage_at_character_level, i);
+                        const hit_die_num = spell.damage.damage_at_character_level[spell_level];
+                        const hit_die = document.createElement('p');
+                        hit_die.classList.add('hit-die-text');
+                        hit_die.textContent = "Damage: " + hit_die_num;
+                    }
+
+                    if('damage_at_slot_level' in spell.damage) {
+                        let spell_level = findHighestSlotLevelAvailable(spell.damage.damage_at_slot_level, player_level);
+                        const hit_die_num = spell.damage.damage_at_slot_level[spell_level];
+                        const hit_die = document.createElement('p');
+                        hit_die.classList.add('hit-die-text');
+                        hit_die.textContent = "Damage: " + hit_die_num;
+                        spell_data_container.appendChild(hit_die);
+                    }
+                }
+            }
+        });
+        spell_container.appendChild(spell_dropdown_head);
+        linkDropdown(spell_dropdown_head);
+    }
+}
+
+/* OLD SPELL BUILDING STUFF */
+
+/*spell_slot_map.forEach((spell_level_count) => {
         if (spell_level_count !== 0) {
             const spell_level_label = document.createElement('p');
             spell_level_label.textContent = "Level " + i.toString() + " Slots";
@@ -180,5 +268,4 @@ function buildSpells(spell_slot_map, player_level, spells, saved_spells) {
             linkDropdown(spell_dropdown_head);
         }
         i++;
-    });
-}
+    });*/

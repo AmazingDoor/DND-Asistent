@@ -9,7 +9,7 @@ import {setSocket as setAbilityMapperSocket} from './../utils/character_sheet/ma
 import {setSocket as setRaceMapperSocket} from './../utils/character_sheet/mappers/race_mapper.js';
 import {setSocket as setClassBuilderSocket} from './../utils/character_sheet/page_builders/class_builder.js';
 import {setSocket as setAbilityBuilderSocket} from './../utils/character_sheet/page_builders/ability_builder.js';
-
+import {setSocket as setDisplayStatUpdaterSocket} from "./../utils/display_stat_updater.js";
 
 export let socket = null;
 
@@ -25,6 +25,7 @@ export function setFactorySocket(io) {
     setRaceMapperSocket(io);
     setClassBuilderSocket(io);
     setAbilityBuilderSocket(io);
+    setDisplayStatUpdaterSocket(io);
 }
 
 export function getSocket() {

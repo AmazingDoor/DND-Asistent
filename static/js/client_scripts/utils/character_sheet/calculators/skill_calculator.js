@@ -1,6 +1,11 @@
-import {getProficiencyBonus} from './../../player_level_handler.js';
+import * as character_data_handler from "./../character_data_handler.js";
+import {getProficiencyBonus} from "./../../../player_level_handler.js";
 
-/*export function calculateSkills(skills, proficiencies, race_skills) {
+export function calculateSkills() {
+    const class_skills = character_data_handler.getClassSkillNames();
+    const race_skills_main = character_data_handler.getRaceSkillNames();
+    let race_skills = [...race_skills_main];
+
     if(race_skills === undefined) {
         race_skills = [];
     }
@@ -15,17 +20,17 @@ import {getProficiencyBonus} from './../../player_level_handler.js';
     });
     race_skills = race_skills.concat(chosen_skills);
 
-    if (skills === undefined) {
-        skills = [];
+    if (class_skills === undefined) {
+        class_skills = [];
     }
     if (race_skills.length > 0) {
         race_skills.forEach((skill) => {
-            if (skills.includes(skill)) {
+            if (class_skills.includes(skill)) {
                 race_skills = race_skills.filter(s => s !== skill && s !== "Any");
             }
         });
     }
-    const all_skills = skills.concat(race_skills);
+    const all_skills = class_skills.concat(race_skills);
     const player_level_mod_num = getProficiencyBonus();
 
     let athletics_skill = 0,
@@ -117,9 +122,4 @@ import {getProficiencyBonus} from './../../player_level_handler.js';
     history_skill, investigation_skill, nature_skill, religion_skill, animal_handling_skill,
     insight_skill, medicine_skill, perception_skill, survival_skill, deception_skill, intimidation_skill, performance_skill,
     persuasion_skill];
-}*/
-
-export function calculateModifier(i) {
-    const new_num = Math.floor((i - 10) / 2);
-    return new_num;
 }

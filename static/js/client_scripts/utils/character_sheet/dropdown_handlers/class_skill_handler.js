@@ -1,4 +1,5 @@
 import * as character_data_handler from './../character_data_handler.js';
+import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -15,6 +16,8 @@ export function addClassSkillEventListeners(socket, setSkills) {
                 changeHeadText(skill_head, option);
                 setSkills();
                 const skills = character_data_handler.getClassSkills();
+                updateSkills();
+                updateAbilities();
                 socket.emit('save_player_skills', {skills: skills, char_id: char_id});
             });
         });
