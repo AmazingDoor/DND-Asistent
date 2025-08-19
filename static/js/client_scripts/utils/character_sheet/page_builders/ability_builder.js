@@ -1,6 +1,6 @@
 import * as ability_calculator from './../calculators/ability_calculator.js';
 import {setCharacterAbilities} from './../character_data_handler.js';
-
+import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
@@ -51,6 +51,8 @@ function addEventListeners() {
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
         setCharacterAbilities(abilities);
 
+        updateSkills();
+        updateAbilities();
         saveAbilities();
     });
 
@@ -63,6 +65,8 @@ function addEventListeners() {
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
         setCharacterAbilities(abilities);
 
+        updateSkills();
+        updateAbilities();
         saveAbilities();
     });
 
@@ -75,6 +79,8 @@ function addEventListeners() {
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
         setCharacterAbilities(abilities);
 
+        updateSkills();
+        updateAbilities();
         saveAbilities();
     });
 
@@ -87,6 +93,8 @@ function addEventListeners() {
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
         setCharacterAbilities(abilities);
 
+        updateSkills();
+        updateAbilities();
         saveAbilities();
     });
 
@@ -99,6 +107,8 @@ function addEventListeners() {
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
         setCharacterAbilities(abilities);
 
+        updateSkills();
+        updateAbilities();
         saveAbilities();
     });
 
@@ -111,6 +121,8 @@ function addEventListeners() {
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
         setCharacterAbilities(abilities);
 
+        updateSkills();
+        updateAbilities();
         saveAbilities();
     });
 }

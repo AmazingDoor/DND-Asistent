@@ -55,15 +55,15 @@ export function calculateAbilities() {
         abilities_dict = Object.assign({}, race_data.abilities);
     }
 
-    const selected_abilities = document.querySelectorAll(".selectedability");
-    let all_abilities = abilities_dict;
+    const selected_abilities = character_data_handler.getRaceAbilityModifiers(); //document.querySelectorAll(".selected-ability");
+    let all_abilities = Object.assign({}, selected_abilities, abilities_dict);
 
-    selected_abilities.forEach((ability) => {
+    /*selected_abilities.forEach((ability) => {
         const row = ability.parentElement.parentElement.parentElement;
         const table_datas = row.querySelectorAll("td");
         const modifier = parseInt(table_datas[1].textContent.replace("+", ""));
         all_abilities[ability.textContent] = modifier;
-    });
+    });*/
 
     let race_str_mod = 0;
     let race_dex_mod = 0;

@@ -121,7 +121,6 @@ function buildSpells(spell_slot_map, player_level, spells, saved_spells, class_n
         spell_dropdown.classList.add('hidden');
         d.appendChild(spell_dropdown);
 
-        console.log(max_spell_level);
         spells.forEach((spell) => {
             if(spell.level <= max_spell_level) {
                 const name = spell.name;

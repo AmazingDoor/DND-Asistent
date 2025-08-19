@@ -1,12 +1,28 @@
 let character_abilities = {};
 let class_skills = [0, []];
-let race_skills = [0, []];
+let race_skills = [];
+let race_ability_modifiers = {};
+let race_languages = [];
 let class_weapon_proficiencies = [];
 let class_armor_proficiencies = [];
 let class_tool_proficiencies = [];
 let class_saving_throws = [];
 let class_spells = [];
 
+export function resetRaceData() {
+    race_skills = [];
+    race_ability_modifiers = {};
+    race_languages = [];
+}
+
+export function resetClassData() {
+    class_skills = [0, []];
+    class_weapon_proficiencies = [];
+    class_armor_proficiencies = [];
+    class_tool_proficiencies = [];
+    class_saving_throws = [];
+    class_spells = [];
+}
 
 /*Modifier From Race*/
 export function setCharacterAbilities(data) {
@@ -83,5 +99,21 @@ export function getRaceSkills() {
 }
 
 export function getRaceSkillNames() {
-    return race_skills[1];
+    return race_skills;
+}
+
+export function setRaceAbilityModifiers(data) {
+    race_ability_modifiers = data;
+}
+
+export function getRaceAbilityModifiers() {
+    return race_ability_modifiers;
+}
+
+export function setRaceLanguages(data) {
+    race_languages = data;
+}
+
+export function getRaceLanguages() {
+    return getRaceLanguages();
 }

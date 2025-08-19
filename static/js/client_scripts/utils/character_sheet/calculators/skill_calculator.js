@@ -11,13 +11,14 @@ export function calculateSkills() {
     }
 
     let chosen_skill_objects = [...document.querySelectorAll('.selected-skill')];
-    let chosen_skills = [];
-    chosen_skill_objects.forEach((o) => {
+    let chosen_skills = character_data_handler.getRaceSkills();
+    /*chosen_skill_objects.forEach((o) => {
         const txt = o.textContent;
         if (txt !== "Select Skill") {
             chosen_skills.push(txt);
         }
-    });
+    });*/
+
     race_skills = race_skills.concat(chosen_skills);
 
     if (class_skills === undefined) {
@@ -26,7 +27,7 @@ export function calculateSkills() {
     if (race_skills.length > 0) {
         race_skills.forEach((skill) => {
             if (class_skills.includes(skill)) {
-                race_skills = race_skills.filter(s => s !== skill && s !== "Any");
+                race_skills = race_skills.filter(s => s !== skill && s !== "Any" && s !== "Select Skill");
             }
         });
     }

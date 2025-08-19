@@ -17,6 +17,7 @@ export function buildRaceSection(race_name) {
 
 function createAbilities(abilities) {
     const abilities_table = document.querySelector('.race-abilities-table');
+    const saved_abilities = Object.keys(character_data_handler.getRaceAbilityModifiers());
     abilities_table.innerHTML = '';
     for (const ability in abilities) {
         if(ability !== "any") {
@@ -30,15 +31,17 @@ function createAbilities(abilities) {
             abilities_table.appendChild(row);
         } else {
             const values = abilities[ability];
+            let i = 0;
             values.forEach((value) => {
                 const row = document.createElement('tr');
                 const dropdown_container = document.createElement('td');
-                createAbilityDropdown(dropdown_container);
+                createAbilityDropdown(dropdown_container, saved_abilities, i);
                 row.appendChild(dropdown_container);
                 const value_container = document.createElement('td');
                 value_container.textContent = "+" + value.toString();
                 row.appendChild(value_container);
                 abilities_table.appendChild(row);
+                i++;
             });
         }
     }

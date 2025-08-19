@@ -1,5 +1,5 @@
 import {updateAbilities} from './../../display_stat_updater.js';
-
+import{setRaceAbilityModifiers} from './../character_data_handler.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -21,7 +21,6 @@ export function addEventListeners(head) {
 
 function clickListener(head, option) {
     head.querySelector('p').textContent = option.textContent;
-    updateAbilities();
     const selected_abilities = head.parentElement.parentElement.parentElement.parentElement.parentElement.querySelectorAll('.selected-ability');
     let abilities = {};
     selected_abilities.forEach((ability) => {
@@ -30,5 +29,7 @@ function clickListener(head, option) {
         const mod_num = parseInt(table_datas[1].textContent.replace("+", ""));
         abilities[ability.textContent] = mod_num;
     });
+    setRaceAbilityModifiers(abilities);
+    updateAbilities();
     socket.emit('save_race_abilities', {race_abilities: abilities, char_id: char_id});
 }

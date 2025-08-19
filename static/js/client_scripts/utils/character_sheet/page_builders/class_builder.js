@@ -47,7 +47,7 @@ function clickEvent(option, head) {
     head.querySelector('.selected-class').textContent = option.textContent;
     socket.emit('save_spells', {char_id: char_id, spells: [], cantrips: []})
     buildClassStatSection(option.textContent);
-    character_data_handler.setClassPreparedSpells([]);
+    character_data_handler.resetClassData();
     if(option.textContent !== "Wizard") {
         buildSpellSection(option.textContent);
     }
