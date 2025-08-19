@@ -94,6 +94,8 @@ export function getPreparedSpellCount(class_name) {
             return spells_known.Warlock[player_level - 1];
         case "Ranger":
             return spells_known.Ranger[player_level - 1];
+        case "Sorcerer":
+            return spells_known.Sorcerer[player_level - 1];
         default:
         return 0;
     }

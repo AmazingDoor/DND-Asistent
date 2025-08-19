@@ -34,7 +34,11 @@ export function buildSpellSection(class_name, saved_spells = [], saved_cantrips 
     const [cantrips, spells] = getClassSpells(class_name);
     const player_level = getPlayerLevel();
     const spell_slots = getMagicSlots(class_name);
-    const spell_slot_map = spell_slots[player_level - 1] || [];
+    const spell_slot_map_object = spell_slots.spell_slots;
+    let spell_slot_map = [];
+    if(spell_slot_map_object !== undefined) {
+        spell_slot_map = spell_slot_map_object[player_level - 1] || [];
+    }
     const max_spell_level = spell_slot_map.length;
 
     saved_spells = getClassPreparedSpells();
@@ -75,15 +79,15 @@ export function saveSpells() {
     let class_name = getClassName();
     if(class_name !== "Wizard") {
         let cantrips = [];
-        let spells = [];
+        let s = [];
         const container = document.querySelector('.spell-container');
         const selected_spells = container.querySelectorAll('.spell-selector');
         selected_spells.forEach((spell) => {
             const spell_name = spell.querySelector('p').textContent;
-            spells.push(spell_name);
+            s.push(spell_name);
         });
 
-        socket.emit('save_spells', {char_id: char_id, spells: spells, cantrips: cantrips})
+        socket.emit('save_spells', {char_id: char_id, spells: s, cantrips: cantrips});
     }
 }
 
@@ -117,6 +121,7 @@ function buildSpells(spell_slot_map, player_level, spells, saved_spells, class_n
         spell_dropdown.classList.add('hidden');
         d.appendChild(spell_dropdown);
 
+        console.log(max_spell_level);
         spells.forEach((spell) => {
             if(spell.level <= max_spell_level) {
                 const name = spell.name;

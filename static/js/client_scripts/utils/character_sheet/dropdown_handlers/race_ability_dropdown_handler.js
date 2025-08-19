@@ -1,3 +1,6 @@
+import {updateAbilities} from './../../display_stat_updater.js';
+
+
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
@@ -9,16 +12,16 @@ export function setSocket(io) {
     socket = io;
 }
 
-export function addEventListeners(head, updateModifiers) {
+export function addEventListeners(head) {
     const options = [...head.querySelector('.ability-options').children];
     options.forEach((option) => {
-        option.addEventListener("click", function() {clickListener(head, option, updateModifiers);});
+        option.addEventListener("click", function() {clickListener(head, option);});
     });
 }
 
-function clickListener(head, option, updateModifiers) {
+function clickListener(head, option) {
     head.querySelector('p').textContent = option.textContent;
-    updateModifiers();
+    updateAbilities();
     const selected_abilities = head.parentElement.parentElement.parentElement.parentElement.parentElement.querySelectorAll('.selected-ability');
     let abilities = {};
     selected_abilities.forEach((ability) => {

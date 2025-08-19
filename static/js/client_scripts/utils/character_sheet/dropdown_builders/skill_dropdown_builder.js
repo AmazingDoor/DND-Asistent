@@ -1,7 +1,7 @@
-import {linkDropdown} from './../dropdown_handler.js';
-import{addEventListeners} from './../race/race_skill_dropdown_handler.js';
-
-export function createSkillDropdown(parent_element, updateSkills) {
+import {linkDropdown} from './../../dropdown_handler.js';
+import {addEventListeners} from './../dropdown_handlers/race_skill_dropdown_handler.js';
+import {updateSkills} from './../../display_stat_updater.js';
+export function createSkillDropdown(parent_element) {
     const head = document.createElement('div');
     head.classList.add('skill-selector');
     head.classList.add('dropdown-head');

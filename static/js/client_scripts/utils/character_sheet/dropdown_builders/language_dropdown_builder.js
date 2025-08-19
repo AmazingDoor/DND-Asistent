@@ -1,5 +1,5 @@
-import {linkDropdown} from './../dropdown_handler.js';
-import {addEventListeners as addLanguageEventListeners} from './../race/race_language_dropdown.js';
+import {linkDropdown} from './../../dropdown_handler.js';
+import {addEventListeners as addLanguageEventListeners} from './../dropdown_handlers/race_language_dropdown.js';
 export function createLanguageDropdown(parent_element) {
     const head = document.createElement('div');
     head.classList.add('language-selector');

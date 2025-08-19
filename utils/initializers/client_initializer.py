@@ -39,4 +39,7 @@ def init_json_data(sid, name, char_id):
     emit('host_change_armor_class', {'value': armor_class}, room=sid)
     emit('host_update_max_health', {'max_health': max_health}, room=sid)
     load_player_class(char_id, sid)
+    emit('load_race_stats', {}, room=sid)
+
+    #Call this last
     emit('update_display_data', room=sid)
