@@ -1,5 +1,6 @@
 let character_abilities = {};
 let class_skills = [0, []];
+let class_cantrips = [];
 let race_skills = [];
 let race_ability_modifiers = {};
 let race_languages = [];
@@ -8,6 +9,7 @@ let class_armor_proficiencies = [];
 let class_tool_proficiencies = [];
 let class_saving_throws = [];
 let class_spells = [];
+let race_spells = [];
 
 export function resetRaceData() {
     race_skills = [];
@@ -22,6 +24,7 @@ export function resetClassData() {
     class_tool_proficiencies = [];
     class_saving_throws = [];
     class_spells = [];
+    class_cantrips = [];
 }
 
 /*Modifier From Race*/
@@ -115,5 +118,13 @@ export function setRaceLanguages(data) {
 }
 
 export function getRaceLanguages() {
-    return getRaceLanguages();
+    return race_languages;
+}
+
+export function setClassPreparedCantrips(data) {
+    class_cantrips = data;
+}
+
+export function getClassPreparedCantrips() {
+    return class_cantrips;
 }

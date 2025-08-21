@@ -74,6 +74,7 @@ function createTraits(traits) {
 }
 
 function createLanguages(languages) {
+    const saved_languages = character_data_handler.getRaceLanguages();
     const set_languages = languages[0];
     const language_choices = languages[1];
     const language_list = document.querySelector('.language-list');
@@ -85,7 +86,7 @@ function createLanguages(languages) {
     });
 
     for (let i = 0; i < language_choices; i++) {
-        createLanguageDropdown(language_list);
+        createLanguageDropdown(language_list, saved_languages, i);
     }
 
 
@@ -93,6 +94,7 @@ function createLanguages(languages) {
 
 function createSkills(skills) {
     const skill_list = document.querySelector('.skill-list');
+    const saved_skills = character_data_handler.getRaceSkills();
     skill_list.innerHTML = '';
     let selectable = 0;
     skills.forEach((skill) => {
@@ -106,7 +108,7 @@ function createSkills(skills) {
     });
 
     for (let i = 0; i < selectable; i++) {
-        createSkillDropdown(skill_list);
+        createSkillDropdown(skill_list, saved_skills, i);
     }
 
 }

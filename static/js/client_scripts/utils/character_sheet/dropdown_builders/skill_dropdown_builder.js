@@ -1,7 +1,7 @@
 import {linkDropdown} from './../../dropdown_handler.js';
 import {addEventListeners} from './../dropdown_handlers/race_skill_dropdown_handler.js';
 import {updateSkills} from './../../display_stat_updater.js';
-export function createSkillDropdown(parent_element) {
+export function createSkillDropdown(parent_element, saved_skills, i) {
     const head = document.createElement('div');
     head.classList.add('skill-selector');
     head.classList.add('dropdown-head');
@@ -29,6 +29,10 @@ export function createSkillDropdown(parent_element) {
                 <div>Persuasion</div>
             </div>
         </div>`;
+
+    if (i < saved_skills.length) {
+        head.querySelector('.selected-skill').textContent = saved_skills[i];
+    }
     parent_element.appendChild(head);
     linkDropdown(head);
     addEventListeners(head, updateSkills);

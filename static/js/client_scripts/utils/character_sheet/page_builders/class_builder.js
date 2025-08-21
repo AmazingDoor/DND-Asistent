@@ -36,6 +36,7 @@ export function buildCharacterClass(data) {
 
     }
     buildClassStatSection(class_name, skills);
+    setSkills();
     if (class_name !== "Wizard") {
         buildSpellSection(class_name);
     }

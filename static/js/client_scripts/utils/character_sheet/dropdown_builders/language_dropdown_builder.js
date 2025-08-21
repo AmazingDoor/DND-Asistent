@@ -1,6 +1,6 @@
 import {linkDropdown} from './../../dropdown_handler.js';
 import {addEventListeners as addLanguageEventListeners} from './../dropdown_handlers/race_language_dropdown.js';
-export function createLanguageDropdown(parent_element) {
+export function createLanguageDropdown(parent_element, saved_languages, i) {
     const head = document.createElement('div');
     head.classList.add('language-selector');
     head.classList.add('dropdown-head');
@@ -27,6 +27,9 @@ export function createLanguageDropdown(parent_element) {
 
         </div>
     </div>`;
+    if (i < saved_languages.length) {
+        head.querySelector('.selected-language').textContent = saved_languages[i];
+    }
     parent_element.appendChild(head);
     linkDropdown(head);
     addLanguageEventListeners(head);

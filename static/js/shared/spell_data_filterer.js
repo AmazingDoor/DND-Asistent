@@ -101,6 +101,31 @@ export function getPreparedSpellCount(class_name) {
     }
 }
 
+export function getPreparedCantripCount(class_name) {
+    const player_level = getPlayerLevel();
+    const abilities = player_data_handler.getCharacterAbilities();
+    switch(class_name) {
+        case "Cleric":
+            return cantrips_known.Cleric[player_level - 1];
+        case "Druid":
+            return cantrips_known.Druid[player_level - 1];
+        case "Wizard":
+            return cantrips_known.Wizard[player_level - 1];
+        case "Paladin":
+            return cantrips_known.Paladin[player_level - 1];
+        case "Bard":
+            return cantrips_known.Bard[player_level - 1];
+        case "Warlock":
+            return cantrips_known.Warlock[player_level - 1];
+        case "Ranger":
+            return cantrips_known.Ranger[player_level - 1];
+        case "Sorcerer":
+            return cantrips_known.Sorcerer[player_level - 1];
+        default:
+        return 0;
+    }
+}
+
 const spells_known = {
     Bard: [4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 15, 16, 18, 19, 19, 20, 22, 22, 22],
     Warlock: [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15],
@@ -109,6 +134,10 @@ const spells_known = {
 }
 
 const cantrips_known = {
+    Cleric: [3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5],
+    Druid: [2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4],
+    Wizard: [3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5],
+    Paladin: [],
     Bard: [2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     Warlock: [2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     Ranger: [],

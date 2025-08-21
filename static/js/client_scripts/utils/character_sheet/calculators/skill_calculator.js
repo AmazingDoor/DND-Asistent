@@ -4,20 +4,17 @@ import {getProficiencyBonus} from "./../../../player_level_handler.js";
 export function calculateSkills() {
     const class_skills = character_data_handler.getClassSkillNames();
     const race_skills_main = character_data_handler.getRaceSkillNames();
+
+
     let race_skills = [...race_skills_main];
 
     if(race_skills === undefined) {
         race_skills = [];
     }
 
+
     let chosen_skill_objects = [...document.querySelectorAll('.selected-skill')];
     let chosen_skills = character_data_handler.getRaceSkills();
-    /*chosen_skill_objects.forEach((o) => {
-        const txt = o.textContent;
-        if (txt !== "Select Skill") {
-            chosen_skills.push(txt);
-        }
-    });*/
 
     race_skills = race_skills.concat(chosen_skills);
 
@@ -52,6 +49,7 @@ export function calculateSkills() {
     intimidation_skill = 0,
     performance_skill = 0,
     persuasion_skill = 0;
+
 
     if (all_skills.length > 0) {
         all_skills.forEach(skill => {
