@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
         clientUpdateMaxHealth(max_health_input.value);
     });
     selectCharacter();
-    //addEventListeners();
 });
 
 function selectCharacter() {

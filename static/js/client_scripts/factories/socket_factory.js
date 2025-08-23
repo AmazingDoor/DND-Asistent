@@ -10,6 +10,7 @@ import {setSocket as setRaceMapperSocket} from './../utils/character_sheet/mappe
 import {setSocket as setClassBuilderSocket} from './../utils/character_sheet/page_builders/class_builder.js';
 import {setSocket as setAbilityBuilderSocket} from './../utils/character_sheet/page_builders/ability_builder.js';
 import {setSocket as setDisplayStatUpdaterSocket} from "./../utils/display_stat_updater.js";
+import {setSocket as setPlayerLevelHandlerSocket} from './../player_level_handler.js';
 
 export let socket = null;
 
@@ -26,6 +27,7 @@ export function setFactorySocket(io) {
     setClassBuilderSocket(io);
     setAbilityBuilderSocket(io);
     setDisplayStatUpdaterSocket(io);
+    setPlayerLevelHandlerSocket(io);
 }
 
 export function getSocket() {
