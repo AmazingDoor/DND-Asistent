@@ -8,9 +8,7 @@ export function setSocket(io) {
 document.addEventListener("DOMContentLoaded", function() {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
-    const ipt = document.querySelector('#player-level-input');
-    ipt.addEventListener('change',
-    function() {setPlayerLevel(ipt.value)});
+
 
     socket.on('load_player_level', data => {
         const lvl = data.get('player_level');

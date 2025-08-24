@@ -104,6 +104,7 @@ export function saveSpells() {
 function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, cantrips, saved_spells, saved_cantrips, class_name, max_spell_level) {
     const spell_div = document.querySelector('.class-spell-div');
     spell_div.innerHTML = '';
+    console.log(class_name);
     const prepared_spell_count = getPreparedSpellCount(class_name);
     const spell_container = document.createElement('div');
     spell_container.classList.add("spell-container");

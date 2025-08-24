@@ -1,5 +1,5 @@
 import * as character_data_handler from './../character_data_handler.js';
-import {setClass, getClassData} from './../mappers/class_mapper.js';
+import {setClass, getClassData, getClassName} from './../mappers/class_mapper.js';
 import {linkDropdown} from './../../dropdown_handler.js';
 import {addClassSkillEventListeners} from './../dropdown_handlers/class_skill_handler.js';
 import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
@@ -9,18 +9,21 @@ document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
 });
+
 let socket = null;
 let class_data;
 export function setSocket(io) {
     socket = io;
     socket.on('build_character_class', data => {
-        buildCharacterClass(data);
+        setClass(data.class_name);
+        character_data_handler.setClassSkills(data.class_skills);
+        buildCharacterClass();
     });
 }
 
-export function buildCharacterClass(data) {
-    const class_name = data.class_name;
-    const skills = data.class_skills;
+export function buildCharacterClass() {
+    const class_name = getClassName();
+    const skills = character_data_handler.getClassSkills();
 
     const class_options = [...document.querySelector(".class-options").children];
     const head = document.querySelector(".class-selector");
