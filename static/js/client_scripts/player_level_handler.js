@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     socket.on('load_player_level', data => {
-        const lvl = data.get('player_level');
+        const lvl = data.player_level;
         setPlayerLevelAndUpdate(lvl);
     });
 });
@@ -21,6 +21,7 @@ export function getPlayerLevel() {
 }
 
 export function setPlayerLevel(level) {
+    //change called from client
     player_level = level;
     socket.emit('client_change_player_level', {player_level: level, char_id: char_id});
 }

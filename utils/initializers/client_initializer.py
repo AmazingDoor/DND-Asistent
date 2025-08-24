@@ -38,13 +38,12 @@ def init_json_data(sid, name, char_id):
     emit('host_update_health', {'result': health, 'client_id': sid}, room=sid)
     emit('host_change_armor_class', {'value': armor_class}, room=sid)
     emit('host_update_max_health', {'max_health': max_health}, room=sid)
+    emit('load_player_level', {'player_level': data.get('player_level')}, room=sid)
     load_player_class(char_id, sid)
-
     race_skills = data.get('race_skills') if data.get('race_skills') is not None else []
     race_abilities = data.get('race_abilities') if data.get('race_abilities') is not None else {}
     race_languages = data.get('race_languages') if data.get('race_languages') is not None else []
     race_name = data.get('race_name') if data.get('race_name') is not None else None
     emit('load_race_stats', {'race_skills': race_skills, 'race_abilities': race_abilities, 'race_languages': race_languages, 'race_name': race_name}, room=sid)
-
     #Call this last
     emit('update_display_data', room=sid)

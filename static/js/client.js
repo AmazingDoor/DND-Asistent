@@ -5,7 +5,9 @@ import './client_scripts/player_display_tab_handler.js';
 import './client_scripts/utils/character_sheet/page_builders/ability_builder.js';
 import * as class_builder from './client_scripts/utils/character_sheet/page_builders/class_builder.js';
 import * as race_builder from './client_scripts/utils/character_sheet/page_builders/race_builder.js';
+import {getRace} from './client_scripts/utils/character_sheet/mappers/race_mapper.js';
 import {setPlayerLevel} from './client_scripts/player_level_handler.js';
+import {updateAbilities, updateSkills} from './client_scripts/utils/display_stat_updater.js';
 
 const socket = io();
 setFactorySocket(socket);
@@ -16,10 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const ipt = document.querySelector('#player-level-input');
     ipt.addEventListener('change',
-    function() {
-        setPlayerLevel(ipt.value)
-
-    });
+    function() {updateEverything(ipt);});
 
     const max_health_input = document.querySelector(".max-health");
     max_health_input.addEventListener('change', function() {
@@ -27,6 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     selectCharacter();
 });
+
+function updateEverything(ipt) {
+    setPlayerLevel(ipt.value)
+    class_builder.buildCharacterClass();
+    const race = getRace();
+    race_builder.buildRaceSection(race);
+    updateSkills();
+    updateAbilities();
+}
 
 function selectCharacter() {
     socket.emit('register_name', { name, char_id });

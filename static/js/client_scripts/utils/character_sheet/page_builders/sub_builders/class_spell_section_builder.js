@@ -97,6 +97,9 @@ export function saveSpells() {
             c.push(cantrip_name);
         });
 
+        setClassPreparedSpells(s);
+        setClassPreparedCantrips(c);
+
         socket.emit('save_spells', {char_id: char_id, spells: s, cantrips: c});
     }
 }
