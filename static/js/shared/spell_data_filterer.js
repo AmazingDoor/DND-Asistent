@@ -74,15 +74,15 @@ export function getSpellCastingAbilityModifier(class_name) {
 }
 
 export function getPreparedSpellCount(class_name) {
-    const player_level = getPlayerLevel();
+    const player_level = parseInt(getPlayerLevel());
     const abilities = player_data_handler.getCharacterAbilities();
     switch(class_name) {
         case "Cleric":
         case "Druid":
-            return player_level + calculateWisdomMod();
+            return player_level + parseInt(calculateWisdomMod());
             break;
         case "Wizard":
-            return player_level + calculateIntelligenceMod();
+            return player_level + parseInt(calculateIntelligenceMod());
             break;
         case "Paladin":
             return Math.floor(player_level / 2) + calculateCharismaMod();

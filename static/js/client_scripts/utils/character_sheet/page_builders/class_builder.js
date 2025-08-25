@@ -41,7 +41,17 @@ export function buildCharacterClass() {
     buildClassStatSection(class_name, skills);
     setSkills();
     if (class_name !== "Wizard") {
+        document.querySelector('#spell-book-option-div').classList.add('hidden');
         buildSpellSection(class_name);
+    } else {
+        const spell_book_option = document.querySelector('#use-spell-book');
+        document.querySelector('#spell-book-option-div').classList.remove('hidden');
+        if (spell_book_option.checked) {
+            return;
+        } else {
+            buildSpellSection(class_name);
+        }
+
     }
 
 
@@ -49,7 +59,7 @@ export function buildCharacterClass() {
 
 function clickEvent(option, head) {
     head.querySelector('.selected-class').textContent = option.textContent;
-    socket.emit('save_spells', {char_id: char_id, spells: [], cantrips: []})
+    //socket.emit('save_spells', {char_id: char_id, spells: [], cantrips: [], })
     buildClassStatSection(option.textContent);
     character_data_handler.resetClassData();
     if(option.textContent !== "Wizard") {

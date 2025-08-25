@@ -11,6 +11,8 @@ def save_player_class(data):
     player_data = safe_read_json(f'{players_folder}\\{char_id}.json')
     if player_data.get('class_name') is None or player_data.get('class_name') != class_name:
         player_data['class_name'] = class_name
+        player_data['class_spells'] = []
+        player_data['clas_cantrips'] = []
         player_data = reset_player_skills(player_data)
         safe_write_json(player_data, f'{players_folder}\\{char_id}.json')
 
