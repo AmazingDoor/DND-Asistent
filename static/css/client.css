@@ -1,3 +1,15 @@
+
+    /* INVENTORY START */
+    .inventory-container {
+        width: 80%;
+        border: 2px solid black;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        overflow-y: auto;
+        min-height: 100px;
+    }
+    /* INVENTORY END */
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;

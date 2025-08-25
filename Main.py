@@ -148,7 +148,7 @@ global PORT
 
 def print_instructions():
     print("NGROC_AUTHTOKEN environment variable not found")
-    print("To get a free ngrok authtoken, sign up at: http://dashboard.ngrok.com/get-started")
+    print("To get a free ngrok authtoken, sign up at: https://dashboard.ngrok.com/login")
     print("Use the token provided in one of these commands in the terminal")
     print("Linux/macOS: export NGROK_AUTHTOKEN=\"Your Token Here\"")
     print("Windows: setx NGROK_AUTHTOKEN \"Your Token Here\"")
