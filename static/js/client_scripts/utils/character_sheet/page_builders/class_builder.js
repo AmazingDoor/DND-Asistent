@@ -97,8 +97,8 @@ function buildClassStatSection(c, active_skills = []) {
         return;
     }
     const saving_throws = class_data.saving_throws;
-    const weapons = class_data.weapons;
-    const armor = class_data.armor;
+    const weapon_proficiencies = class_data.weapons.proficiencies;
+    const armor_proficiencies = class_data.armor.proficiencies;
     const tools = class_data.tools;
     const skill_count = class_data.skills[0];
     const skills = class_data.skills[1];
@@ -106,8 +106,8 @@ function buildClassStatSection(c, active_skills = []) {
     character_data_handler.setClassSkills(class_data.skills);
 
     createSavingThrows(saving_throws)
-    createWeapons(weapons)
-    createArmor(armor)
+    createWeaponProficiencies(weapon_proficiencies)
+    createArmorProficiencies(armor_proficiencies)
     createTools(tools)
     createSkillSelections(skill_count, skills, active_skills)
 }
@@ -126,7 +126,7 @@ function createSavingThrows(saving_throws) {
 
 }
 
-function createWeapons(weapons) {
+function createWeaponProficiencies(weapons) {
     const count = weapons.length;
     let str = '';
     for (let i = 0; i < count; i++) {
@@ -139,7 +139,7 @@ function createWeapons(weapons) {
     document.querySelector('.weapons-display').textContent = str;
 }
 
-function createArmor(armor) {
+function createArmorProficiencies(armor) {
     const count = armor.length;
     let str = '';
     for (let i = 0; i < count; i++) {
