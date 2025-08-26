@@ -115,7 +115,12 @@ export function calculateAbilities() {
     const wis_input = document.querySelector("#wisdom-input");
     const cha_input = document.querySelector("#charisma-input");
 
-    const saving_throws = getClassData().saving_throws || [];
+    const class_data = getClassData();
+    let saving_throws = [];
+
+    if (class_data !== null && class_data !== undefined) {
+        saving_throws = class_data.saving_throws;
+    }
     saving_throws.forEach((saving_throw) => {
         switch (saving_throw) {
             case "Strength":

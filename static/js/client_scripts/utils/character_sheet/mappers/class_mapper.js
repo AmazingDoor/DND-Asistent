@@ -30,5 +30,5 @@ export function getClassData() {
         Warlock: class_proficiencies.warlock,
         Wizard: class_proficiencies.wizard
     }
-    return class_data[class_name];
+    return class_data[class_name] || null;
 }

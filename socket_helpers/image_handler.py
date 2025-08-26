@@ -12,7 +12,7 @@ def handle_host_image_url(data):
     char_id = data.get('char_id')
     target_id = ID_TO_CLIENT.get(char_id)
     if url:
-        d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}.json")
+        d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
         d["imgs"].append(f"{url}")
-        safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}.json")
+        safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
         emit('send_image', {'url': url}, room=target_id)

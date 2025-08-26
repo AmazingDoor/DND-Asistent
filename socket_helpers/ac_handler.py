@@ -11,9 +11,9 @@ def client_change_armor_class(data):
     # Save new armor class and sync to host
     value = data.get('value')
     char_id = data.get('char_id')
-    d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}.json")
+    d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     d["ac"] = value
-    safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}.json")
+    safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     emit('client_change_armor_class', {'char_id': char_id, 'value': value}, room=DM_SID)
 
 @socketio.on('host_change_armor_class')
@@ -23,7 +23,7 @@ def host_change_armor_class(data):
     char_id = data.get('char_id')
     sid = ID_TO_CLIENT.get(char_id)
     value = data.get('value')
-    d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}.json")
+    d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     d["ac"] = value
-    safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}.json")
+    safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     emit('host_change_armor_class', {'value': value}, room=sid)

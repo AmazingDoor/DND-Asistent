@@ -9,9 +9,9 @@ from flask import request
 def client_update_health(data):
     # Save new health and sync with the host
     char_id = data.get('char_id')
-    d = safe_read_json(f"{get_players_folder()}\\{char_id}.json")
+    d = safe_read_json(f"{get_players_folder()}\\{char_id}\\basic_data.json")
     d["health"] = data.get("result")
-    safe_write_json(d, f"{get_players_folder()}\\{char_id}.json")
+    safe_write_json(d, f"{get_players_folder()}\\{char_id}\\basic_data.json")
     for key in ID_TO_CLIENT.keys():
         if ID_TO_CLIENT.get(key) == request.sid:
             print(get_dm_sid())
@@ -24,9 +24,9 @@ def host_update_health(data):
     # Save new health and sync with the client
     char_id = data.get('char_id')
     target_id = ID_TO_CLIENT.get(char_id)
-    d = safe_read_json(f"{get_players_folder()}\\{char_id}.json")
+    d = safe_read_json(f"{get_players_folder()}\\{char_id}\\basic_data.json")
     d["health"] = data.get("result")
-    safe_write_json(d, f"{get_players_folder()}\\{char_id}.json")
+    safe_write_json(d, f"{get_players_folder()}\\{char_id}\\basic_data.json")
     emit('host_update_health', {'result': data.get('result')}, room=target_id)
 
 @socketio.on('host_update_max_health')
@@ -35,9 +35,9 @@ def host_update_max_health(data):
     char_id = data.get('player_id')
     health = data.get('health')
     sid = ID_TO_CLIENT.get(char_id)
-    d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}.json")
+    d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     d["max_health"] = health
-    safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}.json")
+    safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     emit('host_update_max_health', {'max_health': health}, room=sid)
 
 
@@ -47,7 +47,7 @@ def client_update_max_health(data):
     DM_SID = get_dm_sid()
     char_id = data.get('char_id')
     max_health = data.get('max_health')
-    d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}.json")
+    d = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     d["max_health"] = max_health
-    safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}.json")
+    safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     emit('client_update_max_health', {'max_health': max_health, 'char_id': char_id}, room=DM_SID)

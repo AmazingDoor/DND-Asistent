@@ -90,6 +90,9 @@ function setSkills() {
 function buildClassStatSection(c, active_skills = []) {
     setClass(c);
     class_data = getClassData();
+    if (class_data === null || class_data === undefined) {
+        return;
+    }
     if (Object.keys(class_data).length === 0) {
         return;
     }

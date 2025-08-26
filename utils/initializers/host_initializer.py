@@ -20,8 +20,8 @@ def host_page_load():
     emit('add_ip_text', {'ip': txt}, room=DM_SID)
     players = [f for f in os.listdir(PLAYERS_FOLDER)]
     for player in players:
-        data = safe_read_json(f"{PLAYERS_FOLDER}\\{player}")
-        char_id = player.split('.')[0]
+        data = safe_read_json(f"{PLAYERS_FOLDER}\\{player}\\basic_data.json")
+        char_id = player #player.split('.')[0]
         name = data.get("name")
         emit('host_load_client_data', {'name': name, 'char_id': char_id})
         host_init_client_data(char_id)
@@ -32,12 +32,14 @@ def host_init_client_data(char_id):
     PLAYERS_FOLDER = get_players_folder()
     TRAPS_FOLDER = get_traps_folder()
     DM_SID = get_dm_sid()
-    data = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}.json")
-    messages = data.get("messages")
-    imgs = data.get("imgs")
-    health = data.get("health")
-    armor_class = data.get("ac")
-    max_health = data.get("max_health") if data.get("max_health") is not None else 0
+    base_folder = f"{PLAYERS_FOLDER}\\{char_id}\\"
+    message_data = safe_read_json(base_folder + "messages.json")
+    base_data = safe_read_json(base_folder + "basic_data.json")
+    messages = message_data.get("messages")
+    imgs = base_data.get("imgs")
+    health = base_data.get("health")
+    armor_class = base_data.get("ac")
+    max_health = base_data.get("max_health") if base_data.get("max_health") is not None else 0
     for message in messages:
         emit("load_message", {'message': message, 'char_id': char_id}, room=DM_SID)
     for img in imgs:

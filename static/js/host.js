@@ -242,7 +242,7 @@ if (file && file.type.startsWith('image/')) {
   .then(data => {
     const imageUrl = data.url;
     // Emit this URL to clients via socket
-    getAffectedTabs.forEach((c) => {
+    getAffectedTabs().forEach((c) => {
         let t = document.getElementById(clientMap[c]);
         let id = clientMap[c].replace("client-", "");
         socket.emit('host_send_image_url', { url: imageUrl, char_id: id });

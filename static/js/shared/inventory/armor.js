@@ -20,7 +20,7 @@ export const light_armor = {
         stealth_disadvantage: false,
         weight: 13
     }
-}
+};
 
 export const medium_armor = {
     hide: {
@@ -58,7 +58,7 @@ export const medium_armor = {
         stealth_disadvantage: true,
         weight: 40
     }
-}
+};
 
 export const heavy_armor = {
     ring_mail: {
@@ -89,7 +89,7 @@ export const heavy_armor = {
         stealth_disadvantage: true,
         weight: 65
     }
-}
+};
 
 export const shield = {
     cost: "10 gp",
@@ -97,4 +97,4 @@ export const shield = {
     strength: 0,
     stealth_disadvantage: false,
     weight: 6
-}
+};

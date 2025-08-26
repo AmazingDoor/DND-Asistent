@@ -51,10 +51,12 @@ def add_player_inits(data):
     DM_SID = get_dm_sid()
     PLAYERS_FOLDER = get_players_folder()
     combat_id = data.get('combat_id')
-    players = [f.split(".json")[0] for f in os.listdir(PLAYERS_FOLDER) if f.endswith('.json')]
+    #players = [f.split(".json")[0] for f in os.listdir(PLAYERS_FOLDER) if f.endswith('.json')]
+    players = [f for f in os.listdir(PLAYERS_FOLDER)]
+
     players_data = {}
     for player in players:
-        j = safe_read_json(f'{PLAYERS_FOLDER}\\{player}.json')
+        j = safe_read_json(f'{PLAYERS_FOLDER}\\{player}\\basic_data.json')
         players_data[player] = {'player_name': j.get('name'), 'player_ac': j.get('ac'),
                                 'player_health': j.get('health'), 'max_health': j.get('max_health')}
     emit('add_player_inits', {'combat_id': combat_id, 'players_data': players_data}, room=DM_SID)

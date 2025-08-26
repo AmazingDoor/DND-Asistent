@@ -25,6 +25,6 @@ def host_change_armor_class(data):
 
 def save_player_level(char_id, value):
     PLAYERS_FOLDER = get_players_folder()
-    j = safe_read_json(f'{PLAYERS_FOLDER}\\{char_id}.json')
+    j = safe_read_json(f'{PLAYERS_FOLDER}\\{char_id}\\basic_data.json')
     j['player_level'] = value
-    safe_write_json(j, f'{PLAYERS_FOLDER}\\{char_id}.json')
+    safe_write_json(j, f'{PLAYERS_FOLDER}\\{char_id}\\basic_data.json')

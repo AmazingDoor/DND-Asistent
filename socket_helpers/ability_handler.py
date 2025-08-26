@@ -7,7 +7,7 @@ def save_abilities(data):
     PLAYERS_FOLDER = get_players_folder()
     char_id = data.get("char_id")
     abilities = data.get("abilities")
-    j = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}.json")
+    j = safe_read_json(f"{PLAYERS_FOLDER}\\{char_id}\\abilities.json")
     j['abilities'] = abilities
 
-    safe_write_json(j, f"{PLAYERS_FOLDER}\\{char_id}.json")
+    safe_write_json(j, f"{PLAYERS_FOLDER}\\{char_id}\\abilities.json")
