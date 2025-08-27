@@ -10,6 +10,24 @@ let class_tool_proficiencies = [];
 let class_saving_throws = [];
 let class_spells = [];
 let race_spells = [];
+let inventory = [];
+
+
+export function addInvItem(item) {
+    inventory.push(item);
+}
+
+export function removeItem(index) {
+    inventory.splice(index, 1);
+}
+
+export function setInventory(inv) {
+    inventory = inv;
+}
+
+export function getInventory() {
+    return inventory();
+}
 
 export function resetRaceData() {
     race_skills = [];

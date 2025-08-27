@@ -4,6 +4,7 @@ import {linkDropdown} from './../../dropdown_handler.js';
 import {addClassSkillEventListeners} from './../dropdown_handlers/class_skill_handler.js';
 import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
+import * as inventory_builder from './inventory_builder.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -67,6 +68,8 @@ function clickEvent(option, head) {
     }
     setSkills()
     const skill_array = character_data_handler.getClassSkills();
+    inventory_builder.clearInventory();
+    inventory_builder.createClassOptions();
     updateSkills();
     updateAbilities();
     socket.emit('save_player_class', {class_name: option.textContent, skills: skill_array, char_id: char_id});

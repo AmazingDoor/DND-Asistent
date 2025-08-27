@@ -16,7 +16,9 @@ def init_json_data(sid, name, char_id):
     class_data = safe_read_json(base_folder + "class_data.json")
     race_data = safe_read_json(base_folder + "race_data.json")
     message_data = safe_read_json(base_folder + "messages.json")
+    inventory = safe_read_json(base_folder + "inventory.json")
 
+    inv = inventory.get("inventory")
     messages = message_data.get("messages")
     imgs = basic_data.get("imgs")
     health = basic_data.get("health")
@@ -41,6 +43,8 @@ def init_json_data(sid, name, char_id):
     race_languages = race_data.get('race_languages') if race_data.get('race_languages') is not None else []
     race_name = race_data.get('race_name') if race_data.get('race_name') is not None else None
     emit('load_race_stats', {'race_skills': race_skills, 'race_abilities': race_abilities, 'race_languages': race_languages, 'race_name': race_name}, room=sid)
+    emit('build_inventory', {"inventory": inv}, room=sid)
+
     #Call this last
     emit('update_display_data', room=sid)
 
@@ -63,7 +67,7 @@ def ensureExsistingFiles(PLAYERS_FOLDER, char_id, name):
 
     if not os.path.exists(f"{PLAYERS_FOLDER}\\{char_id}\\class_data.json"):
         char_data = {
-            "class_name": "",
+            "class_name": "Select Class",
             "player_skills": [0, []],
             "class_skills": [0, []],
             "class_spells": [],
@@ -74,7 +78,7 @@ def ensureExsistingFiles(PLAYERS_FOLDER, char_id, name):
 
     if not os.path.exists(f"{PLAYERS_FOLDER}\\{char_id}\\race_data.json"):
         char_data = {
-            "race_name": "",
+            "race_name": "Select Race",
             "race_abilities": {},
             "race_languages": []
         }
@@ -83,3 +87,7 @@ def ensureExsistingFiles(PLAYERS_FOLDER, char_id, name):
     if not os.path.exists(f"{PLAYERS_FOLDER}\\{char_id}\\messages.json"):
         char_data = {"messages": []}
         safe_write_json(char_data, f"{PLAYERS_FOLDER}\\{char_id}\\messages.json")
+
+    if not os.path.exists(f"{PLAYERS_FOLDER}\\{char_id}\\inventory.json"):
+        char_data = {"inventory": None}
+        safe_write_json(char_data, f"{PLAYERS_FOLDER}\\{char_id}\\inventory.json")

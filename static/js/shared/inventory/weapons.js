@@ -1,6 +1,7 @@
 import {ammo_types} from './ammo.js';
 export const weapons = {
     club: {
+        name: "Club",
         cost: "1 sp",
         damage: "1 d4",
         damage_type: "Bludgeoning",
@@ -9,6 +10,7 @@ export const weapons = {
         ammo_type: null
     },
     dagger: {
+        name: "Dagger",
         cost: "2 gp",
         damage: "1 d4",
         damage_type: "Piercing",
@@ -17,6 +19,7 @@ export const weapons = {
         ammo_type: null
     },
     greateclub: {
+        name: "Greatclub",
         cost: "2 sp",
         damage: "1 d8",
         damage_type: "Bludgeoning",
@@ -25,6 +28,7 @@ export const weapons = {
         ammo_type: null
     },
     handaxe: {
+        name: "Handaxe",
         cost: "5 gp",
         damage: "1 d6",
         damage_type: "Slashing",
@@ -33,6 +37,7 @@ export const weapons = {
         ammo_type: null
     },
     javelin: {
+        name: "Javelin",
         cost: "5 sp",
         damage: "1 d6",
         damage_type: "Piercing",
@@ -41,6 +46,7 @@ export const weapons = {
         ammo_type: null
     },
     light_hammer: {
+        name: "Light Hammer",
         cost: "2 gp",
         damage: "1 d4",
         damage_type: "Bludgeoning",
@@ -49,6 +55,7 @@ export const weapons = {
         ammo_type: null
     },
     mace: {
+        name: "Mace",
         cost: "5 gp",
         damage: "1 d6",
         damage_type: "Bludgeoning",
@@ -57,6 +64,7 @@ export const weapons = {
         ammo_type: null
     },
     quarterstaff: {
+        name: "Quarterstaff",
         cost: "2 sp",
         damage: "1 d6",
         damage_type: "Bludgeoning",
@@ -65,6 +73,7 @@ export const weapons = {
         ammo_type: null
     },
     sickle: {
+        name: "Sickle",
         cost: "1 gp",
         damage: "1 d4",
         damage_type: "Slashing",
@@ -73,6 +82,7 @@ export const weapons = {
         ammo_type: null
     },
     spear: {
+        name: "Spear",
         cost: "1 gp",
         damage: "1 d6",
         damage_type: "Piercing",
@@ -81,6 +91,7 @@ export const weapons = {
         ammo_type: null
     },
     light_crossbow: {
+        name: "Light Crossbow",
         cost: "25 gp",
         damage: "1 d8",
         damage_type: "Piercing",
@@ -89,6 +100,7 @@ export const weapons = {
         ammo_type: ammo_types.bolt
     },
     dart: {
+        name: "Dart",
         cost: "5 cp",
         damage: "1 d4",
         damage_type: "Piercing",
@@ -97,6 +109,7 @@ export const weapons = {
         ammo_type: null
     },
     shortbow: {
+        name: "Short Bow",
         cost: "25 gp",
         damage: "1 d6",
         damage_type: "Piercing",
@@ -105,6 +118,7 @@ export const weapons = {
         ammo_type: ammo_types.arrow
     },
     sling: {
+        name: "Sling",
         cost: "1 sp",
         damage: "1 d4",
         damage_type: "Bludgeoning",
@@ -113,6 +127,7 @@ export const weapons = {
         ammo_type: ammo_types.sling_ammo
     },
     battleaxe: {
+        name: "Battleaxe",
         cost: "10 gp",
         damage: "1 d8",
         damage_type: "Slashing",
@@ -121,6 +136,7 @@ export const weapons = {
         ammo_type: null
     },
     flail: {
+        name: "Flail",
         cost: "10 gp",
         damage: "1 d8",
         damage_type: "Bludgeoning",
@@ -129,6 +145,7 @@ export const weapons = {
         ammo_type: null
     },
     glaive: {
+        name: "Glaive",
         cost: "20 gp",
         damage: "1 d10",
         damage_type: "Slashing",
@@ -137,6 +154,7 @@ export const weapons = {
         ammo_type: null
     },
     greataxe: {
+        name: "Greataxe",
         cost: "30 gp",
         damage: "1 d12",
         damage_type: "Slashing",
@@ -145,6 +163,7 @@ export const weapons = {
         ammo_type: null
     },
     greatsword: {
+        name: "Greatsword",
         cost: "50 gp",
         damage: "2 d6",
         damage_type: "Slashing",
@@ -153,6 +172,7 @@ export const weapons = {
         ammo_type: null
     },
     halberd: {
+        name: "Halberd",
         cost: "20 gp",
         damage: "1 d10",
         damage_type: "Slashing",
@@ -161,6 +181,7 @@ export const weapons = {
         ammo_type: null
     },
     lance: {
+        name: "Lance",
         cost: "10 gp",
         damage: "1 d12",
         damage_type: "Piercing",
@@ -169,6 +190,7 @@ export const weapons = {
         ammo_type: null
     },
     longsword: {
+        name: "Longsword",
         cost: "15 gp",
         damage: "1 d8",
         damage_type: "Slashing",
@@ -177,6 +199,7 @@ export const weapons = {
         ammo_type: null
     },
     maul: {
+        name: "Maul",
         cost: "10 gp",
         damage: "2 d6",
         damage_type: "Bludgeoning",
@@ -185,6 +208,7 @@ export const weapons = {
         ammo_type: null
     },
     morningstar: {
+        name: "Morningstar",
         cost: "15 gp",
         damage: "1 d8",
         damage_type: "Piercing",
@@ -193,6 +217,7 @@ export const weapons = {
         ammo_type: null
     },
     pike: {
+        name: "Pike",
         cost: "5 gp",
         damage: "1 d10",
         damage_type: "Piercing",
@@ -201,6 +226,7 @@ export const weapons = {
         ammo_type: null
     },
     rapier: {
+        name: "Rapier",
         cost: "25 gp",
         damage: "1 d8",
         damage_type: "Piercing",
@@ -209,6 +235,7 @@ export const weapons = {
         ammo_type: null
     },
     scimitar: {
+        name: "Scimitar",
         cost: "25 gp",
         damage: "1 d6",
         damage_type: "Slashing",
@@ -217,6 +244,7 @@ export const weapons = {
         ammo_type: null
     },
     shortsword: {
+        name: "Shortsword",
         cost: "10 gp",
         damage: "1 d6",
         damage_type: "Piercing",
@@ -225,6 +253,7 @@ export const weapons = {
         ammo_type: null
     },
     trident: {
+        name: "Trident",
         cost: "5 gp",
         damage: "1 d6",
         damage_type: "Piercing",
@@ -233,6 +262,7 @@ export const weapons = {
         ammo_type: null
     },
     war_pick: {
+        name: "War Pick",
         cost: "5 gp",
         damage: "1 d8",
         damage_type: "Piercing",
@@ -241,6 +271,7 @@ export const weapons = {
         ammo_type: null
     },
     warhammer: {
+        name: "Warhammer",
         cost: "15 gp",
         damage: "1 d8",
         damage_type: "Bludgeoning",
@@ -249,6 +280,7 @@ export const weapons = {
         ammo_type: null
     },
     whip: {
+        name: "Whip",
         cost: "2 gp",
         damage: "1 d4",
         damage_type: "Slashing",
@@ -257,6 +289,7 @@ export const weapons = {
         ammo_type: null
     },
     blowgun: {
+        name: "Blowgun",
         cost: "10 gp",
         damage: "1",
         damage_type: "Piercing",
@@ -265,6 +298,7 @@ export const weapons = {
         ammo_type: ammo_types.blowgun_needle
     },
     hand_crossbow: {
+        name: "Hand Crossbow",
         cost: "75 gp",
         damage: "1 d6",
         damage_type: "Piercing",
@@ -273,6 +307,7 @@ export const weapons = {
         ammo_type: ammo_types.bolt
     },
     heavy_crossbow: {
+        name: "Heavy Crossbow",
         cost: "50 gp",
         damage: "1 d10",
         damage_type: "Piercing",
@@ -281,6 +316,7 @@ export const weapons = {
         ammo_type: ammo_types.bolt
     },
     longbow: {
+        name: "Longbow",
         cost: "50 gp",
         damage: "1 d8",
         damage_type: "Piercing",
@@ -289,6 +325,7 @@ export const weapons = {
         ammo_type: ammo_types.arrow
     },
     net: {
+        name: "Net",
         cost: "1 gp",
         damage: "None",
         damage_type: "None",
