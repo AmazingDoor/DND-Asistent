@@ -70,6 +70,7 @@ function clickEvent(option, head) {
     const skill_array = character_data_handler.getClassSkills();
     inventory_builder.clearInventory();
     inventory_builder.createClassOptions();
+    inventory_builder.buildInventory();
     updateSkills();
     updateAbilities();
     socket.emit('save_player_class', {class_name: option.textContent, skills: skill_array, char_id: char_id});

@@ -14,7 +14,13 @@ let inventory = [];
 
 
 export function addInvItem(item) {
-    inventory.push(item);
+    const i = {type: "item", reference: item}
+    inventory.push(i);
+}
+
+export function addInvOption(t, indx) {
+    const o = {type: t, index: indx}
+    inventory.push(o);
 }
 
 export function removeItem(index) {
@@ -26,7 +32,7 @@ export function setInventory(inv) {
 }
 
 export function getInventory() {
-    return inventory();
+    return inventory;
 }
 
 export function resetRaceData() {

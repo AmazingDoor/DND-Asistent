@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
     socket.on('build_inventory', data => {
         const inv = data.inventory;
         character_data_handler.setInventory(inv);
+        buildInventory();
     });
 });
 
@@ -24,7 +25,23 @@ export function createClassOptions() {
     const class_data = getClassData();
 
     const weapon_options = class_data.weapons.options;
+    let i = 0;
     weapon_options.forEach(option_array => {
-        inv_manager.addWeaponOptionToInventory(option_array);
+        character_data_handler.addInvOption("class_weapon_option", i);
+        i++;
+        //inv_manager.addWeaponOptionToInventory(option_array);
+    });
+    inv_manager.saveInventory();
+}
+
+export function buildInventory() {
+    const class_data = getClassData();
+    const class_weapon_options = class_data.weapons.options;
+
+    const inventory = character_data_handler.getInventory();
+    inventory.forEach(item => {
+        if(item.type === "class_weapon_option") {
+            inv_manager.addWeaponOptionToInventory(class_weapon_options[item.index]);
+        }
     });
 }

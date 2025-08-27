@@ -12,6 +12,7 @@ import {setSocket as setAbilityBuilderSocket} from './../utils/character_sheet/p
 import {setSocket as setDisplayStatUpdaterSocket} from "./../utils/display_stat_updater.js";
 import {setSocket as setPlayerLevelHandlerSocket} from './../player_level_handler.js';
 import {setSocket as setInventoryBuilderSocket} from './../utils/character_sheet/page_builders/inventory_builder.js';
+import {setSocket as setInventoryItemManagerSocket} from './../utils/character_sheet/inventory/inventory_item_manager.js';
 export let socket = null;
 
 export function setFactorySocket(io) {
@@ -29,6 +30,7 @@ export function setFactorySocket(io) {
     setDisplayStatUpdaterSocket(io);
     setPlayerLevelHandlerSocket(io);
     setInventoryBuilderSocket(io);
+    setInventoryItemManagerSocket(io);
 }
 
 export function getSocket() {
