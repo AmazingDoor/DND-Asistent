@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, jsonify  # request is from flask
+from functools import wraps
+
+from flask import Flask, render_template, request, jsonify, session
+from flask_session import Session
 from utils.socket_factory import socketio, emit
-from pyngrok import ngrok
 import os
 from werkzeug.utils import secure_filename
+from flask_httpauth import HTTPBasicAuth
 from utils.safe_json import safe_read_json, safe_write_json
 
 from utils.client_tracker import ID_TO_CLIENT, EARLY_CLIENTS, clients
@@ -42,6 +45,38 @@ log.setLevel(logging.CRITICAL)
 
 app = Flask(__name__)
 socketio.init_app(app)
+auth = HTTPBasicAuth()
+
+app.config["SESSION_TYPE"] = "filesystem"
+app.config["SECRET_KEY"] = os.urandom(24)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_USE_SIGNER"] = True
+Session(app)
+
+users = {
+    "player": {"password": "player_password", "role": "player"},
+    "dm": {"password": "strong_dm_password", "role": "dm"}
+}
+
+def verify_password(username, password):
+    user = users.get(username)
+    if user and user["password"] == password:
+        session['user_role'] = user["role"]
+        return username
+    return None
+
+auth.verify_password(verify_password)
+
+def role_required(role):
+    def decorator(func):
+        @wraps(func)
+        def wrapped(*args, **kwars):
+            if session.get('user_role') == role:
+                return func(*args, **kwars)
+            return jsonify({"Error": "Access forbidden"}), 403
+        return wrapped
+    return decorator
+
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -65,6 +100,8 @@ def cleanup():
 
 
 @app.route('/upload-image', methods=['POST'])
+@auth.login_required
+@role_required('dm')
 def upload_image():
     if 'image' not in request.files:
         return jsonify({'error': 'No file part'}), 400
@@ -83,6 +120,7 @@ def upload_image():
 
 
 @app.route('/')
+@auth.login_required
 def index():
     if not request.args.get('role') == 'host':
         return render_template('character_select.html')
@@ -91,16 +129,21 @@ def index():
 
 
 @app.route('/host')
+@auth.login_required
+@role_required('dm')
 def host():
     return render_template('host.html')
 
 
 @app.route('/client')
+@auth.login_required
 def client():
     return render_template('client.html')
 
 
 @app.route('/manage_traps')
+@auth.login_required
+@role_required('dm')
 def manage_traps():
     return render_template('manage_traps.html')
 
@@ -147,30 +190,17 @@ def is_port_available(port):
 global IPV4
 global PORT
 
-def print_instructions():
-    print("NGROC_AUTHTOKEN environment variable not found")
-    print("To get a free ngrok authtoken, sign up at: https://dashboard.ngrok.com/login")
-    print("Use the token provided in one of these commands in the terminal")
-    print("Linux/macOS: export NGROK_AUTHTOKEN=\"Your Token Here\"")
-    print("Windows: setx NGROK_AUTHTOKEN \"Your Token Here\"")
 def setupServer():
     global IPV4
     global PORT
-    #IPV4 = get_ipv4_address()
-    host = "127.0.0.1"
+    host = "0.0.0.0"
     PORT = find_available_port()
-    print(PORT)
-    token = os.getenv("NGROK_AUTHTOKEN")
-    if token:
-        ngrok.set_auth_token(token)
-        IPV4 = ngrok.connect(str(PORT), auth="dnd:Password")
-        set_ip_and_port(IPV4.public_url)
-        print(f"Clients connect to: {IPV4.public_url}")
-        url = f"{IPV4.public_url}?role=host"
-        webbrowser.open(url)
-        socketio.run(app, host=host, port=PORT, allow_unsafe_werkzeug=True)
-    else:
-        print_instructions()
+    IPV4 = get_ipv4_address()
+    set_ip_and_port(IPV4, PORT)
+    print(f"Clients connect to: {IPV4}:{PORT}")
+    url = f"http://{IPV4}:{PORT}?role=host"
+    webbrowser.open(url)
+    socketio.run(app, host=host, port=PORT, allow_unsafe_werkzeug=True)
 
 
 if __name__ == "__main__":
