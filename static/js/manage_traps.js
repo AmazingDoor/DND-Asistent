@@ -9,6 +9,7 @@ window.onload = function() {
 
 socket.on('load_traps_json', (json_file) => {
     const traps = json_file.traps;
+    const box = document.getElementById('trapBox');
     traps.forEach((trap) => {
         const name = trap.trap_name;
         const text = trap.trap_text;
@@ -19,11 +20,11 @@ socket.on('load_traps_json', (json_file) => {
 
 function loadTrapDiv(name, text) {
     const box = document.getElementById('trapBox');
-
     const trap_row = document.createElement('div');
     trap_row.className = ('trap-row');
     trap_row.addEventListener("click", function() {
         const divs = document.querySelectorAll('.trap-row');
+        console.log(divs);
         divs.forEach(d => d.style.backgroundColor = "white");
         trap_row.style.backgroundColor = "lightgray";
         currentDiv = trap_row;

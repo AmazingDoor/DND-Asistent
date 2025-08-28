@@ -261,7 +261,12 @@ if (file && file.type.startsWith('image/')) {
     setAffectedTabs(t);
     showTab(tabId);
   }
+
+  socket.emit('reload_traps');
+
 }
+
+/////////////////END CREATE TAB////////////
 
 socket.on('client_name_registered', ({name, char_id }) => {
     createTab(name, char_id);

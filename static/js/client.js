@@ -42,7 +42,7 @@ function selectCharacter() {
 }
 
 function sendMessage() {
-  const msg = document.getElementById("msg").value;
+  const msg = escapeHTML(document.getElementById("msg").value);
   if (!msg) return;
   socket.emit('message_to_dm', { message: msg, char_id: char_id, char_name: name });
   appendMessage("You", msg);
@@ -163,6 +163,14 @@ function clientUpdateMaxHealth() {
 function updateMaxHealth(max_health) {
     const max_health_input = document.querySelector(".max-health");
     max_health_input.value = max_health;
+}
+
+function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
 }
 
 socket.on('host_update_max_health', data => {

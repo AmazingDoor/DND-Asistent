@@ -13,12 +13,12 @@ let race_spells = [];
 let inventory = [];
 
 
-export function addInvItem(item) {
-    const i = {type: "item", reference: item}
+export function addInvWeapon(item) {
+    const i = {type: "weapon", reference: item}
     inventory.push(i);
 }
 
-export function addInvOption(t, indx) {
+export function addInvWeaponOption(t, indx) {
     const o = {type: t, index: indx}
     inventory.push(o);
 }

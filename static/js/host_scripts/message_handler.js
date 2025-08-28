@@ -20,7 +20,7 @@ function addEventListeners() {
 }
 
 export function sendMessage(active_client, affected_tabs) {
-    const msg = document.getElementById(`client-${active_client}`).querySelector('#msg').value;
+    const msg = escapeHTML(document.getElementById(`client-${active_client}`).querySelector('#msg').value);
     affected_tabs.forEach((char_id) => {
         const tab = document.getElementById(`client-${char_id}`);
         if (!msg) return;
@@ -75,4 +75,12 @@ function loadMessage(message, char_id) {
     line.innerHTML = `<strong>${from}:</strong> ${msg}`;
     chat.appendChild(line);
     chat.scrollTop = chat.scrollHeight;
+}
+
+function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
 }

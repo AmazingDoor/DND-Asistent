@@ -25,7 +25,7 @@ window.onload = function () {
 };
 
 function createCharacter() {
-    name = prompt("Enter your name:");
+    name = escapeHTML(prompt("Enter your name:"));
     char_id = generateUUIDv4();
     character = {
         char_name: name,
@@ -66,6 +66,15 @@ function selectCharacter() {
     fileInput.click();
 }
 
+function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+
 socket.on('client_continue', ({name, char_id}) => {
     sessionStorage.setItem('charName', name);
     sessionStorage.setItem('charId', char_id);
@@ -74,7 +83,7 @@ socket.on('client_continue', ({name, char_id}) => {
 
 socket.on('client_wait', function() {
     const d = document.getElementById("temp-stuff");
-    d.remove()
+    d.remove();
     const b = document.getElementById("body");
     const h1 = document.createElement("h1");
     h1.textContent = "Waiting for the DM to select a campaign..."

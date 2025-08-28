@@ -49,6 +49,7 @@ export function addWeaponOptionToInventory(options) {
         const index = children_array.indexOf(dropdown);
         character_data_handler.removeItem(index);
         addWeaponToInventory(weapon_reference);
+        character_data_handler.addInvWeapon(weapon_reference);
         item_div.remove();
         saveInventory();
     });
@@ -78,6 +79,7 @@ export function addWeaponToInventory(weapon_reference, count = 1) {
 
     inventory_list.appendChild(weapon_div);
 
+
 }
 
 export function addArmorToInventory(armor) {
@@ -97,4 +99,12 @@ export function clearItems() {
 export function saveInventory() {
     const inv = character_data_handler.getInventory();
     socket.emit('save_inventory', { char_id: char_id, inventory: inv});
+}
+
+function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
 }

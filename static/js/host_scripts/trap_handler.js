@@ -18,8 +18,8 @@ function manageTraps() {
 
 function sendTrapMessage(text) {
     getAffectedTabs().forEach((char_id) => {
-        socket.emit("message_to_client", {message: text, char_id: char_id});
-        appendMessage("You", char_id, text);
+        socket.emit("message_to_client", {message: escapeHTML(text), char_id: char_id});
+        appendMessage("You", char_id, escapeHTML(text));
     });
 }
 
@@ -81,4 +81,12 @@ function addEventListeners() {
         updateTrapLists(traps);
     });
 
+}
+
+function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
 }

@@ -18,3 +18,9 @@ def get_traps_json():
     # Server calls this to load the traps file
     j = safe_read_json(f"{TRAPS_FOLDER}\\traps.json")
     emit('load_traps_json', j)
+
+@socketio.on('reload_traps')
+def reloadTraps():
+    TRAPS_FOLDER = get_traps_folder()
+    d = safe_read_json(f"{TRAPS_FOLDER}\\traps.json")
+    emit('update_traps_list', {'traps_data': d}, room=DM_SID)

@@ -27,7 +27,7 @@ export function createClassOptions() {
     const weapon_options = class_data.weapons.options;
     let i = 0;
     weapon_options.forEach(option_array => {
-        character_data_handler.addInvOption("class_weapon_option", i);
+        character_data_handler.addInvWeaponOption("class_weapon_option", i);
         i++;
         //inv_manager.addWeaponOptionToInventory(option_array);
     });
@@ -36,12 +36,25 @@ export function createClassOptions() {
 
 export function buildInventory() {
     const class_data = getClassData();
+    if (class_data === null || class_data === undefined) {
+        return;
+    }
     const class_weapon_options = class_data.weapons.options;
 
     const inventory = character_data_handler.getInventory();
     inventory.forEach(item => {
         if(item.type === "class_weapon_option") {
             inv_manager.addWeaponOptionToInventory(class_weapon_options[item.index]);
+        } else if(item.type==="weapon") {
+            inv_manager.addWeaponToInventory(item.reference);
         }
     });
+}
+
+function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
 }
