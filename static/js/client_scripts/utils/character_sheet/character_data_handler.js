@@ -14,12 +14,17 @@ let inventory = [];
 
 
 export function addInvWeapon(item) {
-    const i = {type: "weapon", reference: item}
+    const i = {type: "weapon", reference: item};
+    inventory.push(i);
+}
+
+export function addInvArmor(item) {
+    const i = {type: "armor", reference: item};
     inventory.push(i);
 }
 
 export function addInvWeaponOption(t, indx) {
-    const o = {type: t, index: indx}
+    const o = {type: t, index: indx};
     inventory.push(o);
 }
 

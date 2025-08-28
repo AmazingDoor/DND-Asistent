@@ -20,7 +20,7 @@ export const barbarian = {
     },
     armor: {
         proficiencies: ["Light Armor", "Medium Armor", "Shields"],
-        options: [],
+        options: [[]],
         starting: []
     },
     tools: [],
@@ -40,7 +40,7 @@ export const bard = {
     },
     armor: {
         proficiencies: ["Light armor", "Medium Armor", "Shields"],
-        options: [armor_data.light_armor.leather],
+        options: [[armor_data.light_armor.leather]],
         starting: []
     },
     tools: [],
