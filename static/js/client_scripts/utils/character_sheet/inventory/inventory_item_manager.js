@@ -17,7 +17,7 @@ export function setSocket(io) {
     socket = io;
 }
 
-export function addWeaponOptionToInventory(options) {
+export function addWeaponOptionToInventory(options, f='') {
     if (options.length === 0 || options === null || options === undefined) {
         return;
     }
@@ -25,6 +25,7 @@ export function addWeaponOptionToInventory(options) {
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
     item_div.classList.add('weapon-option');
+    item_div.setAttribute('data-from', f);
 
     const dropdown = document.createElement('select');
     dropdown.name = 'weapon-options';
@@ -63,7 +64,7 @@ export function addWeaponOptionToInventory(options) {
     inventory_list.appendChild(item_div);
 }
 
-export function addArmorOptionToInventory(options) {
+export function addArmorOptionToInventory(options, f='') {
     if (options.length === 0 || options === null || options === undefined) {
         return;
     }
@@ -71,6 +72,7 @@ export function addArmorOptionToInventory(options) {
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
     item_div.classList.add('weapon-option');
+    item_div.setAttribute('data-from', f)
 
     const dropdown = document.createElement('select');
     dropdown.name = 'armor-options';

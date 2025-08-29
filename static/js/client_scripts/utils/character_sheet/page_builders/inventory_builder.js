@@ -28,14 +28,14 @@ export function createClassOptions() {
     const armor_options = class_data.armor.options;
     let i = 0;
     weapon_options.forEach(option_array => {
-        character_data_handler.addInvWeaponOption("class_weapon_option", i);
+        character_data_handler.addInvWeaponOption("weapon_option", i, "class");
         i++;
         //inv_manager.addWeaponOptionToInventory(option_array);
     });
     i = 0;
 
     armor_options.forEach(option_array => {
-        character_data_handler.addInvWeaponOption("class_armor_option", i);
+        character_data_handler.addInvWeaponOption("armor_option", i, "class");
         i++;
     });
     inv_manager.saveInventory();
@@ -51,14 +51,14 @@ export function buildInventory() {
 
     const inventory = character_data_handler.getInventory();
     inventory.forEach(item => {
-        if(item.type === "class_weapon_option") {
-            inv_manager.addWeaponOptionToInventory(class_weapon_options[item.index]);
+        if(item.type === "weapon_option") {
+            inv_manager.addWeaponOptionToInventory(class_weapon_options[item.index], item.from);
         } else if(item.type === "weapon") {
-            inv_manager.addWeaponToInventory(item.reference);
-        } else if(item.type === "class_armor_option") {
-            inv_manager.addArmorOptionToInventory(class_armor_options[item.index]);
+            inv_manager.addWeaponToInventory(item.reference, item.from);
+        } else if(item.type === "armor_option") {
+            inv_manager.addArmorOptionToInventory(class_armor_options[item.index], item.from);
         } else if(item.type === "armor") {
-            inv_manager.addArmorToInventory(item.reference);
+            inv_manager.addArmorToInventory(item.reference, item.from);
         }
     });
 }
