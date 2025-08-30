@@ -46,7 +46,7 @@ export function addWeaponOptionToInventory(options, f='default') {
             }
         }
         const option = document.createElement('option');
-        option.textContent = opt.weapon.name;
+        option.textContent = opt.count.toString() + " " + opt.weapon.name;
         option.dataset.weapon_reference = weapon_key;
         option.dataset.weapon_count = opt.count;
         dropdown.appendChild(option);
@@ -99,7 +99,7 @@ export function addArmorOptionToInventory(options, f='default') {
             }
         }
         const option = document.createElement('option');
-        option.textContent = opt.armor.name;
+        option.textContent = opt.count.toString() + " " + opt.armor.name;
         option.dataset.armor_reference = armor_key;
         option.dataset.armor_count = opt.count;
         dropdown.appendChild(option);
@@ -152,7 +152,7 @@ export function addItemOptionToInventory(options, f='default') {
             }
         }
         const option = document.createElement('option');
-        option.textContent = opt.item.name;
+        option.textContent = opt.count.toString() + " " + opt.item.name;
         option.dataset.item_reference = item_key;
         option.dataset.item_count = opt.count;
         dropdown.appendChild(option);
