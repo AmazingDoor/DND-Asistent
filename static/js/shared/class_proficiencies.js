@@ -27,7 +27,7 @@ export const barbarian = {
     },
     armor: {
         proficiencies: ["Light Armor", "Medium Armor", "Shields"],
-        options: [[]],
+        options: [],
         starting: []
     },
     tools: [],

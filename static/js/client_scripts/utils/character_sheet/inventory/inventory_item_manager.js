@@ -18,7 +18,7 @@ export function setSocket(io) {
     socket = io;
 }
 
-export function addWeaponOptionToInventory(options, f='default') {
+export function addWeaponOptionToInventory(options, f='default', build_inventory) {
     if (options === null || options === undefined) {
         return;
     }
@@ -60,8 +60,9 @@ export function addWeaponOptionToInventory(options, f='default') {
         const children_array = [...dropdown.parentElement.children];
         const index = children_array.indexOf(dropdown);
         character_data_handler.removeItem(index);
-        addWeaponToInventory(weapon_reference, weapon_count);
+        //addWeaponToInventory(weapon_reference, index, "default", weapon_count);
         character_data_handler.addInvWeapon(weapon_reference, f, weapon_count);
+        build_inventory();
         item_div.remove();
         saveInventory();
     });
@@ -70,7 +71,7 @@ export function addWeaponOptionToInventory(options, f='default') {
     inventory_list.appendChild(item_div);
 }
 
-export function addArmorOptionToInventory(options, f='default') {
+export function addArmorOptionToInventory(options, f='default', build_inventory) {
         if (options === null || options === undefined) {
         return;
     }
@@ -108,14 +109,14 @@ export function addArmorOptionToInventory(options, f='default') {
     dropdown.addEventListener('change', () => {
         const armor = dropdown.options[dropdown.selectedIndex];
         const armor_reference = armor.dataset.armor_reference;
-        console.log(armor_reference);
         const armor_count = armor.dataset.armor_count;
         const label = armor.textContent;
         const children_array = [...dropdown.parentElement.children];
         const index = children_array.indexOf(dropdown);
         character_data_handler.removeItem(index);
-        addArmorToInventory(armor_reference, armor_count);
+        //addArmorToInventory(armor_reference, index, "default", armor_count);
         character_data_handler.addInvArmor(armor_reference, f, armor_count);
+        build_inventory();
         item_div.remove();
         saveInventory();
     });
@@ -124,7 +125,7 @@ export function addArmorOptionToInventory(options, f='default') {
     inventory_list.appendChild(item_div);
 }
 
-export function addItemOptionToInventory(options, f='default') {
+export function addItemOptionToInventory(options, f='default', build_inventory) {
     if (options === null || options === undefined) {
         return;
     }
@@ -166,8 +167,9 @@ export function addItemOptionToInventory(options, f='default') {
         const children_array = [...dropdown.parentElement.children];
         const index = children_array.indexOf(dropdown);
         character_data_handler.removeItem(index);
-        addItemToInventory(item_reference, item_count);
+        //addItemToInventory(item_reference, index, "default", item_count);
         character_data_handler.addInvItem(item_reference, f, item_count);
+        build_inventory();
         item_div.remove();
         saveInventory();
     });
@@ -176,7 +178,7 @@ export function addItemOptionToInventory(options, f='default') {
     inventory_list.appendChild(item_div);
 }
 
-export function addWeaponToInventory(weapon_reference, f='default', count=1) {
+export function addWeaponToInventory(weapon_reference, index, f='default', count=1) {
     const weapon_div = document.createElement('div');
     weapon_div.classList.add('inventory-item');
     weapon_div.dataset.tag = 'weapon';
@@ -187,12 +189,24 @@ export function addWeaponToInventory(weapon_reference, f='default', count=1) {
     weapon_name.textContent = weapon_data.name;
     weapon_div.appendChild(weapon_name);
 
+    const weapon_count = document.createElement('input');
+    weapon_count.type = 'number';
+    weapon_count.value = count.toString();
+    weapon_div.appendChild(weapon_count);
+
+    weapon_count.addEventListener("change", function() {
+        console.log(index);
+        console.log(character_data_handler.getInventory());
+        character_data_handler.getInventory()[index].count = weapon_count.value;
+        saveInventory();
+    });
+
     inventory_list.appendChild(weapon_div);
 
 
 }
 
-export function addArmorToInventory(armor_reference, f='default', count=1) {
+export function addArmorToInventory(armor_reference, index, f='default', count=1) {
     const armor_div = document.createElement('div');
     armor_div.classList.add('inventory-item');
     armor_div.dataset.tag = 'armor';
@@ -204,12 +218,42 @@ export function addArmorToInventory(armor_reference, f='default', count=1) {
     armor_name.textContent = armor_data.name;
     armor_div.appendChild(armor_name);
 
+    const armor_count = document.createElement('input');
+    armor_count.type = 'number';
+    armor_count.value = count.toString();
+    armor_div.appendChild(armor_count);
+
+    armor_count.addEventListener("change", function() {
+        character_data_handler.getInventory()[index].count = armor_count.value;
+        saveInventory();
+    });
+
     inventory_list.appendChild(armor_div);
 }
 
-export function addItemToInventory(item, f='default', count=1) {
-    //console.log(item);
-}
+export function addItemToInventory(item_reference, index, f='default', count=1) {
+    const item_div = document.createElement('div');
+    item_div.classList.add('inventory-item');
+    item_div.dataset.tag = 'item';
+
+    const item_name = document.createElement('h3');
+    const item_data = items[item_reference];
+
+
+    item_name.textContent = item_data.name;
+    item_div.appendChild(item_name);
+
+    const item_count = document.createElement('input');
+    item_count.type = 'number';
+    item_count.value = count;
+    item_div.appendChild(item_count);
+
+    item_count.addEventListener("change", function() {
+        character_data_handler.getInventory()[index].count = item_count.value;
+        saveInventory();
+    });
+
+    inventory_list.appendChild(item_div);}
 
 export function clearItems() {
     inventory_list.innerHTML = '';
