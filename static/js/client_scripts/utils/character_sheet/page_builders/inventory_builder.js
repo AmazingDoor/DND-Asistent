@@ -26,6 +26,8 @@ export function createClassOptions() {
 
     const weapon_options = class_data.weapons.options;
     const armor_options = class_data.armor.options;
+    const item_options = class_data.inventory.options;
+
     let i = 0;
     weapon_options.forEach(option_array => {
         character_data_handler.addInvOption("weapon_option", i, "class");
@@ -38,6 +40,13 @@ export function createClassOptions() {
         character_data_handler.addInvOption("armor_option", i, "class");
         i++;
     });
+
+    i = 0;
+    item_options.forEach((option_array) => {
+        character_data_handler.addInvOption("item_option", i, "class");
+        i++;
+    });
+
     inv_manager.saveInventory();
 }
 

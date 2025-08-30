@@ -1,6 +1,6 @@
 import * as weapon_data from './inventory/weapons.js';
-import * as instrument_data from './inventory/instruments.js';
 import * as armor_data from './inventory/armor.js';
+import * as item_data from './inventory/items.js';
 
 function setDefaultCount(l) {
     return l.map(weapon => ({weapon: weapon, count: 1}));
@@ -46,8 +46,8 @@ export const bard = {
     tools: [],
     skills: [2, ["Animal Handling", "Athletics", "Intimidation", "Nature", "Perception", "Survival"]],
     inventory: {
-        options: [],
-        starting: [[instrument_data.instruments], ["Diplomat's Pack", "Entertainer's Pack"]]
+        options: [getInstruments(), [item_data.items.diplomats_pack, item_data.items.entertainers_pack]],
+        starting: []
     }
 };
 
@@ -259,3 +259,16 @@ export const wizard = {
     }
 
 };
+
+function getInstruments() {
+    let instruments = [];
+    Object.keys(item_data.items).forEach(key => {
+        const o = item_data.items[key];
+        if('tool_category' in o) {
+            if (o['tool_category'] === "Musical Instrument") {
+                instruments.push(item_data.items[key]);
+            }
+        }
+    });
+    return instruments;
+}

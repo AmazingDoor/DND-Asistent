@@ -30,7 +30,7 @@ export function addInvItem(item, t='default') {
 
 //This is also used for armor
 export function addInvOption(t, indx, t2='default') {
-    const o = {type: t, index: indx, from: t};
+    const o = {type: t, index: indx, from: t2};
     inventory.push(o);
 }
 
