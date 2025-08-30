@@ -103,14 +103,6 @@ export const heavy_armor = {
     }
 };
 
-export const shield = {
-    name: "Shield",
-    cost: "10 gp",
-    ac_mod: 2,
-    strength: 0,
-    stealth_disadvantage: false,
-    weight: 6
-};
 
 export function getAllArmors() {
     return Object.assign({}, light_armor, medium_armor, heavy_armor);

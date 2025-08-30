@@ -54,8 +54,8 @@ app.config["SESSION_USE_SIGNER"] = True
 Session(app)
 
 users = {
-    "player": {"password": "player_password", "role": "player"},
-    "dm": {"password": "strong_dm_password", "role": "dm"}
+    "player": {"password": "", "role": "player"},
+    "dm": {"password": "", "role": "dm"}
 }
 
 def verify_password(username, password):

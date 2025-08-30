@@ -1,5 +1,7 @@
 import * as inv_manager from './../inventory/inventory_item_manager.js';
-//import * as class_proficiencies from './../../../shared/class_proficiencies.js';
+import {weapons} from './../../../../shared/inventory/weapons.js';
+import {getAllArmors} from './../../../../shared/inventory/armor.js';
+import {items} from './../../../../shared/inventory/items.js';
 import {getClassData} from './../mappers/class_mapper.js';
 import * as character_data_handler from './../character_data_handler.js';
 
@@ -7,7 +9,6 @@ let socket = null;
 export function setSocket(io) {
     socket = io;
 }
-
 
 document.addEventListener("DOMContentLoaded", function() {
     socket.on('build_inventory', data => {
@@ -28,6 +29,11 @@ export function createClassOptions() {
     const armor_options = class_data.armor.options;
     const item_options = class_data.inventory.options;
 
+
+    const starting_weapons = class_data.weapons.starting;
+    const starting_armor = class_data.armor.starting;
+    const starting_items = class_data.inventory.starting;
+
     let i = 0;
     weapon_options.forEach(option_array => {
         character_data_handler.addInvOption("weapon_option", i, "class");
@@ -47,6 +53,26 @@ export function createClassOptions() {
         i++;
     });
 
+    starting_weapons.forEach((weapon) => {
+        const count = weapon.count;
+        const w = weapon.weapon;
+        console.log(weapon);
+        character_data_handler.addInvWeapon(getKey(weapons, w), "class", count);
+    });
+
+    starting_armor.forEach((armor) => {
+        const armors = getAllArmors();
+        const count = armor.count;
+        const a = armor.armor;
+        character_data_handler.addInvArmor(getKey(armors, a), "class", count);
+    });
+
+    starting_items.forEach((item) => {
+        const count = item.count;
+        const i = item.item;
+        character_data_handler.addInvItem(getKey(items, i), "class", count);
+    });
+
     inv_manager.saveInventory();
 }
 
@@ -64,17 +90,26 @@ export function buildInventory() {
         if(item.type === "weapon_option") {
             inv_manager.addWeaponOptionToInventory(class_weapon_options[item.index], item.from);
         } else if(item.type === "weapon") {
-            inv_manager.addWeaponToInventory(item.reference, item.from);
+            inv_manager.addWeaponToInventory(item.reference, item.from, item.count);
         } else if(item.type === "armor_option") {
             inv_manager.addArmorOptionToInventory(class_armor_options[item.index], item.from);
         } else if(item.type === "armor") {
-            inv_manager.addArmorToInventory(item.reference, item.from);
+            inv_manager.addArmorToInventory(item.reference, item.from, item.count);
         } else if(item.type === "item") {
-            inv_manager.addItemToInventory(item.reference, item.from);
+            inv_manager.addItemToInventory(item.reference, item.from, item.count);
         } else if(item.type === "item_option") {
             inv_manager.addItemOptionToInventory(class_item_options[item.index], item.from);
         }
     });
+}
+
+
+function getKey(d, d2) {
+    for (let key in d) {
+        if (d[key] === d2) {
+            return key;
+        }
+    }
 }
 
 function escapeHTML(str) {

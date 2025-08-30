@@ -2,13 +2,20 @@ import * as weapon_data from './inventory/weapons.js';
 import * as armor_data from './inventory/armor.js';
 import * as item_data from './inventory/items.js';
 
-function setDefaultCount(l) {
-    return l.map(weapon => ({weapon: weapon, count: 1}));
+function setDefaultCount(l, t="weapon") {
+    if (t === "weapon") {
+        return l.map(weapon => ({weapon: weapon, count: 1}));
+    } else if (t === "armor"){
+        return l.map(armor => ({armor: armor, count: 1}));
+    } else if (t==="item") {
+        return l.map(item => ({item: item, count: 1}));
+    }
 }
 
 function filterArray(input_array, filter_out_array) {
     return [...input_array].filter(item => !filter_out_array.includes(item));
 }
+
 
 export const barbarian = {
     saving_throws: ['Strength', 'Constitution'],
@@ -27,9 +34,10 @@ export const barbarian = {
     skills: [2, ["Animal Handling", "Athletics", "Intimidation", "Nature", "Perception", "Survival"]],
     inventory: {
         options: [],
-        starting: ["Explorer's Pack"]
+        starting: [{item: item_data.items.explorers_pack, count: 1}]
     }
 };
+
 
 export const bard = {
     saving_throws: ['Dexterity', 'Charisma'],
@@ -40,13 +48,13 @@ export const bard = {
     },
     armor: {
         proficiencies: ["Light armor", "Medium Armor", "Shields"],
-        options: [[armor_data.light_armor.leather]],
+        options: [[{armor: armor_data.light_armor.leather, count: 1}]],
         starting: []
     },
     tools: [],
     skills: [2, ["Animal Handling", "Athletics", "Intimidation", "Nature", "Perception", "Survival"]],
     inventory: {
-        options: [getInstruments(), [item_data.items.diplomats_pack, item_data.items.entertainers_pack]],
+        options: [setDefaultCount(getInstruments(), "item"), [{item: item_data.items.diplomats_pack, count: 1}, {item: item_data.items.entertainers_pack, count: 1}]],
         starting: []
     }
 };
@@ -56,18 +64,18 @@ export const cleric = {
     weapons: {
         proficiencies: ["Simple Weapons"],
         options: [setDefaultCount([weapon_data.weapons.mace, weapon_data.weapons.warhammer]), [{weapon: weapon_data.weapons.light_crossbow, count: 1, ammo: 20}, ...setDefaultCount(filterArray(weapon_data.simple_weapons, [weapon_data.weapons.light_crossbow]))]],
-        starting: []
+        starting: [{weapon: weapon_data.weapons.shield, count: 1}]
     },
     armor: {
         proficiencies: ["Light Armor", "Medium Armor", "Shields"],
-        options: [[armor_data.medium_armor.scale_mail, armor_data.light_armor.leather, armor_data.heavy_armor.chain_mail]],
-        starting: [armor_data.shield]
+        options: [setDefaultCount([armor_data.medium_armor.scale_mail, armor_data.light_armor.leather, armor_data.heavy_armor.chain_mail], "armor")],
+        starting: []
     },
     tools: [],
     skills: [2, ["History", "Insight", "Medicine", "Persuasion", "Religion"]],
     inventory: {
-        options: [["Priest's Pack", "Explorer's Pack"]],
-        starting: ["Holy Symbol"]
+        options: [setDefaultCount([item_data.items.priests_pack, item_data.items.explorers_pack], "item"), setDefaultCount(getHolySymbols(), "item")],
+        starting: []
     }
 
 };
@@ -271,4 +279,17 @@ function getInstruments() {
         }
     });
     return instruments;
+}
+
+function getHolySymbols() {
+    let symbols = [];
+    Object.keys(item_data.items).forEach(key => {
+        const o = item_data.items[key];
+        if('gear_category' in o) {
+            if(o.gear_category.index === "holy-symbols") {
+                symbols.push(item_data.items[key]);
+            }
+        }
+    });
+    return symbols;
 }

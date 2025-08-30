@@ -19,7 +19,10 @@ export function setSocket(io) {
 }
 
 export function addWeaponOptionToInventory(options, f='default') {
-    if (options.length === 0 || options === null || options === undefined) {
+    if (options === null || options === undefined) {
+        return;
+    }
+    if (options.length === 0) {
         return;
     }
 
@@ -45,18 +48,20 @@ export function addWeaponOptionToInventory(options, f='default') {
         const option = document.createElement('option');
         option.textContent = opt.weapon.name;
         option.dataset.weapon_reference = weapon_key;
+        option.dataset.weapon_count = opt.count;
         dropdown.appendChild(option);
     });
 
     dropdown.addEventListener('change', () => {
         const weapon = dropdown.options[dropdown.selectedIndex];
         const weapon_reference = weapon.dataset.weapon_reference;
+        const weapon_count = weapon.dataset.weapon_count;
         const label = weapon.textContent;
         const children_array = [...dropdown.parentElement.children];
         const index = children_array.indexOf(dropdown);
         character_data_handler.removeItem(index);
-        addWeaponToInventory(weapon_reference);
-        character_data_handler.addInvWeapon(weapon_reference, f);
+        addWeaponToInventory(weapon_reference, weapon_count);
+        character_data_handler.addInvWeapon(weapon_reference, f, weapon_count);
         item_div.remove();
         saveInventory();
     });
@@ -66,7 +71,10 @@ export function addWeaponOptionToInventory(options, f='default') {
 }
 
 export function addArmorOptionToInventory(options, f='default') {
-    if (options.length === 0 || options === null || options === undefined) {
+        if (options === null || options === undefined) {
+        return;
+    }
+    if (options.length === 0) {
         return;
     }
 
@@ -82,28 +90,32 @@ export function addArmorOptionToInventory(options, f='default') {
     placeholder.textContent = "Select Armor";
     dropdown.appendChild(placeholder);
 
+
     options.forEach(opt => {
         let armor_key = null;
         for (let key in armors) {
-            if(armors[key] === opt) {
+            if(armors[key] === opt.armor) {
                 armor_key = key;
             }
         }
         const option = document.createElement('option');
-        option.textContent = opt.name;
+        option.textContent = opt.armor.name;
         option.dataset.armor_reference = armor_key;
+        option.dataset.armor_count = opt.count;
         dropdown.appendChild(option);
     });
 
     dropdown.addEventListener('change', () => {
         const armor = dropdown.options[dropdown.selectedIndex];
         const armor_reference = armor.dataset.armor_reference;
+        console.log(armor_reference);
+        const armor_count = armor.dataset.armor_count;
         const label = armor.textContent;
         const children_array = [...dropdown.parentElement.children];
         const index = children_array.indexOf(dropdown);
         character_data_handler.removeItem(index);
-        addArmorToInventory(armor_reference);
-        character_data_handler.addInvArmor(armor_reference, f);
+        addArmorToInventory(armor_reference, armor_count);
+        character_data_handler.addInvArmor(armor_reference, f, armor_count);
         item_div.remove();
         saveInventory();
     });
@@ -113,7 +125,10 @@ export function addArmorOptionToInventory(options, f='default') {
 }
 
 export function addItemOptionToInventory(options, f='default') {
-if (options.length === 0 || options === null || options === undefined) {
+    if (options === null || options === undefined) {
+        return;
+    }
+    if (options.length === 0) {
         return;
     }
 
@@ -132,26 +147,27 @@ if (options.length === 0 || options === null || options === undefined) {
     options.forEach(opt => {
         let item_key = null;
         for (let key in items) {
-            if(items[key] === opt) {
+            if(items[key] === opt.item) {
                 item_key = key;
             }
         }
-        console.log(opt);
         const option = document.createElement('option');
-        option.textContent = opt.name;
+        option.textContent = opt.item.name;
         option.dataset.item_reference = item_key;
+        option.dataset.item_count = opt.count;
         dropdown.appendChild(option);
     });
 
     dropdown.addEventListener('change', () => {
         const item = dropdown.options[dropdown.selectedIndex];
         const item_reference = item.dataset.item_reference;
+        const item_count = item.dataset.item_count;
         const label = item.textContent;
         const children_array = [...dropdown.parentElement.children];
         const index = children_array.indexOf(dropdown);
         character_data_handler.removeItem(index);
-        addItemToInventory(item_reference);
-        character_data_handler.addInvItem(item_reference, f);
+        addItemToInventory(item_reference, item_count);
+        character_data_handler.addInvItem(item_reference, f, item_count);
         item_div.remove();
         saveInventory();
     });
@@ -160,7 +176,7 @@ if (options.length === 0 || options === null || options === undefined) {
     inventory_list.appendChild(item_div);
 }
 
-export function addWeaponToInventory(weapon_reference, count = 1) {
+export function addWeaponToInventory(weapon_reference, f='default', count=1) {
     const weapon_div = document.createElement('div');
     weapon_div.classList.add('inventory-item');
     weapon_div.dataset.tag = 'weapon';
@@ -176,9 +192,7 @@ export function addWeaponToInventory(weapon_reference, count = 1) {
 
 }
 
-export function addArmorToInventory(armor_reference) {
-    console.log(armor_reference);
-
+export function addArmorToInventory(armor_reference, f='default', count=1) {
     const armor_div = document.createElement('div');
     armor_div.classList.add('inventory-item');
     armor_div.dataset.tag = 'armor';
@@ -186,14 +200,15 @@ export function addArmorToInventory(armor_reference) {
     const armor_name = document.createElement('h3');
     const armor_data = armors[armor_reference];
 
+
     armor_name.textContent = armor_data.name;
     armor_div.appendChild(armor_name);
 
     inventory_list.appendChild(armor_div);
 }
 
-export function addItemToInventory(item) {
-    console.log(item);
+export function addItemToInventory(item, f='default', count=1) {
+    //console.log(item);
 }
 
 export function clearItems() {

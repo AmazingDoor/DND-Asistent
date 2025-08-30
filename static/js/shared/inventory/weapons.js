@@ -332,6 +332,18 @@ export const weapons = {
         weight: 3,
         properties: ["Special", "Thrown", "Range 5/15"],
         ammo_type: null
+    },
+    shield: {
+        name: "Shield",
+        cost: "10 gp",
+        damage: "None",
+        damage_type: "None",
+        properties: [],
+        ammo_type: null,
+        ac_mod: 2,
+        strength: 0,
+        stealth_disadvantage: false,
+        weight: 6
     }
 };
 

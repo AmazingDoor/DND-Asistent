@@ -13,18 +13,18 @@ let race_spells = [];
 let inventory = [];
 
 
-export function addInvWeapon(item, t='default') {
-    const i = {type: "weapon", reference: item, from: t};
+export function addInvWeapon(item, t='default', count=1) {
+    const i = {type: "weapon", reference: item, from: t, count: count};
     inventory.push(i);
 }
 
-export function addInvArmor(item, t='default') {
-    const i = {type: "armor", reference: item, from: t};
+export function addInvArmor(item, t='default', count=1) {
+    const i = {type: "armor", reference: item, from: t, count: count};
     inventory.push(i);
 }
 
-export function addInvItem(item, t='default') {
-    const i = {type: 'item', reference: item, from: t};
+export function addInvItem(item, t='default', count=1) {
+    const i = {type: 'item', reference: item, from: t, count: count};
     inventory.push(i);
 }
 
