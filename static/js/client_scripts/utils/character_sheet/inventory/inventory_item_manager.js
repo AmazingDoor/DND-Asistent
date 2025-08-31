@@ -4,6 +4,9 @@ import {getAllArmors} from './../../../../shared/inventory/armor.js';
 import {items} from './../../../../shared/inventory/items.js';
 
 const inventory_list = document.querySelector('.inventory-container');
+const weapon_list = document.querySelector('.inventory-weapons');
+const armor_list = document.querySelector('.inventory-armor');
+const mount_list = document.querySelector('.mounts-container');
 
 let armors;
 document.addEventListener("DOMContentLoaded", function() {
@@ -57,10 +60,10 @@ export function addWeaponOptionToInventory(options, f='default', build_inventory
         const weapon_reference = weapon.dataset.weapon_reference;
         const weapon_count = weapon.dataset.weapon_count;
         const label = weapon.textContent;
-        const children_array = [...dropdown.parentElement.children];
-        const index = children_array.indexOf(dropdown);
-        character_data_handler.removeItem(index);
-        //addWeaponToInventory(weapon_reference, index, "default", weapon_count);
+        const children_array = [...dropdown.parentElement.parentElement.children];
+
+        const index = children_array.indexOf(dropdown.parentElement);
+        character_data_handler.removeWeapon(index);
         character_data_handler.addInvWeapon(weapon_reference, f, weapon_count);
         build_inventory();
         item_div.remove();
@@ -68,7 +71,7 @@ export function addWeaponOptionToInventory(options, f='default', build_inventory
     });
 
     item_div.appendChild(dropdown);
-    inventory_list.appendChild(item_div);
+    weapon_list.appendChild(item_div);
 }
 
 export function addArmorOptionToInventory(options, f='default', build_inventory) {
@@ -111,10 +114,11 @@ export function addArmorOptionToInventory(options, f='default', build_inventory)
         const armor_reference = armor.dataset.armor_reference;
         const armor_count = armor.dataset.armor_count;
         const label = armor.textContent;
-        const children_array = [...dropdown.parentElement.children];
-        const index = children_array.indexOf(dropdown);
-        character_data_handler.removeItem(index);
-        //addArmorToInventory(armor_reference, index, "default", armor_count);
+        const children_array = [...dropdown.parentElement.parentElement.children];
+        const inv_container_children = [...inventory_list.children];
+        const inv_weapons = [...weapon_list.children];
+        const index = children_array.indexOf(dropdown.parentElement);
+        character_data_handler.removeArmor(index);
         character_data_handler.addInvArmor(armor_reference, f, armor_count);
         build_inventory();
         item_div.remove();
@@ -122,7 +126,7 @@ export function addArmorOptionToInventory(options, f='default', build_inventory)
     });
 
     item_div.appendChild(dropdown);
-    inventory_list.appendChild(item_div);
+    armor_list.appendChild(item_div);
 }
 
 export function addItemOptionToInventory(options, f='default', build_inventory) {
@@ -164,10 +168,9 @@ export function addItemOptionToInventory(options, f='default', build_inventory) 
         const item_reference = item.dataset.item_reference;
         const item_count = item.dataset.item_count;
         const label = item.textContent;
-        const children_array = [...dropdown.parentElement.children];
-        const index = children_array.indexOf(dropdown);
+        const children_array = [...dropdown.parentElement.parentElement.children];
+        const index = children_array.indexOf(dropdown.parentElement);
         character_data_handler.removeItem(index);
-        //addItemToInventory(item_reference, index, "default", item_count);
         character_data_handler.addInvItem(item_reference, f, item_count);
         build_inventory();
         item_div.remove();
@@ -183,7 +186,7 @@ export function addWeaponToInventory(weapon_reference, index, f='default', count
     weapon_div.classList.add('inventory-item');
     weapon_div.dataset.tag = 'weapon';
 
-    const weapon_name = document.createElement('h3');
+    const weapon_name = document.createElement('p');
     const weapon_data = weapons[weapon_reference];
 
     weapon_name.textContent = weapon_data.name;
@@ -195,13 +198,11 @@ export function addWeaponToInventory(weapon_reference, index, f='default', count
     weapon_div.appendChild(weapon_count);
 
     weapon_count.addEventListener("change", function() {
-        console.log(index);
-        console.log(character_data_handler.getInventory());
-        character_data_handler.getInventory()[index].count = weapon_count.value;
+        character_data_handler.getWeaponInventory()[index].count = weapon_count.value;
         saveInventory();
     });
 
-    inventory_list.appendChild(weapon_div);
+    weapon_list.appendChild(weapon_div);
 
 
 }
@@ -211,7 +212,7 @@ export function addArmorToInventory(armor_reference, index, f='default', count=1
     armor_div.classList.add('inventory-item');
     armor_div.dataset.tag = 'armor';
 
-    const armor_name = document.createElement('h3');
+    const armor_name = document.createElement('p');
     const armor_data = armors[armor_reference];
 
 
@@ -224,11 +225,11 @@ export function addArmorToInventory(armor_reference, index, f='default', count=1
     armor_div.appendChild(armor_count);
 
     armor_count.addEventListener("change", function() {
-        character_data_handler.getInventory()[index].count = armor_count.value;
+        character_data_handler.getArmorInventory()[index].count = armor_count.value;
         saveInventory();
     });
 
-    inventory_list.appendChild(armor_div);
+    armor_list.appendChild(armor_div);
 }
 
 export function addItemToInventory(item_reference, index, f='default', count=1) {
@@ -236,7 +237,7 @@ export function addItemToInventory(item_reference, index, f='default', count=1) 
     item_div.classList.add('inventory-item');
     item_div.dataset.tag = 'item';
 
-    const item_name = document.createElement('h3');
+    const item_name = document.createElement('p');
     const item_data = items[item_reference];
 
 
@@ -257,12 +258,18 @@ export function addItemToInventory(item_reference, index, f='default', count=1) 
 
 export function clearItems() {
     inventory_list.innerHTML = '';
-    character_data_handler.setInventory([]);
+    weapon_list.innerHTML = '';
+    armor_list.innerHTML = '';
+    character_data_handler.setInventory({inv: [], weapon: [], armor: []});
 
 }
 
 export function saveInventory() {
-    const inv = character_data_handler.getInventory();
+    const inventory = character_data_handler.getInventory();
+    const weapon_inventory = character_data_handler.getWeaponInventory();
+    const armor_inventory = character_data_handler.getArmorInventory();
+    const mount_inventory = character_data_handler.getMountInventory();
+    const inv = {inv: inventory, weapon: weapon_inventory, armor: armor_inventory, mount: mount_inventory};
     socket.emit('save_inventory', { char_id: char_id, inventory: inv});
 }
 

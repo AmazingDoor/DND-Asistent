@@ -11,16 +11,19 @@ let class_saving_throws = [];
 let class_spells = [];
 let race_spells = [];
 let inventory = [];
+let weapon_inventory = [];
+let armor_inventory = [];
+let mount_inventory = [];
 
 
 export function addInvWeapon(item, t='default', count=1) {
     const i = {type: "weapon", reference: item, from: t, count: count};
-    inventory.push(i);
+    weapon_inventory.push(i);
 }
 
 export function addInvArmor(item, t='default', count=1) {
     const i = {type: "armor", reference: item, from: t, count: count};
-    inventory.push(i);
+    armor_inventory.push(i);
 }
 
 export function addInvItem(item, t='default', count=1) {
@@ -31,19 +34,50 @@ export function addInvItem(item, t='default', count=1) {
 //This is also used for armor
 export function addInvOption(t, indx, t2='default') {
     const o = {type: t, index: indx, from: t2};
-    inventory.push(o);
+    if (t === "weapon_option") {
+        weapon_inventory.push(o);
+    } else if(t === "armor_option") {
+        armor_inventory.push(o);
+    } else if(t === "item_option") {
+        inventory.push(o);
+    } else if(t === "mount_option") {
+        mount_inventory.push(o);
+    }
 }
 
 export function removeItem(index) {
     inventory.splice(index, 1);
 }
 
+export function removeWeapon(index) {
+    weapon_inventory.splice(index, 1);
+}
+
+export function removeArmor(index) {
+    armor_inventory.splice(index, 1);
+}
+
 export function setInventory(inv) {
-    inventory = inv;
+    inventory = inv.inv;
+    weapon_inventory = inv.weapon;
+    armor_inventory = inv.armor;
+    mount_inventory = inv.mount;
 }
 
 export function getInventory() {
     return inventory;
+}
+
+export function getWeaponInventory() {
+    return weapon_inventory;
+}
+
+export function getArmorInventory() {
+    return armor_inventory;
+}
+
+export function getMountInventory() {
+    return mount_inventory;
 }
 
 export function resetRaceData() {

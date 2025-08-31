@@ -56,7 +56,6 @@ export function createClassOptions() {
     starting_weapons.forEach((weapon) => {
         const count = weapon.count;
         const w = weapon.weapon;
-        console.log(weapon);
         character_data_handler.addInvWeapon(getKey(weapons, w), "class", count);
     });
 
@@ -78,6 +77,9 @@ export function createClassOptions() {
 
 export function buildInventory() {
     document.querySelector('.inventory-container').innerHTML = '';
+    document.querySelector('.inventory-weapons').innerHTML = '';
+    document.querySelector('.inventory-armor').innerHTML = '';
+    document.querySelector('.mounts-container').innerHTML = '';
     const class_data = getClassData();
     if (class_data === null || class_data === undefined) {
         return;
@@ -89,21 +91,36 @@ export function buildInventory() {
     const inventory = character_data_handler.getInventory();
     let i = 0;
     inventory.forEach(item => {
-        if(item.type === "weapon_option") {
-            inv_manager.addWeaponOptionToInventory(class_weapon_options[item.index], item.from, buildInventory);
-        } else if(item.type === "weapon") {
-            inv_manager.addWeaponToInventory(item.reference, i, item.from, item.count);
-        } else if(item.type === "armor_option") {
-            inv_manager.addArmorOptionToInventory(class_armor_options[item.index], item.from, buildInventory);
-        } else if(item.type === "armor") {
-            inv_manager.addArmorToInventory(item.reference, i, item.from, item.count);
-        } else if(item.type === "item") {
+        if(item.type === "item") {
             inv_manager.addItemToInventory(item.reference, i, item.from, item.count);
         } else if(item.type === "item_option") {
             inv_manager.addItemOptionToInventory(class_item_options[item.index], item.from, buildInventory);
         }
         i++;
     });
+
+    i = 0;
+    const weapon_inventory = character_data_handler.getWeaponInventory();
+    weapon_inventory.forEach(item => {
+        if(item.type === "weapon_option") {
+            inv_manager.addWeaponOptionToInventory(class_weapon_options[item.index], item.from, buildInventory);
+        } else if(item.type === "weapon") {
+            inv_manager.addWeaponToInventory(item.reference, i, item.from, item.count);
+        }
+        i++;
+    });
+
+    i = 0;
+    const armor_inventory = character_data_handler.getArmorInventory();
+    armor_inventory.forEach(item => {
+        if(item.type === "armor_option") {
+            inv_manager.addArmorOptionToInventory(class_armor_options[item.index], item.from, buildInventory);
+        } else if(item.type === "armor") {
+            inv_manager.addArmorToInventory(item.reference, i, item.from, item.count);
+        }
+        i++;
+    });
+
 }
 
 
