@@ -720,7 +720,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "bottle,_glass": {
+    "bottle_glass": {
         "desc": [],
         "special": [],
         "index": "bottle-glass",
@@ -1068,7 +1068,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "case,_crossbow_bolt": {
+    "case_crossbow_bolt": {
         "special": [],
         "index": "case-crossbow-bolt",
         "name": "Case, crossbow bolt",
@@ -1091,7 +1091,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "case,_map_or_scroll": {
+    "case_map_or_scroll": {
         "special": [],
         "index": "case-map-or-scroll",
         "name": "Case, map or scroll",
@@ -1243,7 +1243,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "clothes,_common": {
+    "clothes_common": {
         "desc": [],
         "special": [],
         "index": "clothes-common",
@@ -1264,7 +1264,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "clothes,_costume": {
+    "clothes_costume": {
         "desc": [],
         "special": [],
         "index": "clothes-costume",
@@ -1285,7 +1285,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "clothes,_fine": {
+    "clothes_fine": {
         "desc": [],
         "special": [],
         "index": "clothes-fine",
@@ -1306,7 +1306,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "clothes,_travelers": {
+    "clothes_travelers": {
         "desc": [],
         "special": [],
         "index": "clothes-travelers",
@@ -1540,28 +1540,28 @@ export const items = {
             },
             {
                 "item": {
-                    "index": "oil-flask",
+                    "index": "oil_flask",
                     "name": "Oil (flask)"
                 },
                 "quantity": 2
             },
             {
                 "item": {
-                    "index": "paper-one-sheet",
+                    "index": "paper_one_sheet",
                     "name": "Paper (one sheet)"
                 },
                 "quantity": 5
             },
             {
                 "item": {
-                    "index": "perfume-vial",
+                    "index": "perfume_vial",
                     "name": "Perfume (vial)"
                 },
                 "quantity": 1
             },
             {
                 "item": {
-                    "index": "sealing-wax",
+                    "index": "sealing_wax",
                     "name": "Sealing wax"
                 },
                 "quantity": 1
@@ -2109,7 +2109,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "hammer,_sledge": {
+    "hammer_sledge": {
         "desc": [],
         "special": [],
         "index": "hammer-sledge",
@@ -2222,7 +2222,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "horse,_draft": {
+    "horse_draft": {
         "desc": [],
         "special": [],
         "index": "horse-draft",
@@ -2244,7 +2244,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "horse,_riding": {
+    "horse_riding": {
         "desc": [],
         "special": [],
         "index": "horse-riding",
@@ -2462,7 +2462,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "lantern,_bullseye": {
+    "lantern_bullseye": {
         "special": [],
         "index": "lantern-bullseye",
         "name": "Lantern, bullseye",
@@ -2485,7 +2485,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "lantern,_hooded": {
+    "lantern_hooded": {
         "special": [],
         "index": "lantern-hooded",
         "name": "Lantern, hooded",
@@ -2748,7 +2748,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "mirror,_steel": {
+    "mirror_steel": {
         "desc": [],
         "special": [],
         "index": "mirror-steel",
@@ -2964,7 +2964,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "pick,_miners": {
+    "pick_miners": {
         "desc": [],
         "special": [],
         "index": "pick-miners",
@@ -3027,7 +3027,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "poison,_basic_vial": {
+    "poison_basic_vial": {
         "special": [],
         "index": "poison-basic-vial",
         "name": "Poison, basic (vial)",
@@ -3116,7 +3116,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "pot,_iron": {
+    "pot_iron": {
         "desc": [],
         "special": [],
         "index": "pot-iron",
@@ -3294,7 +3294,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "ram,_portable": {
+    "ram_portable": {
         "special": [],
         "index": "ram-portable",
         "name": "Ram, portable",
@@ -3408,7 +3408,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "rope,_hempen_50_feet": {
+    "rope_hempen_50_feet": {
         "special": [],
         "index": "rope-hempen-50-feet",
         "name": "Rope, hempen (50 feet)",
@@ -3431,7 +3431,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "rope,_silk_50_feet": {
+    "rope_silk_50_feet": {
         "special": [],
         "index": "rope-silk-50-feet",
         "name": "Rope, silk (50 feet)",
@@ -3498,7 +3498,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "saddle,_exotic": {
+    "saddle_exotic": {
         "special": [],
         "index": "saddle-exotic",
         "name": "Saddle, Exotic",
@@ -3518,7 +3518,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "saddle,_military": {
+    "saddle_military": {
         "special": [],
         "index": "saddle-military",
         "name": "Saddle, Military",
@@ -3538,7 +3538,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "saddle,_pack": {
+    "saddle_pack": {
         "desc": [],
         "special": [],
         "index": "saddle-pack",
@@ -3556,7 +3556,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "saddle,_riding": {
+    "saddle_riding": {
         "desc": [],
         "special": [],
         "index": "saddle-riding",
@@ -3613,7 +3613,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "scale,_merchants": {
+    "scale_merchants": {
         "special": [],
         "index": "scale-merchants",
         "name": "Scale, merchant's",
@@ -3937,7 +3937,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "spike,_iron": {
+    "spike_iron": {
         "desc": [],
         "special": [],
         "index": "spike-iron",
@@ -4068,7 +4068,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "tent,_two-person": {
+    "tent_two_person": {
         "special": [],
         "index": "tent-two-person",
         "name": "Tent, two-person",

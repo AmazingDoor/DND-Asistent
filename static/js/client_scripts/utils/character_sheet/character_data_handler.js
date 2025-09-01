@@ -31,6 +31,11 @@ export function addInvItem(item, t='default', count=1) {
     inventory.push(i);
 }
 
+export function addInvContainerItem(item, t='default', count=1, inv = null) {
+    const i = {type: 'container_item', reference: item, from: t, count: count, inventory: inv};
+    inventory.push(i);
+}
+
 //This is also used for armor
 export function addInvOption(t, indx, t2='default') {
     const o = {type: t, index: indx, from: t2};
