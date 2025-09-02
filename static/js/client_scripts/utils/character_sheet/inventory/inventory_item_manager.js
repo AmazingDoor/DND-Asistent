@@ -160,9 +160,9 @@ export function addItemOptionToInventory(options, f='default', build_inventory) 
         option.textContent = opt.count.toString() + " " + opt.item.name;
         option.dataset.item_reference = item_key;
         option.dataset.item_count = opt.count;
-        option.dataset.item_inv = null;
+        option.dataset.item_inv = "0";
         if (opt.item.contents.length > 0) {
-            option.dataset.item_inv = opt.item.contents;
+            option.dataset.item_inv = "1";
         }
         dropdown.appendChild(option);
     });
@@ -175,8 +175,8 @@ export function addItemOptionToInventory(options, f='default', build_inventory) 
         const children_array = [...dropdown.parentElement.parentElement.children];
         const index = children_array.indexOf(dropdown.parentElement);
         character_data_handler.removeItem(index);
-        if (item.dataset.item_inv !== null && item.dataset.item_inv !== undefined) {
-            character_data_handler.addInvContainerItem(item_reference, f, item_count, item.dataset.item_inv);
+        if (item.dataset.item_inv === "1") {
+            character_data_handler.addInvContainerItem(item_reference, f, item_count);
         } else {
             character_data_handler.addInvItem(item_reference, f, item_count);
         }
@@ -269,7 +269,6 @@ export function addContainerToInventory(item_reference, index, f='default', coun
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
     item_div.dataset.tag = 'container-item';
-
     const item_name = document.createElement('p');
     const item_data = items[item_reference];
 
@@ -290,7 +289,6 @@ export function addContainerToInventory(item_reference, index, f='default', coun
         saveInventory();
     });
 
-    console.log(inv);
     inventory_list.appendChild(item_div);
 }
 
