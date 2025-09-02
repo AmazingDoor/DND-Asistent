@@ -96,7 +96,6 @@ export function buildInventory() {
         } else if(item.type === "item_option") {
             inv_manager.addItemOptionToInventory(class_item_options[item.index], item.from, buildInventory);
         } else if( item.type === "container_item") {
-            console.log(item);
             inv_manager.addContainerToInventory(item.reference, i, item.from, item.count, item.inventory);
         }
         i++;

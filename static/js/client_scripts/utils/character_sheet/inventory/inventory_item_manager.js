@@ -272,9 +272,7 @@ export function addContainerToInventory(item_reference, index, f='default', coun
     const item_name = document.createElement('p');
     const item_data = items[item_reference];
 
-    if (inv === null || inv === undefined) {
-        inv = item_data.contents;
-    }
+    console.log(inv);
 
     item_name.textContent = item_data.name;
     item_div.appendChild(item_name);

@@ -32,14 +32,16 @@ export function addInvItem(item, t='default', count=1) {
     inventory.push(i);
 }
 
-export function addInvContainerItem(item, t='default', count=1) {
-    let inv = null;
-    const item_data = items[item];
-    if (item_data.contents.length > 0) {
-        inv = item_data.contents.map((input_item) => ({
-            item_reference: input_item.item.index.replace('-', '_'),
-            count: input_item.quantity
-        }));
+export function addInvContainerItem(item, t='default', count=1, input_inv=null) {
+    let inv = input_inv;
+    if(inv === null) {
+        const item_data = items[item];
+        if (item_data.contents.length > 0) {
+            inv = item_data.contents.map((input_item) => ({
+                item_reference: input_item.item.index.replace(/-/g, '_'),
+                count: input_item.quantity
+            }));
+        }
     }
     const i = {type: 'container_item', reference: item, from: t, count: count, inventory: inv};
     inventory.push(i);
