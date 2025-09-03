@@ -385,7 +385,7 @@ export function addSpellbookToInventory(index, f='default', count=1, spells) {
     item_div.appendChild(spells_div);
 
 
-    addSpellsToBook(spells, spells_div);
+    addSpellsToBook(spells, spells_div, spells);
 
     inventory_list.appendChild(item_div);
 }
@@ -403,12 +403,7 @@ export function addSpellsToBook(saved_spells, spell_div) {
     const max_spell_level = spell_slot_map.length;
     const spells = wizard.spells;
     spell_div.innterHTML = '';
-    let spell_count = 6;
-     if(saved_spells !== null) {
-        spell_count = saved_spells.length;
-     } else {
-        saved_spells = [];
-     }
+    const spell_count = saved_spells.length;
 
     const spell_container = document.createElement('div');
     spell_div.appendChild(spell_container);
@@ -446,7 +441,7 @@ export function addSpellsToBook(saved_spells, spell_div) {
                 spell_option.appendChild(spell_option_text);
                 spell_dropdown.appendChild(spell_option);
 
-                spell_option.addEventListener("click", function() {spellOptionClickEvent(spell_dropdown_head, spell_option_text)});
+                spell_option.addEventListener("click", function() {spellOptionClickEvent(spell_dropdown_head, spell_option_text, saved_spells, e)});
 
                 const spell_data_container = document.createElement('div');
                 spell_data_container.classList.add('spell-data-container');
@@ -498,10 +493,12 @@ export function addSpellsToBook(saved_spells, spell_div) {
 }
 
 //SPELL STUFF//
-function spellOptionClickEvent(head, option) {
+function spellOptionClickEvent(head, option, spells, index) {
     const txt = head.querySelector('p');
     txt.textContent = option.textContent;
-    saveSpells();
+    spells[index] = option.textContent;
+    console.log(spells);
+    saveInventory();
 }
 
 function findHighestSlotLevelAvailable(d, level) {

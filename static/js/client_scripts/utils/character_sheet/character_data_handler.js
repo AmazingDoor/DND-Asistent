@@ -47,6 +47,12 @@ export function addInvContainerItem(item, t='default', count=1, input_inv=null) 
     inventory.push(i);
 }
 
+export function addSpellbookItem(reference, t='default', count=1, spells=[]) {
+    console.log(spells);
+    const i = {type: 'spellbook_item', reference: 'spellbook', from: t, count: count, spells: spells}
+    inventory.push(i);
+}
+
 //This is also used for armor
 export function addInvOption(t, indx, t2='default') {
     const o = {type: t, index: indx, from: t2};
@@ -60,6 +66,8 @@ export function addInvOption(t, indx, t2='default') {
         mount_inventory.push(o);
     }
 }
+
+
 
 export function removeItem(index) {
     inventory.splice(index, 1);

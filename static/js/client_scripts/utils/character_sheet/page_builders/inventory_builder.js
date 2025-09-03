@@ -69,7 +69,12 @@ export function createClassOptions() {
     starting_items.forEach((item) => {
         const count = item.count;
         const i = item.item;
-        character_data_handler.addInvItem(getKey(items, i), "class", count);
+        if(i.index === "spellbook") {
+            const spells = item.spells;
+            character_data_handler.addSpellbookItem(getKey(items, i), "class", count, spells);
+        } else {
+            character_data_handler.addInvItem(getKey(items, i), "class", count);
+        }
     });
 
     inv_manager.saveInventory();
@@ -97,11 +102,11 @@ export function buildInventory() {
             inv_manager.addItemOptionToInventory(class_item_options[item.index], item.from, buildInventory);
         } else if( item.type === "container_item") {
             inv_manager.addContainerToInventory(item.reference, i, item.from, item.count, item.inventory);
+        } else if(item.type === "spellbook_item") {
+            inv_manager.addSpellbookToInventory(i, item.from, item.count, item.spells);
         }
         i++;
     });
-    inv_manager.addSpellbookToInventory(i + 1, 'class', 1, null);
-
     i = 0;
     const weapon_inventory = character_data_handler.getWeaponInventory();
     weapon_inventory.forEach(item => {

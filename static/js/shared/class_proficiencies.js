@@ -263,7 +263,7 @@ export const wizard = {
     skills: [2, ["Arcana", "History", "Insight", "Investigaton", "Medicine", "Religion"]],
     inventory: {
         options: [],
-        starting: []
+        starting: [{item: item_data.items.spellbook, count: 1, spells: ["Select Spell", "Select Spell", "Select Spell", "Select Spell", "Select Spell", "Select Spell"]}]
     }
 
 };
