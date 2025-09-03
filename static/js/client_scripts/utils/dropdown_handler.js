@@ -12,6 +12,7 @@ export function linkDropdown(dropdown) {
     dropdown.addEventListener("click", function() {
         const content = dropdown.querySelector(".dropdown-content");
         content.classList.toggle("hidden");
+        console.log(s);
     });
 }
 

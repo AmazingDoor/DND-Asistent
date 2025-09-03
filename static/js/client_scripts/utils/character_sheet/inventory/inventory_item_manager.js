@@ -2,6 +2,12 @@ import * as character_data_handler from './../character_data_handler.js';
 import {weapons} from './../../../../shared/inventory/weapons.js';
 import {getAllArmors} from './../../../../shared/inventory/armor.js';
 import {items} from './../../../../shared/inventory/items.js';
+import {getPlayerLevel} from './../../../player_level_handler.js';
+import {linkDropdown} from './../../dropdown_handler.js';
+import {getClassName} from './../mappers/class_mapper.js';
+import {wizard} from './../../../../shared/spell_lists/wizard.js';
+import {getMagicSlots} from './../../../../shared/spell_caster_slot_map.js';
+
 
 const inventory_list = document.querySelector('.inventory-container');
 const weapon_list = document.querySelector('.inventory-weapons');
@@ -304,12 +310,12 @@ export function addContainerToInventory(item_reference, index, f='default', coun
     item_div.appendChild(inv_div);
 
 
-    buildItemInv(inv, inv_div);
+    buildItemContainerInv(inv, inv_div);
 
     inventory_list.appendChild(item_div);
 }
 
-export function buildItemInv(inv, display) {
+export function buildItemContainerInv(inv, display) {
     const item_table = document.createElement('table');
     for(let i = 0; i < inv.length; i++) {
         const item = inv[i];
@@ -334,9 +340,180 @@ export function buildItemInv(inv, display) {
         table_row.appendChild(right_side);
 
         item_table.appendChild(table_row);
+
+        item_count.addEventListener('change', function() {
+            inv[i].count = item_count.value;
+            saveInventory();
+        });
     }
     display.appendChild(item_table);
 }
+
+export function addSpellbookToInventory(index, f='default', count=1, spells) {
+    const item_div = document.createElement('div');
+    item_div.classList.add('inventory-item');
+
+    const data_div = document.createElement('div');
+    data_div.classList.add('item-data-div');
+
+    const spells_div = document.createElement('div');
+    spells_div.classList.add('item-inv-div');
+
+
+    item_div.classList.add('container');
+    item_div.dataset.tag = 'container-item';
+    item_div.setAttribute('data-from', f)
+
+    const item_name = document.createElement('p');
+    const item_data = items.spellbook;
+
+
+    item_name.textContent = item_data.name;
+    data_div.appendChild(item_name);
+
+    const item_count = document.createElement('input');
+    item_count.type = 'number';
+    item_count.value = count;
+    data_div.appendChild(item_count);
+    item_div.appendChild(data_div);
+
+    item_count.addEventListener("change", function() {
+        character_data_handler.getInventory()[index].count = item_count.value;
+        saveInventory();
+    });
+
+    item_div.appendChild(spells_div);
+
+
+    addSpellsToBook(spells, spells_div);
+
+    inventory_list.appendChild(item_div);
+}
+
+export function addSpellsToBook(saved_spells, spell_div) {
+    const spell_slots = getMagicSlots("Wizard");
+    const player_level = getPlayerLevel();
+
+    const spell_slot_map_object = spell_slots.spell_slots;
+    let spell_slot_map = [];
+    if(spell_slot_map_object !== undefined) {
+        spell_slot_map = spell_slot_map_object[player_level - 1] || [];
+    }
+
+    const max_spell_level = spell_slot_map.length;
+    const spells = wizard.spells;
+    spell_div.innterHTML = '';
+    let spell_count = 6;
+     if(saved_spells !== null) {
+        spell_count = saved_spells.length;
+     } else {
+        saved_spells = [];
+     }
+
+    const spell_container = document.createElement('div');
+    spell_div.appendChild(spell_container);
+
+    for (let e = 0; e < spell_count; e++) {
+        const spell_dropdown_head = document.createElement('div');
+        spell_dropdown_head.classList.add('dropdown-head');
+        spell_dropdown_head.classList.add('spell-selector');
+        const head_text = document.createElement('p');
+        let t = "Select Spell";
+        if(e in saved_spells && saved_spells.length > 0) {
+            t = saved_spells[e];
+        }
+
+        head_text.textContent = t;
+        spell_dropdown_head.appendChild(head_text);
+
+        const d = document.createElement('div');
+        d.classList.add('dropdown');
+        spell_dropdown_head.appendChild(d);
+
+        const spell_dropdown = document.createElement('div');
+        spell_dropdown.classList.add('spell-options');
+        spell_dropdown.classList.add('dropdown-content');
+        spell_dropdown.classList.add('hidden');
+        d.appendChild(spell_dropdown);
+
+        spells.forEach((spell) => {
+            if(spell.level <= max_spell_level) {
+                const name = spell.name;
+                const spell_option = document.createElement('div');
+                spell_option.classList.add('spell-option');
+                const spell_option_text = document.createElement('p');
+                spell_option_text.textContent = name;
+                spell_option.appendChild(spell_option_text);
+                spell_dropdown.appendChild(spell_option);
+
+                spell_option.addEventListener("click", function() {spellOptionClickEvent(spell_dropdown_head, spell_option_text)});
+
+                const spell_data_container = document.createElement('div');
+                spell_data_container.classList.add('spell-data-container');
+                spell_option.appendChild(spell_data_container);
+
+                const spell_description_container = document.createElement('div');
+                spell_description_container.classList.add('spell-description-container');
+                spell_data_container.appendChild(spell_description_container);
+
+                const spell_description = document.createElement('p');
+                spell_description.classList.add('spell-description');
+                spell_description.textContent = spell.desc;
+                spell_description_container.appendChild(spell_description);
+
+                if ('dc' in spell) {
+                    const die = document.createElement('p');
+                    die.classList.add('dc-text');
+                    die.textContent = "DC: " + spell.dc.dc_type.name;
+                    spell_data_container.appendChild(die);
+                }
+
+                if ('damage' in spell) {
+                    if ('damage_at_character_level' in spell.damage) {
+                        let spell_level = findHighestCharacterLevelAvailable(spell.damage.damage_at_character_level, max_spell_level);
+                        const hit_die_num = spell.damage.damage_at_character_level[spell_level];
+                        const hit_die = document.createElement('p');
+                        hit_die.classList.add('hit-die-text');
+                        hit_die.textContent = "Damage: " + hit_die_num;
+                    }
+
+                    if('damage_at_slot_level' in spell.damage) {
+                        let spell_level = findHighestSlotLevelAvailable(spell.damage.damage_at_slot_level, player_level);
+                        const hit_die_num = spell.damage.damage_at_slot_level[spell_level];
+                        const hit_die = document.createElement('p');
+                        hit_die.classList.add('hit-die-text');
+                        hit_die.textContent = "Damage: " + hit_die_num;
+                        spell_data_container.appendChild(hit_die);
+                    }
+                }
+            }
+        });
+
+        spell_container.appendChild(spell_dropdown_head);
+        spell_dropdown_head.addEventListener("click", function() {
+            const content = spell_dropdown_head.querySelector(".dropdown-content");
+            content.classList.toggle("hidden");
+        });
+    }
+}
+
+//SPELL STUFF//
+function spellOptionClickEvent(head, option) {
+    const txt = head.querySelector('p');
+    txt.textContent = option.textContent;
+    saveSpells();
+}
+
+function findHighestSlotLevelAvailable(d, level) {
+    let highest = 1;
+    for (const key in d) {
+        if (parseInt(key) <= level) {
+            highest = key;
+        }
+    }
+    return highest;
+}
+///////////////
 
 export function clearItems() {
     inventory_list.innerHTML = '';

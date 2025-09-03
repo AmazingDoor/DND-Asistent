@@ -100,6 +100,7 @@ export function buildInventory() {
         }
         i++;
     });
+    inv_manager.addSpellbookToInventory(i + 1, 'class', 1, null);
 
     i = 0;
     const weapon_inventory = character_data_handler.getWeaponInventory();
