@@ -193,6 +193,7 @@ export function addWeaponToInventory(weapon_reference, index, f='default', count
     const weapon_div = document.createElement('div');
     weapon_div.classList.add('inventory-item');
     weapon_div.dataset.tag = 'weapon';
+    weapon_div.setAttribute('data-from', f)
 
     const weapon_name = document.createElement('p');
     const weapon_data = weapons[weapon_reference];
@@ -219,6 +220,7 @@ export function addArmorToInventory(armor_reference, index, f='default', count=1
     const armor_div = document.createElement('div');
     armor_div.classList.add('inventory-item');
     armor_div.dataset.tag = 'armor';
+    armor_div.setAttribute('data-from', f)
 
     const armor_name = document.createElement('p');
     const armor_data = armors[armor_reference];
@@ -244,6 +246,7 @@ export function addItemToInventory(item_reference, index, f='default', count=1) 
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
     item_div.dataset.tag = 'item';
+    item_div.setAttribute('data-from', f)
 
     const item_name = document.createElement('p');
     const item_data = items[item_reference];
@@ -268,26 +271,71 @@ export function addItemToInventory(item_reference, index, f='default', count=1) 
 export function addContainerToInventory(item_reference, index, f='default', count=1, inv) {
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
+
+    const data_div = document.createElement('div');
+    data_div.classList.add('item-data-div');
+
+    const inv_div = document.createElement('div');
+    inv_div.classList.add('item-inv-div');
+
+
+    item_div.classList.add('container');
     item_div.dataset.tag = 'container-item';
+    item_div.setAttribute('data-from', f)
+
     const item_name = document.createElement('p');
     const item_data = items[item_reference];
 
-    console.log(inv);
 
     item_name.textContent = item_data.name;
-    item_div.appendChild(item_name);
+    data_div.appendChild(item_name);
 
     const item_count = document.createElement('input');
     item_count.type = 'number';
     item_count.value = count;
-    item_div.appendChild(item_count);
+    data_div.appendChild(item_count);
+    item_div.appendChild(data_div);
 
     item_count.addEventListener("change", function() {
         character_data_handler.getInventory()[index].count = item_count.value;
         saveInventory();
     });
 
+    item_div.appendChild(inv_div);
+
+
+    buildItemInv(inv, inv_div);
+
     inventory_list.appendChild(item_div);
+}
+
+export function buildItemInv(inv, display) {
+    const item_table = document.createElement('table');
+    for(let i = 0; i < inv.length; i++) {
+        const item = inv[i];
+        const item_reference = item.item_reference;
+        const count = item.count;
+        const item_data = items[item_reference];
+
+        const item_name = document.createElement('p');
+        item_name.textContent = item_data.name;
+
+        const item_count = document.createElement('input');
+        item_count.type = 'number';
+        item_count.value = count;
+
+        const table_row = document.createElement('tr');
+        const left_side = document.createElement('td');
+        const right_side = document.createElement('td');
+
+        left_side.appendChild(item_name);
+        right_side.appendChild(item_count);
+        table_row.appendChild(left_side);
+        table_row.appendChild(right_side);
+
+        item_table.appendChild(table_row);
+    }
+    display.appendChild(item_table);
 }
 
 export function clearItems() {
