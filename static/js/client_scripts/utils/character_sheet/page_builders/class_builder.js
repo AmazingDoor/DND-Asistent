@@ -63,9 +63,7 @@ function clickEvent(option, head) {
     //socket.emit('save_spells', {char_id: char_id, spells: [], cantrips: [], })
     buildClassStatSection(option.textContent);
     character_data_handler.resetClassData();
-    if(option.textContent !== "Wizard") {
-        buildSpellSection(option.textContent);
-    }
+    buildSpellSection(option.textContent);
     setSkills()
     const skill_array = character_data_handler.getClassSkills();
     inventory_builder.clearInventory();
