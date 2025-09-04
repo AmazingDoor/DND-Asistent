@@ -432,7 +432,7 @@ export function addSpellsToBook(saved_spells, spell_div) {
         d.appendChild(spell_dropdown);
 
         spells.forEach((spell) => {
-            if(spell.level <= max_spell_level) {
+            if(spell.level <= max_spell_level && spell.level !== 0) {
                 const name = spell.name;
                 const spell_option = document.createElement('div');
                 spell_option.classList.add('spell-option');

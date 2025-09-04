@@ -135,60 +135,12 @@ function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, can
         spell_dropdown.classList.add('hidden');
         d.appendChild(spell_dropdown);
 
-        spells.forEach((spell) => {
-            if(spell.level <= max_spell_level) {
-                const name = spell.name;
-                const spell_option = document.createElement('div');
-                spell_option.classList.add('spell-option');
-                const spell_option_text = document.createElement('p');
-                spell_option_text.textContent = name;
-                spell_option.appendChild(spell_option_text);
-                spell_dropdown.appendChild(spell_option);
-
-                spell_option.addEventListener("click", function() {spellOptionClickEvent(spell_dropdown_head, spell_option_text)});
-
-                const spell_data_container = document.createElement('div');
-                spell_data_container.classList.add('spell-data-container');
-                spell_option.appendChild(spell_data_container);
-
-                const spell_description_container = document.createElement('div');
-                spell_description_container.classList.add('spell-description-container');
-                spell_data_container.appendChild(spell_description_container);
-
-                const spell_description = document.createElement('p');
-                spell_description.classList.add('spell-description');
-                spell_description.textContent = spell.desc;
-                spell_description_container.appendChild(spell_description);
-
-                if ('dc' in spell) {
-                    const die = document.createElement('p');
-                    die.classList.add('dc-text');
-                    die.textContent = "DC: " + spell.dc.dc_type.name;
-                    spell_data_container.appendChild(die);
-                }
-
-                if ('damage' in spell) {
-                    if ('damage_at_character_level' in spell.damage) {
-                        let spell_level = findHighestCharacterLevelAvailable(spell.damage.damage_at_character_level, max_spell_level);
-                        const hit_die_num = spell.damage.damage_at_character_level[spell_level];
-                        const hit_die = document.createElement('p');
-                        hit_die.classList.add('hit-die-text');
-                        hit_die.textContent = "Damage: " + hit_die_num;
-                    }
-
-                    if('damage_at_slot_level' in spell.damage) {
-                        let spell_level = findHighestSlotLevelAvailable(spell.damage.damage_at_slot_level, player_level);
-                        const hit_die_num = spell.damage.damage_at_slot_level[spell_level];
-                        const hit_die = document.createElement('p');
-                        hit_die.classList.add('hit-die-text');
-                        hit_die.textContent = "Damage: " + hit_die_num;
-                        spell_data_container.appendChild(hit_die);
-                    }
-                }
-            }
+        spell_dropdown_head.addEventListener("click", function() {
+            addSpellsToDropdown(spells, max_spell_level, spell_dropdown, spell_dropdown_head, player_level);
         });
         spell_container.appendChild(spell_dropdown_head);
         linkDropdown(spell_dropdown_head);
+
     }
 
     const cantrip_div = document.querySelector('.class-cantrip-div');
@@ -277,6 +229,61 @@ function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, can
         cantrip_container.appendChild(cantrip_dropdown_head);
         linkDropdown(cantrip_dropdown_head);
     }
+}
+
+function addSpellsToDropdown(spells, max_spell_level, spell_dropdown, spell_dropdown_head, player_level) {
+    spells.forEach((spell) => {
+        if(spell.level <= max_spell_level) {
+            const name = spell.name;
+            const spell_option = document.createElement('div');
+            spell_option.classList.add('spell-option');
+            const spell_option_text = document.createElement('p');
+            spell_option_text.textContent = name;
+            spell_option.appendChild(spell_option_text);
+            spell_dropdown.appendChild(spell_option);
+
+            spell_option.addEventListener("click", function() {spellOptionClickEvent(spell_dropdown_head, spell_option_text)});
+
+            const spell_data_container = document.createElement('div');
+            spell_data_container.classList.add('spell-data-container');
+            spell_option.appendChild(spell_data_container);
+
+            const spell_description_container = document.createElement('div');
+            spell_description_container.classList.add('spell-description-container');
+            spell_data_container.appendChild(spell_description_container);
+
+            const spell_description = document.createElement('p');
+            spell_description.classList.add('spell-description');
+            spell_description.textContent = spell.desc;
+            spell_description_container.appendChild(spell_description);
+
+            if ('dc' in spell) {
+                const die = document.createElement('p');
+                die.classList.add('dc-text');
+                die.textContent = "DC: " + spell.dc.dc_type.name;
+                spell_data_container.appendChild(die);
+            }
+
+            if ('damage' in spell) {
+                if ('damage_at_character_level' in spell.damage) {
+                    let spell_level = findHighestCharacterLevelAvailable(spell.damage.damage_at_character_level, max_spell_level);
+                    const hit_die_num = spell.damage.damage_at_character_level[spell_level];
+                    const hit_die = document.createElement('p');
+                    hit_die.classList.add('hit-die-text');
+                    hit_die.textContent = "Damage: " + hit_die_num;
+                }
+
+                if('damage_at_slot_level' in spell.damage) {
+                    let spell_level = findHighestSlotLevelAvailable(spell.damage.damage_at_slot_level, player_level);
+                    const hit_die_num = spell.damage.damage_at_slot_level[spell_level];
+                    const hit_die = document.createElement('p');
+                    hit_die.classList.add('hit-die-text');
+                    hit_die.textContent = "Damage: " + hit_die_num;
+                    spell_data_container.appendChild(hit_die);
+                }
+            }
+        }
+    });
 }
 
 /* OLD SPELL BUILDING STUFF */
