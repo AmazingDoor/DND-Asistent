@@ -13,6 +13,7 @@ function setDefaultCount(l, t="weapon") {
 }
 
 function filterArray(input_array, filter_out_array) {
+    //return an array with no duplicates
     return [...input_array].filter(item => !filter_out_array.includes(item));
 }
 

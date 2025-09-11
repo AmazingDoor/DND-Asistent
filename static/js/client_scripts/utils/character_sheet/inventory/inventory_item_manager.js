@@ -27,7 +27,7 @@ export function setSocket(io) {
     socket = io;
 }
 
-export function addWeaponOptionToInventory(options, f='default', build_inventory) {
+export function addWeaponOptionToInventory(options, f='default', build_inventory, ammo_count=0) {
     if (options === null || options === undefined) {
         return;
     }
@@ -58,6 +58,7 @@ export function addWeaponOptionToInventory(options, f='default', build_inventory
         option.textContent = opt.count.toString() + " " + opt.weapon.name;
         option.dataset.weapon_reference = weapon_key;
         option.dataset.weapon_count = opt.count;
+        option.dataset.ammo_count = opt.ammo;
         dropdown.appendChild(option);
     });
 
@@ -65,12 +66,23 @@ export function addWeaponOptionToInventory(options, f='default', build_inventory
         const weapon = dropdown.options[dropdown.selectedIndex];
         const weapon_reference = weapon.dataset.weapon_reference;
         const weapon_count = weapon.dataset.weapon_count;
+        const ammo_count = weapon.dataset.ammo_count;
+
         const label = weapon.textContent;
         const children_array = [...dropdown.parentElement.parentElement.children];
 
         const index = children_array.indexOf(dropdown.parentElement);
         character_data_handler.removeWeapon(index);
         character_data_handler.addInvWeapon(weapon_reference, f, weapon_count);
+
+
+        //HERE
+        console.log(ammo_count);
+        const ammo_type = weapons[weapon_reference].ammo_type;
+        if(ammo_type !== null) {
+            character_data_handler.addInvItem(ammo_type, f, ammo_count);
+        }
+
         build_inventory();
         item_div.remove();
         saveInventory();
@@ -195,6 +207,8 @@ export function addItemOptionToInventory(options, f='default', build_inventory) 
     inventory_list.appendChild(item_div);
 }
 
+
+
 export function addWeaponToInventory(weapon_reference, index, f='default', count=1) {
     const weapon_div = document.createElement('div');
     weapon_div.classList.add('inventory-item');
@@ -256,7 +270,6 @@ export function addItemToInventory(item_reference, index, f='default', count=1) 
 
     const item_name = document.createElement('p');
     const item_data = items[item_reference];
-
 
     item_name.textContent = item_data.name;
     item_div.appendChild(item_name);
