@@ -85,19 +85,19 @@ export const druid = {
     saving_throws: ["Intelligence", "Wisdom"],
     weapons: {
         proficiencies: ["Clubs", "Daggers", "Darts", "Javelins", "Maces", "Quarterstaffs", "Scimitars", "sickless", "Slings", "Spears"],
-        options: [[]],
+        options: [[{weapon: weapon_data.weapons.shield, count: 1}, ...setDefaultCount(weapon_data.simple_weapons)], [{weapon: weapon_data.weapons.scimitar, count: 1}, ...setDefaultCount(weapon_data.getMeleeWeapons(weapon_data.simple_weapons))]],
         starting: []
     },
     armor: {
         proficiencies: ["Light Armor", "Medium Armor", "Shields (Non-Metal)"],
         options: [],
-        starting: []
+        starting: [{armor: armor_data.light_armor.leather, count: 1}]
     },
     tools: ["Herbalism Kit"],
     skills: [2, ["Arcana", "Animal Handling", "Insight", "Medicine", "Nature", "Perception", "Religion", "Survival"]],
     inventory: {
-        options: [],
-        starting: []
+        options: [setDefaultCount(item_data.getDruidicFoci(), "item")],
+        starting: [{item: item_data.items.explorers_pack, count: 1}]
     }
 
 };

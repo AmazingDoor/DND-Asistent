@@ -4478,3 +4478,17 @@ export const items = {
         "properties": []
     }
 }
+
+export function getDruidicFoci() {
+    let foci = [];
+    for (const [key, value] of Object.entries(items)) {
+        if(value.gear_category !== undefined) {
+            if(value.gear_category.index !== undefined) {
+                if(value.gear_category.index === "druidic-foci") {
+                    foci.push(items[key]);
+                }
+            }
+        }
+    };
+    return foci;
+}

@@ -27,11 +27,9 @@ export function setSocket(io) {
     socket = io;
 }
 
+
 export function addWeaponOptionToInventory(options, f='default', build_inventory, ammo_count=0) {
-    if (options === null || options === undefined) {
-        return;
-    }
-    if (options.length === 0) {
+    if (options === null || options === undefined || options.length === 0) {
         return;
     }
 
@@ -40,141 +38,189 @@ export function addWeaponOptionToInventory(options, f='default', build_inventory
     item_div.classList.add('weapon-option');
     item_div.setAttribute('data-from', f);
 
-    const dropdown = document.createElement('select');
-    dropdown.name = 'weapon-options';
+    // Create the custom dropdown container
+    const dropdownContainer = document.createElement('div');
+    dropdownContainer.classList.add('custom-dropdown');
 
-    const placeholder = document.createElement('option');
-    placeholder.textContent = "Select Weapon";
-    dropdown.appendChild(placeholder);
+    // Create the dropdown toggle (displayed item)
+    const dropdownToggle = document.createElement('div');
+    dropdownToggle.classList.add('dropdown-toggle');
+    dropdownToggle.textContent = 'Select Weapon';  // Placeholder text
 
+    // Create the options container (hidden by default)
+    const optionsContainer = document.createElement('div');
+    optionsContainer.classList.add('options-container');
+    optionsContainer.style.display = 'none';  // Initially hidden
+
+    // Iterate over the options to create custom options
     options.forEach(opt => {
         let weapon_key = null;
         for (let key in weapons) {
-            if(weapons[key] === opt.weapon) {
+            if (weapons[key] === opt.weapon) {
                 weapon_key = key;
             }
         }
-        const option = document.createElement('option');
+
+        const option = document.createElement('div');
+        option.classList.add('custom-option');
         option.textContent = opt.count.toString() + " " + opt.weapon.name;
         option.dataset.weapon_reference = weapon_key;
         option.dataset.weapon_count = opt.count;
         option.dataset.ammo_count = opt.ammo;
-        dropdown.appendChild(option);
+
+        // Handle option selection
+        option.addEventListener('click', () => {
+            const weapon_reference = option.dataset.weapon_reference;
+            const weapon_count = option.dataset.weapon_count;
+            const ammo_count = option.dataset.ammo_count;
+
+            const label = option.textContent;
+            const children_array = [...dropdownContainer.parentElement.children];
+            const index = children_array.indexOf(dropdownContainer);
+
+            character_data_handler.removeWeapon(index);
+            character_data_handler.addInvWeapon(weapon_reference, f, weapon_count);
+
+            console.log(ammo_count);
+            const ammo_type = weapons[weapon_reference].ammo_type;
+            if (ammo_type !== null) {
+                character_data_handler.addInvItem(ammo_type, f, ammo_count);
+            }
+
+            build_inventory();
+            item_div.remove();
+            saveInventory();
+        });
+
+        optionsContainer.appendChild(option);
     });
 
-    dropdown.addEventListener('change', () => {
-        const weapon = dropdown.options[dropdown.selectedIndex];
-        const weapon_reference = weapon.dataset.weapon_reference;
-        const weapon_count = weapon.dataset.weapon_count;
-        const ammo_count = weapon.dataset.ammo_count;
+    // Append options container to dropdown container
+    dropdownContainer.appendChild(dropdownToggle);
+    dropdownContainer.appendChild(optionsContainer);
+    item_div.appendChild(dropdownContainer);
 
-        const label = weapon.textContent;
-        const children_array = [...dropdown.parentElement.parentElement.children];
-
-        const index = children_array.indexOf(dropdown.parentElement);
-        character_data_handler.removeWeapon(index);
-        character_data_handler.addInvWeapon(weapon_reference, f, weapon_count);
-
-
-        //HERE
-        console.log(ammo_count);
-        const ammo_type = weapons[weapon_reference].ammo_type;
-        if(ammo_type !== null) {
-            character_data_handler.addInvItem(ammo_type, f, ammo_count);
-        }
-
-        build_inventory();
-        item_div.remove();
-        saveInventory();
-    });
-
-    item_div.appendChild(dropdown);
+    // Append the item_div to the weapon list (parent container)
     weapon_list.appendChild(item_div);
+
+    // Toggle dropdown visibility on click
+    dropdownToggle.addEventListener('click', () => {
+        const isOpen = optionsContainer.style.display === 'block';
+        optionsContainer.style.display = isOpen ? 'none' : 'block';
+    });
 }
 
-export function addArmorOptionToInventory(options, f='default', build_inventory) {
-        if (options === null || options === undefined) {
-        return;
-    }
-    if (options.length === 0) {
+
+export function addArmorOptionToInventory(options, f = 'default', build_inventory) {
+    if (options === null || options === undefined || options.length === 0) {
         return;
     }
 
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
-    item_div.classList.add('weapon-option');
-    item_div.setAttribute('data-from', f)
+    item_div.classList.add('armor-option');
+    item_div.setAttribute('data-from', f);
 
-    const dropdown = document.createElement('select');
-    dropdown.name = 'armor-options';
+    // Create the custom dropdown container
+    const dropdownContainer = document.createElement('div');
+    dropdownContainer.classList.add('custom-dropdown');
 
-    const placeholder = document.createElement('option');
-    placeholder.textContent = "Select Armor";
-    dropdown.appendChild(placeholder);
+    // Create the dropdown toggle (displayed item)
+    const dropdownToggle = document.createElement('div');
+    dropdownToggle.classList.add('dropdown-toggle');
+    dropdownToggle.textContent = 'Select Armor';  // Placeholder text
 
+    // Create the options container (hidden by default)
+    const optionsContainer = document.createElement('div');
+    optionsContainer.classList.add('options-container');
+    optionsContainer.style.display = 'none';  // Initially hidden
 
+    // Iterate over the options to create the custom options
     options.forEach(opt => {
         let armor_key = null;
         for (let key in armors) {
-            if(armors[key] === opt.armor) {
+            if (armors[key] === opt.armor) {
                 armor_key = key;
             }
         }
-        const option = document.createElement('option');
+
+        const option = document.createElement('div');
+        option.classList.add('custom-option');
         option.textContent = opt.count.toString() + " " + opt.armor.name;
         option.dataset.armor_reference = armor_key;
         option.dataset.armor_count = opt.count;
-        dropdown.appendChild(option);
+
+        // Handle option selection
+        option.addEventListener('click', () => {
+            const armor_reference = option.dataset.armor_reference;
+            const armor_count = option.dataset.armor_count;
+
+            const label = option.textContent;
+            const children_array = [...dropdownContainer.parentElement.children];
+            const index = children_array.indexOf(dropdownContainer);
+
+            character_data_handler.removeArmor(index);
+            character_data_handler.addInvArmor(armor_reference, f, armor_count);
+
+            build_inventory();
+            item_div.remove();
+            saveInventory();
+        });
+
+        optionsContainer.appendChild(option);
     });
 
-    dropdown.addEventListener('change', () => {
-        const armor = dropdown.options[dropdown.selectedIndex];
-        const armor_reference = armor.dataset.armor_reference;
-        const armor_count = armor.dataset.armor_count;
-        const label = armor.textContent;
-        const children_array = [...dropdown.parentElement.parentElement.children];
-        const inv_container_children = [...inventory_list.children];
-        const inv_weapons = [...weapon_list.children];
-        const index = children_array.indexOf(dropdown.parentElement);
-        character_data_handler.removeArmor(index);
-        character_data_handler.addInvArmor(armor_reference, f, armor_count);
-        build_inventory();
-        item_div.remove();
-        saveInventory();
-    });
+    // Append options container to dropdown container
+    dropdownContainer.appendChild(dropdownToggle);
+    dropdownContainer.appendChild(optionsContainer);
+    item_div.appendChild(dropdownContainer);
 
-    item_div.appendChild(dropdown);
+    // Append the item_div to the armor list (parent container)
     armor_list.appendChild(item_div);
+
+    // Toggle dropdown visibility on click
+    dropdownToggle.addEventListener('click', () => {
+        const isOpen = optionsContainer.style.display === 'block';
+        optionsContainer.style.display = isOpen ? 'none' : 'block';
+    });
 }
 
-export function addItemOptionToInventory(options, f='default', build_inventory) {
-    if (options === null || options === undefined) {
-        return;
-    }
-    if (options.length === 0) {
+export function addItemOptionToInventory(options, f = 'default', build_inventory) {
+    console.log(options);
+    if (options === null || options === undefined || options.length === 0) {
         return;
     }
 
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
     item_div.classList.add('inventory-option');
-    item_div.setAttribute('data-from', f)
+    item_div.setAttribute('data-from', f);
 
-    const dropdown = document.createElement('select');
-    dropdown.name = 'armor-options';
+    // Create a custom dropdown container
+    const dropdownContainer = document.createElement('div');
+    dropdownContainer.classList.add('custom-dropdown');
 
-    const placeholder = document.createElement('option');
-    placeholder.textContent = "Select Item";
-    dropdown.appendChild(placeholder);
+    // Create the dropdown toggle (displayed item)
+    const dropdownToggle = document.createElement('div');
+    dropdownToggle.classList.add('dropdown-toggle');
+    dropdownToggle.textContent = 'Select Item';  // Placeholder text
 
+    // Create the options container (hidden by default)
+    const optionsContainer = document.createElement('div');
+    optionsContainer.classList.add('options-container');
+    optionsContainer.style.display = 'none';  // Initially hidden
+
+    // Iterate over the options to create the custom options
     options.forEach(opt => {
         let item_key = null;
         for (let key in items) {
-            if(items[key] === opt.item) {
+            if (items[key] === opt.item) {
                 item_key = key;
             }
         }
-        const option = document.createElement('option');
+
+        const option = document.createElement('div');
+        option.classList.add('custom-option');
         option.textContent = opt.count.toString() + " " + opt.item.name;
         option.dataset.item_reference = item_key;
         option.dataset.item_count = opt.count;
@@ -182,29 +228,42 @@ export function addItemOptionToInventory(options, f='default', build_inventory) 
         if (opt.item.contents.length > 0) {
             option.dataset.item_inv = "1";
         }
-        dropdown.appendChild(option);
+
+        option.addEventListener('click', () => {
+            const item_reference = option.dataset.item_reference;
+            const item_count = option.dataset.item_count;
+            const label = option.textContent;
+
+            // Find the index of the item_div in the parent (just like you did with the <select>)
+            const children_array = [...dropdownContainer.parentElement.children];
+            const index = children_array.indexOf(dropdownContainer);
+
+            character_data_handler.removeItem(index);
+            if (option.dataset.item_inv === "1") {
+                character_data_handler.addInvContainerItem(item_reference, f, item_count);
+            } else {
+                character_data_handler.addInvItem(item_reference, f, item_count);
+            }
+
+            build_inventory();
+            item_div.remove();
+            saveInventory();
+        });
+
+        optionsContainer.appendChild(option);
     });
 
-    dropdown.addEventListener('change', () => {
-        const item = dropdown.options[dropdown.selectedIndex];
-        const item_reference = item.dataset.item_reference;
-        const item_count = item.dataset.item_count;
-        const label = item.textContent;
-        const children_array = [...dropdown.parentElement.parentElement.children];
-        const index = children_array.indexOf(dropdown.parentElement);
-        character_data_handler.removeItem(index);
-        if (item.dataset.item_inv === "1") {
-            character_data_handler.addInvContainerItem(item_reference, f, item_count);
-        } else {
-            character_data_handler.addInvItem(item_reference, f, item_count);
-        }
-        build_inventory();
-        item_div.remove();
-        saveInventory();
-    });
-
-    item_div.appendChild(dropdown);
+    // Append options container to dropdown container
+    dropdownContainer.appendChild(dropdownToggle);
+    dropdownContainer.appendChild(optionsContainer);
+    item_div.appendChild(dropdownContainer);
     inventory_list.appendChild(item_div);
+
+    // Toggle dropdown visibility on click
+    dropdownToggle.addEventListener('click', () => {
+        const isOpen = optionsContainer.style.display === 'block';
+        optionsContainer.style.display = isOpen ? 'none' : 'block';
+    });
 }
 
 
