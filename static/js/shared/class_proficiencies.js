@@ -17,6 +17,16 @@ function filterArray(input_array, filter_out_array) {
     return [...input_array].filter(item => !filter_out_array.includes(item));
 }
 
+export const other_item_types = {
+    weapon: 'weapon',
+    armor: 'armor',
+    item: 'item',
+    container_item: 'container_item',
+    weapon_choice: 'weapon_choice',
+    armor_choice: 'armor_choice',
+    item_choice: 'item_choice'
+}
+
 
 export const barbarian = {
     saving_throws: ['Strength', 'Constitution'],
@@ -111,7 +121,7 @@ export const fighter = {
     },
     armor: {
         proficiencies: ["All Armor", "Shields"],
-        options: [],
+        options: [[{armor: armor_data.heavy_armor.chain_mail, count: 1}, {armor: armor_data.light_armor.leather, count: 1, other:[{type: other_item_types.weapon, item: weapon_data.weapons.longbow, count: 1, ammo: 20}]}]],
         starting: []
     },
     tools: [],

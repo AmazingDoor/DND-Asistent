@@ -36,6 +36,8 @@
 .custom-option {
     padding: 10px;
     cursor: pointer;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 .custom-option:hover {

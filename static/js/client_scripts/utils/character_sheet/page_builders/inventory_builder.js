@@ -38,7 +38,6 @@ export function createClassOptions() {
     weapon_options.forEach(option_array => {
         character_data_handler.addInvOption("weapon_option", i, "class");
         i++;
-        //inv_manager.addWeaponOptionToInventory(option_array);
     });
     i = 0;
 
@@ -73,7 +72,11 @@ export function createClassOptions() {
             const spells = item.spells;
             character_data_handler.addSpellbookItem(getKey(items, i), "class", count, spells);
         } else {
-            character_data_handler.addInvItem(getKey(items, i), "class", count);
+            if(i.contents.length > 0) {
+                character_data_handler.addInvContainerItem(getKey(items, i), "class", count);
+            } else {
+                character_data_handler.addInvItem(getKey(items, i), "class", count);
+            }
         }
     });
 
@@ -120,6 +123,7 @@ export function buildInventory() {
 
     i = 0;
     const armor_inventory = character_data_handler.getArmorInventory();
+    console.log(armor_inventory);
     armor_inventory.forEach(item => {
         if(item.type === "armor_option") {
             inv_manager.addArmorOptionToInventory(class_armor_options[item.index], item.from, buildInventory);

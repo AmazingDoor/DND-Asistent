@@ -1,5 +1,6 @@
 import * as character_data_handler from './../character_data_handler.js';
 import {weapons} from './../../../../shared/inventory/weapons.js';
+import {other_item_types} from './../../../../shared/class_proficiencies.js';
 import {getAllArmors} from './../../../../shared/inventory/armor.js';
 import {items} from './../../../../shared/inventory/items.js';
 import {getPlayerLevel} from './../../../player_level_handler.js';
@@ -63,10 +64,33 @@ export function addWeaponOptionToInventory(options, f='default', build_inventory
 
         const option = document.createElement('div');
         option.classList.add('custom-option');
-        option.textContent = opt.count.toString() + " " + opt.weapon.name;
+
+        let option_row = document.createElement('div');
+
+        option_row.textContent = opt.count.toString() + " " + opt.weapon.name;
         option.dataset.weapon_reference = weapon_key;
         option.dataset.weapon_count = opt.count;
-        option.dataset.ammo_count = opt.ammo;
+        option.appendChild(option_row);
+        const other_items = opt.other;
+
+        if(opt.ammo !== 0 && opt.ammo !== undefined) {
+            const ammo_row = document.createElement('div');
+            ammo_row.classList.add('display-horizontal');
+            const ammo_name = document.createElement('p');
+            const ammo_count = document.createElement('p');
+            ammo_name.textContent = items[weapons[weapon_key].ammo_type].name;
+            ammo_count.textContent = opt.ammo.toString();
+
+            ammo_row.appendChild(ammo_count);
+            ammo_row.appendChild(ammo_name);
+            option.appendChild(ammo_row);
+            option.dataset.ammo_count = opt.ammo;
+        }
+
+        if(opt.other !== undefined) {
+            option = addOtherItemsToOption(option, other_items);
+        }
+
 
         // Handle option selection
         option.addEventListener('click', () => {
@@ -75,16 +99,21 @@ export function addWeaponOptionToInventory(options, f='default', build_inventory
             const ammo_count = option.dataset.ammo_count;
 
             const label = option.textContent;
-            const children_array = [...dropdownContainer.parentElement.children];
-            const index = children_array.indexOf(dropdownContainer);
+            const children_array = [...dropdownContainer.parentElement.parentElement.children];
+            console.log(children_array);
+            const index = children_array.indexOf(dropdownContainer.parentElement);
 
             character_data_handler.removeWeapon(index);
             character_data_handler.addInvWeapon(weapon_reference, f, weapon_count);
 
-            console.log(ammo_count);
             const ammo_type = weapons[weapon_reference].ammo_type;
             if (ammo_type !== null) {
                 character_data_handler.addInvItem(ammo_type, f, ammo_count);
+            }
+
+            if(opt.other !== undefined) {
+                const other_items = opt.other;
+                addOtherItemsToInventory(other_items, f);
             }
 
             build_inventory();
@@ -144,23 +173,39 @@ export function addArmorOptionToInventory(options, f = 'default', build_inventor
             }
         }
 
-        const option = document.createElement('div');
+        let option = document.createElement('div');
         option.classList.add('custom-option');
-        option.textContent = opt.count.toString() + " " + opt.armor.name;
+
+        let option_row = document.createElement('div');
+
+        option_row.textContent = opt.count.toString() + " " + opt.armor.name;
         option.dataset.armor_reference = armor_key;
         option.dataset.armor_count = opt.count;
+        option.appendChild(option_row);
+        const other_items = opt.other;
+        if(opt.other !== undefined) {
+            option = addOtherItemsToOption(option, other_items);
+        }
+
 
         // Handle option selection
         option.addEventListener('click', () => {
             const armor_reference = option.dataset.armor_reference;
             const armor_count = option.dataset.armor_count;
+            console.log(armor_reference);
+
 
             const label = option.textContent;
-            const children_array = [...dropdownContainer.parentElement.children];
-            const index = children_array.indexOf(dropdownContainer);
+            const children_array = [...dropdownContainer.parentElement.parentElement.children];
+            const index = children_array.indexOf(dropdownContainer.parentElement);
 
             character_data_handler.removeArmor(index);
             character_data_handler.addInvArmor(armor_reference, f, armor_count);
+
+            if(opt.other !== undefined) {
+                const other_items = opt.other;
+                addOtherItemsToInventory(other_items, f);
+            }
 
             build_inventory();
             item_div.remove();
@@ -186,7 +231,6 @@ export function addArmorOptionToInventory(options, f = 'default', build_inventor
 }
 
 export function addItemOptionToInventory(options, f = 'default', build_inventory) {
-    console.log(options);
     if (options === null || options === undefined || options.length === 0) {
         return;
     }
@@ -221,9 +265,18 @@ export function addItemOptionToInventory(options, f = 'default', build_inventory
 
         const option = document.createElement('div');
         option.classList.add('custom-option');
-        option.textContent = opt.count.toString() + " " + opt.item.name;
+
+        let option_row = document.createElement('div');
+
+        option_row.textContent = opt.count.toString() + " " + opt.item.name;
         option.dataset.item_reference = item_key;
         option.dataset.item_count = opt.count;
+        option.appendChild(option_row);
+        const other_items = opt.other;
+        if(opt.other !== undefined) {
+            option = addOtherItemsToOption(option, other_items);
+        }
+
         option.dataset.item_inv = "0";
         if (opt.item.contents.length > 0) {
             option.dataset.item_inv = "1";
@@ -234,15 +287,20 @@ export function addItemOptionToInventory(options, f = 'default', build_inventory
             const item_count = option.dataset.item_count;
             const label = option.textContent;
 
-            // Find the index of the item_div in the parent (just like you did with the <select>)
-            const children_array = [...dropdownContainer.parentElement.children];
-            const index = children_array.indexOf(dropdownContainer);
+            // Find the index of the item_div in the parent
+            const children_array = [...dropdownContainer.parentElement.parentElement.children];
+            const index = children_array.indexOf(dropdownContainer.parentElement);
 
             character_data_handler.removeItem(index);
             if (option.dataset.item_inv === "1") {
                 character_data_handler.addInvContainerItem(item_reference, f, item_count);
             } else {
                 character_data_handler.addInvItem(item_reference, f, item_count);
+            }
+
+            if(opt.other !== undefined) {
+                const other_items = opt.other;
+                addOtherItemsToInventory(other_items, f);
             }
 
             build_inventory();
@@ -303,7 +361,6 @@ export function addArmorToInventory(armor_reference, index, f='default', count=1
 
     const armor_name = document.createElement('p');
     const armor_data = armors[armor_reference];
-
 
     armor_name.textContent = armor_data.name;
     armor_div.appendChild(armor_name);
@@ -391,6 +448,7 @@ export function buildItemContainerInv(inv, display) {
     const item_table = document.createElement('table');
     for(let i = 0; i < inv.length; i++) {
         const item = inv[i];
+        console.log(item);
         const item_reference = item.item_reference;
         const count = item.count;
         const item_data = items[item_reference];
@@ -569,7 +627,6 @@ function spellOptionClickEvent(head, option, spells, index) {
     const txt = head.querySelector('p');
     txt.textContent = option.textContent;
     spells[index] = option.textContent;
-    console.log(spells);
     saveInventory();
 }
 
@@ -599,6 +656,98 @@ export function saveInventory() {
     const mount_inventory = character_data_handler.getMountInventory();
     const inv = {inv: inventory, weapon: weapon_inventory, armor: armor_inventory, mount: mount_inventory};
     socket.emit('save_inventory', { char_id: char_id, inventory: inv});
+}
+
+function addOtherItemsToInventory(other_items, f) {
+    other_items.forEach(item => {
+        const item_type = item.type;
+        let item_key = null;
+        const item_count = item.count;
+
+        if(item_type === other_item_types.weapon) {
+            for (let key in weapons) {
+                if (weapons[key] === item.item) {
+                    item_key = key;
+                }
+            }
+            character_data_handler.addInvWeapon(item_key, f, item_count);
+            const ammo_type = weapons[item_key].ammo_type;
+            if (ammo_type !== null) {
+                character_data_handler.addInvItem(ammo_type, f, item.ammo);
+            }
+
+        } else if (item_type === other_item_types.armor) {
+            for (let key in armors) {
+                if (getAllArmors()[key] === item.item) {
+                    item_key = key;
+                }
+            }
+            character_data_handler.addInvArmor(item_key, f, item_count);
+
+        } else if (item_type === other_item_types.item) {
+            for (let key in items) {
+                if (items[key] === item.item) {
+                    item_key = key;
+                }
+            }
+            character_data_handler.addInvItem(item_key, f, item_count);
+
+        }
+
+    });
+}
+
+function addOtherItemsToOption(option, other_items) {
+    const item_row = document.createElement('div');
+    item_row.classList.add('display-horizontal');
+    other_items.forEach(item => {
+        const item_name = document.createElement('p');
+        const item_count = document.createElement('p');
+
+        item_name.textContent = item.item.name  + " ";
+        item_count.textContent = item.count;
+
+        item_row.appendChild(item_count);
+        item_row.appendChild(item_name);
+        option.appendChild(item_row);
+
+        if(item.ammo !== 0 && item.ammo !== undefined) {
+            const item_type = item.type;
+            let item_key = null;
+            if(item_type === other_item_types.weapon) {
+                for (let key in weapons) {
+                    if (weapons[key] === item.item) {
+                        item_key = key;
+                    }
+                }
+
+            } else if (item_type === other_item_types.armor) {
+                for (let key in armors) {
+                    if (getAllArmors()[key] === item.item) {
+                        item_key = key;
+                    }
+                }
+            } else if (item_type === other_item_types.item) {
+                for (let key in items) {
+                    if (items[key] === item.item) {
+                        item_key = key;
+                    }
+                }
+            }
+            const ammo_row = document.createElement('div');
+            ammo_row.classList.add('display-horizontal');
+            const ammo_name = document.createElement('p');
+            const ammo_count = document.createElement('p');
+            ammo_name.textContent = items[weapons[item_key].ammo_type].name;
+            ammo_count.textContent = item.ammo.toString() + " ";
+
+            ammo_row.appendChild(ammo_count);
+            ammo_row.appendChild(ammo_name);
+            option.appendChild(ammo_row);
+        }
+    });
+
+    return option;
 }
 
 function escapeHTML(str) {
