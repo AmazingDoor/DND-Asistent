@@ -1,6 +1,7 @@
 import * as weapon_data from './inventory/weapons.js';
 import * as armor_data from './inventory/armor.js';
 import * as item_data from './inventory/items.js';
+import {options as selection_options} from './inventory/class_loadout_options.js';
 
 function setDefaultCount(l, t="weapon") {
     if (t === "weapon") {
@@ -15,6 +16,13 @@ function setDefaultCount(l, t="weapon") {
 function filterArray(input_array, filter_out_array) {
     //return an array with no duplicates
     return [...input_array].filter(item => !filter_out_array.includes(item));
+}
+
+function addOthers(items, other_items) {
+    console.log(items);
+    const item_objects = [...items];
+    console.log(item_objects.map(item => ({ ...item, other: other_items})));
+    return item_objects.map(item => ({ ...item, other: other_items}));
 }
 
 export const other_item_types = {
@@ -32,7 +40,7 @@ export const barbarian = {
     saving_throws: ['Strength', 'Constitution'],
     weapons: {
         proficiencies: ["Simple Weapons", "Martial Weapons"],
-        options: [setDefaultCount(weapon_data.getMeleeWeapons(weapon_data.martial_weapons)), setDefaultCount(weapon_data.simple_weapons)],
+        options: ['barbarian_weapon_1', 'barbarian_weapon_2'],
         starting: [{weapon: weapon_data.weapons.javelin, count: 4}]
 
     },
@@ -54,18 +62,18 @@ export const bard = {
     saving_throws: ['Dexterity', 'Charisma'],
     weapons: {
         proficiencies: ["Simple Weapons", "Hand Crossbows", "Longswords", "Rapiers", "Shortswords"],
-        options: [setDefaultCount([weapon_data.weapons.rapier, weapon_data.weapons.longsword, ...weapon_data.simple_weapons])],
+        options: ['bard_weapon_1'],
         starting: [{weapon: weapon_data.weapons.dagger, count: 1}]
     },
     armor: {
         proficiencies: ["Light armor", "Medium Armor", "Shields"],
-        options: [[{armor: armor_data.light_armor.leather, count: 1}]],
-        starting: []
+        options: [],
+        starting: [{armor: armor_data.light_armor.leather, count: 1}]
     },
     tools: [],
     skills: [2, ["Animal Handling", "Athletics", "Intimidation", "Nature", "Perception", "Survival"]],
     inventory: {
-        options: [setDefaultCount(getInstruments(), "item"), [{item: item_data.items.diplomats_pack, count: 1}, {item: item_data.items.entertainers_pack, count: 1}]],
+        options: ['bard_inventory_1', 'bard_inventory_2'],
         starting: []
     }
 };
@@ -74,18 +82,18 @@ export const cleric = {
     saving_throws: ['Wisdom', 'Charisma'],
     weapons: {
         proficiencies: ["Simple Weapons"],
-        options: [setDefaultCount([weapon_data.weapons.mace, weapon_data.weapons.warhammer]), [{weapon: weapon_data.weapons.light_crossbow, count: 1, ammo: 20}, ...setDefaultCount(filterArray(weapon_data.simple_weapons, [weapon_data.weapons.light_crossbow]))]],
+        options: ['cleric_weapon_1', 'cleric_weapon_2'],
         starting: [{weapon: weapon_data.weapons.shield, count: 1}]
     },
     armor: {
         proficiencies: ["Light Armor", "Medium Armor", "Shields"],
-        options: [setDefaultCount([armor_data.medium_armor.scale_mail, armor_data.light_armor.leather, armor_data.heavy_armor.chain_mail], "armor")],
+        options: ['cleric_armor_1'],
         starting: []
     },
     tools: [],
     skills: [2, ["History", "Insight", "Medicine", "Persuasion", "Religion"]],
     inventory: {
-        options: [setDefaultCount([item_data.items.priests_pack, item_data.items.explorers_pack], "item"), setDefaultCount(getHolySymbols(), "item")],
+        options: ['cleric_inventory_1', 'cleric_inventory_2'],
         starting: []
     }
 
@@ -95,7 +103,7 @@ export const druid = {
     saving_throws: ["Intelligence", "Wisdom"],
     weapons: {
         proficiencies: ["Clubs", "Daggers", "Darts", "Javelins", "Maces", "Quarterstaffs", "Scimitars", "sickless", "Slings", "Spears"],
-        options: [[{weapon: weapon_data.weapons.shield, count: 1}, ...setDefaultCount(weapon_data.simple_weapons)], [{weapon: weapon_data.weapons.scimitar, count: 1}, ...setDefaultCount(weapon_data.getMeleeWeapons(weapon_data.simple_weapons))]],
+        options: ['druid_weapon_1', 'druid_weapon_2'],
         starting: []
     },
     armor: {
@@ -106,7 +114,7 @@ export const druid = {
     tools: ["Herbalism Kit"],
     skills: [2, ["Arcana", "Animal Handling", "Insight", "Medicine", "Nature", "Perception", "Religion", "Survival"]],
     inventory: {
-        options: [setDefaultCount(item_data.getDruidicFoci(), "item")],
+        options: ['druid_inventory_1'],
         starting: [{item: item_data.items.explorers_pack, count: 1}]
     }
 
@@ -116,7 +124,7 @@ export const fighter = {
     saving_throws: ["Strength", "Constitution"],
     weapons: {
         proficiencies: ["Simple Weapons", "Martial Weapons"],
-        options: [],
+        options: ['fighter_weapon_1', 'fighter_weapon_2'],
         starting: []
     },
     armor: {

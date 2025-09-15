@@ -8,6 +8,7 @@ import {linkDropdown} from './../../dropdown_handler.js';
 import {getClassName} from './../mappers/class_mapper.js';
 import {wizard} from './../../../../shared/spell_lists/wizard.js';
 import {getMagicSlots} from './../../../../shared/spell_caster_slot_map.js';
+import {options as class_loadout_options} from './../../../../shared/inventory/class_loadout_options.js';
 
 
 const inventory_list = document.querySelector('.inventory-container');
@@ -29,10 +30,11 @@ export function setSocket(io) {
 }
 
 
-export function addWeaponOptionToInventory(options, f='default', build_inventory, ammo_count=0) {
-    if (options === null || options === undefined || options.length === 0) {
+export function addWeaponOptionToInventory(option_ref, f = 'default', build_inventory) {
+    if (option_ref === null || option_ref === undefined || option_ref.length === 0) {
         return;
     }
+    const options = class_loadout_options[option_ref];
 
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
@@ -100,7 +102,6 @@ export function addWeaponOptionToInventory(options, f='default', build_inventory
 
             const label = option.textContent;
             const children_array = [...dropdownContainer.parentElement.parentElement.children];
-            console.log(children_array);
             const index = children_array.indexOf(dropdownContainer.parentElement);
 
             character_data_handler.removeWeapon(index);
@@ -140,10 +141,11 @@ export function addWeaponOptionToInventory(options, f='default', build_inventory
 }
 
 
-export function addArmorOptionToInventory(options, f = 'default', build_inventory) {
-    if (options === null || options === undefined || options.length === 0) {
+export function addArmorOptionToInventory(option_ref, f = 'default', build_inventory) {
+    if (option_ref === null || option_ref === undefined || option_ref.length === 0) {
         return;
     }
+    const options = class_loadout_options[option_ref];
 
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
@@ -192,7 +194,6 @@ export function addArmorOptionToInventory(options, f = 'default', build_inventor
         option.addEventListener('click', () => {
             const armor_reference = option.dataset.armor_reference;
             const armor_count = option.dataset.armor_count;
-            console.log(armor_reference);
 
 
             const label = option.textContent;
@@ -230,10 +231,11 @@ export function addArmorOptionToInventory(options, f = 'default', build_inventor
     });
 }
 
-export function addItemOptionToInventory(options, f = 'default', build_inventory) {
-    if (options === null || options === undefined || options.length === 0) {
+export function addItemOptionToInventory(option_ref, f = 'default', build_inventory) {
+    if (option_ref === null || option_ref === undefined || option_ref.length === 0) {
         return;
     }
+    const options = class_loadout_options[option_ref];
 
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
@@ -448,7 +450,6 @@ export function buildItemContainerInv(inv, display) {
     const item_table = document.createElement('table');
     for(let i = 0; i < inv.length; i++) {
         const item = inv[i];
-        console.log(item);
         const item_reference = item.item_reference;
         const count = item.count;
         const item_data = items[item_reference];
@@ -691,9 +692,9 @@ function addOtherItemsToInventory(other_items, f) {
                 }
             }
             character_data_handler.addInvItem(item_key, f, item_count);
+        } else if (item_type === other_item_types.weapon_option) {
 
         }
-
     });
 }
 

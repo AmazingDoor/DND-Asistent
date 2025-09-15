@@ -48,14 +48,13 @@ export function addInvContainerItem(item, t='default', count=1, input_inv=null) 
 }
 
 export function addSpellbookItem(reference, t='default', count=1, spells=[]) {
-    console.log(spells);
     const i = {type: 'spellbook_item', reference: 'spellbook', from: t, count: count, spells: spells}
     inventory.push(i);
 }
 
 //This is also used for armor
-export function addInvOption(t, indx, t2='default') {
-    const o = {type: t, index: indx, from: t2};
+export function addInvOption(t, optns, t2='default') {
+    const o = {type: t, options: optns, from: t2};
     if (t === "weapon_option") {
         weapon_inventory.push(o);
     } else if(t === "armor_option") {
