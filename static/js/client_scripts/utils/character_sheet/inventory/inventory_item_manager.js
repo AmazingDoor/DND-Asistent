@@ -70,9 +70,6 @@ export function addWeaponOptionToInventory(option_ref, f = 'default', build_inve
 
         let option_row = document.createElement('div');
 
-
-
-
         option_row.textContent = opt.count.toString() + " " + opt.weapon.name;
         option.dataset.weapon_reference = weapon_key;
         option.dataset.weapon_count = opt.count;
@@ -337,7 +334,7 @@ export function addItemOptionToInventory(option_ref, f = 'default', build_invent
 
 
 
-export function addWeaponToInventory(weapon_reference, index, f='default', count=1) {
+export function addWeaponToInventory(weapon_reference, index, f='default', count=1, ammo=0) {
     const weapon_div = document.createElement('div');
     weapon_div.classList.add('inventory-item');
     weapon_div.dataset.tag = 'weapon';

@@ -57,6 +57,11 @@ export function createClassOptions() {
         const count = weapon.count;
         const w = weapon.weapon;
         character_data_handler.addInvWeapon(getKey(weapons, w), "class", count);
+        if(weapon.ammo !== undefined && weapon.ammo !== null && weapon.ammo != 0) {
+            const ammo_type = weapon.weapon.ammo_type;
+            const ammo_count = weapon.ammo;
+            character_data_handler.addInvItem(ammo_type, "class", ammo_count);
+        }
     });
 
     starting_armor.forEach((armor) => {

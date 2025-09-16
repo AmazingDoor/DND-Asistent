@@ -145,8 +145,8 @@ export const monk = {
     saving_throws: ["Strength", "Dexterity"],
     weapons: {
         proficiencies: ["Simple Weapons", "Shortswords"],
-        options: [],
-        starting: []
+        options: ['monk_weapon_1'],
+        starting: [{weapon: weapon_data.weapons.dart, count: 10}]
     },
     armor: {
         proficiencies: [],
@@ -156,7 +156,7 @@ export const monk = {
     tools: ["Artisan's Tool", "Musical Instrument"],
     skills: [2, ["Acrobatics", "Athletics", "History", "Insight", "Religion", "Stealth"]],
     inventory: {
-        options: [],
+        options: ['monk_inventory_1'],
         starting: []
     }
 
@@ -166,17 +166,17 @@ export const paladin = {
     saving_throws: ["Wisdom", "Charisma"],
     weapons: {
         proficiencies: ["Simple Weapons", "Martial Weapons"],
-        options: [],
+        options: ['paladin_weapon_1', 'paladin_weapon_2'],
         starting: []
     },
     armor: {proficiencies: ["All Armor", "Shields"],
         options: [],
-        starting: []
+        starting: [{armor: armor_data.heavy_armor.chain_mail, count: 1}]
     },
     tools: [],
     skills: [2, ["Athletics", "Insight", "Intimidation", "Medicine", "Persuasion", "Religion"]],
     inventory: {
-        options: [],
+        options: ['paladin_inventory_1', 'paladin_inventory_2'],
         starting: []
     }
 
@@ -186,19 +186,19 @@ export const ranger = {
     saving_throws: ["Strength", "Dexterity"],
     weapons: {
         proficiencies: ["Simple Weapons", "Martial Weapons"],
-        options: [],
-        starting: []
+        options: ['ranger_weapon_1', 'ranger_weapon_1'],
+        starting: [{weapon: weapon_data.weapons.longbow, count: 1, ammo: 20}]
     },
     armor: {
         proficiencies: ["Light Armor", "Medium Armor", "Shields"],
-        options: [],
+        options: ['ranger_armor_1'],
         starting: []
     },
     tools: [],
     skills: [3, ["Animal Handling", "Athletics", "Insight", "Investigation", "Nature", "Perception", "Stealth", "Survival"]],
     inventory: {
-        options: [],
-        starting: []
+        options: ['ranger_inventory_1'],
+        starting: [{item: item_data.items.quiver, count: 1}]
     }
 
 };
