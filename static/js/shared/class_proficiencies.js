@@ -124,7 +124,7 @@ export const fighter = {
     saving_throws: ["Strength", "Constitution"],
     weapons: {
         proficiencies: ["Simple Weapons", "Martial Weapons"],
-        options: ['fighter_weapon_1'],
+        options: ['fighter_weapon_1', 'fighter_weapon_2'],
         starting: []
     },
     armor: {
@@ -135,7 +135,7 @@ export const fighter = {
     tools: [],
     skills: [2, ["Acrobatics", "Animal Handling", "Athletics", "History", "Insight", "Intimidation", "Perception", "Survival"]],
     inventory: {
-        options: [],
+        options: ['fighter_inventory_1'],
         starting: []
     }
 

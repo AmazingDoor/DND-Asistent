@@ -72,7 +72,9 @@ export const options = {
     druid_weapon_2: [{weapon: weapon_data.weapons.scimitar, count: 1}, ...setDefaultCount(weapon_data.getMeleeWeapons(weapon_data.simple_weapons))],
     druid_inventory_1: setDefaultCount(item_data.getDruidicFoci(), "item"),
     fighter_weapon_1: [...addOthers(setDefaultCount(weapon_data.martial_weapons), [{type: other_item_types.weapon, item: weapon_data.weapons.shield, count: 1}]), ...addOthers(setDefaultCount(weapon_data.martial_weapons), [{type: other_item_types.weapon_choice, options: 'fighter_weapon_1_option_2', label: "+1 Martial Weapon"}])],
+    fighter_weapon_2: [{weapon: weapon_data.weapons.light_crossbow, count: 1, ammo: 20}, {weapon: weapon_data.weapons.handaxe, count: 2}],
     fighter_weapon_1_option_2: setDefaultCount(weapon_data.martial_weapons),
-    fighter_armor_1: [{armor: armor_data.heavy_armor.chain_mail, count: 1}, {armor: armor_data.light_armor.leather, count: 1, other:[{type: other_item_types.weapon, item: weapon_data.weapons.longbow, count: 1, ammo: 20}]}]
+    fighter_armor_1: [{armor: armor_data.heavy_armor.chain_mail, count: 1}, {armor: armor_data.light_armor.leather, count: 1, other:[{type: other_item_types.weapon, item: weapon_data.weapons.longbow, count: 1, ammo: 20}]}],
+    fighter_inventory_1: [{item: item_data.items.dungeoneers_pack, count: 1}, {item: item_data.items.explorers_pack, count: 1}]
 
 }
