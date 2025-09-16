@@ -43,6 +43,7 @@ export function createClassOptions() {
 
     i = 0;
     armor_options.forEach(option_array => {
+        console.log(option_array);
         character_data_handler.addInvOption("armor_option", option_array, "class");
         i++;
     });

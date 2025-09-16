@@ -52,7 +52,6 @@ export function addSpellbookItem(reference, t='default', count=1, spells=[]) {
     inventory.push(i);
 }
 
-//This is also used for armor
 export function addInvOption(t, optns, t2='default') {
     const o = {type: t, options: optns, from: t2};
     if (t === "weapon_option") {

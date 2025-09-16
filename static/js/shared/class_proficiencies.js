@@ -124,12 +124,12 @@ export const fighter = {
     saving_throws: ["Strength", "Constitution"],
     weapons: {
         proficiencies: ["Simple Weapons", "Martial Weapons"],
-        options: ['fighter_weapon_1', 'fighter_weapon_2'],
+        options: ['fighter_weapon_1'],
         starting: []
     },
     armor: {
         proficiencies: ["All Armor", "Shields"],
-        options: [[{armor: armor_data.heavy_armor.chain_mail, count: 1}, {armor: armor_data.light_armor.leather, count: 1, other:[{type: other_item_types.weapon, item: weapon_data.weapons.longbow, count: 1, ammo: 20}]}]],
+        options: ['fighter_armor_1'],
         starting: []
     },
     tools: [],
