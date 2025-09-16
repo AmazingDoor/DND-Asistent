@@ -207,19 +207,19 @@ export const rogue = {
     saving_throws: ["Dexterity", "Intelligence"],
     weapons: {
         proficiencies: ["Simple Weapons", "Hand Crossbows", "Longswords", "Rapiers", "Shortswords"],
-        options: [],
-        starting: []
+        options: ['rogue_weapon_1', 'rogue_weapon_2'],
+        starting: [{weapon: weapon_data.weapons.dagger, count: 2}]
     },
     armor: {
         proficiencies: ["Light Armor"],
         options: [],
-        starting: []
+        starting: [{armor: armor_data.light_armor.leather, count: 1}]
     },
     tools: ["Thieves' Tools"],
     skills: [4, ["Acrobatics", "Athletics", "Deception", "Insight", "Intimidation", "Investigation", "Perception", "Performance", "Persuasion", "Sleight of Hand", "Stealth"]],
     inventory: {
-        options: [],
-        starting: []
+        options: ['rogue_inventory_1'],
+        starting: [{item: item_data.items.thieves_tools, count: 1}]
     }
 
 };

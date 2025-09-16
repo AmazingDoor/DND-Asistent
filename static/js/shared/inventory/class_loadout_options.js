@@ -86,5 +86,7 @@ export const options = {
     ranger_armor_1: [{armor: armor_data.medium_armor.scale_mail, count: 1}, {armor: armor_data.light_armor.leather, count: 1}],
     ranger_weapon_1: setDefaultCount(weapon_data.getMeleeWeapons(weapon_data.simple_weapons)),
     ranger_inventory_1: [{item: item_data.items.dungeoneers_pack, count: 1}, {item: item_data.items.explorers_pack, count: 1}],
-
+    rogue_weapon_1: [{weapon: weapon_data.weapons.rapier, count: 1}, {weapon: weapon_data.weapons.shortsword, count: 1}],
+    rogue_weapon_2: [{weapon: weapon_data.weapons.shortbow, count: 1, ammo: 20, other:[{type: other_item_types.item, item: item_data.items.quiver, count: 1}]}, {weapon: weapon_data.weapons.shortsword, count: 1}],
+    rogue_inventory_1: [{item: item_data.items.burglars_pack, count: 1}, {item: item_data.items.dungeoneers_pack, count: 1}, {item: item_data.items.explorers_pack, count: 1}]
 }

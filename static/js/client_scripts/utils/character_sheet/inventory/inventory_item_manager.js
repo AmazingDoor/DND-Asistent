@@ -457,6 +457,7 @@ export function buildItemContainerInv(inv, display) {
     for(let i = 0; i < inv.length; i++) {
         const item = inv[i];
         const item_reference = item.item_reference;
+        console.log(item_reference);
         const count = item.count;
         const item_data = items[item_reference];
 

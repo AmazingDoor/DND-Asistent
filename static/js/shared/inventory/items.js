@@ -240,7 +240,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "ball_bearings_bag_of_1,000": {
+    "ball_bearings_bag_of_1000": {
         "special": [],
         "index": "ball-bearings-bag-of-1000",
         "name": "Ball bearings (bag of 1,000)",
