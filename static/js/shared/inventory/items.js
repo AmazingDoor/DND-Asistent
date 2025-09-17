@@ -4492,3 +4492,17 @@ export function getDruidicFoci() {
     };
     return foci;
 }
+
+export function getArcaneFoci() {
+    let foci = [];
+    for (const [key, value] of Object.entries(items)) {
+        if(value.gear_category !== undefined) {
+            if(value.gear_category.index !== undefined) {
+                if(value.gear_category.index === "arcane-foci") {
+                    foci.push(items[key]);
+                }
+            }
+        }
+    };
+    return foci;
+}

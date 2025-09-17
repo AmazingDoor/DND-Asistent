@@ -274,7 +274,6 @@ export function addItemOptionToInventory(option_ref, f = 'default', build_invent
         option.classList.add('custom-option');
 
         let option_row = document.createElement('div');
-
         option_row.textContent = opt.count.toString() + " " + opt.item.name;
         option.dataset.item_reference = item_key;
         option.dataset.item_count = opt.count;
@@ -457,7 +456,6 @@ export function buildItemContainerInv(inv, display) {
     for(let i = 0; i < inv.length; i++) {
         const item = inv[i];
         const item_reference = item.item_reference;
-        console.log(item_reference);
         const count = item.count;
         const item_data = items[item_reference];
 

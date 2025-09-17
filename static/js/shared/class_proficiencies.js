@@ -228,8 +228,8 @@ export const sorcerer = {
     saving_throws: ["Constitution", "Charisma"],
     weapons: {
         proficiencies: ["Daggers", "Darts", "Slings", "Quarterstaffs", "Light Crossbows"],
-        options: [],
-        starting: []
+        options: ['sorcerer_weapon_1'],
+        starting: [{weapon: weapon_data.weapons.dagger, count: 2}]
     },
     armor: {
         proficiencies: [],
@@ -239,7 +239,7 @@ export const sorcerer = {
     tools: [],
     skills: [2, ["Arcana", "Deception", "Insight", "Intimidation", "Persuasion", "Religion"]],
     inventory: {
-        options: [],
+        options: ['sorcerer_inventory_1', 'sorcerer_inventory_2'],
         starting: []
     }
 
@@ -249,18 +249,18 @@ export const warlock = {
     saving_throws: ["Wisdom", "Charisma"],
     weapons: {
         proficiencies: ["Simple Weapons"],
-        options: [],
-        starting: []
+        options: ['warlock_weapon_1'],
+        starting: [{weapon: weapon_data.weapons.dagger, count: 2}]
     },
     armor: {
         proficiencies: ["Light Armor"],
         options: [],
-        starting: []
+        starting: [{armor: armor_data.light_armor.leather, count: 1}]
     },
     tools: [],
     skills: [2, ["Arcana", "Deception", "History", "Intimidation", "Investigation", "Nature", "Religion"]],
     inventory: {
-        options: [],
+        options: ['warlock_inventory_1', 'warlock_inventory_2'],
         starting: []
     }
 
@@ -270,7 +270,7 @@ export const wizard = {
     saving_throws: ["Intelligence", "Wisdom"],
     weapons: {
         proficiencies: ["Daggers", "Darts", "Slings", "Quarterstaffs", "Light Crossbows"],
-        options: [],
+        options: ['wizard_weapon_1'],
         starting: []
     },
     armor: {
@@ -281,7 +281,7 @@ export const wizard = {
     tools: [],
     skills: [2, ["Arcana", "History", "Insight", "Investigaton", "Medicine", "Religion"]],
     inventory: {
-        options: [],
+        options: ['wizard_inventory_1', 'wizard_inventory_2'],
         starting: [{item: item_data.items.spellbook, count: 1, spells: ["Select Spell", "Select Spell", "Select Spell", "Select Spell", "Select Spell", "Select Spell"]}]
     }
 

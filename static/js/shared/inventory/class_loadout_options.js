@@ -88,5 +88,15 @@ export const options = {
     ranger_inventory_1: [{item: item_data.items.dungeoneers_pack, count: 1}, {item: item_data.items.explorers_pack, count: 1}],
     rogue_weapon_1: [{weapon: weapon_data.weapons.rapier, count: 1}, {weapon: weapon_data.weapons.shortsword, count: 1}],
     rogue_weapon_2: [{weapon: weapon_data.weapons.shortbow, count: 1, ammo: 20, other:[{type: other_item_types.item, item: item_data.items.quiver, count: 1}]}, {weapon: weapon_data.weapons.shortsword, count: 1}],
-    rogue_inventory_1: [{item: item_data.items.burglars_pack, count: 1}, {item: item_data.items.dungeoneers_pack, count: 1}, {item: item_data.items.explorers_pack, count: 1}]
+    rogue_inventory_1: [{item: item_data.items.burglars_pack, count: 1}, {item: item_data.items.dungeoneers_pack, count: 1}, {item: item_data.items.explorers_pack, count: 1}],
+    sorcerer_weapon_1: [{weapon: weapon_data.weapons.light_crossbow, count: 1, ammo: 20}, ...setDefaultCount(filterArray(weapon_data.simple_weapons, [weapon_data.weapons.light_crossbow]))],
+    sorcerer_inventory_1: [{item: item_data.items.component_pouch, count: 1}, ...setDefaultCount(item_data.getArcaneFoci(), "item")],
+    sorcerer_inventory_2: [{item: item_data.items.dungeoneers_pack, count: 1}, {item: item_data.items.explorers_pack, count: 1}],
+    warlock_weapon_1: [{weapon: weapon_data.weapons.light_crossbow, count: 1, ammo: 20}, ...setDefaultCount(filterArray(weapon_data.simple_weapons, [weapon_data.weapons.light_crossbow]))],
+    warlock_weapon_1: setDefaultCount(weapon_data.simple_weapons),
+    warlock_inventory_1: [{item: item_data.items.component_pouch, count: 1}, ...setDefaultCount(item_data.getArcaneFoci(), "item")],
+    warlock_inventory_2: [{item: item_data.items.scholars_pack, count: 1}, {item: item_data.items.dungeoneers_pack, count: 1}],
+    wizard_weapon_1: [{weapon: weapon_data.weapons.quarterstaff, count: 1}, {weapon: weapon_data.weapons.dagger, count: 1}],
+    wizard_inventory_1: [{item: item_data.items.component_pouch, count: 1}, ...setDefaultCount(item_data.getArcaneFoci(), "item")],
+    wizard_inventory_2: [{item: item_data.items.scholars_pack, count: 1}, {item: item_data.items.explorers_pack, count: 1}]
 }
