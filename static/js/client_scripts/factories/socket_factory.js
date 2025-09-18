@@ -13,6 +13,9 @@ import {setSocket as setDisplayStatUpdaterSocket} from "./../utils/display_stat_
 import {setSocket as setPlayerLevelHandlerSocket} from './../player_level_handler.js';
 import {setSocket as setInventoryBuilderSocket} from './../utils/character_sheet/page_builders/inventory_builder.js';
 import {setSocket as setInventoryItemManagerSocket} from './../utils/character_sheet/inventory/inventory_item_manager.js';
+import {setSocket as setBackgroundBuilderSocket} from './../utils/character_sheet/page_builders/background_builder.js';
+import {setSocket as setBackgroundMapperSocket} from './../utils/character_sheet/mappers/background_mapper.js';
+
 export let socket = null;
 
 export function setFactorySocket(io) {
@@ -31,6 +34,8 @@ export function setFactorySocket(io) {
     setPlayerLevelHandlerSocket(io);
     setInventoryBuilderSocket(io);
     setInventoryItemManagerSocket(io);
+    setBackgroundBuilderSocket(io);
+    setBackgroundMapperSocket(io);
 }
 
 export function getSocket() {
