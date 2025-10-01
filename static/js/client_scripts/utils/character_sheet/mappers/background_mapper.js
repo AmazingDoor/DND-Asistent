@@ -18,6 +18,7 @@ export function getBackgroundName() {
 export function getBackgroundData() {
     const backgrounds = {
         Acolyte: background_data.acolyte,
+        Charlatan: background_data.charlatan
     }
     return backgrounds[background_name] || null;
 }

@@ -15,6 +15,7 @@ let inventory = [];
 let weapon_inventory = [];
 let armor_inventory = [];
 let mount_inventory = [];
+let background_skills = [];
 
 
 export function addInvWeapon(item, t='default', count=1) {
@@ -80,6 +81,9 @@ export function removeArmor(index) {
 }
 
 export function setInventory(inv) {
+    if(inv === null) {
+        return;
+    }
     inventory = inv.inv;
     weapon_inventory = inv.weapon;
     armor_inventory = inv.armor;
@@ -218,4 +222,16 @@ export function setClassPreparedCantrips(data) {
 
 export function getClassPreparedCantrips() {
     return class_cantrips;
+}
+
+export function getBackgroundSkills() {
+    return background_skills;
+}
+
+export function addBackgroundSkill(skill) {
+    background_skills.push(skill);
+}
+
+export function setBackgroundSkills(skills) {
+    background_skills = skills;
 }

@@ -40,5 +40,7 @@ function buildCharacterBackground() {
 
 function clickEvent(option, head) {
     head.querySelector('.selected-background').textContent = option.textContent;
-
+    setBackground(option.textContent);
+    character_data_handler.setBackgroundSkills(getBackgroundData().skills);
+    updateSkills();
 }

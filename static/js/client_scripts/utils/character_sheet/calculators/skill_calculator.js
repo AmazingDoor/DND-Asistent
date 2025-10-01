@@ -4,6 +4,7 @@ import {getProficiencyBonus} from "./../../../player_level_handler.js";
 export function calculateSkills() {
     const class_skills = character_data_handler.getClassSkillNames();
     const race_skills_main = character_data_handler.getRaceSkillNames();
+    const background_skills = character_data_handler.getBackgroundSkills();
 
 
     let race_skills = [...race_skills_main];
@@ -28,7 +29,23 @@ export function calculateSkills() {
             }
         });
     }
-    const all_skills = class_skills.concat(race_skills);
+
+    if(background_skills.length > 0) {
+        background_skills.forEach((skill) => {
+            if(class_skills.includes(skill)) {
+                background_skills = background_skills.filter(s => s !== skill);
+            }
+        });
+    }
+
+    if(background_skills.length > 0) {
+        background_skills.forEach((skill) => {
+            if(race_skills.includes(skill)) {
+                background_skills = background_skills.filter(s => s !== skill);
+            }
+        });
+    }
+    const all_skills = class_skills.concat(race_skills).concat(background_skills);
     const player_level_mod_num = getProficiencyBonus();
 
     let athletics_skill = 0,
