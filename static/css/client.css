@@ -1,4 +1,75 @@
 
+    .overlay-container {
+        top: 0px;
+        right: 0px;
+        position: fixed;
+        height: 100vh;
+        z-index: 2;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .overlay-content-pages {
+        background-color: #f1f1f1;
+        padding-right: 10px;
+        padding-left:10px;
+        width: fit-content;
+    }
+
+    .overlay-content-page {
+        display: inline-flex;
+        flex-direction: row-reverse;
+        width: fit-content;
+    }
+
+    .overlay-background {
+        position:fixed;
+        width:100dvw;
+        height:100dvh;
+        background-color: rgba(0, 0, 0, 0.5);
+        
+    }
+   /*VERTICAL TAB BAR*/
+    .sideways-text {
+        writing-mode: sideways-rl;
+        margin: 0px;
+    }
+
+    .vertical-tab-bar {
+        background-color: none;
+    }
+
+
+    .vertical-tab {
+        background-color: #ccc;
+        border-right: 1px solid black;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        border-left: 1px solid black;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+
+    .selected-vertical-tab {
+        background-color: #f1f1f1;
+        border-top: 1px solid black;
+        border-right: none;
+        border-left: 1px solid black;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+
+    .vertical-tab:hover {
+        background-color:darkgrey;
+    }
+
+    .sideways-text:hover {
+        cursor: pointer;
+    }
+    /*END VERTICAL TAB BAR*/
+    
     /* INVENTORY START */
     /* Test Dropdown */
       .custom-dropdown {
@@ -102,11 +173,15 @@
     /* INVENTORY END */
 
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      display: flex;
-      height: 100vh;
+        padding-left: 5px;
+        padding-right: 5px;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        height: 100dvh;
     }
+
+
 
     .display-horizontal {
         display: flex;
@@ -114,7 +189,7 @@
     }
 
     #image-area {
-      width: 50%;
+      width: 50vw;
       background-color: #222;
       color: white;
       display: flex;
@@ -125,16 +200,16 @@
     }
 
     #chat-area {
-      width: 50%;
-      height: 95%;
+      width: 50vw;
+      height: 95vh;
       display: flex;
       flex-direction: column;
       padding: 10px;
     }
 
     #right-container {
-        width: 50%
-        height: 90%
+        width: 50%;
+        height: 90%;
         display: flex;
         flex-direction: row;
         padding: 10px;
@@ -362,7 +437,6 @@
     }
 
     .character-sheet-tabs {
-        z-index: 1;
         background: 'white';
     }
 
@@ -401,14 +475,11 @@
         background-color: white;
     }
 
-.character-sheet-overlay-container {
+.character-sheet-container {
     background: white;
-    border: 2px solid black;
+    border-right: 2px solid black;
     height: 100dvh;
-    position: fixed;
     width: 50dvh;
-    z-index: 999;
-    right: 0px;
 }
 
 .character-sheet-overlay {
@@ -416,6 +487,10 @@
 }
 
 .character-sheet-data-container {
+    border-left: 2px solid black;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
     height: 100%;
 }
 
@@ -425,7 +500,7 @@
 }
 
 .tablinks p {
-    text-align-center;
+    text-align: center;
     margin-top: 0px;
     margin-bottom: 0px;
 

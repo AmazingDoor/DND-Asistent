@@ -16,9 +16,10 @@ export function getBackgroundName() {
 }
 
 export function getBackgroundData() {
+    console.log(background_name);
     const backgrounds = {
         Acolyte: background_data.acolyte,
-        Charlatan: background_data.charlatan
+        Charlatan: background_data.charlatan,
     }
     return backgrounds[background_name] || null;
 }
