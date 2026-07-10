@@ -488,7 +488,7 @@
 
     .tablinks-filler {
         display: flex;
-        width: 100%;
+        flex: 1;
         border-bottom: 1px solid black;
     }
 
@@ -521,13 +521,14 @@
     padding-right: 5px;
     padding-top: 2px;
     flex: 1;
-    width: fit-content;
+    width: max-content;
     overflow-y: auto;
 }
 
 .character-sheet-tabs {
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 
 .tablinks p {
