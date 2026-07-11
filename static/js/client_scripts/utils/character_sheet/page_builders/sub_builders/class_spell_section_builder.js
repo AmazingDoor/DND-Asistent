@@ -182,6 +182,7 @@ function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, can
                 const cantrip_option = document.createElement('div');
                 cantrip_option.classList.add('cantrip-option');
                 const cantrip_option_text = document.createElement('p');
+                cantrip_option_text.classList.add("cantrip-option-head");
                 cantrip_option_text.textContent = name;
                 cantrip_option.appendChild(cantrip_option_text);
                 cantrip_dropdown.appendChild(cantrip_option);

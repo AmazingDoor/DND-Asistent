@@ -1,4 +1,9 @@
-
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+    
     .overlay-container {
         top: 0px;
         right: 0px;
@@ -152,6 +157,7 @@
 
     #inventory-tab-contents {
         display: flex;
+        flex: 1;
         flex-direction: column;
         padding-left: 5px;
         padding-right: 5px;
@@ -186,20 +192,12 @@
     /* INVENTORY END */
 
     body {
-        padding-left: 5px;
-        padding-right: 5px;
+        padding-left: 20px;
+        padding-right: 20px;
         margin: 0;
         font-family: Arial, sans-serif;
         display: flex;
-        height: 100%;
-        width: 100%;
         justify-content: center;
-    }
-
-    html {
-        height: 100%;
-        width: 100%;
-        padding: 0px;
     }
 
 
@@ -237,8 +235,8 @@
     }
 
     #center-container {
-      width: 50vh;
       display: flex;
+      flex: 1;
       flex-direction: row;
       background-color: #f4f4f4;
       justify-content: center;
@@ -504,7 +502,6 @@
 .character-sheet-container {
     display: flex;
     flex: 1;
-    width: fit-content;
     min-height: 0;
     background: white;
     border-right: 2px solid black;
@@ -515,13 +512,13 @@
 
 .character-sheet-data-container {
     display: flex;
-    justify-content: center;
-    border-left: 2px solid black;
+    flex: 1;
     padding-left: 5px;
     padding-right: 5px;
+    width: 100%;
+    justify-content: center;
+    border-left: 2px solid black;
     padding-top: 2px;
-    flex: 1;
-    width: max-content;
     overflow-y: auto;
 }
 
@@ -548,9 +545,14 @@
 #skill-table-container {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
     height: 100%;
 }
+
+#skills-table-body {
+    overflow-y: auto;
+}
+
+
 
 .dropdown-head {
     display: flex;
@@ -560,9 +562,32 @@
     border: 1px solid black;
     cursor: default;
     min-width: 100px;
+    width: fit-content;
     padding-bottom: 0px;
     flex-grow: 0;
     flex-direction: column;
+}
+
+.skill-dropdown {
+    display: flex;
+    width: fit-content;
+    flex-direction: column;
+    max-width: 200px;
+}
+
+.skill-option {
+    display: flex;
+    width: fit-content;
+}
+
+.cantrip-option {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    padding-top: 5px;
+}
+
+.cantrip-option-head {
+    font-weight: bold;
 }
 
 .selected-class {
@@ -588,7 +613,7 @@
 }
 
 .dropdown-content {
-  width: 100%;
+  width: 200%;
   position: absolute;
   background-color: #f1f1f1;
   max-height: 400px;
@@ -699,27 +724,61 @@
     font-size: 20px;
 }
 
-@media (max-width: 1000px) {
+html {
+    height: 100%;
+}
 
-    body {
-        width: 100dvw;
-        height: 90dvh;
+body {
+    height: 100%;
+}
+
+.main-container {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.desktop-hidden {
+    display: none;
+}
+
+.screen-sections {
+    height: 100%;
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    .desktop-hidden {
+        display: auto;
+    }
+
+    .inventory-weapons {
+        background-color: aqua;
     }
 
     h3 {
-        font-size: 75px;
+        font-size: 20px;
     }
 
     h2 {
-        font-size: 75px;
+        font-size: 20px;
     }
 
     p {
-        font-size: 75px;
+        font-size: 20px;
     }
 
     button {
-        font-size: 75px;
+        font-size: 20px;
     }
 
 
@@ -771,30 +830,25 @@
         font-size: 100px;
     }
 
-    #damage-input {
-        font-size: 100px;
-        width: 200px;
-    }
-
-    #heal-input {
-        font-size: 100px;
-        width: 200px;
+    .number-input {
+        font-size: 30px;
+        width: 50px;
     }
 
     #update-health-button {
-        width: 300px;
-        font-size: 75px;
+        width: fit-content;
+        font-size: 20px;
     }
 
     #armor-class-text {
-        font-size: 75px;
+        font-size: 20px;
     }
 
     .armor-class-div {
         flex-direction: column;
     }
 
-    #armor-class-text: {
+    #armor-class-text {
         margin-bottom: 2px;
     }
 
@@ -808,8 +862,8 @@
     }
 
     .max-health {
-        font-size: 100px;
-        width: 200px;
+        font-size: 30px;
+        width: 50px;
     }
 
     #health-label {
@@ -818,14 +872,13 @@
     }
 
     #health-num {
+        font-size: 30px;
         padding-top: 0px;
-        margin-top 0px;
+        margin-top: 0px;
         margin-bottom: 2px;
     }
 
     #ac-input {
-        font-size: 100px;
-        width: 200px;
         margin-bottom: 2px;
     }
 
@@ -834,8 +887,6 @@
     }
 
     #speed-input {
-        font-size: 100px;
-        width: 200px;
         margin-bottom: 2px;
     }
 
@@ -844,8 +895,7 @@
     }
 
     #initiative-modifier-input {
-        font-size: 100px;
-        width: 200px;
+        margin-bottom: 2px;
     }
 
     .ability-title {
@@ -903,8 +953,87 @@
         display: flex;
         flex-direction: column;
     }
+    
+    .player-stats-display-pages {
+        width: 100%;
+    }
 
+    .player-stats-display-page {
+        width: 100%;
+    }
 
+    .ability-title {
+        font-size: 20px;
+    }
 
+    .ability-modifier {
+        font-size: 20px;
+    }
+
+    .ability-table-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .ability-table-body {
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    .ability-table {
+        position: relative;
+        width: 100%;
+    }
+
+    .overlay-container {
+        top: auto;
+        right: auto;
+        bottom: 0px;
+        left: 0px;
+        position: auto;
+        z-index: 2;
+        display: flex;
+        flex-direction: row;
+        background-color: red;
+        height: auto;
+    }
+
+    .mobile-button-container {
+        display: flex;
+        justify-content: space-between;
+        z-index: 2;
+        flex: 1;
+        height: 50px;
+        position: fixed;
+        bottom: 0;
+        left:0;
+        width: 100%;
+        background-color: black;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+
+    .main-container {
+        display: flex;
+        flex: 1;
+        overflow-y: auto;
+        padding-bottom: 35px;
+    }
+
+    body {
+        height: auto;
+        widtH: auto;
+    }
+
+    html {
+        height: auto;
+        width: auto;
+    }
+
+    .screen-sections {
+        display: flex;
+        flex-direction: column;
+    }
 
 }

@@ -112,28 +112,6 @@ function toggleImages() {
 
 }
 
-function toggleChat() {
-    const chat_area = document.getElementById("chat-area");
-    chat_area.classList.toggle("mobile-hidden");
-    const img_area = document.getElementById("image-area");
-    const player_stats = document.getElementById("player-stats");
-
-    if (chat_area.classList.contains("mobile-hidden")) {
-        player_stats.classList.remove("mobile-hidden");
-    } else {
-        player_stats.classList.add("mobile-hidden");
-    }
-
-    if (!img_area.classList.contains("mobile-hidden")) {
-        img_area.classList.add("mobile-hidden");
-    }
-
-    document.getElementById("toggle-chat").style.backgroundColor = "lightgray";
-
-
-
-}
-
 function show_initiative_overlay(combat_id) {
     const overlay = document.querySelector(".initiative-input-container");
     overlay.style.display = 'flex';
@@ -185,11 +163,6 @@ socket.on('load_message', data => {
 
 socket.on('private_message', data => {
   appendMessage(data.from, data.message);
-  const text_area = document.getElementById("chat-area");
-  if (text_area.classList.contains("mobile-hidden")) {
-    document.getElementById("toggle-chat").style.backgroundColor = "red";
-  }
-
 });
 
 
@@ -211,12 +184,6 @@ socket.on('send_image', data => {
   document.getElementById("images").appendChild(imageBox);
   const img_area = document.getElementById("image-area");
 
-  if (n) {
-      if (img_area.classList.contains("mobile-hidden")) {
-        document.getElementById("toggle-imgs").style.backgroundColor = "red";
-      }
-  }
-
 });
 
 
@@ -235,8 +202,6 @@ socket.on('initialize_combat', ({combat_id}) => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-      document.querySelector("#toggle-imgs").addEventListener("click", function() {toggleImages()});
-      document.querySelector("#toggle-chat").addEventListener("click", function() {toggleChat()});
       document.querySelector("#submit-init-button").addEventListener("click", function() {submit_init();});
       document.querySelector("#hide-init-overlay-button").addEventListener("click", function() {hide_initiative_overlay();});
 
