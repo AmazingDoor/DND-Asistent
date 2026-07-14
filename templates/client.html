@@ -14,7 +14,7 @@
   </head>
   <body>
     <div class="overlay-background hidden"></div>  
-    <div class="overlay-container">
+    <div class="overlay-container mobile-hidden">
       <div class="vertical-tab-bar mobile-hidden">
         <div class="overlay-tab vertical-tab selected-vertical-tab" id="dm-chat-tab">
           <p class="sideways-text">DM Chat</p>
@@ -25,7 +25,7 @@
       </div>
       <div class="overlay-content-pages hidden">
         <div class="overlay-content-page" id="dm-chat-page">
-          <div class="mobile-hidden" id="chat-area">
+          <div id="chat-area">
             <h2>Chat</h2>
             <div id="chat"></div>
             <div id="input-area">
@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="overlay-content-page hidden" id="images-page">
-          <div class="mobile-hidden" id="image-area">
+          <div id="image-area">
             <h2>Images</h2>
             <div id="images"></div>
           </div>
@@ -57,7 +57,7 @@
     </div>
     <div class="screen-sections">
       <div class="main-container">
-        <div class="character-sheet-container mobile-hidden">
+        <div class="mobile-page character-sheet-container mobile-hidden">
           <div class="character-sheet-tabs">
             <div class="tablinks-filler"></div>
             <div class="tablinks selected-tab" id="abilities"><p>Abilities</p></div>
@@ -241,7 +241,7 @@
           </div>
         </div>
 
-        <div id="center-container">
+        <div id="center-container" class="mobile-page">
           <div id="player-stats">
             <div class="display-horizontal">
               <h3>Level: </h3>
@@ -453,7 +453,7 @@
           </div>
         </div>
 
-        <div id="inventory-tab-contents" class="mobile-hidden">
+        <div id="inventory-tab-contents" class="mobile-page mobile-hidden">
           <h3>Inventory</h3>
           <div class="inventory-container item-holder">
           </div>
