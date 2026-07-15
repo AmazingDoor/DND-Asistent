@@ -111,10 +111,10 @@ export const cleric = {
                     "url": "/api/2014/damage-types/radiant"
                 },
                 "damage_at_character_level": {
-                    "1": "1d8",
-                    "5": "2d8",
-                    "11": "3d8",
-                    "17": "4d8"
+                    "1": "1 d8",
+                    "5": "2 d8",
+                    "11": "3 d8",
+                    "17": "4 d8"
                 }
             },
             "dc": {
@@ -412,15 +412,15 @@ export const cleric = {
                     "url": "/api/2014/damage-types/radiant"
                 },
                 "damage_at_slot_level": {
-                    "1": "4d6",
-                    "2": "5d6",
-                    "3": "6d6",
-                    "4": "7d6",
-                    "5": "8d6",
-                    "6": "9d6",
-                    "7": "10d6",
-                    "8": "11d6",
-                    "9": "12d6"
+                    "1": "4 d6",
+                    "2": "5 d6",
+                    "3": "6 d6",
+                    "4": "7 d6",
+                    "5": "8 d6",
+                    "6": "9 d6",
+                    "7": "10 d6",
+                    "8": "11 d6",
+                    "9": "12 d6"
                 }
             },
             "school": "Evocation"
@@ -481,15 +481,15 @@ export const cleric = {
                     "url": "/api/2014/damage-types/necrotic"
                 },
                 "damage_at_slot_level": {
-                    "1": "3d10",
-                    "2": "4d10",
-                    "3": "5d10",
-                    "4": "6d10",
-                    "5": "7d10",
-                    "6": "8d10",
-                    "7": "9d10",
-                    "8": "10d10",
-                    "9": "11d10"
+                    "1": "3 d10",
+                    "2": "4 d10",
+                    "3": "5 d10",
+                    "4": "6 d10",
+                    "5": "7 d10",
+                    "6": "8 d10",
+                    "7": "9 d10",
+                    "8": "10 d10",
+                    "9": "11 d10"
                 }
             },
             "school": "Necromancy"
@@ -947,14 +947,14 @@ export const cleric = {
                     "url": "/api/2014/damage-types/force"
                 },
                 "damage_at_slot_level": {
-                    "2": "1d8 + MOD",
-                    "3": "1d8 + MOD",
-                    "4": "2d8 + MOD",
-                    "5": "2d8 + MOD",
-                    "6": "3d8 + MOD",
-                    "7": "3d8 + MOD",
-                    "8": "4d8 + MOD",
-                    "9": "4d8 + MOD"
+                    "2": "1 d8 + MOD",
+                    "3": "1 d8 + MOD",
+                    "4": "2 d8 + MOD",
+                    "5": "2 d8 + MOD",
+                    "6": "3 d8 + MOD",
+                    "7": "3 d8 + MOD",
+                    "8": "4 d8 + MOD",
+                    "9": "4 d8 + MOD"
                 }
             },
             "school": "Evocation"
@@ -1532,7 +1532,7 @@ export const cleric = {
                     "url": "/api/2014/damage-types/bludgeoning"
                 },
                 "damage_at_slot_level": {
-                    "4": "2d8"
+                    "4": "2 d8"
                 }
             },
             "dc": {
@@ -1789,11 +1789,11 @@ export const cleric = {
                     "url": "/api/2014/damage-types/fire"
                 },
                 "damage_at_slot_level": {
-                    "5": "4d6 + 4d6",
-                    "6": "4d6 + 5d6",
-                    "7": "4d6 + 6d6",
-                    "8": "4d6 + 7d6",
-                    "9": "4d6 + 8d6"
+                    "5": "4 d6 + 4 d6",
+                    "6": "4 d6 + 5 d6",
+                    "7": "4 d6 + 6 d6",
+                    "8": "4 d6 + 7 d6",
+                    "9": "4 d6 + 8 d6"
                 }
             },
             "dc": {
@@ -1935,11 +1935,11 @@ export const cleric = {
                     "url": "/api/2014/damage-types/piercing"
                 },
                 "damage_at_slot_level": {
-                    "5": "4d10",
-                    "6": "5d10",
-                    "7": "6d10",
-                    "8": "7d10",
-                    "9": "8d10"
+                    "5": "4 d10",
+                    "6": "5 d10",
+                    "7": "6 d10",
+                    "8": "7 d10",
+                    "9": "8 d10"
                 }
             },
             "dc": {
@@ -2128,7 +2128,7 @@ export const cleric = {
                     "url": "/api/2014/damage-types/slashing"
                 },
                 "damage_at_slot_level": {
-                    "6": "6d10"
+                    "6": "6 d10"
                 }
             },
             "dc": {
@@ -2240,7 +2240,7 @@ export const cleric = {
                     "url": "/api/2014/damage-types/necrotic"
                 },
                 "damage_at_slot_level": {
-                    "6": "14d6"
+                    "6": "14 d6"
                 }
             },
             "dc": {
@@ -2466,7 +2466,7 @@ export const cleric = {
                     "url": "/api/2014/damage-types/fire"
                 },
                 "damage_at_slot_level": {
-                    "7": "7d10"
+                    "7": "7 d10"
                 }
             },
             "dc": {

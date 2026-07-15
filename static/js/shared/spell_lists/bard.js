@@ -198,10 +198,10 @@ export const bard = {
                     "url": "/api/2014/damage-types/psychic"
                 },
                 "damage_at_character_level": {
-                    "1": "1d4",
-                    "5": "2d4",
-                    "11": "3d4",
-                    "17": "4d4"
+                    "1": "1 d4",
+                    "5": "2 d4",
+                    "11": "3 d4",
+                    "17": "4 d4"
                 }
             },
             "dc": {
@@ -608,7 +608,7 @@ export const bard = {
             "level": 1,
             "damage": {
                 "damage_at_slot_level": {
-                    "1": "5d8"
+                    "1": "5 d8"
                 }
             },
             "area_of_effect": {
@@ -661,15 +661,15 @@ export const bard = {
                     "url": "/api/2014/damage-types/thunder"
                 },
                 "damage_at_slot_level": {
-                    "1": "2d8",
-                    "2": "3d8",
-                    "3": "4d8",
-                    "4": "5d8",
-                    "5": "6d8",
-                    "6": "7d8",
-                    "7": "8d8",
-                    "8": "9d8",
-                    "9": "10d8"
+                    "1": "2 d8",
+                    "2": "3 d8",
+                    "3": "4 d8",
+                    "4": "5 d8",
+                    "5": "6 d8",
+                    "6": "7 d8",
+                    "7": "8 d8",
+                    "8": "9 d8",
+                    "9": "10 d8"
                 }
             },
             "dc": {
@@ -895,14 +895,14 @@ export const bard = {
                     "url": "/api/2014/damage-types/fire"
                 },
                 "damage_at_slot_level": {
-                    "2": "2d8",
-                    "3": "3d8",
-                    "4": "4d8",
-                    "5": "5d8",
-                    "6": "6d8",
-                    "7": "7d8",
-                    "8": "8d8",
-                    "9": "9d8"
+                    "2": "2 d8",
+                    "3": "3 d8",
+                    "4": "4 d8",
+                    "5": "5 d8",
+                    "6": "6 d8",
+                    "7": "7 d8",
+                    "8": "8 d8",
+                    "9": "9 d8"
                 }
             },
             "dc": {
@@ -1119,14 +1119,14 @@ export const bard = {
                     "url": "/api/2014/damage-types/thunder"
                 },
                 "damage_at_slot_level": {
-                    "2": "3d8",
-                    "3": "4d8",
-                    "4": "5d8",
-                    "5": "6d8",
-                    "6": "7d8",
-                    "7": "8d8",
-                    "8": "9d8",
-                    "9": "10d8"
+                    "2": "3 d8",
+                    "3": "4 d8",
+                    "4": "5 d8",
+                    "5": "6 d8",
+                    "6": "7 d8",
+                    "7": "8 d8",
+                    "8": "9 d8",
+                    "9": "10 d8"
                 }
             },
             "dc": {
@@ -1692,7 +1692,7 @@ export const bard = {
                     "url": "/api/2014/damage-types/force"
                 },
                 "damage_at_slot_level": {
-                    "4": "4d6"
+                    "4": "4 d6"
                 }
             },
             "school": "Conjuration"
@@ -1928,7 +1928,7 @@ export const bard = {
                     "url": "/api/2014/damage-types/psychic"
                 },
                 "damage_at_slot_level": {
-                    "5": "3d6"
+                    "5": "3 d6"
                 }
             },
             "dc": {
@@ -2482,7 +2482,7 @@ export const bard = {
                     "url": "/api/2014/damage-types/force"
                 },
                 "damage_at_slot_level": {
-                    "7": "3d10"
+                    "7": "3 d10"
                 }
             },
             "school": "Evocation"
@@ -2800,7 +2800,7 @@ export const bard = {
                     "url": "/api/2014/damage-types/psychic"
                 },
                 "damage_at_slot_level": {
-                    "8": "4d6"
+                    "8": "4 d6"
                 }
             },
             "dc": {

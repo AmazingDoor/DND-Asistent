@@ -659,10 +659,21 @@
     display: flex;
     flex: 1;
     min-height: 0;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.player-stats-display-page {
+    overflow-y: auto;
 }
 
 .hidden {
     display: none !important;
+}
+
+.player-display-pages {
+    display: flex;
+    flex: 1;
 }
 
 .player-display-tablink {
@@ -674,10 +685,6 @@
     cursor: default;
 }
 
-.player-display-pages {
-    display: flex;
-    flex: 1;
-}
 
 .player-display-tablink:hover {
     background-color: gray;
@@ -751,6 +758,43 @@ body {
     width: 100%;
 }
 
+.spell-casting-top-section {
+    display: flex;
+    flex-direction: row;
+}
+
+#spell-casting-tab-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+#concentration-container {
+    display: flex;
+    flex: 1;
+    border-bottom: 1px solid black;
+    margin-bottom: 5px;
+}
+
+.spell-casting-tab {
+    background-color: lightgray;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    cursor: default;
+}
+
+
+.spell-casting-tab:hover {
+    background-color: gray;
+}
+
+.spell-casting-tab.selected-tab {
+    background-color: white;
+    border-bottom: none;
+}
+
 @media (max-width: 900px) {
 
     *,
@@ -800,7 +844,7 @@ body {
     }
 
     #player-stats {
-        height: 100dvh;
+        height: 100%;
         width: 100dvw;
     }
 
@@ -954,6 +998,7 @@ body {
     
     .player-stats-display-pages {
         width: 100%;
+        padding-bottom: 50px;
     }
 
     .player-stats-display-page {
@@ -1050,7 +1095,6 @@ body {
         display: flex;
         flex: 1;
         overflow-y: auto;
-        padding-bottom: 35px;
     }
 
     body {

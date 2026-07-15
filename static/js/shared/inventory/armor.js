@@ -1,7 +1,10 @@
 export const light_armor = {
     padded: {
         name: "Padded",
-        cost: "5 gp",
+        cost: {
+            amount: 5,
+            unit: "gp"
+        },
         ac_mod: 11,
         strength: 0,
         stealth_disadvantage: true,
@@ -9,7 +12,10 @@ export const light_armor = {
     },
     leather: {
         name: "Leather",
-        cost: "10 gp",
+        cost: {
+            amount: 10,
+            unit: "gp"
+        },
         ac_mod: 11,
         strength: 0,
         stealth_disadvantage: false,
@@ -17,7 +23,10 @@ export const light_armor = {
     },
     studded_leather: {
         name: "Studded Leather",
-        cost: "45 gp",
+        cost: {
+            amount: 45,
+            unit: "gp"
+        },
         ac_mod: 12,
         strength: 0,
         stealth_disadvantage: false,
@@ -28,7 +37,10 @@ export const light_armor = {
 export const medium_armor = {
     hide: {
         name: "Hide",
-        cost: "10 gp",
+        cost: {
+            amount: 10,
+            unit: "gp"
+        },
         ac_mod: 12,
         strength: 0,
         stealth_disadvantage: false,
@@ -36,7 +48,10 @@ export const medium_armor = {
     },
     chain_shirt: {
         name: "Chain Shirt",
-        cost: "50 gp",
+        cost: {
+            amount: 50,
+            unit: "gp"
+        },
         ac_mod: 13,
         strength: 0,
         stealth_disadvantage: false,
@@ -44,7 +59,10 @@ export const medium_armor = {
     },
     scale_mail: {
         name: "Scale Mail",
-        cost: "50 gp",
+        cost: {
+            amount: 50,
+            unit: "gp"
+        },
         ac_mod: 14,
         strength: 0,
         stealth_disadvantage: true,
@@ -52,7 +70,10 @@ export const medium_armor = {
     },
     breastplate: {
         name: "Breastplate",
-        cost: "400 gp",
+        cost: {
+            amount: 400,
+            unit: "gp"
+        },
         ac_mod: 14,
         strength: 0,
         stealth_disadvantage: false,
@@ -60,7 +81,10 @@ export const medium_armor = {
     },
     half_plate: {
         name: "Half Plate",
-        cost: "750 gp",
+        cost: {
+            amount: 750,
+            unit: "gp"
+        },
         ac_mod: 15,
         strength: 0,
         stealth_disadvantage: true,
@@ -71,7 +95,10 @@ export const medium_armor = {
 export const heavy_armor = {
     ring_mail: {
         name: "Ring Mail",
-        cost: "30 gp",
+        cost: {
+            amount: 30,
+            unit: "gp"
+        },
         ac_mod: 14,
         strength: 0,
         stealth_disadvantage: true,
@@ -79,7 +106,10 @@ export const heavy_armor = {
     },
     chain_mail: {
         name: "Chain Mail",
-        cost: "75 gp",
+        cost: {
+            amount: 75,
+            unit: "gp"
+        },
         ac_mod: 16,
         strength: 13,
         stealth_disadvantage: true,
@@ -87,7 +117,10 @@ export const heavy_armor = {
     },
     splint: {
         name: "Splint",
-        cost: "200 gp",
+        cost: {
+            amount: 200,
+            unit: "gp"
+        },
         ac_mod: 17,
         strength: 15,
         stealth_disadvantage: true,
@@ -95,7 +128,10 @@ export const heavy_armor = {
     },
     plate: {
         name: "Plate",
-        cost: "1500 gp",
+        cost: {
+            amount: 1500,
+            unit: "gp"
+        },
         ac_mod: 18,
         strength: 15,
         stealth_disadvantage: true,
