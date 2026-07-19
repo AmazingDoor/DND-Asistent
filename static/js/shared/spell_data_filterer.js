@@ -7,7 +7,6 @@ import {sorcerer} from './../shared/spell_lists/sorcerer.js';
 import {warlock} from './../shared/spell_lists/warlock.js';
 import {wizard} from './../shared/spell_lists/wizard.js';
 import {getPlayerLevel} from './../client_scripts/player_level_handler.js';
-import * as player_data_handler from './../client_scripts/utils/character_sheet/character_data_handler.js';
 import {calculateCharismaMod, calculateIntelligenceMod, calculateWisdomMod} from './../client_scripts/utils/character_sheet/calculators/ability_calculator.js';
 
 export function getSpellData(class_name, spell_name) {
@@ -75,7 +74,6 @@ export function getSpellCastingAbilityModifier(class_name) {
 
 export function getPreparedSpellCount(class_name) {
     const player_level = parseInt(getPlayerLevel());
-    const abilities = player_data_handler.getCharacterAbilities();
     switch(class_name) {
         case "Cleric":
         case "Druid":
@@ -103,7 +101,6 @@ export function getPreparedSpellCount(class_name) {
 
 export function getPreparedCantripCount(class_name) {
     const player_level = getPlayerLevel();
-    const abilities = player_data_handler.getCharacterAbilities();
     switch(class_name) {
         case "Cleric":
             return cantrips_known.Cleric[player_level - 1];

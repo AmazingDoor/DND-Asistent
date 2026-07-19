@@ -1,4 +1,7 @@
+import { getClassSpells } from '../../../shared/spell_data_filterer.js';
 import {items} from './../../../shared/inventory/items.js';
+import { getClassName as get_class_name } from './mappers/class_mapper.js';
+
 let character_abilities = {};
 let class_skills = [0, []];
 let class_cantrips = [];
@@ -234,4 +237,24 @@ export function addBackgroundSkill(skill) {
 
 export function setBackgroundSkills(skills) {
     background_skills = skills;
+}
+
+export function getClassName() {
+    return get_class_name();
+}
+
+export function getSpellData() {
+    var saved_spells = getClassPreparedSpells();
+    var class_spells = getClassSpells(get_class_name())[1];
+    var savedSpellData = [];
+    saved_spells.forEach((spell) => {
+        for(let i = 0; i < class_spells.length; i++) {
+            let classSpell = class_spells[i];
+            if(spell == classSpell.name) {
+                savedSpellData.push(classSpell);
+                break;
+            }
+        };
+    });
+    return savedSpellData;
 }

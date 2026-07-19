@@ -5,6 +5,7 @@ import './client_scripts/utils/dropdown_handler.js';
 import './client_scripts/player_display_tab_handler.js';
 import './client_scripts/utils/character_sheet/page_builders/inventory_builder.js';
 import './client_scripts/utils/character_sheet/page_builders/ability_builder.js';
+import { updateSpells } from './client_scripts/utils/spell_handler.js';
 import  * as mobile_button_handler from './client_scripts/mobile_button_handler.js';
 import * as class_builder from './client_scripts/utils/character_sheet/page_builders/class_builder.js';
 import * as race_builder from './client_scripts/utils/character_sheet/page_builders/race_builder.js';
@@ -37,6 +38,7 @@ function updateEverything(ipt) {
     race_builder.buildRaceSection(race);
     updateSkills();
     updateAbilities();
+    updateSpells();
 }
 
 function selectCharacter() {

@@ -12,6 +12,7 @@ import {linkDropdown} from './../../../dropdown_handler.js';
 import {getClassSpells, getSpellData, getPreparedSpellCount, getPreparedCantripCount} from './../../../../../shared/spell_data_filterer.js';
 import {getClassName} from './../../mappers/class_mapper.js';
 import {setClassPreparedSpells, getClassPreparedSpells, setClassPreparedCantrips,getClassPreparedCantrips, getInventory} from './../../character_data_handler.js';
+import { updateSpells } from '../../../spell_handler.js';
 let socket = null;
 export function setSocket(io) {
     socket = io;
@@ -59,6 +60,7 @@ function spellOptionClickEvent(head, option) {
     const txt = head.querySelector('p');
     txt.textContent = option.textContent;
     saveSpells();
+    updateSpells();
 }
 
 function findHighestSlotLevelAvailable(d, level) {

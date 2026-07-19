@@ -5,6 +5,7 @@ import {addClassSkillEventListeners} from './../dropdown_handlers/class_skill_ha
 import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 import * as inventory_builder from './inventory_builder.js';
+import { updateSpells } from '../../spell_handler.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -19,6 +20,7 @@ export function setSocket(io) {
         setClass(data.class_name);
         character_data_handler.setClassSkills(data.class_skills);
         buildCharacterClass();
+        updateSpells();
     });
 }
 
