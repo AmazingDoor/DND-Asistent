@@ -7,6 +7,7 @@ import { getPreparedSpellCount } from "../../../../../shared/spell_data_filterer
 const concentrationSpellName = document.getElementById('concentration-spell-name');
 const spellDisplayList = document.getElementById('combat-spell-display-list');
 let className = '';
+let maxSpellLevel = 0;
 
 export function updateData() {
     spellDisplayList.textContent = '';
@@ -33,7 +34,6 @@ function addEmpty(container) {
     emtpyContainer.appendChild(emptyText);
 
     container.appendChild(emtpyContainer);
-    console.log('added');
 }
 
 function addSpell(spell_data) {
@@ -69,9 +69,11 @@ function addSpell(spell_data) {
     let player_level = getPlayerLevel() - 1;
     let selectedButton = false;
     let max_spell_level_array = getMagicSlots(className);
-    let max_spell_level = max_spell_level_array.spell_slots[player_level].length;
+    maxSpellLevel = max_spell_level_array.spell_slots[player_level].length;
     
-    for(let i = spell_data.level; i <= max_spell_level; i++) {
+    const damageNum = document.createElement('t3');
+
+    for(let i = spell_data.level; i <= maxSpellLevel; i++) {
         let spellLevelButton = document.createElement('button');
         spellLevelButton.textContent = i;
         spellLevelButton.classList.add("spell-level-button");
@@ -80,9 +82,10 @@ function addSpell(spell_data) {
             spellLevelButton.classList.add("selectedButton");
             spellLevelButton.disabled = true;
             selectedButton = true;
+            setSpellDamageNum(damageNum, getCorrectSpellDamage(spell_data, i));
         }
         spellLevelButton.addEventListener("click", (event) => {
-            spellButtonPressed(spellContainer, spellLevelButton);
+            spellButtonPressed(spellContainer, spellLevelButton, damageNum, getCorrectSpellDamage(spell_data, i));
         });
     }
 
@@ -101,9 +104,42 @@ function addSpell(spell_data) {
     const castingTime = document.createElement('t3');
     castingTime.textContent = spell_data.casting_time;
     spellInfoContainer.appendChild(castingTime);
+
+    if(spell_data.damage !== undefined && spell_data.damage !== null) {
+        const damageLabel = document.createElement('t3');
+        damageLabel.textContent = "Damage: ";
+        spellInfoContainer.appendChild(damageLabel);
+        spellInfoContainer.appendChild(damageNum);
+    }
 }
 
-function spellButtonPressed(spellContainer, pressedButton) {
+function getCorrectSpellDamage(spell_data, level) {
+    let damage_info = spell_data.damage;
+    console.log(damage_info);
+    if (damage_info !== undefined && damage_info !== null) {
+        if (damage_info.damage_at_character_level !== undefined && damage_info.damage_at_character_level !== null) {
+            for (let i = level; i > 0; i--) {
+                if(damage_info.damage_at_character_level[i] !== undefined) {
+                    return damage_info.damage_at_character_level[i];
+                }
+            }
+        } else if (damage_info.damage_at_slot_level !== undefined && damage_info.damage_at_slot_level !== null) {
+            console.log(damage_info.damage_at_slot_level);
+            for (let i = level; i > 0; i--) {
+                if(damage_info.damage_at_slot_level[i] !== undefined) {
+                    return damage_info.damage_at_slot_level[i];
+                }
+            }
+        }
+    }
+    return '';
+}
+
+function setSpellDamageNum(damageNum, damage) {
+    damageNum.textContent = damage;
+}
+
+function spellButtonPressed(spellContainer, pressedButton, damageNum, damage) {
     const buttons = spellContainer.querySelectorAll(".spell-level-button");
     buttons.forEach((button) => {
         button.classList.remove("selectedButton");
@@ -112,6 +148,8 @@ function spellButtonPressed(spellContainer, pressedButton) {
 
     pressedButton.classList.add('selectedButton');
     pressedButton.disabled = true;
+
+    setSpellDamageNum(damageNum, damage);
 }
 
 function addCantrip(cantrip_data){

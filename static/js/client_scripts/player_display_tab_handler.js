@@ -13,8 +13,6 @@ export function select_tab(tab_id) {
     const selectedTab = playerStatsDisplayTabs.querySelectorAll(".selected-tab")[0];
 
     if(!playerStatsDisplayPages.classList.contains("mobile-hidden")) {
-        console.log(selectedTab.id);
-        console.log(tab_id);
         if(String(selectedTab.id) == String(tab_id)) {
             playerStatsDisplayPages.classList.add("mobile-hidden");
             playerStatContainer.classList.remove('combat-overlay-open')
