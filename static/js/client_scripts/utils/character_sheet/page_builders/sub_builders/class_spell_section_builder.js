@@ -18,6 +18,8 @@ export function setSocket(io) {
     socket = io;
 }
 
+
+let spell_slots = [];
 document.addEventListener("DOMContentLoaded", function() {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
@@ -26,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const saved_spells = data.spells;
         const saved_cantrips = data.cantrips;
         const class_name = data.class_name;
+        spell_slots = getMagicSlots(class_name);
         setClassPreparedSpells(saved_spells);
         setClassPreparedCantrips(saved_cantrips);
     });
@@ -37,7 +40,7 @@ export function buildSpellSection(class_name, saved_spells = [], saved_cantrips 
         spells = [];
     }
     const player_level = getPlayerLevel();
-    const spell_slots = getMagicSlots(class_name);
+    
     const spell_slot_map_object = spell_slots.spell_slots;
     let spell_slot_map = [];
     let cantrip_slot_map = [];
@@ -64,12 +67,15 @@ function spellOptionClickEvent(head, option) {
 }
 
 function findHighestSlotLevelAvailable(d, level) {
+    const l = level - 1;
+    const highestSpellSlotLevel = spell_slots.spell_slots[l].length;
     let highest = 1;
-    for (const key in d) {
-        if (parseInt(key) <= level) {
+    for(const key in d) {
+        if(key <= highestSpellSlotLevel) {
             highest = key;
         }
     }
+
     return highest;
 }
 

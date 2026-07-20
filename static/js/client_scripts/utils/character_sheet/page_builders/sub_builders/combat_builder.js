@@ -37,7 +37,7 @@ function addEmpty(container) {
 }
 
 function addSpell(spell_data) {
-    console.log(spell_data);
+    //console.log(spell_data);
     const spellContainer = document.createElement('div');
     spellContainer.classList.add("combat-spell-container");
     spellDisplayList.appendChild(spellContainer);
@@ -115,7 +115,6 @@ function addSpell(spell_data) {
 
 function getCorrectSpellDamage(spell_data, level) {
     let damage_info = spell_data.damage;
-    console.log(damage_info);
     if (damage_info !== undefined && damage_info !== null) {
         if (damage_info.damage_at_character_level !== undefined && damage_info.damage_at_character_level !== null) {
             for (let i = level; i > 0; i--) {
@@ -124,7 +123,6 @@ function getCorrectSpellDamage(spell_data, level) {
                 }
             }
         } else if (damage_info.damage_at_slot_level !== undefined && damage_info.damage_at_slot_level !== null) {
-            console.log(damage_info.damage_at_slot_level);
             for (let i = level; i > 0; i--) {
                 if(damage_info.damage_at_slot_level[i] !== undefined) {
                     return damage_info.damage_at_slot_level[i];
