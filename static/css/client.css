@@ -18,6 +18,28 @@
     #combat-spell-display-list {
         background-color: white;
     }
+
+    .spell-level-button {
+
+        font-size: 10px;
+        padding: 2px;
+    }
+
+    .combat-spell-name {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    .combat-empty-container {
+        background-color: darkgray;
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+        margin-bottom: 10px;
+    }
+
+    .combat-empty-container.t2 {
+        font-weight: bold;
+    }
     
     .overlay-container {
         top: 0px;
@@ -672,14 +694,27 @@
 
 .player-stats-display-pages {
     display: flex;
-    flex: 1;
     min-height: 0;
     border-left: 1px solid black;
     border-right: 1px solid black;
+    height: 100%;
 }
 
 .player-stats-display-page {
+    display: flex;
+    height: 100%;
     overflow-y: auto;
+}
+
+.player-stats-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: hidden;
+}
+
+#combat-spell-casting-container {
+    width: 100%;
 }
 
 .hidden {
@@ -810,7 +845,7 @@ body {
     border-bottom: none;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
 
     *,
     *::before,
@@ -1010,15 +1045,6 @@ body {
         display: flex;
         flex-direction: column;
     }
-    
-    .player-stats-display-pages {
-        width: 100%;
-        padding-bottom: 50px;
-    }
-
-    .player-stats-display-page {
-        width: 100%;
-    }
 
     .ability-title {
         font-size: 20px;
@@ -1049,7 +1075,7 @@ body {
         left: 0px;
         right: auto;
         position: fixed;
-        z-index: 2;
+        z-index: 3;
         display: flex;
         flex-direction: row;
         padding-bottom: 50px;
@@ -1094,7 +1120,7 @@ body {
     .mobile-button-container {
         display: flex;
         justify-content: space-between;
-        z-index: 2;
+        z-index: 3;
         flex: 1;
         height: 50px;
         position: fixed;
@@ -1170,5 +1196,48 @@ body {
 
     .dropdown-content div {
         width: fit-content;
+    }
+
+    .player-stats-display-pages {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+
+    .player-stats-display-page {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        
+    }
+
+    .player-stats-container {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        bottom: 0px;
+        left: 0px;
+        z-index: 2;
+        background-color: #f1f1f1;
+        width: 100%;
+        max-height: 100%;
+        padding-bottom:50px;
+        overflow-y: hidden;
+        height: auto;
+    }
+
+    .combat-overlay-open {
+        height: 99%;
+    }
+
+    .spell-level-button {
+        font-size: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    #combat-spell-casting-container {
+        width: 100%;
     }
 }

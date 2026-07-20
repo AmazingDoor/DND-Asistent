@@ -5,10 +5,31 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+const playerStatsDisplayTabs = document.querySelectorAll(".player-stats-display-tabs")[0];
+const playerStatsDisplayPages = document.querySelectorAll(".player-stats-display-pages")[0];
+const playerStatContainer = document.querySelectorAll(".player-stats-container")[0];
+
 export function select_tab(tab_id) {
+    const selectedTab = playerStatsDisplayTabs.querySelectorAll(".selected-tab")[0];
+
+    if(!playerStatsDisplayPages.classList.contains("mobile-hidden")) {
+        console.log(selectedTab.id);
+        console.log(tab_id);
+        if(String(selectedTab.id) == String(tab_id)) {
+            playerStatsDisplayPages.classList.add("mobile-hidden");
+            playerStatContainer.classList.remove('combat-overlay-open')
+            return;
+        }
+    } else {
+        playerStatsDisplayPages.classList.remove("mobile-hidden");
+        playerStatContainer.classList.add('combat-overlay-open');
+    }
+
+
+    
+    const tablinks = document.querySelectorAll('.player-display-tablink');
     const selected_tab = document.querySelector('#' + tab_id);
     const display_page = document.querySelector('#' + tab_id.replace('tab', 'container'));
-    const tablinks = document.querySelectorAll('.player-display-tablink');
     const display_pages = document.querySelectorAll('.player-stats-display-page');
 
     resetAll(tablinks, display_pages);
