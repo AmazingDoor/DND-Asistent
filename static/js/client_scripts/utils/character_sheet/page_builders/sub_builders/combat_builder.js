@@ -37,7 +37,7 @@ function addEmpty(container) {
 }
 
 function addSpell(spell_data) {
-    //console.log(spell_data);
+    console.log(spell_data);
     const spellContainer = document.createElement('div');
     spellContainer.classList.add("combat-spell-container");
     spellDisplayList.appendChild(spellContainer);
@@ -105,24 +105,67 @@ function addSpell(spell_data) {
     castingTime.textContent = spell_data.casting_time;
     spellInfoContainer.appendChild(castingTime);
 
-    if(spell_data.damage !== undefined && spell_data.damage !== null) {
+    if("damage" in spell_data) {
         const damageLabel = document.createElement('t3');
         damageLabel.textContent = "Damage: ";
         spellInfoContainer.appendChild(damageLabel);
         spellInfoContainer.appendChild(damageNum);
     }
+
+    //Add healing spells
+
+    const extraInfoContainer = document.createElement('div');
+    extraInfoContainer.classList.add('extra-spell-data');
+    spellContainer.appendChild(extraInfoContainer);
+
+    const extraInfoExpandContainer = document.createElement('div');
+    extraInfoExpandContainer.classList.add('expand-spell-info');
+    extraInfoContainer.appendChild(extraInfoExpandContainer);
+
+    const extraInfoExpandText = document.createElement('t3');
+    extraInfoExpandText.textContent = "⯆";
+    extraInfoExpandContainer.appendChild(extraInfoExpandText);
+
+    const hiddenDataContainer = document.createElement('div');
+    hiddenDataContainer.classList.add("hidden-spell-data-container", "hidden");
+    extraInfoContainer.appendChild(hiddenDataContainer);
+
+    extraInfoExpandContainer.addEventListener("click", (action) => {
+       expandSpellContainer(extraInfoExpandText, hiddenDataContainer); 
+    });
+
+    const spellDescriptionContainer = document.createElement('div');
+    spellDescriptionContainer.classList.add('spell-description-container');
+    hiddenDataContainer.appendChild(spellDescriptionContainer);
+
+    const spellDescription = document.createElement('p');
+    const spellDescriptions = spell_data.desc;
+    spellDescriptions.forEach((description) => {
+        spellDescription.textContent += description;
+    });
+    spellDescriptionContainer.appendChild(spellDescription);
+}
+
+function expandSpellContainer(arrow, expandableContainer) {
+    if(expandableContainer.classList.contains("hidden")) {
+        arrow.textContent = "⯅";
+        expandableContainer.classList.remove("hidden");
+    } else {
+        arrow.textContent = "⯆";
+        expandableContainer.classList.add("hidden");
+    }
 }
 
 function getCorrectSpellDamage(spell_data, level) {
-    let damage_info = spell_data.damage;
-    if (damage_info !== undefined && damage_info !== null) {
-        if (damage_info.damage_at_character_level !== undefined && damage_info.damage_at_character_level !== null) {
+    if ("damage" in spell_data) {
+        let damage_info = spell_data.damage;
+        if ("damage_at_character_level" in damage_info) {
             for (let i = level; i > 0; i--) {
                 if(damage_info.damage_at_character_level[i] !== undefined) {
                     return damage_info.damage_at_character_level[i];
                 }
             }
-        } else if (damage_info.damage_at_slot_level !== undefined && damage_info.damage_at_slot_level !== null) {
+        } else if ("damage_at_slot_level" in damage_info) {
             for (let i = level; i > 0; i--) {
                 if(damage_info.damage_at_slot_level[i] !== undefined) {
                     return damage_info.damage_at_slot_level[i];

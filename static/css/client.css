@@ -713,7 +713,7 @@
     overflow-y: hidden;
 }
 
-#combat-spell-casting-container {
+#combat-category-container {
     width: 100%;
 }
 
@@ -808,12 +808,12 @@ body {
     width: 100%;
 }
 
-.spell-casting-top-section {
+.combat-category-top-section {
     display: flex;
     flex-direction: row;
 }
 
-#spell-casting-tab-container {
+#combat-category-tab-container {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -826,7 +826,7 @@ body {
     margin-bottom: 5px;
 }
 
-.spell-casting-tab {
+.combat-category-tab {
     background-color: lightgray;
     border-left: 1px solid black;
     border-top: 1px solid black;
@@ -836,11 +836,11 @@ body {
 }
 
 
-.spell-casting-tab:hover {
+.combat-category-tab:hover {
     background-color: gray;
 }
 
-.spell-casting-tab.selected-tab {
+.combat-category-tab.selected-tab {
     background-color: white;
     border-bottom: none;
 }
@@ -1237,7 +1237,7 @@ body {
         padding-right: 10px;
     }
 
-    #combat-spell-casting-container {
+    #combat-category-container {
         width: 100%;
     }
 }

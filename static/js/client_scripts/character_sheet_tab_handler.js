@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
         addClickListener(tab);
     });
 
-    const spell_casting_tabs = document.querySelectorAll(".spell-casting-tab");
+    const spell_casting_tabs = document.querySelectorAll(".combat-category-tab");
     spell_casting_tabs.forEach((tab) => {
         addSpellCastingTabListener(tab);
     });
@@ -36,14 +36,14 @@ function addSpellCastingTabListener(tab) {
     tab.addEventListener("click", function () {
         const id = tab.id;
 
-        const tbs = document.querySelectorAll(".spell-casting-tab");
+        const tbs = document.querySelectorAll(".combat-category-tab");
         tbs.forEach(tab => {
             tab.classList.remove('selected-tab');
         });
 
         document.querySelector('#' + id).classList.add('selected-tab');
 
-        const pages = document.querySelectorAll(".spell-casting-page");
+        const pages = document.querySelectorAll(".combat-category-page");
         pages.forEach((page) => {
             page.classList.add("hidden");
         });
