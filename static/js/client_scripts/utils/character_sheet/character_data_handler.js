@@ -3,23 +3,52 @@ import {items} from './../../../shared/inventory/items.js';
 import { getClassName as get_class_name } from './mappers/class_mapper.js';
 
 let character_abilities = {};
+let character_ability_modifiers = {};
 let class_skills = [0, []];
 let class_cantrips = [];
-let race_skills = [];
-let race_ability_modifiers = {};
-let race_languages = [];
+//let race_skills = [];
+//let race_ability_modifiers = {};
+//let race_languages = [];
 let class_weapon_proficiencies = [];
 let class_armor_proficiencies = [];
 let class_tool_proficiencies = [];
 let class_saving_throws = [];
 let class_spells = [];
-let race_spells = [];
+//let race_spells = [];
 let inventory = [];
 let weapon_inventory = [];
 let armor_inventory = [];
 let mount_inventory = [];
 let background_skills = [];
 
+export function setCharacterAbilityModifiers(d) {
+    character_ability_modifiers = d;
+}
+
+export function setCharacterAbilities(d) {
+    character_abilities = d;
+}
+
+export function getSpellCastingAbilityScore() {
+    const className = getClassName();
+    console.log(character_ability_modifiers);
+    const spellCastingAbilities = 
+    {
+        Artificer: character_ability_modifiers.int,
+        Bard: character_ability_modifiers.cha,
+        Cleric: character_ability_modifiers.wis,
+        Druid: character_ability_modifiers.wis,
+        Paladin: character_ability_modifiers.cha,
+        Ranger: character_ability_modifiers.wis,
+        Sorcerer: character_ability_modifiers.cha,
+        Warlock: character_ability_modifiers.cha,
+        Wizard: character_ability_modifiers.int
+    };
+    if(className in spellCastingAbilities) {
+        return spellCastingAbilities[className];
+    }
+    return 0;
+}
 
 export function addInvWeapon(item, t='default', count=1) {
     const i = {type: "weapon", reference: item, from: t, count: count};
@@ -109,12 +138,6 @@ export function getMountInventory() {
     return mount_inventory;
 }
 
-export function resetRaceData() {
-    race_skills = [];
-    race_ability_modifiers = {};
-    race_languages = [];
-}
-
 export function resetClassData() {
     class_skills = [0, []];
     class_weapon_proficiencies = [];
@@ -123,15 +146,6 @@ export function resetClassData() {
     class_saving_throws = [];
     class_spells = [];
     class_cantrips = [];
-}
-
-/*Modifier From Race*/
-export function setCharacterAbilities(data) {
-    character_abilities = data;
-}
-
-export function getCharacterAbilities() {
-    return character_abilities;
 }
 
 /*Skills From Class*/
@@ -189,34 +203,6 @@ export function setClassPreparedSpells(spells) {
 
 export function getClassPreparedSpells() {
     return class_spells;
-}
-
-export function setRaceSkills(data) {
-    race_skills = data;
-}
-
-export function getRaceSkills() {
-    return race_skills;
-}
-
-export function getRaceSkillNames() {
-    return race_skills;
-}
-
-export function setRaceAbilityModifiers(data) {
-    race_ability_modifiers = data;
-}
-
-export function getRaceAbilityModifiers() {
-    return race_ability_modifiers;
-}
-
-export function setRaceLanguages(data) {
-    race_languages = data;
-}
-
-export function getRaceLanguages() {
-    return race_languages;
 }
 
 export function setClassPreparedCantrips(data) {

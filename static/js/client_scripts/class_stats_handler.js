@@ -14,6 +14,8 @@ export function setSocket(io) {
     socket = io;
 }
 
+
+
 /*export function addEventListeners(updateSkills) {
     const class_options = [...document.querySelector(".class-options").children];
     const head = document.querySelector(".class-selector");

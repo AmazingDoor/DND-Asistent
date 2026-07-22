@@ -1,9 +1,11 @@
 import * as character_data_handler from "./../character_data_handler.js";
 import {getProficiencyBonus} from "./../../../player_level_handler.js";
+import { getRaceSkills } from "../mappers/race_mapper.js";
 
 export function calculateSkills() {
     const class_skills = character_data_handler.getClassSkillNames();
-    const race_skills_main = character_data_handler.getRaceSkillNames();
+    const race_skills_main = getRaceSkills();
+    console.log(race_skills_main);
     const background_skills = character_data_handler.getBackgroundSkills();
 
 
@@ -15,7 +17,7 @@ export function calculateSkills() {
 
 
     let chosen_skill_objects = [...document.querySelectorAll('.selected-skill')];
-    let chosen_skills = character_data_handler.getRaceSkills();
+    let chosen_skills = getRaceSkills();
 
     race_skills = race_skills.concat(chosen_skills);
 

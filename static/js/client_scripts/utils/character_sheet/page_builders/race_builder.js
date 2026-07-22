@@ -1,5 +1,5 @@
 import * as character_data_handler from './../character_data_handler.js';
-import {getRaceData} from "./../mappers/race_mapper.js";
+import {getRaceData, getRaceAbilities, getRaceLanguages, getRaceSkills} from "./../mappers/race_mapper.js";
 import {createAbilityDropdown} from './../dropdown_builders/ability_dropdown_builder.js';
 import {createLanguageDropdown} from './../dropdown_builders/language_dropdown_builder.js';
 import {createSkillDropdown} from './../dropdown_builders/skill_dropdown_builder.js';
@@ -17,7 +17,7 @@ export function buildRaceSection(race_name) {
 
 function createAbilities(abilities) {
     const abilities_table = document.querySelector('.race-abilities-table');
-    const saved_abilities = Object.keys(character_data_handler.getRaceAbilityModifiers());
+    const saved_abilities = Object.keys(getRaceAbilities());
     abilities_table.innerHTML = '';
     for (const ability in abilities) {
         if(ability !== "any") {
@@ -74,7 +74,7 @@ function createTraits(traits) {
 }
 
 function createLanguages(languages) {
-    const saved_languages = character_data_handler.getRaceLanguages();
+    const saved_languages = getRaceLanguages();
     const set_languages = languages[0];
     const language_choices = languages[1];
     const language_list = document.querySelector('.language-list');
@@ -94,7 +94,7 @@ function createLanguages(languages) {
 
 function createSkills(skills) {
     const skill_list = document.querySelector('.skill-list');
-    const saved_skills = character_data_handler.getRaceSkills();
+    const saved_skills = getRaceSkills();
     skill_list.innerHTML = '';
     let selectable = 0;
     skills.forEach((skill) => {

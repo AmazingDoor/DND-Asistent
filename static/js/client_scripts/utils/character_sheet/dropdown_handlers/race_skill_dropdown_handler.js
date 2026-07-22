@@ -1,5 +1,4 @@
-import {setRaceSkills} from './../character_data_handler.js';
-
+import { setRaceSkills } from "../mappers/race_mapper.js";
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');

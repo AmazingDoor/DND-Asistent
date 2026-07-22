@@ -1,6 +1,5 @@
 import {updateAbilities} from './../../display_stat_updater.js';
-import{setRaceAbilityModifiers} from './../character_data_handler.js';
-
+import {setRaceAbilities } from '../mappers/race_mapper.js';
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
@@ -29,7 +28,7 @@ function clickListener(head, option) {
         const mod_num = parseInt(table_datas[1].textContent.replace("+", ""));
         abilities[ability.textContent] = mod_num;
     });
-    setRaceAbilityModifiers(abilities);
+    setRaceAbilities(abilities);
     updateAbilities();
     socket.emit('save_race_abilities', {race_abilities: abilities, char_id: char_id});
 }

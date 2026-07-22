@@ -1,3 +1,4 @@
+import { initializeClient } from './client_scripts/client_initializer.js';
 import {setFactorySocket} from './client_scripts/factories/socket_factory.js';
 import './client_scripts/character_sheet_tab_handler.js';
 import './client_scripts/overlay_tab_handler.js';
@@ -12,6 +13,7 @@ import * as race_builder from './client_scripts/utils/character_sheet/page_build
 import {getRace} from './client_scripts/utils/character_sheet/mappers/race_mapper.js';
 import {setPlayerLevel} from './client_scripts/player_level_handler.js';
 import {updateAbilities, updateSkills} from './client_scripts/utils/display_stat_updater.js';
+import { calculateAbilities } from './client_scripts/utils/character_sheet/calculators/ability_calculator.js';
 
 const socket = io();
 setFactorySocket(socket);
@@ -29,6 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
         clientUpdateMaxHealth(max_health_input.value);
     });
     selectCharacter();
+    initializeClient();
+
 });
 
 function updateEverything(ipt) {

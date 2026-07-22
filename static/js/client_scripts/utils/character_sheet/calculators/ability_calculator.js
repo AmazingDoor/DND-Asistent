@@ -1,6 +1,6 @@
 import * as character_data_handler from "./../character_data_handler.js";
 import {getProficiencyBonus} from "./../../../player_level_handler.js";
-import {getRaceData} from "./../mappers/race_mapper.js";
+import {getRaceData, getRaceAbilities} from "./../mappers/race_mapper.js";
 import {getClassData} from "./../mappers/class_mapper.js";
 
 
@@ -55,7 +55,7 @@ export function calculateAbilities() {
         abilities_dict = Object.assign({}, race_data.abilities);
     }
 
-    const selected_abilities = character_data_handler.getRaceAbilityModifiers(); //document.querySelectorAll(".selected-ability");
+    const selected_abilities = getRaceAbilities(); //document.querySelectorAll(".selected-ability");
     let all_abilities = Object.assign({}, selected_abilities, abilities_dict);
 
     /*selected_abilities.forEach((ability) => {
@@ -143,12 +143,26 @@ export function calculateAbilities() {
         }
     });
 
-    return [calculateModifier(str_input) + str_bonus + race_str_mod,
+    const finalCalculations = [calculateModifier(str_input) + str_bonus + race_str_mod,
     calculateModifier(dex_input) + dex_bonus + race_dex_mod,
     calculateModifier(con_input) + con_bonus + race_con_mod,
     calculateModifier(int_input) + int_bonus + race_int_mod,
     calculateModifier(wis_input) + wis_bonus + race_wis_mod,
     calculateModifier(cha_input) + cha_bonus + race_cha_mod]
+
+    const finalCalculationDict = {
+        str: finalCalculations[0],
+        dex: finalCalculations[1],
+        con: finalCalculations[2],
+        int: finalCalculations[3],
+        wis: finalCalculations[4],
+        cha: finalCalculations[5]
+    };
+
+
+    character_data_handler.setCharacterAbilityModifiers(finalCalculationDict);
+    
+    return finalCalculations;
 
 }
 

@@ -5,16 +5,18 @@ export function setSocket(io) {
     socket = io;
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+export function Initialize() {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
+    return new Promise(resolve => {
+        socket.once('load_player_level', data => {
+            const lvl = data.player_level;
+            setPlayerLevelAndUpdate(lvl);
 
-
-    socket.on('load_player_level', data => {
-        const lvl = data.player_level;
-        setPlayerLevelAndUpdate(lvl);
+            resolve(data);
+        });
     });
-});
+}
 
 export function getPlayerLevel() {
     return player_level;
