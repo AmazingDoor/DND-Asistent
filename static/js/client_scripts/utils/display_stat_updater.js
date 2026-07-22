@@ -64,6 +64,7 @@ export function updateSkills() {
     insight_skill, medicine_skill, perception_skill, survival_skill, deception_skill, intimidation_skill, performance_skill,
     persuasion_skill] = calculateSkills();
 
+
     athletics.textContent = signNumber(str_mod + athletics_skill);
     acrobatics.textContent = signNumber(dex_mod + acrobatics_skill);
     sleight.textContent = signNumber(dex_mod + sleight_of_hand_skill);

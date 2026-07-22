@@ -40,7 +40,6 @@ function clickEvent(dropdown_text, option) {
 
 function loadEvent() {
     let race_name = getRaceName();
-    console.log(race_name);
     if(race_name !== null) {
         const dropdown_head = document.querySelector('.race-selector');
         const dropdown_text = dropdown_head.querySelector('p');

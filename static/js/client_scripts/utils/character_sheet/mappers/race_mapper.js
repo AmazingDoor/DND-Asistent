@@ -2,7 +2,6 @@ import * as race_features from './../../../../shared/race_features.js';
 import * as character_data_handler from '../character_data_handler.js';
 
 let socket = null;
-let race = null;
 
 let race_skills;
 let race_abilities;
@@ -33,8 +32,8 @@ export function setSocket(io) {
     socket = io;
 }
 
-export function setRace(race_name) {
-    race = race_name;
+export function setRace(name) {
+    race_name = name;
     let race_data = race_features[getRaceId(race_name)];
     console.log(race_features);
     race_skills = race_data.skills;
@@ -42,12 +41,12 @@ export function setRace(race_name) {
     race_languages = race_data.languages;
 }
 
-export function getRaceId(race_name) {
-    return race_name.toLowerCase().replace(" ", "_")
+export function getRaceId(name) {
+    return name.toLowerCase().replace(" ", "_")
 }
 
 export function getRace() {
-    return race;
+    return race_name;
 }
 
 export function setRaceSkills(data) {
