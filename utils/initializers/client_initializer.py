@@ -2,8 +2,16 @@ from utils.socket_factory import socketio, emit
 from utils.file_manager import get_players_folder
 from utils.safe_json import safe_write_json, safe_read_json
 from utils.class_stats_manager import load_player_class
+from utils.client_tracker import ID_TO_CLIENT
 import os
 
+@socketio.on('require_character_abilities')
+def send_character_abilities(data):
+    char_id = data.get("char_id")
+    sid = ID_TO_CLIENT.get(char_id)
+    base_folder = f"{get_players_folder()}\\{char_id}\\"
+    abilities = safe_read_json(base_folder + "abilities.json")
+    emit('build_character_abilities', {'abilities': abilities.get('abilities')}, room=sid)
 
 def init_json_data(sid, name, char_id):
     # Load or Create all the data for each client
@@ -12,7 +20,6 @@ def init_json_data(sid, name, char_id):
     base_folder = f"{PLAYERS_FOLDER}\\{char_id}\\"
 
     basic_data = safe_read_json(base_folder + "basic_data.json")
-    abilities = safe_read_json(base_folder + "abilities.json")
     class_data = safe_read_json(base_folder + "class_data.json")
     race_data = safe_read_json(base_folder + "race_data.json")
     message_data = safe_read_json(base_folder + "messages.json")
@@ -28,7 +35,6 @@ def init_json_data(sid, name, char_id):
     class_name = class_data.get('class_name') if class_data.get('class_name') else ''
     max_health = basic_data.get("max_health") if basic_data.get("max_health") is not None else 0
     emit('load_spells', {'class_name': class_name, 'spells': class_spells, 'cantrips': class_cantrips})
-    emit('build_character_abilities', {'abilities': abilities.get('abilities')}, room=sid)
     for message in messages:
         emit("load_message", {'message': message}, room=sid)
     for img in imgs:

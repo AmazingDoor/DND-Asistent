@@ -33,8 +33,8 @@ function clickEvent(dropdown_text, option) {
     dropdown_text.textContent = option.textContent;
     setRace(option.textContent);
     buildRaceSection(option.textContent);
-    updateSkills();
     updateAbilities();
+    updateSkills();
     socket.emit('save_race', {race_name: option.textContent, char_id: char_id});
 }
 
@@ -46,7 +46,7 @@ function loadEvent() {
         dropdown_text.textContent = race_name;
         //setRace(race_name);
         buildRaceSection(race_name);
-        updateSkills();
         updateAbilities();
+        updateSkills();
     }
 }

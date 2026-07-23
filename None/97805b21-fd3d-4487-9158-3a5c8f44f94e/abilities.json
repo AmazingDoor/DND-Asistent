@@ -1,0 +1,10 @@
+{
+    "abilities": {
+        "str_num": 0,
+        "dex_num": 0,
+        "con_num": 0,
+        "int_num": 0,
+        "wis_num": 0,
+        "cha_num": 0
+    }
+}

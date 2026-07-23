@@ -1,0 +1,9 @@
+{
+    "name": "TheDoor",
+    "imgs": [],
+    "health": 0,
+    "ac": 0,
+    "max_health": 0,
+    "states_text": "",
+    "player_level": 1
+}

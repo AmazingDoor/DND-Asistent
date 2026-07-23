@@ -1,5 +1,6 @@
 import {calculateSkills} from './character_sheet/calculators/skill_calculator.js';
 import {calculateAbilities} from './character_sheet/calculators/ability_calculator.js';
+import { getCharacterSkills } from './character_sheet/character_data_handler.js';
 
 let socket = null;
 export function setSocket(io) {
@@ -32,14 +33,7 @@ export function updateAbilities() {
 }
 
 export function updateSkills() {
-
-    let str_mod = calculateModifier(document.querySelector('#strength-input'));
-    let dex_mod = calculateModifier(document.querySelector('#dexterity-input'));
-    let con_mod = calculateModifier(document.querySelector('#constitution-input'));
-    let int_mod = calculateModifier(document.querySelector('#intelligence-input'));
-    let wis_mod = calculateModifier(document.querySelector('#wisdom-input'));
-    let cha_mod = calculateModifier(document.querySelector('#charisma-input'));
-
+    calculateSkills();
     const athletics = document.querySelector("#athletics-num");
     const acrobatics = document.querySelector("#acrobatics-num");
     const sleight = document.querySelector("#sleight-num");
@@ -59,30 +53,26 @@ export function updateSkills() {
     const performance = document.querySelector("#performance-num");
     const persuasion = document.querySelector("#persuasion-num");
 
-    const [athletics_skill, acrobatics_skill, sleight_of_hand_skill, stealth_skill, arcana_skill,
-    history_skill, investigation_skill, nature_skill, religion_skill, animal_handling_skill,
-    insight_skill, medicine_skill, perception_skill, survival_skill, deception_skill, intimidation_skill, performance_skill,
-    persuasion_skill] = calculateSkills();
+    const character_skills = getCharacterSkills();
 
-
-    athletics.textContent = signNumber(str_mod + athletics_skill);
-    acrobatics.textContent = signNumber(dex_mod + acrobatics_skill);
-    sleight.textContent = signNumber(dex_mod + sleight_of_hand_skill);
-    stealth.textContent = signNumber(dex_mod + stealth_skill);
-    arcana.textContent = signNumber(int_mod + arcana_skill);
-    history.textContent = signNumber(int_mod + history_skill);
-    investigation.textContent = signNumber(int_mod + investigation_skill);
-    nature.textContent = signNumber(int_mod + nature_skill);
-    religion.textContent = signNumber(int_mod + religion_skill);
-    animal_handling.textContent = signNumber(wis_mod + animal_handling_skill);
-    insight.textContent = signNumber(wis_mod + insight_skill);
-    medicine.textContent = signNumber(wis_mod + medicine_skill);
-    perception.textContent = signNumber(wis_mod + perception_skill);
-    survival.textContent = signNumber(wis_mod + survival_skill);
-    deception.textContent = signNumber(cha_mod + deception_skill);
-    intimidation.textContent = signNumber(cha_mod + intimidation_skill);
-    performance.textContent = signNumber(cha_mod + performance_skill);
-    persuasion.textContent = signNumber(cha_mod + persuasion_skill);
+    athletics.textContent = signNumber(character_skills["athletics"]);
+    acrobatics.textContent = signNumber(character_skills["acrobatics"]);
+    sleight.textContent = signNumber(character_skills["sleight_of_hand"]);
+    stealth.textContent = signNumber(character_skills["stealth"]);
+    arcana.textContent = signNumber(character_skills["arcana"]);
+    history.textContent = signNumber(character_skills["history"]);
+    investigation.textContent = signNumber(character_skills["investigation"]);
+    nature.textContent = signNumber(character_skills["nature"]);
+    religion.textContent = signNumber(character_skills["religion"]);
+    animal_handling.textContent = signNumber(character_skills["animal_handling"]);
+    insight.textContent = signNumber(character_skills["insight"]);
+    medicine.textContent = signNumber(character_skills["medicine"]);
+    perception.textContent = signNumber(character_skills["perception"]);
+    survival.textContent = signNumber(character_skills["survival"]);
+    deception.textContent = signNumber(character_skills["deception"]);
+    intimidation.textContent = signNumber(character_skills["intimidation"]);
+    performance.textContent = signNumber(character_skills["performance"]);
+    persuasion.textContent = signNumber(character_skills["persuasion"]);
 }
 
 function calculateModifier(i) {

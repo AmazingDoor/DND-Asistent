@@ -2,7 +2,7 @@ import { getClassSpells } from '../../../shared/spell_data_filterer.js';
 import {items} from './../../../shared/inventory/items.js';
 import { getClassName as get_class_name } from './mappers/class_mapper.js';
 
-let character_abilities = {};
+let base_character_abilities = {};
 let character_ability_modifiers = {};
 let class_skills = [0, []];
 let class_cantrips = [];
@@ -19,14 +19,58 @@ let inventory = [];
 let weapon_inventory = [];
 let armor_inventory = [];
 let mount_inventory = [];
+let character_skills = {};
 let background_skills = [];
+
+
+export function setCharacterBaseAbilities(base_abilities) {
+    base_character_abilities = {
+        str: base_abilities[0],
+        dex: base_abilities[1],
+        con: base_abilities[2],
+        int: base_abilities[3],
+        wis: base_abilities[4],
+        cha: base_abilities[5] 
+    }
+}
+
+export function getCharacterBaseAbilities() {
+    return base_character_abilities;
+}
+
+export function setCharacterSkills(skills) {
+    character_skills = {
+        athletics: skills[0],
+        acrobatics: skills[1],
+        sleight_of_hand: skills[2],
+        stealth: skills[3],
+        arcana: skills[4],
+        history: skills[5],
+        investigation: skills[6],
+        nature: skills[7],
+        religion: skills[8],
+        animal_handling: skills[9],
+        insight: skills[10],
+        medicine: skills[11],
+        perception: skills[12],
+        survival: skills[13],
+        deception: skills[14],
+        intimidation: skills[15],
+        performance: skills[16],
+        persuasion: skills[17]
+    };
+}
+
+export function getCharacterSkills() {
+    return character_skills;
+}
 
 export function setCharacterAbilityModifiers(d) {
     character_ability_modifiers = d;
 }
 
-export function setCharacterAbilities(d) {
-    character_abilities = d;
+export function getCharacterAbilityModifiers() {
+    return character_ability_modifiers;
 }
 
 export function getSpellCastingAbilityScore() {

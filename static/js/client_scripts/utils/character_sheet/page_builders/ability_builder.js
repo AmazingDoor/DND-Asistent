@@ -1,5 +1,5 @@
 import * as ability_calculator from './../calculators/ability_calculator.js';
-import {setCharacterAbilities} from './../character_data_handler.js';
+import {getCharacterBaseAbilities, setCharacterBaseAbilities} from './../character_data_handler.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -10,23 +10,36 @@ document.addEventListener("DOMContentLoaded", () => {
 let socket = null;
 export function setSocket(io) {
     socket = io;
-    socket.on('build_character_abilities', data => {
-        buildCharacterAbilities(data);
+
+}
+
+export function Initialize() {
+    socket.emit('require_character_abilities', {char_id: char_id});
+    return new Promise(resolve => {
+        socket.once('build_character_abilities', data => {
+            const abilities = data.abilities;
+            const abilities_array = [abilities.str_num, abilities.dex_num,
+                abilities.con_num, abilities.int_num, abilities.wis_num, 
+                abilities.cha_num];
+            setCharacterBaseAbilities(abilities_array);
+            buildCharacterAbilities();
+            resolve(data);
+        });
+
     });
 }
 
-export function buildCharacterAbilities(data) {
-    const abilities = data.abilities;
-    setCharacterAbilities(abilities);
+export function buildCharacterAbilities() {
+    const abilities = getCharacterBaseAbilities();
     addEventListeners();
 
 
-    const str_num = abilities.str_num;
-    const dex_num = abilities.dex_num;
-    const con_num = abilities.con_num;
-    const int_num = abilities.int_num;
-    const wis_num = abilities.wis_num;
-    const cha_num = abilities.cha_num;
+    const str_num = abilities.str;
+    const dex_num = abilities.dex;
+    const con_num = abilities.con;
+    const int_num = abilities.int;
+    const wis_num = abilities.wis;
+    const cha_num = abilities.cha;
 
     const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
 
@@ -49,10 +62,10 @@ function addEventListeners() {
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
-        setCharacterAbilities(abilities);
+        setCharacterBaseAbilities(abilities);
 
-        updateSkills();
         updateAbilities();
+        updateSkills();
         saveAbilities();
     });
 
@@ -63,10 +76,10 @@ function addEventListeners() {
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
-        setCharacterAbilities(abilities);
+        setCharacterBaseAbilities(abilities);
 
-        updateSkills();
         updateAbilities();
+        updateSkills();
         saveAbilities();
     });
 
@@ -77,7 +90,7 @@ function addEventListeners() {
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
-        setCharacterAbilities(abilities);
+        setCharacterBaseAbilities(abilities);
 
         updateSkills();
         updateAbilities();
@@ -91,7 +104,7 @@ function addEventListeners() {
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
-        setCharacterAbilities(abilities);
+        setCharacterBaseAbilities(abilities);
 
         updateSkills();
         updateAbilities();
@@ -105,7 +118,7 @@ function addEventListeners() {
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
-        setCharacterAbilities(abilities);
+        setCharacterBaseAbilities(abilities);
 
         updateSkills();
         updateAbilities();
@@ -119,7 +132,7 @@ function addEventListeners() {
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
         const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
-        setCharacterAbilities(abilities);
+        setCharacterBaseAbilities(abilities);
 
         updateSkills();
         updateAbilities();

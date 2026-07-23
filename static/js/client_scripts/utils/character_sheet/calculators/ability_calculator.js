@@ -7,51 +7,47 @@ import {getClassData} from "./../mappers/class_mapper.js";
 export function calculateStrengthMod() {
     const itp = document.querySelector('#strength-input');
     const num = itp.value;
-    return calculateModifier(itp);
+    return calculateModifier(num);
 }
 
 export function calculateDexterityMod() {
     const itp = document.querySelector('#dexterity-input');
     const num = itp.value;
-    return calculateModifier(itp);
+    return calculateModifier(num);
 }
 
 export function calculateConstitutionMod() {
     const itp = document.querySelector('#constitution-input');
     const num = itp.value;
-    return calculateModifier(itp);
+    return calculateModifier(num);
 }
 
 export function calculateIntelligenceMod() {
     const itp = document.querySelector('#intelligence-input');
     const num = itp.value;
-    return calculateModifier(itp);
+    return calculateModifier(num);
 }
 
 export function calculateWisdomMod() {
     const itp = document.querySelector('#wisdom-input');
     const num = itp.value;
-    return calculateModifier(itp);
+    return calculateModifier(num);
 }
 
 export function calculateCharismaMod() {
     const itp = document.querySelector('#charisma-input');
     const num = itp.value;
-    return calculateModifier(itp);
+    return calculateModifier(num);
 }
 
 function calculateModifier(i) {
-    const num = i.value;
-    const new_num = Math.floor((parseInt(num) - 10) / 2);
+    const new_num = Math.floor((parseInt(i) - 10) / 2);
     return new_num;
 }
 
 export function calculateAbilities() {
     const prof_bonus = getProficiencyBonus();
     const race_data = getRaceData(getRace());
-
-    console.log(getRace());
-    console.log(race_data);
 
     let abilities_dict = {};
     if (race_data !== null && race_data !== undefined) {
@@ -81,6 +77,7 @@ export function calculateAbilities() {
     let int_bonus = 0;
     let wis_bonus = 0;
     let cha_bonus = 0;
+
 
     for (const ability in all_abilities) {
         switch(ability.toString()) {
@@ -146,12 +143,20 @@ export function calculateAbilities() {
         }
     });
 
-    const finalCalculations = [calculateModifier(str_input) + str_bonus + race_str_mod,
-    calculateModifier(dex_input) + dex_bonus + race_dex_mod,
-    calculateModifier(con_input) + con_bonus + race_con_mod,
-    calculateModifier(int_input) + int_bonus + race_int_mod,
-    calculateModifier(wis_input) + wis_bonus + race_wis_mod,
-    calculateModifier(cha_input) + cha_bonus + race_cha_mod]
+
+    const base_abilities = character_data_handler.getCharacterBaseAbilities();
+
+    console.log(base_abilities);
+    console.log(race_str_mod);
+    console.log(parseInt(base_abilities.str) + str_bonus);
+
+    const finalCalculations = [
+    calculateModifier(parseInt(base_abilities.str) + parseInt(race_str_mod)),
+    calculateModifier(parseInt(base_abilities.dex) + parseInt(race_dex_mod)),
+    calculateModifier(parseInt(base_abilities.con) + parseInt(race_con_mod)),
+    calculateModifier(parseInt(base_abilities.int) + parseInt(race_int_mod)),
+    calculateModifier(parseInt(base_abilities.wis) + parseInt(race_wis_mod)),
+    calculateModifier(parseInt(base_abilities.cha) + parseInt(race_cha_mod))];
 
     const finalCalculationDict = {
         str: finalCalculations[0],

@@ -11,11 +11,8 @@ let race_name;
 export function Initialize() {
     return new Promise(resolve =>{
         socket.once('load_race_stats', data => {
-            race_skills = data.race_skills;
-            race_abilities = data.race_abilities;
-            race_languages = data.race_name;
             race_name = data.race_name;
-
+            setRace(race_name);
             resolve(data);
         });
     });
@@ -35,7 +32,6 @@ export function setSocket(io) {
 export function setRace(name) {
     race_name = name;
     let race_data = race_features[getRaceId(race_name)];
-    console.log(race_features);
     race_skills = race_data.skills;
     race_abilities = race_data.abilities;
     race_languages = race_data.languages;
