@@ -146,10 +146,6 @@ export function calculateAbilities() {
 
     const base_abilities = character_data_handler.getCharacterBaseAbilities();
 
-    console.log(base_abilities);
-    console.log(race_str_mod);
-    console.log(parseInt(base_abilities.str) + str_bonus);
-
     const finalCalculations = [
     calculateModifier(parseInt(base_abilities.str) + parseInt(race_str_mod)),
     calculateModifier(parseInt(base_abilities.dex) + parseInt(race_dex_mod)),

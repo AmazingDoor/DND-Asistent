@@ -1,4 +1,5 @@
-import { getSpellCastingAbilityScore, getSpellData, getClassName } from "../../character_data_handler.js";
+import { getSpellCastingAbilityScore} from "../../character_data_handler.js";
+import { getSpellData, getClassName } from "../../mappers/class_mapper.js";
 import { getMagicSlots } from "../../../../../shared/spell_caster_slot_map.js";
 import { getPlayerLevel } from "../../../../player_level_handler.js";
 import { getPreparedSpellCount } from "../../../../../shared/spell_data_filterer.js";

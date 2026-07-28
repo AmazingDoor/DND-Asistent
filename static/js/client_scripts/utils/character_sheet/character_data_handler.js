@@ -4,17 +4,6 @@ import { getClassName as get_class_name } from './mappers/class_mapper.js';
 
 let base_character_abilities = {};
 let character_ability_modifiers = {};
-let class_skills = [0, []];
-let class_cantrips = [];
-//let race_skills = [];
-//let race_ability_modifiers = {};
-//let race_languages = [];
-let class_weapon_proficiencies = [];
-let class_armor_proficiencies = [];
-let class_tool_proficiencies = [];
-let class_saving_throws = [];
-let class_spells = [];
-//let race_spells = [];
 let inventory = [];
 let weapon_inventory = [];
 let armor_inventory = [];
@@ -75,7 +64,6 @@ export function getCharacterAbilityModifiers() {
 
 export function getSpellCastingAbilityScore() {
     const className = getClassName();
-    console.log(character_ability_modifiers);
     const spellCastingAbilities = 
     {
         Artificer: character_ability_modifiers.int,
@@ -182,81 +170,6 @@ export function getMountInventory() {
     return mount_inventory;
 }
 
-export function resetClassData() {
-    class_skills = [0, []];
-    class_weapon_proficiencies = [];
-    class_armor_proficiencies = [];
-    class_tool_proficiencies = [];
-    class_saving_throws = [];
-    class_spells = [];
-    class_cantrips = [];
-}
-
-/*Skills From Class*/
-export function setClassSkills(data) {
-    class_skills = data
-}
-
-export function getClassSkillNames() {
-    return class_skills[1];
-}
-
-export function getClassSkills() {
-    return class_skills;
-}
-
-/*Weapon Proficiencies From Class*/
-export function setClassWeaponProficiencies(data) {
-    class_weapon_proficiencies = data;
-}
-
-export function getClassWeaponProficiencies() {
-    return class_weapon_proficiencies;
-}
-
-/*Armor Proficiencies From Class*/
-export function setClassArmorProficiencies(data) {
-    class_armor_proficiencies = data;
-}
-
-export function getClassArmorProficiencies() {
-    return class_weapon_proficiencies;
-}
-
-/*Tool Proficiencies From Class*/
-export function setClassToolProficiencies(data) {
-    class_tool_proficiencies = data;
-}
-
-export function getClassToolProficiencies() {
-    return class_tool_proficiencies;
-}
-
-/*Saving Throws From Class*/
-export function setClassSavingThrows(data) {
-    class_saving_throws = data;
-}
-
-export function getClassSavingThrows() {
-    return class_saving_throws;
-}
-
-export function setClassPreparedSpells(spells) {
-    class_spells = spells;
-}
-
-export function getClassPreparedSpells() {
-    return class_spells;
-}
-
-export function setClassPreparedCantrips(data) {
-    class_cantrips = data;
-}
-
-export function getClassPreparedCantrips() {
-    return class_cantrips;
-}
-
 export function getBackgroundSkills() {
     return background_skills;
 }
@@ -267,24 +180,4 @@ export function addBackgroundSkill(skill) {
 
 export function setBackgroundSkills(skills) {
     background_skills = skills;
-}
-
-export function getClassName() {
-    return get_class_name();
-}
-
-export function getSpellData() {
-    var saved_spells = getClassPreparedSpells();
-    var class_spells = getClassSpells(get_class_name())[1];
-    var savedSpellData = [];
-    saved_spells.forEach((spell) => {
-        for(let i = 0; i < class_spells.length; i++) {
-            let classSpell = class_spells[i];
-            if(spell == classSpell.name) {
-                savedSpellData.push(classSpell);
-                break;
-            }
-        };
-    });
-    return savedSpellData;
 }

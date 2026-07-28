@@ -1,4 +1,4 @@
-import * as character_data_handler from './../character_data_handler.js';
+import { getClassSkills } from '../mappers/class_mapper.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -15,7 +15,7 @@ export function addClassSkillEventListeners(socket, setSkills) {
             option.addEventListener('click', function() {
                 changeHeadText(skill_head, option);
                 setSkills();
-                const skills = character_data_handler.getClassSkills();
+                const skills = getClassSkills();
                 updateSkills();
                 updateAbilities();
                 socket.emit('save_player_skills', {skills: skills, char_id: char_id});

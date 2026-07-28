@@ -1,11 +1,11 @@
-import * as character_data_handler from './../character_data_handler.js';
-import {setClass, getClassData, getClassName} from './../mappers/class_mapper.js';
+import {setDefaultClassData, getClassData, getClassName, setClassSkills, getClassSkills, resetClassData} from './../mappers/class_mapper.js';
 import {linkDropdown} from './../../dropdown_handler.js';
 import {addClassSkillEventListeners} from './../dropdown_handlers/class_skill_handler.js';
 import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 import * as inventory_builder from './inventory_builder.js';
 import { updateSpells } from '../../spell_handler.js';
+import { setUsingSpellbook, isUsingSpellbook } from './../mappers/class_mapper.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -13,20 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 let socket = null;
-let class_data;
 export function setSocket(io) {
     socket = io;
-    socket.on('build_character_class', data => {
-        setClass(data.class_name);
-        character_data_handler.setClassSkills(data.class_skills);
-        buildCharacterClass();
-        updateSpells();
-    });
 }
 
 export function buildCharacterClass() {
     const class_name = getClassName();
-    const skills = character_data_handler.getClassSkills();
+    const skills = getClassSkills();
 
     const class_options = [...document.querySelector(".class-options").children];
     const head = document.querySelector(".class-selector");
@@ -41,36 +34,54 @@ export function buildCharacterClass() {
         document.querySelector('.selected-class').textContent = "Select Class";
 
     }
+    handleSpellBuilding()
     buildClassStatSection(class_name, skills);
     setSkills();
+    
+
+}
+
+function handleSpellBuilding(load_from_save=true) {
+    const class_name = getClassName();
     if (class_name !== "Wizard") {
         document.querySelector('#spell-book-option-div').classList.add('hidden');
-        buildSpellSection(class_name);
+        buildSpellSection(class_name, isUsingSpellbook());
     } else {
         const spell_book_option = document.querySelector('#use-spell-book');
         document.querySelector('#spell-book-option-div').classList.remove('hidden');
-        if (spell_book_option.checked) {
-            return;
+       
+        if(load_from_save) {
+            spell_book_option.checked = isUsingSpellbook();
         } else {
-            buildSpellSection(class_name);
+            spell_book_option.checked = true;
+            setUsingSpellbook(true);
         }
 
-    }
+        spell_book_option.addEventListener("click", function() {
+            setUsingSpellbook(spell_book_option.checked);
+            socket.emit('use_spell_book', {char_id: char_id, use_spell_book: spell_book_option.checked})
+            buildSpellSection(class_name, isUsingSpellbook());
+        });
 
+        buildSpellSection(class_name, isUsingSpellbook());
+    }
 
 }
 
 function clickEvent(option, head) {
+    resetClassData();
+    let same_class = head.querySelector('.selected-class').textContent === option.textContent;
     head.querySelector('.selected-class').textContent = option.textContent;
+    setDefaultClassData(option.textContent);
+    handleSpellBuilding(same_class);
     //socket.emit('save_spells', {char_id: char_id, spells: [], cantrips: [], })
-    buildClassStatSection(option.textContent);
-    character_data_handler.resetClassData();
-    buildSpellSection(option.textContent);
+    //buildClassStatSection(option.textContent);
+    //buildSpellSection(option.textContent);
     setSkills()
-    const skill_array = character_data_handler.getClassSkills();
-    inventory_builder.clearInventory();
-    inventory_builder.createClassOptions();
-    inventory_builder.buildInventory();
+    const skill_array = getClassSkills();
+    //inventory_builder.clearInventory();
+    //inventory_builder.createClassOptions();
+    //inventory_builder.buildInventory();
     updateSkills();
     updateAbilities();
     socket.emit('save_player_class', {class_name: option.textContent, skills: skill_array, char_id: char_id});
@@ -88,12 +99,11 @@ function setSkills() {
         }
     });
 
-    character_data_handler.setClassSkills([skill_names.length, skill_names]);
+    setClassSkills([skill_names.length, skill_names]);
 }
 
 function buildClassStatSection(c, active_skills = []) {
-    setClass(c);
-    class_data = getClassData();
+    let class_data = getClassData();
     if (class_data === null || class_data === undefined) {
         return;
     }
@@ -107,7 +117,7 @@ function buildClassStatSection(c, active_skills = []) {
     const skill_count = class_data.skills[0];
     const skills = class_data.skills[1];
 
-    character_data_handler.setClassSkills(class_data.skills);
+    setClassSkills(class_data.skills);
 
     createSavingThrows(saving_throws)
     createWeaponProficiencies(weapon_proficiencies)

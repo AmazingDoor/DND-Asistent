@@ -9,9 +9,10 @@ import {wizard} from './../../../../../shared/spell_lists/wizard.js';
 import {full_caster, half_caster, third_caster, warlock_pact_magic, getMagicSlots} from './../../../../../shared/spell_caster_slot_map.js';
 import {getPlayerLevel} from './../../../../player_level_handler.js';
 import {linkDropdown} from './../../../dropdown_handler.js';
-import {getClassSpells, getSpellData, getPreparedSpellCount, getPreparedCantripCount} from './../../../../../shared/spell_data_filterer.js';
-import {getClassName} from './../../mappers/class_mapper.js';
-import {setClassPreparedSpells, getClassPreparedSpells, setClassPreparedCantrips,getClassPreparedCantrips, getInventory} from './../../character_data_handler.js';
+import {getClassSpells, getPreparedSpellCount, getPreparedCantripCount} from './../../../../../shared/spell_data_filterer.js';
+import {getClassName, isUsingSpellbook} from './../../mappers/class_mapper.js';
+import {getInventory} from './../../character_data_handler.js';
+import { setClassPreparedSpells, getClassPreparedSpells, setClassPreparedCantrips, getClassPreparedCantrips } from './../../mappers/class_mapper.js';
 import { updateSpells } from '../../../spell_handler.js';
 let socket = null;
 export function setSocket(io) {
@@ -23,40 +24,38 @@ let spell_slots = [];
 document.addEventListener("DOMContentLoaded", function() {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
-
-    socket.on('load_spells', (data) => {
-        const saved_spells = data.spells;
-        const saved_cantrips = data.cantrips;
-        const class_name = data.class_name;
-        spell_slots = getMagicSlots(class_name);
-        setClassPreparedSpells(saved_spells);
-        setClassPreparedCantrips(saved_cantrips);
-    });
 });
 
-export function buildSpellSection(class_name, saved_spells = [], saved_cantrips = []) {
-    let [cantrips, spells] = getClassSpells(class_name);
-    if (class_name === "Wizard") {
-        spells = [];
+export function buildSpellSection(class_name, using_spellbook, saved_spells = [], saved_cantrips = []) {
+    spell_slots = getMagicSlots(class_name);
+    if(using_spellbook) {
+        const spell_div = document.querySelector('.class-spell-div');
+        spell_div.innerHTML = '';
+
+    } else {
+        let [cantrips, spells] = getClassSpells(class_name);
+        if (using_spellbook) {
+            spells = [];
+        }
+        const player_level = getPlayerLevel();
+        
+        const spell_slot_map_object = spell_slots.spell_slots;
+        let spell_slot_map = [];
+        let cantrip_slot_map = [];
+        if(spell_slot_map_object !== undefined) {
+            spell_slot_map = spell_slot_map_object[player_level - 1] || [];
+            cantrip_slot_map = spell_slot_map_object[player_level - 1] || [];
+        }
+        const max_spell_level = spell_slot_map.length;
+
+        saved_spells = getClassPreparedSpells();
+        saved_cantrips = getClassPreparedCantrips();
+
+        console.log(getClassPreparedCantrips());
+
+        buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, cantrips, saved_spells, saved_cantrips, class_name, max_spell_level);
+
     }
-    const player_level = getPlayerLevel();
-    
-    const spell_slot_map_object = spell_slots.spell_slots;
-    let spell_slot_map = [];
-    let cantrip_slot_map = [];
-    if(spell_slot_map_object !== undefined) {
-        spell_slot_map = spell_slot_map_object[player_level - 1] || [];
-        cantrip_slot_map = spell_slot_map_object[player_level - 1] || [];
-    }
-    const max_spell_level = spell_slot_map.length;
-
-    saved_spells = getClassPreparedSpells();
-    saved_cantrips = getClassPreparedCantrips();
-
-    buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, cantrips, saved_spells, saved_cantrips, class_name, max_spell_level);
-
-    //saveSpells();
-
 }
 
 function spellOptionClickEvent(head, option) {
@@ -93,11 +92,14 @@ export function saveSpells() {
     let class_name = getClassName();
     let s = [];
     const container = document.querySelector('.spell-container');
-    const selected_spells = container.querySelectorAll('.spell-selector');
-    selected_spells.forEach((spell) => {
-        const spell_name = spell.querySelector('p').textContent;
-        s.push(spell_name);
-    });
+    
+    if(!isUsingSpellbook()) {
+        const selected_spells = container.querySelectorAll('.spell-selector');
+        selected_spells.forEach((spell) => {
+            const spell_name = spell.querySelector('p').textContent;
+            s.push(spell_name);
+        });
+    }
 
     let c = [];
     const cantrip_container = document.querySelector('.cantrip-container');

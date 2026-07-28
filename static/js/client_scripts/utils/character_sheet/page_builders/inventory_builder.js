@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
     socket.on('build_inventory', data => {
         const inv = data.inventory;
         character_data_handler.setInventory(inv);
-        buildInventory();
+        //buildInventory();
     });
 });
 

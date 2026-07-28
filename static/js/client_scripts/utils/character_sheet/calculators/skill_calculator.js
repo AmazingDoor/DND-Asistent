@@ -1,11 +1,12 @@
 import * as character_data_handler from "./../character_data_handler.js";
 import {getProficiencyBonus} from "./../../../player_level_handler.js";
 import { getRaceAbilities, getRaceSkills } from "../mappers/race_mapper.js";
+import { getClassSkillNames } from "../mappers/class_mapper.js";
 
 let abilities = {};
 
 export function calculateSkills() {
-    const class_skills = character_data_handler.getClassSkillNames();
+    const class_skills = getClassSkillNames();
     const race_skills_main = getRaceSkills();
     const background_skills = character_data_handler.getBackgroundSkills();
 
@@ -53,7 +54,6 @@ export function calculateSkills() {
     const player_level_mod_num = getProficiencyBonus();
 
     abilities = character_data_handler.getCharacterAbilityModifiers();
-    console.log(abilities);
 
 
     let athletics_skill = abilities["str"],
