@@ -41,7 +41,7 @@ export function buildCharacterClass() {
 
 }
 
-function handleSpellBuilding(load_from_save=true) {
+function handleSpellBuilding() {
     const class_name = getClassName();
     if (class_name !== "Wizard") {
         document.querySelector('#spell-book-option-div').classList.add('hidden');
@@ -49,13 +49,8 @@ function handleSpellBuilding(load_from_save=true) {
     } else {
         const spell_book_option = document.querySelector('#use-spell-book');
         document.querySelector('#spell-book-option-div').classList.remove('hidden');
-       
-        if(load_from_save) {
-            spell_book_option.checked = isUsingSpellbook();
-        } else {
-            spell_book_option.checked = true;
-            setUsingSpellbook(true);
-        }
+        
+        spell_book_option.checked = isUsingSpellbook();
 
         spell_book_option.addEventListener("click", function() {
             setUsingSpellbook(spell_book_option.checked);
@@ -70,20 +65,27 @@ function handleSpellBuilding(load_from_save=true) {
 
 function clickEvent(option, head) {
     resetClassData();
+    setUsingSpellbook(false);
     let same_class = head.querySelector('.selected-class').textContent === option.textContent;
+    if(same_class) {
+        return;
+    }
+
+    if(option.textContent == "Wizard") {
+        setUsingSpellbook(true);
+    }
+
     head.querySelector('.selected-class').textContent = option.textContent;
     setDefaultClassData(option.textContent);
-    handleSpellBuilding(same_class);
-    //socket.emit('save_spells', {char_id: char_id, spells: [], cantrips: [], })
-    //buildClassStatSection(option.textContent);
-    //buildSpellSection(option.textContent);
+    handleSpellBuilding();
     setSkills()
     const skill_array = getClassSkills();
-    //inventory_builder.clearInventory();
-    //inventory_builder.createClassOptions();
-    //inventory_builder.buildInventory();
+    inventory_builder.clearInventory();
+    inventory_builder.createClassOptions();
+    inventory_builder.buildInventory();
     updateSkills();
     updateAbilities();
+    socket.emit('use_spell_book', {char_id: char_id, use_spell_book: true})
     socket.emit('save_player_class', {class_name: option.textContent, skills: skill_array, char_id: char_id});
 }
 

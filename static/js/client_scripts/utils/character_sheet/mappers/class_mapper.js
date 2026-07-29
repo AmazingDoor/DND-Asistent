@@ -134,7 +134,6 @@ export function setDefaultClassData(c) {
 }
 
 export function setClass(data) {
-    console.log(data);
     resetClassData();
     setDefaultClassData(data.class_name);
     setClassSkills(data.class_skills);
@@ -156,7 +155,6 @@ export function getClassName() {
 }
 
 export function getClassData() {
-    console.log(class_name);
     const default_class_data = {
         Barbarian: class_proficiencies.barbarian,
         Bard: class_proficiencies.bard,

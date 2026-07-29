@@ -2,7 +2,7 @@ import * as inv_manager from './../inventory/inventory_item_manager.js';
 import {weapons} from './../../../../shared/inventory/weapons.js';
 import {getAllArmors} from './../../../../shared/inventory/armor.js';
 import {items} from './../../../../shared/inventory/items.js';
-import {getClassData} from './../mappers/class_mapper.js';
+import {getClassData, isUsingSpellbook} from './../mappers/class_mapper.js';
 import * as character_data_handler from './../character_data_handler.js';
 import {options as class_loadout_options} from './../../../../shared/inventory/class_loadout_options.js';
 
@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function() {
     socket.on('build_inventory', data => {
         const inv = data.inventory;
         character_data_handler.setInventory(inv);
-        //buildInventory();
     });
 });
 
@@ -75,8 +74,10 @@ export function createClassOptions() {
         const count = item.count;
         const i = item.item;
         if(i.index === "spellbook") {
-            const spells = item.spells;
-            character_data_handler.addSpellbookItem(getKey(items, i), "class", count, spells);
+            if(isUsingSpellbook()) {
+                const spells = item.spells;
+                character_data_handler.addSpellbookItem(getKey(items, i), "class", count, spells);
+            }
         } else {
             if(i.contents.length > 0) {
                 character_data_handler.addInvContainerItem(getKey(items, i), "class", count);

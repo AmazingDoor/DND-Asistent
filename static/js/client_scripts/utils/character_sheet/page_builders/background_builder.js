@@ -14,12 +14,6 @@ let class_data;
 export function setSocket(io) {
     socket = io;
     buildCharacterBackground();
-
-    /*socket.on('build_character_class', data => {
-        setClass(data.class_name);
-        character_data_handler.setClassSkills(data.class_skills);
-        buildCharacterClass();
-    });*/
 }
 
 function buildCharacterBackground() {
