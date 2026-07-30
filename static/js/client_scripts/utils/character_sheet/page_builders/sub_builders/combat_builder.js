@@ -1,5 +1,6 @@
-import { getSpellCastingAbilityScore} from "../../character_data_handler.js";
-import { getSpellData, getClassName } from "../../mappers/class_mapper.js";
+import { getSpellCastingAbilityScore, getCharacterAbilityModifiers} from "../../character_data_handler.js";
+import { getSpellData, getClassName, isUsingSpellbook } from "../../mappers/class_mapper.js";
+import { getSpellsFromSpellbooks } from "../../character_data_handler.js";
 import { getMagicSlots } from "../../../../../shared/spell_caster_slot_map.js";
 import { getPlayerLevel } from "../../../../player_level_handler.js";
 import { getPreparedSpellCount } from "../../../../../shared/spell_data_filterer.js";
@@ -11,12 +12,23 @@ let maxSpellLevel = 0;
 
 export function updateData() {
     spellDisplayList.textContent = '';
-
     className = getClassName();
     let knownSpellCount = getPreparedSpellCount(className);
-    let spell_data_array = getSpellData();
+    let prepared_spell_count = 0;
 
-    for(let i = 0; i < knownSpellCount; i++) {
+    let spell_data_array;
+    if (isUsingSpellbook()) {
+        let int_modifier = getCharacterAbilityModifiers().int;
+
+        spell_data_array = getSpellsFromSpellbooks();
+        prepared_spell_count = parseInt(getPlayerLevel()) + parseInt(int_modifier);
+    } else {
+        spell_data_array = getSpellData();
+        prepared_spell_count = knownSpellCount;
+    }
+
+
+    for(let i = 0; i < prepared_spell_count; i++) {
         if(i < spell_data_array.length) {
             addSpell(spell_data_array[i]);
         } else {
@@ -37,7 +49,6 @@ function addEmpty(container) {
 }
 
 function addSpell(spell_data) {
-    console.log(spell_data);
     const spellContainer = document.createElement('div');
     spellContainer.classList.add("combat-spell-container");
     spellDisplayList.appendChild(spellContainer);

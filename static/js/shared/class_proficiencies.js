@@ -19,9 +19,7 @@ function filterArray(input_array, filter_out_array) {
 }
 
 function addOthers(items, other_items) {
-    console.log(items);
     const item_objects = [...items];
-    console.log(item_objects.map(item => ({ ...item, other: other_items})));
     return item_objects.map(item => ({ ...item, other: other_items}));
 }
 

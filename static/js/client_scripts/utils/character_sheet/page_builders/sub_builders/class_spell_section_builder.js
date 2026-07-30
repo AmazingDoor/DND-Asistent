@@ -15,6 +15,7 @@ import {getInventory} from './../../character_data_handler.js';
 import { setClassPreparedSpells, getClassPreparedSpells, setClassPreparedCantrips, getClassPreparedCantrips } from './../../mappers/class_mapper.js';
 import { updateSpells } from '../../../spell_handler.js';
 import * as inventory_builder from '../inventory_builder.js';
+import { clearItems } from '../../inventory/inventory_item_manager.js';
 let socket = null;
 export function setSocket(io) {
     socket = io;
@@ -32,10 +33,6 @@ export function buildSpellSection(class_name, using_spellbook, saved_spells = []
     if(using_spellbook) {
         const spell_div = document.querySelector('.class-spell-div');
         spell_div.innerHTML = '';
-        inventory_builder.clearInventory();
-        inventory_builder.createClassOptions();
-        inventory_builder.buildInventory();
-
     } else {
         let [cantrips, spells] = getClassSpells(class_name);
         if (using_spellbook) {
@@ -102,6 +99,12 @@ export function saveSpells() {
             const spell_name = spell.querySelector('p').textContent;
             s.push(spell_name);
         });
+    } else {
+        const selected_spells = [];
+        selected_spells.forEach((spell => {
+            const spell_name = spell.querySelector('p').textContent;
+            s.push(spell_name);
+        }))
     }
 
     let c = [];

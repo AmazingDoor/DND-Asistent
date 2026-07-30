@@ -4,17 +4,37 @@ import {addClassSkillEventListeners} from './../dropdown_handlers/class_skill_ha
 import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 import * as inventory_builder from './inventory_builder.js';
+import { clearItems as clearInventory, clearItems } from '../inventory/inventory_item_manager.js';
 import { updateSpells } from '../../spell_handler.js';
 import { setUsingSpellbook, isUsingSpellbook } from './../mappers/class_mapper.js';
+import { updateData as updateCombatSpellData } from './sub_builders/combat_builder.js';
+import { getInventory } from '../character_data_handler.js';
 
-document.addEventListener("DOMContentLoaded", () => {
-    name = sessionStorage.getItem('charName');
-    char_id = sessionStorage.getItem('charId');
-});
 
 let socket = null;
+let spell_book_option;
+let name;
+let char_id;
+
+
 export function setSocket(io) {
     socket = io;
+
+    name = sessionStorage.getItem('charName');
+    char_id = sessionStorage.getItem('charId');
+
+    spell_book_option = document.querySelector('#use-spell-book');
+
+    spell_book_option.addEventListener("click", async function() {
+        setUsingSpellbook(spell_book_option.checked);
+        socket.emit('use_spell_book', {char_id: char_id, use_spell_book: spell_book_option.checked})
+        await inventory_builder.buildInventory();
+        let class_name = getClassName();
+        buildSpellSection(class_name, isUsingSpellbook());
+        updateCombatSpellData();
+        console.log('updated spells');
+
+    });
 }
 
 export function buildCharacterClass() {
@@ -26,7 +46,6 @@ export function buildCharacterClass() {
     class_options.forEach((option) => {
         option.addEventListener("click", function() {clickEvent(option, head)});
     });
-
 
     if (class_name !== null) {
         document.querySelector('.selected-class').textContent = class_name;
@@ -47,29 +66,30 @@ function handleSpellBuilding() {
         document.querySelector('#spell-book-option-div').classList.add('hidden');
         buildSpellSection(class_name, isUsingSpellbook());
     } else {
-        const spell_book_option = document.querySelector('#use-spell-book');
         document.querySelector('#spell-book-option-div').classList.remove('hidden');
         
         spell_book_option.checked = isUsingSpellbook();
-
-        spell_book_option.addEventListener("click", function() {
-            setUsingSpellbook(spell_book_option.checked);
-            socket.emit('use_spell_book', {char_id: char_id, use_spell_book: spell_book_option.checked})
-            buildSpellSection(class_name, isUsingSpellbook());
-        });
 
         buildSpellSection(class_name, isUsingSpellbook());
     }
 
 }
 
-function clickEvent(option, head) {
-    resetClassData();
-    setUsingSpellbook(false);
+let building = false;
+async function clickEvent(option, head) {
+    console.log('ran');
     let same_class = head.querySelector('.selected-class').textContent === option.textContent;
     if(same_class) {
         return;
     }
+
+    if(building) {
+        return;
+    }
+    building = true;
+    resetClassData();
+    setUsingSpellbook(false);
+
 
     if(option.textContent == "Wizard") {
         setUsingSpellbook(true);
@@ -80,13 +100,14 @@ function clickEvent(option, head) {
     handleSpellBuilding();
     setSkills()
     const skill_array = getClassSkills();
-    inventory_builder.clearInventory();
-    inventory_builder.createClassOptions();
-    inventory_builder.buildInventory();
+    await inventory_builder.buildInventory(true);
+    //inventory_builder.createClassOptions();
+
     updateSkills();
     updateAbilities();
     socket.emit('use_spell_book', {char_id: char_id, use_spell_book: true})
     socket.emit('save_player_class', {class_name: option.textContent, skills: skill_array, char_id: char_id});
+    building = false;
 }
 
 function setSkills() {

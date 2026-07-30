@@ -5,6 +5,9 @@ from utils.class_stats_manager import load_player_class
 from utils.client_tracker import ID_TO_CLIENT
 import os
 
+
+#some sockets emits in here are no longer used
+#probably should fix that at some point
 @socketio.on('require_character_abilities')
 def send_character_abilities(data):
     char_id = data.get("char_id")
@@ -49,7 +52,7 @@ def init_json_data(sid, name, char_id):
     race_languages = race_data.get('race_languages') if race_data.get('race_languages') is not None else []
     race_name = race_data.get('race_name') if race_data.get('race_name') is not None else None
     emit('load_race_stats', {'race_skills': race_skills, 'race_abilities': race_abilities, 'race_languages': race_languages, 'race_name': race_name}, room=sid)
-    emit('build_inventory', {"inventory": inv}, room=sid)
+    #emit('build_inventory', {"inventory": inv}, room=sid)
 
     #Call this last
     emit('update_display_data', room=sid)

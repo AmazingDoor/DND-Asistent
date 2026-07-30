@@ -57,13 +57,6 @@ export function calculateAbilities() {
     const selected_abilities = getRaceAbilities();
     let all_abilities = Object.assign({}, selected_abilities, abilities_dict);
 
-    /*selected_abilities.forEach((ability) => {
-        const row = ability.parentElement.parentElement.parentElement;
-        const table_datas = row.querySelectorAll("td");
-        const modifier = parseInt(table_datas[1].textContent.replace("+", ""));
-        all_abilities[ability.textContent] = modifier;
-    });*/
-
     let race_str_mod = 0;
     let race_dex_mod = 0;
     let race_con_mod = 0;

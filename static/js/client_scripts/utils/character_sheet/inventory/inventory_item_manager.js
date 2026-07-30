@@ -9,7 +9,8 @@ import {getClassName} from './../mappers/class_mapper.js';
 import {wizard} from './../../../../shared/spell_lists/wizard.js';
 import {getMagicSlots} from './../../../../shared/spell_caster_slot_map.js';
 import {options as class_loadout_options} from './../../../../shared/inventory/class_loadout_options.js';
-
+import { addSpellToBookInventory } from './../character_data_handler.js';
+import { updateData as updateCombatSpellData } from '../page_builders/sub_builders/combat_builder.js';
 
 const inventory_list = document.querySelector('.inventory-container');
 const weapon_list = document.querySelector('.inventory-weapons');
@@ -521,14 +522,15 @@ export function addSpellbookToInventory(index, f='default', count=1, spells) {
     item_div.appendChild(spells_div);
 
 
-    addSpellsToBook(spells, spells_div, spells);
+    addSpellsToBook(spells, spells_div, index);
 
     inventory_list.appendChild(item_div);
 }
 
-export function addSpellsToBook(saved_spells, spell_div) {
+export function addSpellsToBook(saved_spells, spell_div, book_index) {
     const spell_slots = getMagicSlots("Wizard");
     const player_level = getPlayerLevel();
+
 
     const spell_slot_map_object = spell_slots.spell_slots;
     let spell_slot_map = [];
@@ -544,14 +546,14 @@ export function addSpellsToBook(saved_spells, spell_div) {
     const spell_container = document.createElement('div');
     spell_div.appendChild(spell_container);
 
-    for (let e = 0; e < spell_count; e++) {
+    for (let spell_index = 0; spell_index < spell_count; spell_index++) {
         const spell_dropdown_head = document.createElement('div');
         spell_dropdown_head.classList.add('dropdown-head');
         spell_dropdown_head.classList.add('spell-selector');
         const head_text = document.createElement('p');
         let t = "Select Spell";
-        if(e in saved_spells && saved_spells.length > 0) {
-            t = saved_spells[e];
+        if(spell_index in saved_spells && saved_spells.length > 0) {
+            t = saved_spells[spell_index];
         }
 
         head_text.textContent = t;
@@ -577,7 +579,7 @@ export function addSpellsToBook(saved_spells, spell_div) {
                 spell_option.appendChild(spell_option_text);
                 spell_dropdown.appendChild(spell_option);
 
-                spell_option.addEventListener("click", function() {spellOptionClickEvent(spell_dropdown_head, spell_option_text, saved_spells, e)});
+                spell_option.addEventListener("click", function() {spellOptionClickEvent(spell_dropdown_head, spell_option_text, saved_spells, spell_index, book_index)});
 
                 const spell_data_container = document.createElement('div');
                 spell_data_container.classList.add('spell-data-container');
@@ -629,11 +631,13 @@ export function addSpellsToBook(saved_spells, spell_div) {
 }
 
 //SPELL STUFF//
-function spellOptionClickEvent(head, option, spells, index) {
+function spellOptionClickEvent(head, option, spells, spell_index, book_index) {
     const txt = head.querySelector('p');
     txt.textContent = option.textContent;
-    spells[index] = option.textContent;
+    spells[spell_index] = option.textContent;
+    addSpellToBookInventory(book_index, spell_index, option.textContent);
     saveInventory();
+    updateCombatSpellData();
 }
 
 function findHighestSlotLevelAvailable(d, level) {
@@ -646,6 +650,12 @@ function findHighestSlotLevelAvailable(d, level) {
     return highest;
 }
 ///////////////
+
+export function clearVisualInventory() {
+    inventory_list.innerHTML = '';
+    weapon_list.innerHTML = '';
+    armor_list.innerHTML = '';
+}
 
 export function clearItems() {
     inventory_list.innerHTML = '';
@@ -698,7 +708,6 @@ function addOtherItemsToInventory(other_items, f) {
             }
             character_data_handler.addInvItem(item_key, f, item_count);
         } else if (item_type === other_item_types.weapon_choice) {
-            console.log(item.options);
             character_data_handler.addInvOption("weapon_option", item.options, f);
         }
     });

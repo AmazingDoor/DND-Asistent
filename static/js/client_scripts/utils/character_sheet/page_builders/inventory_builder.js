@@ -7,19 +7,28 @@ import * as character_data_handler from './../character_data_handler.js';
 import {options as class_loadout_options} from './../../../../shared/inventory/class_loadout_options.js';
 
 let socket = null;
+let name;
+let char_id;
 export function setSocket(io) {
     socket = io;
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    socket.on('build_inventory', data => {
-        const inv = data.inventory;
-        character_data_handler.setInventory(inv);
-    });
-});
+export async function Initialize() {
+    name = sessionStorage.getItem("charName");
+    char_id = sessionStorage.getItem("charId");
+    await setSavedInventory();
+    return;
+}
 
-export function clearInventory() {
-    inv_manager.clearItems();
+function setSavedInventory() {
+    socket.emit("require_inventory", {char_id: char_id});
+    return new Promise((resolve) => {
+        socket.once('initialize_inventory_data', data => {
+            const inv = data.inventory.inventory;
+            character_data_handler.setInventory(inv);
+            resolve(data);
+        });
+    });
 }
 
 export function createClassOptions() {
@@ -86,15 +95,21 @@ export function createClassOptions() {
             }
         }
     });
-
     inv_manager.saveInventory();
 }
 
-export function buildInventory() {
+export async function buildInventory(resetSavedInventory=false) {
     document.querySelector('.inventory-container').innerHTML = '';
     document.querySelector('.inventory-weapons').innerHTML = '';
     document.querySelector('.inventory-armor').innerHTML = '';
     document.querySelector('.mounts-container').innerHTML = '';
+    await inv_manager.clearItems();
+    if(resetSavedInventory) {
+        await inv_manager.saveInventory();
+    }
+    await setSavedInventory();
+    createClassOptions();
+
     const class_data = getClassData();
     if (class_data === null || class_data === undefined) {
         return;
@@ -117,6 +132,7 @@ export function buildInventory() {
         }
         i++;
     });
+
     i = 0;
     const weapon_inventory = character_data_handler.getWeaponInventory();
     weapon_inventory.forEach(item => {
@@ -140,6 +156,7 @@ export function buildInventory() {
     });
 
 }
+
 
 
 function getKey(d, d2) {

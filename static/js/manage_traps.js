@@ -24,7 +24,6 @@ function loadTrapDiv(name, text) {
     trap_row.className = ('trap-row');
     trap_row.addEventListener("click", function() {
         const divs = document.querySelectorAll('.trap-row');
-        console.log(divs);
         divs.forEach(d => d.style.backgroundColor = "white");
         trap_row.style.backgroundColor = "lightgray";
         currentDiv = trap_row;

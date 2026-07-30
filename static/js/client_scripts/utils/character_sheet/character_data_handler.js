@@ -1,6 +1,6 @@
 import { getClassSpells } from '../../../shared/spell_data_filterer.js';
 import {items} from './../../../shared/inventory/items.js';
-import { getClassName as get_class_name } from './mappers/class_mapper.js';
+import { getClassName as get_class_name, getClassName } from './mappers/class_mapper.js';
 
 let base_character_abilities = {};
 let character_ability_modifiers = {};
@@ -11,6 +11,49 @@ let mount_inventory = [];
 let character_skills = {};
 let background_skills = [];
 
+
+export function addSpellToBookInventory(book_index, spell_index, spell_name) {
+    const spell_book = inventory[book_index];
+    console.log(inventory);
+    spell_book.spells[spell_index] = spell_name;
+}
+
+export function getSpellsFromSpellbooks() {
+    let spell_books = [];
+    let all_spells = [];
+    let filtered_spells = [];
+    const class_spells = getClassSpells(getClassName())[1];
+    
+    
+    inventory.forEach((item) => {
+        console.log(item.type);
+        if(item.type == "spellbook_item") {
+            spell_books.push(item);
+        }
+    });
+
+    console.log(spell_books);
+
+    //TODO: filter for prepared spells
+    spell_books.forEach((book) => {
+        let spells = book.spells;
+        spells.forEach((spell) => {
+            all_spells.push(spell);
+        });
+    });
+
+    all_spells.forEach((spell) => {
+        for(let i = 0; i < class_spells.length; i++) {
+            let classSpell = class_spells[i];
+            if(spell == classSpell.name) {
+                filtered_spells.push(classSpell);
+                break;
+            }
+        }
+    });
+
+    return filtered_spells;
+}
 
 export function setCharacterBaseAbilities(base_abilities) {
     base_character_abilities = {

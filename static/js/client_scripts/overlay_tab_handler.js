@@ -36,7 +36,6 @@ function AddOverlayTabClickListener(tab) {
         });
 
         const page_id = id.replace("-tab", "-page");
-        console.log(page_id);
         document.querySelector("#" + page_id).classList.remove('hidden');
     });
 }
