@@ -667,6 +667,7 @@ export function clearItems() {
 
 export function saveInventory() {
     const inventory = character_data_handler.getInventory();
+    console.log(inventory);
     const weapon_inventory = character_data_handler.getWeaponInventory();
     const armor_inventory = character_data_handler.getArmorInventory();
     const mount_inventory = character_data_handler.getMountInventory();

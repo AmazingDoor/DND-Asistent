@@ -26,13 +26,11 @@ export function getSpellsFromSpellbooks() {
     
     
     inventory.forEach((item) => {
-        console.log(item.type);
         if(item.type == "spellbook_item") {
             spell_books.push(item);
         }
     });
 
-    console.log(spell_books);
 
     //TODO: filter for prepared spells
     spell_books.forEach((book) => {

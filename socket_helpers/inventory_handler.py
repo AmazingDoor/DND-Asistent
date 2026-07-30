@@ -21,5 +21,6 @@ def send_inventory_data(data):
     players_folder = get_players_folder()
     char_id = data.get("char_id")
     sid = ID_TO_CLIENT[char_id]
-    inventory = safe_read_json(f"{players_folder}\\{char_id}\\inventory.json")
+    file_path = f"{players_folder}\\{char_id}\\inventory.json"
+    inventory = safe_read_json(file_path)
     emit('initialize_inventory_data', {"inventory": inventory}, room=sid)

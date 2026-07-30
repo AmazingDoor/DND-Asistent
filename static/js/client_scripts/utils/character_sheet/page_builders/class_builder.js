@@ -4,11 +4,12 @@ import {addClassSkillEventListeners} from './../dropdown_handlers/class_skill_ha
 import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 import * as inventory_builder from './inventory_builder.js';
-import { clearItems as clearInventory, clearItems } from '../inventory/inventory_item_manager.js';
+import { clearItems as clearInventory, clearItems, saveInventory } from '../inventory/inventory_item_manager.js';
 import { updateSpells } from '../../spell_handler.js';
 import { setUsingSpellbook, isUsingSpellbook } from './../mappers/class_mapper.js';
 import { updateData as updateCombatSpellData } from './sub_builders/combat_builder.js';
 import { getInventory } from '../character_data_handler.js';
+import * as inventory_handler from '../../inventory_handler.js';
 
 
 let socket = null;
@@ -28,12 +29,11 @@ export function setSocket(io) {
     spell_book_option.addEventListener("click", async function() {
         setUsingSpellbook(spell_book_option.checked);
         socket.emit('use_spell_book', {char_id: char_id, use_spell_book: spell_book_option.checked})
-        await inventory_builder.buildInventory();
+        await inventory_builder.rebuildInventory();
         let class_name = getClassName();
         buildSpellSection(class_name, isUsingSpellbook());
         updateCombatSpellData();
         console.log('updated spells');
-
     });
 }
 
@@ -77,7 +77,6 @@ function handleSpellBuilding() {
 
 let building = false;
 async function clickEvent(option, head) {
-    console.log('ran');
     let same_class = head.querySelector('.selected-class').textContent === option.textContent;
     if(same_class) {
         return;
@@ -96,11 +95,14 @@ async function clickEvent(option, head) {
     }
 
     head.querySelector('.selected-class').textContent = option.textContent;
+    inventory_handler.clearInventory();
     setDefaultClassData(option.textContent);
+    await inventory_handler.setDefaultInventory();
+    saveInventory();
     handleSpellBuilding();
     setSkills()
     const skill_array = getClassSkills();
-    await inventory_builder.buildInventory(true);
+    await inventory_builder.rebuildInventory();
     //inventory_builder.createClassOptions();
 
     updateSkills();

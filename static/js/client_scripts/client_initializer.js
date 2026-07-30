@@ -7,11 +7,14 @@ import { Initialize as InitializeInventoryBuilder } from "./utils/character_shee
 import { buildCharacterClass } from "./utils/character_sheet/page_builders/class_builder.js";
 import { buildInventory } from "./utils/character_sheet/page_builders/inventory_builder.js";
 import { updateData as updateCombatSpellData } from "./utils/character_sheet/page_builders/sub_builders/combat_builder.js";
+import { Initialize as InitializeInventoryHandler } from "./utils/inventory_handler.js";
+
 export async function initializeClient() {
     await InitializePlayerLevelHandler();
     await InitializeRaceMapper();
     await InitializeClassMapper();
     await InitializeAbilityBuilder();
+    await InitializeInventoryHandler();
     await InitializeInventoryBuilder();
     InitializeRaceDropdownHandler();
     buildCharacterClass();
