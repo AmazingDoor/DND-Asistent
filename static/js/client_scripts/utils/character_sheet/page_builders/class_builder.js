@@ -103,6 +103,7 @@ async function clickEvent(option, head) {
     setSkills()
     const skill_array = getClassSkills();
     await inventory_builder.rebuildInventory();
+    updateCombatSpellData();
     //inventory_builder.createClassOptions();
 
     updateSkills();
