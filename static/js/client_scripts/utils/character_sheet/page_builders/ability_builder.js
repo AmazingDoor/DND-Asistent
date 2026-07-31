@@ -62,6 +62,7 @@ function addEventListeners() {
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
         const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
+        console.log(abilities);
         setCharacterBaseAbilities(abilities);
 
         updateAbilities();
@@ -75,7 +76,7 @@ function addEventListeners() {
         setModText(mod, mod_num);
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
-        const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
+        const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
         setCharacterBaseAbilities(abilities);
 
         updateAbilities();
@@ -89,7 +90,7 @@ function addEventListeners() {
         setModText(mod, mod_num);
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
-        const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
+        const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
         setCharacterBaseAbilities(abilities);
 
         updateSkills();
@@ -103,7 +104,7 @@ function addEventListeners() {
         setModText(mod, mod_num);
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
-        const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
+        const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
         setCharacterBaseAbilities(abilities);
 
         updateSkills();
@@ -117,7 +118,7 @@ function addEventListeners() {
         setModText(mod, mod_num);
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
-        const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
+        const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
         setCharacterBaseAbilities(abilities);
 
         updateSkills();
@@ -131,7 +132,7 @@ function addEventListeners() {
         setModText(mod, mod_num);
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
-        const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
+        const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
         setCharacterBaseAbilities(abilities);
 
         updateSkills();

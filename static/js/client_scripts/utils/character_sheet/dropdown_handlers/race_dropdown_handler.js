@@ -28,10 +28,10 @@ export function addEventListeners() {
     });
 }
 
-function clickEvent(dropdown_text, option) {
+async function clickEvent(dropdown_text, option) {
     resetRaceData();
     dropdown_text.textContent = option.textContent;
-    setRace(option.textContent);
+    await setRace(option.textContent);
     buildRaceSection(option.textContent);
     updateAbilities();
     updateSkills();

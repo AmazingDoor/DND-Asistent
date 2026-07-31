@@ -17,6 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 export function updateAbilities() {
+    console.log(getRace());
+    console.log(getClassName());
+    if(getRace() == null || getRace() == undefined || getClassName() == null || getClassName() == undefined) {
+        return;
+    }
     let str_mod = document.querySelector('.strength-modifier-usable');
     let dex_mod = document.querySelector('.dexterity-modifier-usable');
     let con_mod = document.querySelector('.constitution-modifier-usable');
