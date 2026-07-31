@@ -32,6 +32,7 @@ export function setSocket(io) {
 export function setRace(name) {
     race_name = name;
     let race_data = race_features[getRaceId(race_name)];
+    if(race_data == undefined) {return;}
     race_skills = race_data.skills;
     race_abilities = race_data.abilities;
     race_languages = race_data.languages;
@@ -42,6 +43,9 @@ export function getRaceId(name) {
 }
 
 export function getRace() {
+    if(race_name == "Select Race") {
+        return undefined;
+    }
     return race_name;
 }
 

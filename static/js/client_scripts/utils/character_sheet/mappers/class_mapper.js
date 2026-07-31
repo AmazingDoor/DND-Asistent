@@ -125,6 +125,10 @@ export function setDefaultClassData(c) {
     class_name = c;
     let class_data = getClassData();
 
+    if(class_data == null || class_data == undefined) {
+        return;
+    }
+
     if("saving_throws" in class_data) {
         class_saving_throws = class_data.saving_throws;
     }

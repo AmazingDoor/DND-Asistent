@@ -1,6 +1,8 @@
 import {calculateSkills} from './character_sheet/calculators/skill_calculator.js';
 import {calculateAbilities} from './character_sheet/calculators/ability_calculator.js';
 import { getCharacterSkills } from './character_sheet/character_data_handler.js';
+import { getRace, getRaceName } from './character_sheet/mappers/race_mapper.js';
+import { getClassName } from './character_sheet/mappers/class_mapper.js';
 
 let socket = null;
 export function setSocket(io) {
@@ -33,6 +35,9 @@ export function updateAbilities() {
 }
 
 export function updateSkills() {
+    if(getRace() == null || getRace() == undefined || getClassName() == null || getClassName() == undefined) {
+        return;
+    }
     calculateSkills();
     const athletics = document.querySelector("#athletics-num");
     const acrobatics = document.querySelector("#acrobatics-num");

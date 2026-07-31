@@ -547,6 +547,10 @@ export function addSpellsToBook(saved_spells, spell_div, book_index) {
     spell_div.appendChild(spell_container);
 
     for (let spell_index = 0; spell_index < spell_count; spell_index++) {
+        const book_spell_container = document.createElement('div');
+        book_spell_container.classList.add('book-spell-container');
+        spell_container.appendChild(book_spell_container);
+
         const spell_dropdown_head = document.createElement('div');
         spell_dropdown_head.classList.add('dropdown-head');
         spell_dropdown_head.classList.add('spell-selector');
@@ -558,6 +562,14 @@ export function addSpellsToBook(saved_spells, spell_div, book_index) {
 
         head_text.textContent = t;
         spell_dropdown_head.appendChild(head_text);
+
+        if(head_text.textContent != "Select Spell") {
+            const prepared_spell_checkbox = document.createElement('input');
+            prepared_spell_checkbox.type = 'checkbox';
+            prepared_spell_checkbox.id = '';
+            prepared_spell_checkbox.classList.add('prepared-spell-checkbox');
+            book_spell_container.appendChild(prepared_spell_checkbox);
+        }
 
         const d = document.createElement('div');
         d.classList.add('dropdown');
@@ -622,7 +634,7 @@ export function addSpellsToBook(saved_spells, spell_div, book_index) {
             }
         });
 
-        spell_container.appendChild(spell_dropdown_head);
+        book_spell_container.appendChild(spell_dropdown_head);
         spell_dropdown_head.addEventListener("click", function() {
             const content = spell_dropdown_head.querySelector(".dropdown-content");
             content.classList.toggle("hidden");
