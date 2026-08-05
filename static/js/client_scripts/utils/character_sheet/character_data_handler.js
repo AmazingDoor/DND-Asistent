@@ -12,10 +12,22 @@ let character_skills = {};
 let background_skills = [];
 
 
-export function addSpellToBookInventory(book_index, spell_index, spell_name) {
+export function addSpellToBookInventory(book_index, spell_index, spell_name, prepared_spell) {
     const spell_book = inventory[book_index];
-    console.log(inventory);
-    spell_book.spells[spell_index] = spell_name;
+   let spell_data = createSpellDict(spell_name, prepared_spell)
+    spell_book.spells[spell_index] = spell_data;
+}
+
+function createSpellDict(spell_name, prepared) {
+    let spell_data = {spell_name: spell_name, prepared: prepared};
+    return spell_data;
+}
+
+export function setSpellPrepared(book_index, spell_index, prepared) {
+    const spell_book = inventory[book_index];
+    console.log(spell_book);
+    let spell = spell_book.spells[spell_index];
+    spell.prepared = prepared;
 }
 
 export function getSpellsFromSpellbooks() {
@@ -36,14 +48,18 @@ export function getSpellsFromSpellbooks() {
     spell_books.forEach((book) => {
         let spells = book.spells;
         spells.forEach((spell) => {
-            all_spells.push(spell);
+            if(spell.prepared) {
+                all_spells.push(spell);
+            }
         });
     });
 
     all_spells.forEach((spell) => {
         for(let i = 0; i < class_spells.length; i++) {
             let classSpell = class_spells[i];
-            if(spell == classSpell.name) {
+            //console.log(spell.spell_name);
+            //console.log(classSpell.name);
+            if(spell.spell_name == classSpell.name) {
                 filtered_spells.push(classSpell);
                 break;
             }

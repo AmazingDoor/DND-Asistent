@@ -17,8 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 export function updateAbilities() {
-    console.log(getRace());
-    console.log(getClassName());
     if(getRace() == null || getRace() == undefined || getClassName() == null || getClassName() == undefined) {
         return;
     }

@@ -9,8 +9,8 @@ import {getClassName} from './../mappers/class_mapper.js';
 import {wizard} from './../../../../shared/spell_lists/wizard.js';
 import {getMagicSlots} from './../../../../shared/spell_caster_slot_map.js';
 import {options as class_loadout_options} from './../../../../shared/inventory/class_loadout_options.js';
-import { addSpellToBookInventory } from './../character_data_handler.js';
-import { updateData as updateCombatSpellData } from '../page_builders/sub_builders/combat_builder.js';
+import { addSpellToBookInventory, setSpellPrepared } from './../character_data_handler.js';
+import { updateData as updateCombatSpellData, updateData } from '../page_builders/sub_builders/combat_builder.js';
 
 const inventory_list = document.querySelector('.inventory-container');
 const weapon_list = document.querySelector('.inventory-weapons');
@@ -556,18 +556,32 @@ export function addSpellsToBook(saved_spells, spell_div, book_index) {
         spell_dropdown_head.classList.add('spell-selector');
         const head_text = document.createElement('p');
         let t = "Select Spell";
+        let prepared = false;
         if(spell_index in saved_spells && saved_spells.length > 0) {
-            t = saved_spells[spell_index];
+            let spell_name = saved_spells[spell_index].spell_name;
+            if(spell_name !== undefined && spell_name !== null) {
+                t = spell_name;
+                prepared = saved_spells[spell_index].prepared;
+            }
+            
         }
 
         head_text.textContent = t;
         spell_dropdown_head.appendChild(head_text);
 
         if(head_text.textContent != "Select Spell") {
+            const prepared_spell_checkbox_label = document.createElement("p");
+            prepared_spell_checkbox_label.textContent = "Prepared";
+            book_spell_container.appendChild(prepared_spell_checkbox_label);
+
             const prepared_spell_checkbox = document.createElement('input');
             prepared_spell_checkbox.type = 'checkbox';
             prepared_spell_checkbox.id = '';
             prepared_spell_checkbox.classList.add('prepared-spell-checkbox');
+            prepared_spell_checkbox.addEventListener("click", function() {
+                togglePreparedSpell(prepared_spell_checkbox, spell_index, book_index);
+            });
+            prepared_spell_checkbox.checked = prepared;
             book_spell_container.appendChild(prepared_spell_checkbox);
         }
 
@@ -647,7 +661,7 @@ function spellOptionClickEvent(head, option, spells, spell_index, book_index) {
     const txt = head.querySelector('p');
     txt.textContent = option.textContent;
     spells[spell_index] = option.textContent;
-    addSpellToBookInventory(book_index, spell_index, option.textContent);
+    addSpellToBookInventory(book_index, spell_index, option.textContent, false);
     saveInventory();
     updateCombatSpellData();
 }
@@ -660,6 +674,16 @@ function findHighestSlotLevelAvailable(d, level) {
         }
     }
     return highest;
+}
+
+function togglePreparedSpell(checkbox, spell_index, book_index) {
+    if(checkbox.checked) {
+        setSpellPrepared(book_index, spell_index, true);
+    } else {
+        setSpellPrepared(book_index, spell_index, false);
+    }
+    updateData();
+    saveInventory();
 }
 ///////////////
 

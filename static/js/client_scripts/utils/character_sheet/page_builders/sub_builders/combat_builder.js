@@ -22,6 +22,9 @@ export function updateData() {
 
         spell_data_array = getSpellsFromSpellbooks();
         prepared_spell_count = parseInt(getPlayerLevel()) + parseInt(int_modifier);
+        if(prepared_spell_count < 1) {
+            prepared_spell_count = 1;
+        }
     } else {
         spell_data_array = getSpellData();
         prepared_spell_count = knownSpellCount;
