@@ -3,6 +3,7 @@ import {calculateAbilities} from './character_sheet/calculators/ability_calculat
 import { getCharacterSkills } from './character_sheet/character_data_handler.js';
 import { getRace, getRaceName } from './character_sheet/mappers/race_mapper.js';
 import { getClassName } from './character_sheet/mappers/class_mapper.js';
+import { bus, EVENTS } from './event_bus.js';
 
 let socket = null;
 export function setSocket(io) {
@@ -10,10 +11,18 @@ export function setSocket(io) {
     socket.on('update_display_data', function() {updateAbilities(); updateSkills();})
 }
 
+const update_abilities_subscribe_events = [EVENTS.ABILITY_CHANGED, 
+    EVENTS.LEVEL_UPDATED, EVENTS.CLASS_CHANGED];
+
+const update_skills_subscribe_events = [EVENTS.ABILITY_CHANGED, 
+    EVENTS.LEVEL_UPDATED, EVENTS.CLASS_CHANGED];
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
+    bus.subscribeToEvents(update_abilities_subscribe_events, updateAbilities);
+    bus.subscribeToEvents(update_skills_subscribe_events, updateSkills);
+    
 });
 
 export function updateAbilities() {

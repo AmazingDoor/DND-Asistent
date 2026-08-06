@@ -5,6 +5,8 @@ import {items} from './../../../../shared/inventory/items.js';
 import {getClassData, isUsingSpellbook} from './../mappers/class_mapper.js';
 import * as character_data_handler from './../character_data_handler.js';
 import {options as class_loadout_options} from './../../../../shared/inventory/class_loadout_options.js';
+import { getPlayerLevel } from '../../../player_level_handler.js';
+import { getAbilities } from '../mappers/ability_mapper.js';
 
 let socket = null;
 let name;
@@ -28,6 +30,7 @@ export function buildInventory() {
     document.querySelector('.inventory-weapons').innerHTML = '';
     document.querySelector('.inventory-armor').innerHTML = '';
     document.querySelector('.mounts-container').innerHTML = '';
+    character_data_handler.setMaxPreparedSpells(getPlayerLevel(), getAbilities()[3]);
     //createClassOptions();
 
     const class_data = getClassData();

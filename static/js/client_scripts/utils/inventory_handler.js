@@ -19,7 +19,6 @@ export function setSocket(io) {
 
 export async function Initialize() {
     await setSavedInventory();
-    console.log(character_data_handler.getInventory());
 }
 
 export function setSavedInventory() {

@@ -4,11 +4,19 @@ import { getSpellsFromSpellbooks } from "../../character_data_handler.js";
 import { getMagicSlots } from "../../../../../shared/spell_caster_slot_map.js";
 import { getPlayerLevel } from "../../../../player_level_handler.js";
 import { getPreparedSpellCount } from "../../../../../shared/spell_data_filterer.js";
+import { bus, EVENTS } from "../../../event_bus.js";
+
 
 const concentrationSpellName = document.getElementById('concentration-spell-name');
 const spellDisplayList = document.getElementById('combat-spell-display-list');
 let className = '';
 let maxSpellLevel = 0;
+
+const update_data_subscribe_events = [EVENTS.LEVEL_UPDATED, EVENTS.CLASS_CHANGED, 
+    EVENTS.USE_SPELL_BOOK_CLICKED, EVENTS.SPELL_BOOK_SPELL_SELECTED, EVENTS.SPELL_PREPARED];
+bus.subscribeToEvents(update_data_subscribe_events, updateData);
+
+
 
 export function updateData() {
     spellDisplayList.textContent = '';
@@ -29,7 +37,6 @@ export function updateData() {
         spell_data_array = getSpellData();
         prepared_spell_count = knownSpellCount;
     }
-
 
     for(let i = 0; i < prepared_spell_count; i++) {
         if(i < spell_data_array.length) {

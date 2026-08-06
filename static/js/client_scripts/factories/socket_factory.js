@@ -16,6 +16,8 @@ import {setSocket as setInventoryItemManagerSocket} from './../utils/character_s
 import {setSocket as setBackgroundBuilderSocket} from './../utils/character_sheet/page_builders/background_builder.js';
 import {setSocket as setBackgroundMapperSocket} from './../utils/character_sheet/mappers/background_mapper.js';
 import { setSocket as setInventoryHandlerSocket } from '../utils/inventory_handler.js';
+import { SetSocket as setInventorySaverSocket } from '../utils/character_sheet/inventory/savers/inventory_saver.js';
+
 
 export let socket = null;
 
@@ -38,6 +40,7 @@ export function setFactorySocket(io) {
     setBackgroundBuilderSocket(io);
     setBackgroundMapperSocket(io);
     setInventoryHandlerSocket(io);
+    setInventorySaverSocket(io);
 }
 
 export function getSocket() {

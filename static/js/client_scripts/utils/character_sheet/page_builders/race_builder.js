@@ -1,10 +1,16 @@
 import * as character_data_handler from './../character_data_handler.js';
-import {getRaceData, getRaceAbilities, getRaceLanguages, getRaceSkills} from "./../mappers/race_mapper.js";
+import {getRaceData, getRaceAbilities, getRaceLanguages, getRaceSkills, getRace} from "./../mappers/race_mapper.js";
 import {createAbilityDropdown} from './../dropdown_builders/ability_dropdown_builder.js';
 import {createLanguageDropdown} from './../dropdown_builders/language_dropdown_builder.js';
 import {createSkillDropdown} from './../dropdown_builders/skill_dropdown_builder.js';
+import { bus, EVENTS } from '../../event_bus.js';
 
-export function buildRaceSection(race_name) {
+
+const build_race_section_subscriptions = [EVENTS.LEVEL_UPDATED];
+bus.subscribeToEvents(build_race_section_subscriptions, buildRaceSection);
+
+export function buildRaceSection() {
+    const race_name = getRace();
     const race_data = getRaceData(race_name);
     if(race_data === undefined || race_data === null) {return;}
     createAbilities(race_data.abilities);

@@ -1,6 +1,7 @@
 import * as ability_calculator from './../calculators/ability_calculator.js';
 import {getCharacterBaseAbilities, setCharacterBaseAbilities} from './../character_data_handler.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
+import { bus, EVENTS } from '../../event_bus.js';
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
@@ -62,11 +63,9 @@ function addEventListeners() {
 
         const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
         const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
-        console.log(abilities);
         setCharacterBaseAbilities(abilities);
 
-        updateAbilities();
-        updateSkills();
+        bus.publish(EVENTS.ABILITY_CHANGED);
         saveAbilities();
     });
 
@@ -79,9 +78,9 @@ function addEventListeners() {
         const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
         setCharacterBaseAbilities(abilities);
 
-        updateAbilities();
-        updateSkills();
+        bus.publish(EVENTS.ABILITY_CHANGED);
         saveAbilities();
+
     });
 
     con_input.addEventListener('change', function() {
@@ -93,9 +92,9 @@ function addEventListeners() {
         const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
         setCharacterBaseAbilities(abilities);
 
-        updateSkills();
-        updateAbilities();
+        bus.publish(EVENTS.ABILITY_CHANGED);
         saveAbilities();
+
     });
 
     int_input.addEventListener('change', function() {
@@ -107,8 +106,7 @@ function addEventListeners() {
         const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
         setCharacterBaseAbilities(abilities);
 
-        updateSkills();
-        updateAbilities();
+        bus.publish(EVENTS.ABILITY_CHANGED);
         saveAbilities();
     });
 
@@ -121,8 +119,7 @@ function addEventListeners() {
         const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
         setCharacterBaseAbilities(abilities);
 
-        updateSkills();
-        updateAbilities();
+        bus.publish(EVENTS.ABILITY_CHANGED);
         saveAbilities();
     });
 
@@ -135,8 +132,7 @@ function addEventListeners() {
         const abilities = [str_input.value, dex_input.value, con_input.value, int_input.value, wis_input.value, cha_input.value];
         setCharacterBaseAbilities(abilities);
 
-        updateSkills();
-        updateAbilities();
+        bus.publish(EVENTS.ABILITY_CHANGED);
         saveAbilities();
     });
 }

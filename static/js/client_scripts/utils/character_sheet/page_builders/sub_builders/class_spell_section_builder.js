@@ -10,13 +10,19 @@ import {full_caster, half_caster, third_caster, warlock_pact_magic, getMagicSlot
 import {getPlayerLevel} from './../../../../player_level_handler.js';
 import {linkDropdown} from './../../../dropdown_handler.js';
 import {getClassSpells, getPreparedSpellCount, getPreparedCantripCount} from './../../../../../shared/spell_data_filterer.js';
-import {getClassName, isUsingSpellbook} from './../../mappers/class_mapper.js';
 import {getInventory} from './../../character_data_handler.js';
-import { setClassPreparedSpells, getClassPreparedSpells, setClassPreparedCantrips, getClassPreparedCantrips } from './../../mappers/class_mapper.js';
+import { setClassPreparedSpells, getClassPreparedSpells, 
+    setClassPreparedCantrips, getClassPreparedCantrips, 
+    getClassName, isUsingSpellbook } from './../../mappers/class_mapper.js';
 import { updateSpells } from '../../../spell_handler.js';
 import * as inventory_builder from '../inventory_builder.js';
 import { clearItems } from '../../inventory/inventory_item_manager.js';
+import { bus, EVENTS } from '../../../event_bus.js';
+
 let socket = null;
+
+const build_spell_section_subscriptions = [EVENTS.USE_SPELL_BOOK_CLICKED];
+
 export function setSocket(io) {
     socket = io;
 }
@@ -28,7 +34,9 @@ document.addEventListener("DOMContentLoaded", function() {
     char_id = sessionStorage.getItem('charId');
 });
 
-export function buildSpellSection(class_name, using_spellbook, saved_spells = [], saved_cantrips = []) {
+export function buildSpellSection(saved_spells = [], saved_cantrips = []) {
+    let using_spellbook = isUsingSpellbook();
+    let class_name = getClassName();
     spell_slots = getMagicSlots(class_name);
     if(using_spellbook) {
         const spell_div = document.querySelector('.class-spell-div');

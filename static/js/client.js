@@ -14,6 +14,7 @@ import {getRace} from './client_scripts/utils/character_sheet/mappers/race_mappe
 import {setPlayerLevel} from './client_scripts/player_level_handler.js';
 import {updateAbilities, updateSkills} from './client_scripts/utils/display_stat_updater.js';
 import { calculateAbilities } from './client_scripts/utils/character_sheet/calculators/ability_calculator.js';
+import { bus, EVENTS } from './client_scripts/utils/event_bus.js';
 
 const socket = io();
 setFactorySocket(socket);
@@ -24,7 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const ipt = document.querySelector('#player-level-input');
     ipt.addEventListener('change',
-    function() {updateEverything(ipt);});
+    function() {
+        setPlayerLevel(ipt.value);
+        bus.publish(EVENTS.LEVEL_UPDATED);
+    });
 
     const max_health_input = document.querySelector(".max-health");
     max_health_input.addEventListener('change', function() {
