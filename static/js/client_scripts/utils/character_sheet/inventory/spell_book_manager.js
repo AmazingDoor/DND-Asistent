@@ -2,13 +2,64 @@ import { items } from "../../../../shared/inventory/items.js";
 import { getMagicSlots } from "../../../../shared/spell_caster_slot_map.js";
 import { getPlayerLevel } from "../../../player_level_handler.js";
 import { wizard } from "../../../../shared/spell_lists/wizard.js";
-import { addSpellToBookInventory, setSpellPrepared, getMaxPreparedSpells, getCharacterAbilityModifiers } from "../character_data_handler.js";
+import { addSpellToBookInventory, setSpellPrepared, getMaxPreparedSpells, getCharacterAbilityModifiers, getPreparedSpellCount, setMaxPreparedSpells } from "../character_data_handler.js";
 import { updateData as updateCombatSpellData } from "../page_builders/sub_builders/combat_builder.js";
 import { saveInventory } from "./savers/inventory_saver.js";
 import { getAbilities } from "../mappers/ability_mapper.js";
 import { bus, EVENTS } from "../../event_bus.js";
 
 const inventory_list = document.querySelector('.inventory-container');
+const checkbox_array = [];
+
+export function clearCheckboxes() {
+    checkbox_array = [];
+}
+
+const set_max_prepared_spells_num_subscriptions = [EVENTS.LEVEL_UPDATED];
+bus.subscribeToEvents(set_max_prepared_spells_num_subscriptions, setMaxPreparedSpellsNum);
+
+function setMaxPreparedSpellsNum() {
+    setMaxPreparedSpells();
+    const max_prepared_spell_count = getMaxPreparedSpells();
+    const spell_nums = inventory_list.querySelectorAll('.max-prepared-spell-num');
+    spell_nums.forEach((n) => {
+        n.textContent = max_prepared_spell_count;
+    });
+
+}
+
+const set_prepared_spells_num_subscriptions = [EVENTS.SPELL_PREPARED];
+bus.subscribeToEvents(set_prepared_spells_num_subscriptions, setPreparedSpellsNum)
+
+function setPreparedSpellsNum() {
+    const current_spell_count = getPreparedSpellCount();
+    const spell_nums = inventory_list.querySelectorAll('.prepared-spell-num');
+    spell_nums.forEach((n) => {
+        n.textContent = current_spell_count;
+    });
+
+    ensureDisabledCheckboxes();
+}
+
+const ensure_disabled_checkboxes_subscriptions = [EVENTS.SPELL_PREPARED, EVENTS.LEVEL_UPDATED];
+bus.subscribeToEvents(ensure_disabled_checkboxes_subscriptions, ensureDisabledCheckboxes);
+
+function ensureDisabledCheckboxes() {
+    const current_spell_count = getPreparedSpellCount();
+    const max_spell_count = getMaxPreparedSpells();
+
+    if(current_spell_count >= max_spell_count) {
+        checkbox_array.forEach((box) => {
+            if(!box.checked) {
+                box.disabled = true;
+            }
+        });
+    } else {
+        checkbox_array.forEach((box) => {
+            box.disabled = false;
+        });
+    }
+}
 
 export function addSpellbookToInventory(index, f='default', count=1, spells) {
     const item_div = document.createElement('div');
@@ -50,7 +101,7 @@ export function addSpellbookToInventory(index, f='default', count=1, spells) {
 
     const prepared_spell_num = document.createElement('p');
     prepared_spell_num.textContent = "0";
-    prepared_spell_num.classList.add('prepared_spell_num');
+    prepared_spell_num.classList.add('prepared-spell-num');
     prepared_spell_num.classList.add('prepared-spell-count-format');
     data_div.appendChild(prepared_spell_num);
 
@@ -76,6 +127,8 @@ export function addSpellbookToInventory(index, f='default', count=1, spells) {
     addSpellsToBook(spells, spells_div, index);
 
     inventory_list.appendChild(item_div);
+    setMaxPreparedSpellsNum();
+    setPreparedSpellsNum();
 }
 
 export function addSpellsToBook(saved_spells, spell_div, book_index) {
@@ -206,6 +259,7 @@ function addCheckboxToSpell(prepare_option_container, prepared, spell_index, boo
     prepare_option_container.appendChild(prepared_spell_checkbox_label);
 
     const prepared_spell_checkbox = document.createElement('input');
+    checkbox_array.push(prepared_spell_checkbox);
     prepared_spell_checkbox.type = 'checkbox';
     prepared_spell_checkbox.id = '';
     prepared_spell_checkbox.classList.add('prepared-spell-checkbox');

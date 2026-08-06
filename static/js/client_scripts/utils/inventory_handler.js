@@ -19,6 +19,25 @@ export function setSocket(io) {
 
 export async function Initialize() {
     await setSavedInventory();
+    let spell_books = [];
+    let inventory = character_data_handler.getInventory();
+    inventory.forEach((item) => {
+        if(item.type == "spellbook_item") {
+            spell_books.push(item);
+        }
+    });
+
+    spell_books.forEach((book) => {
+        let spells = book.spells;
+        spells.forEach((spell) => {
+            if(spell != "Select Spell") {
+                if(spell.prepared) {
+                    character_data_handler.increasePreparedSpellCount();
+                }
+            }
+        });
+    });
+
 }
 
 export function setSavedInventory() {

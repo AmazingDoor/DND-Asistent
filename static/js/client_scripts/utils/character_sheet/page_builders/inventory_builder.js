@@ -30,7 +30,7 @@ export function buildInventory() {
     document.querySelector('.inventory-weapons').innerHTML = '';
     document.querySelector('.inventory-armor').innerHTML = '';
     document.querySelector('.mounts-container').innerHTML = '';
-    character_data_handler.setMaxPreparedSpells(getPlayerLevel(), getAbilities()[3]);
+    character_data_handler.setMaxPreparedSpells();
     //createClassOptions();
 
     const class_data = getClassData();

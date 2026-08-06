@@ -1,4 +1,5 @@
 import { getClassSpells } from '../../../shared/spell_data_filterer.js';
+import { getPlayerLevel } from '../../player_level_handler.js';
 import {items} from './../../../shared/inventory/items.js';
 import { getClassName as get_class_name, getClassName } from './mappers/class_mapper.js';
 
@@ -11,9 +12,19 @@ let mount_inventory = [];
 let character_skills = {};
 let background_skills = [];
 let max_prepared_spells = 0;
+let prepared_spell_count = 0;
 
 
-export function setMaxPreparedSpells(spell_count) {
+export function getPreparedSpellCount() {
+    return prepared_spell_count;
+}
+
+export function setPreparedSpellCount(num) {
+    prepared_spell_count = num;
+}
+
+export function setMaxPreparedSpells() {
+    const spell_count = parseInt(getPlayerLevel()) + parseInt(character_ability_modifiers.int);
     max_prepared_spells = spell_count;
 }
 
@@ -36,6 +47,19 @@ export function setSpellPrepared(book_index, spell_index, prepared) {
     const spell_book = inventory[book_index];
     let spell = spell_book.spells[spell_index];
     spell.prepared = prepared;
+    if(prepared) {
+        increasePreparedSpellCount();
+    } else {
+        decreasePreparedSpellCount();
+    }
+}
+
+export function increasePreparedSpellCount() {
+    prepared_spell_count += 1;
+}
+
+export function decreasePreparedSpellCount() {
+    prepared_spell_count -= 1;
 }
 
 export function getSpellsFromSpellbooks() {
