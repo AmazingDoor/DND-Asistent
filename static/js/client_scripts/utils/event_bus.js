@@ -43,6 +43,7 @@ export const EVENTS = {
     ARMOR_SELECTED: "armor_selected",
     SPELL_SELECTED: "spell_selected",
     SPELL_BOOK_SPELL_SELECTED: "spell_book_spell_selected",
-    SPELL_PREPARED: "spell_prepared"
+    SPELL_PREPARED: "spell_prepared",
+    SPELL_CASTED: "spell_casted"
 
 };

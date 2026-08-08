@@ -9,7 +9,7 @@ import { getAbilities } from "../mappers/ability_mapper.js";
 import { bus, EVENTS } from "../../event_bus.js";
 
 const inventory_list = document.querySelector('.inventory-container');
-const checkbox_array = [];
+let checkbox_array = [];
 
 export function clearCheckboxes() {
     checkbox_array = [];

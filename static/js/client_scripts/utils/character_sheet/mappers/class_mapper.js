@@ -22,7 +22,6 @@ export function Initialize() {
             resolve(data);
         });
     });
-
 }
 
 export function resetClassData() {

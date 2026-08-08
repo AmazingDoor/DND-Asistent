@@ -10,7 +10,7 @@ import { bus, EVENTS } from "../../../event_bus.js";
 const concentrationSpellName = document.getElementById('concentration-spell-name');
 const spellDisplayList = document.getElementById('combat-spell-display-list');
 let className = '';
-let maxSpellLevel = 0;
+let max_spell_level = 0;
 
 const update_data_subscribe_events = [EVENTS.LEVEL_UPDATED, EVENTS.CLASS_CHANGED, 
     EVENTS.USE_SPELL_BOOK_CLICKED, EVENTS.SPELL_BOOK_SPELL_SELECTED, EVENTS.SPELL_PREPARED];
@@ -59,152 +59,201 @@ function addEmpty(container) {
 }
 
 function addSpell(spell_data) {
-    const spellContainer = document.createElement('div');
-    spellContainer.classList.add("combat-spell-container");
-    spellDisplayList.appendChild(spellContainer);
-    
-    const topContainer = document.createElement('div');
-    topContainer.classList.add('combat-spell-top-container');
-    spellContainer.appendChild(topContainer);
+    const combatSpell = new CombatSpell(spell_data);
+    combatSpell.addToParent(spellDisplayList);
+}
 
-    const spellName = document.createElement('t3');
-    spellName.classList.add('combat-spell-name');
-    spellName.textContent = spell_data.name;
-    topContainer.appendChild(spellName);
+class CombatSpell {
+    constructor(spellData) {
+        this.spell_data = spellData;
+        this.spell_container = document.createElement('div');
+        this.spell_container.classList.add("combat-spell-container");
+        
 
-    if(spell_data.concentration) {
-        const concentrationLabel = document.createElement('t3');
-        concentrationLabel.textContent = " (uses concentratoin)";
-        topContainer.appendChild(concentrationLabel);
+        this.buildSpellDiv();
     }
 
-    const spellLevelDiv = document.createElement('div');
-    spellLevelDiv.classList.add("combat-spell-level-div");
-    spellContainer.appendChild(spellLevelDiv);
-    
-    const spellLevelLabel = document.createElement('t3');
-    spellLevelLabel.classList.add('spell-level-label');
-    spellLevelLabel.textContent = "Level: ";
-    spellLevelDiv.appendChild(spellLevelLabel);
+    buildSpellDiv() {
+        const top_container = document.createElement('div');
+        top_container.classList.add('combat-spell-top-container');
+        this.spell_container.appendChild(top_container);
 
-    let player_level = getPlayerLevel() - 1;
-    let selectedButton = false;
-    let max_spell_level_array = getMagicSlots(className);
-    maxSpellLevel = max_spell_level_array.spell_slots[player_level].length;
-    
-    const damageNum = document.createElement('t3');
-    const healNum = document.createElement('t3');
+        const spell_name = document.createElement('t3');
+        spell_name.classList.add("combat-spell-name");
+        spell_name.textContent = this.spell_data.name;
+        top_container.appendChild(spell_name);
 
+        if(this.spell_data.concentration) {
+            const concentration_label = document.createElement('t3');
+            concentration_label.textContent = " (uses concentration)";
+            top_container.appendChild(concentration_label);
+        }
 
-    for(let i = spell_data.level; i <= maxSpellLevel; i++) {
-        let spellLevelButton = document.createElement('button');
-        spellLevelButton.textContent = i;
-        spellLevelButton.classList.add("spell-level-button");
-        spellLevelDiv.appendChild(spellLevelButton);
-        if(!selectedButton) {
-            spellLevelButton.classList.add("selectedButton");
-            spellLevelButton.disabled = true;
-            selectedButton = true;
-            if("heal_at_slot_level" in spell_data) {
-                setSpellDieNum(healNum, getCorrectSpellHeal(spell_data, i));
-                spellLevelButton.addEventListener("click", (event) => {
-                spellButtonPressed(spellContainer, spellLevelButton, healNum, getCorrectSpellDamage(spell_data, i));
-                });
+        const cast_button_container = document.createElement('div');
+        cast_button_container.classList.add("cast-button-container");
+        top_container.appendChild(cast_button_container);
+
+        const cast_button = document.createElement('button');
+        cast_button.textContent = "Cast";
+        cast_button.addEventListener("click", function() {
+            this.castButtonPressed();
+        });
+
+        const spell_level_div = document.createElement('div');
+        spell_level_div.classList.add('combat-spell-level-div');
+        this.spell_container.appendChild(spell_level_div);
+
+        const spell_level_label = document.createElement('t3');
+        spell_level_label.classList.add('spell-level-label');
+        spell_level_label.textContent = "Level: ";
+        spell_level_div.appendChild(spell_level_label);
+
+        let player_level = getPlayerLevel() - 1;
+        let max_spell_level_array = getMagicSlots(className);
+        max_spell_level = max_spell_level_array.spell_slots[player_level].length;
+
+        this.damage_num = document.createElement('t3');
+        this.heal_num = document.createElement('t3');
+        this.spell_level_buttons = [];
+
+        let selected_level_button = false;
+        for (let i = this.spell_data.level; i <= max_spell_level; i++) {
+            let spell_level_button = document.createElement('button');
+            spell_level_button.textContent = i;
+            spell_level_button.classList.add("spell-level-button");
+            spell_level_div.appendChild(spell_level_button);
+            if(!selected_level_button) {
+                spell_level_button.classList.add("selected-button");
+                spell_level_button.disabled = true;
+                selected_level_button = true;
             }
-            if("damage" in spell_data) {
-                setSpellDieNum(damageNum, getCorrectSpellDamage(spell_data, i));
-                spellLevelButton.addEventListener("click", (event) => {
-                spellButtonPressed(spellContainer, spellLevelButton, damageNum, getCorrectSpellDamage(spell_data, i));
+
+            if("heal_at_slot_level" in this.spell_data) {
+                spell_level_button.addEventListener("click", (event) => {
+                    this.spellButtonPressed(this.heal_num, getCorrectSpellHeal(this.spell_data, i), spell_level_button);
                 });
+                this.setSpellDieNum(this.heal_num, getCorrectSpellHeal(this.spell_data, i));
             }
+
+            if("damage" in this.spell_data) {
+                spell_level_button.addEventListener("click", (event) => {
+                    this.spellButtonPressed(this.damage_num, getCorrectSpellDamage(this.spell_data, i), spell_level_button);
+                });
+                this.setSpellDieNum(this.damage_num, getCorrectSpellDamage(this.spell_data, i));
+            }
+
+            spell_level_button.addEventListener("click", (event) => {
+                this.updateSelectedButton(spell_level_button);
+            });
+
+            this.spell_level_buttons.push(spell_level_button);
         }
 
-        if("heal_at_slot_level" in spell_data) {
-            spellLevelButton.addEventListener("click", (event) => {
-            spellButtonPressed(spellContainer, spellLevelButton, healNum, getCorrectSpellHeal(spell_data, i));
-            });
-        }
-        if("damage" in spell_data) {
-            spellLevelButton.addEventListener("click", (event) => {
-            spellButtonPressed(spellContainer, spellLevelButton, damageNum, getCorrectSpellDamage(spell_data, i));
-            });
+        const bottom_container = document.createElement('div');
+        bottom_container.classList.add('combat-spell-bottom-container');
+        this.spell_container.appendChild(bottom_container);
+
+        const spell_info_container = document.createElement('div');
+        spell_info_container.classList.add("combat-spell-info-container");
+        bottom_container.appendChild(spell_info_container);
+
+        const casting_time_label = document.createElement('t3');
+        casting_time_label.textContent = "cast Time: ";
+        spell_info_container.appendChild(casting_time_label);
+
+        const casting_time = document.createElement('t3');
+        casting_time.textContent = this.spell_data.casting_time;
+        spell_info_container.appendChild(casting_time);
+
+        if("damage" in this.spell_data) {
+            const damage_label = document.createElement('t3');
+            damage_label.textContent = "Damage: ";
+            spell_info_container.appendChild(damage_label);
+            spell_info_container.appendChild(this.damage_num);
         }
 
-        spellLevelButton.addEventListener("click", (event) => {
-            updateSelectedButton(spellContainer, spellLevelButton);
+        if("heal_at_slot_level" in this.spell_data) {
+            const heal_label = document.createElement('t3');
+            heal_label.textContent = "Healing: ";
+            spell_info_container.appendChild(heal_label);
+            spell_info_container.appendChild(this.heal_num);
+        }
+
+        const extra_info_container = document.createElement('div');
+        extra_info_container.classList.add('extra-spell-data');
+        this.spell_container.appendChild(extra_info_container);
+
+        const extra_info_expand_container = document.createElement('div');
+        extra_info_expand_container.classList.add('expand-spell-info');
+        extra_info_container.appendChild(extra_info_expand_container);
+
+        this.extra_info_expand_text = document.createElement('t3');
+        this.extra_info_expand_text.textContent = "⯆";
+        extra_info_expand_container.appendChild(this.extra_info_expand_text);
+
+        this.hidden_data_container = document.createElement('div');
+        this.hidden_data_container.classList.add("hidden-spell-data-container", "hidden");
+        extra_info_container.appendChild(this.hidden_data_container);
+
+        extra_info_expand_container.addEventListener("click", (action) => {
+            this.expandSpellContainer(); 
+        });
+
+        const spell_description_container = document.createElement('div');
+        spell_description_container.classList.add('spell-description-container');
+        this.hidden_data_container.appendChild(spell_description_container);
+
+        const spell_description = document.createElement('p');
+        const spell_descriptions = this.spell_data.desc;
+        spell_descriptions.forEach((description) => {
+            spell_description.textContent += description;
+        });
+        spell_description_container.appendChild(spell_description);
+
+    }
+
+    expandSpellContainer() {
+        if(this.hidden_data_container.classList.contains("hidden")) {
+            this.extra_info_expand_text.textContent = "⯅";
+            this.hidden_data_container.classList.remove("hidden");
+        } else {
+            this.extra_info_expand_text.textContent = "⯆";
+            this.hidden_data_container.classList.add("hidden");
+        }
+    }
+
+    updateSelectedButton(selected_button) {
+        this.spell_level_buttons.forEach((button) => {
+            if(button == selected_button) {
+                button.classList.add("selected-button");
+                button.disabled = true;
+            } else {
+                button.classList.remove("selected-button");
+                button.disabled = false;
+            }
         });
     }
 
-    const bottomContainer = document.createElement('div');
-    bottomContainer.classList.add('combat-spell-bottom-container');
-    spellContainer.appendChild(bottomContainer);
-
-    const spellInfoContainer = document.createElement('div');
-    spellInfoContainer.classList.add("combat-spell-info-container");
-    bottomContainer.appendChild(spellInfoContainer);
-
-    const castingTimeLabel = document.createElement('t3');
-    castingTimeLabel.textContent = "Cast Time: ";
-    spellInfoContainer.appendChild(castingTimeLabel);
-
-    const castingTime = document.createElement('t3');
-    castingTime.textContent = spell_data.casting_time;
-    spellInfoContainer.appendChild(castingTime);
-
-    if("damage" in spell_data) {
-        const damageLabel = document.createElement('t3');
-        damageLabel.textContent = "Damage: ";
-        spellInfoContainer.appendChild(damageLabel);
-        spellInfoContainer.appendChild(damageNum);
+    setSpellDieNum(dieNum, num) {
+        dieNum.textContent = num;
     }
 
-    if("heal_at_slot_level" in spell_data) {
-        const healLabel = document.createElement('t3');
-        healLabel.textContent = "Healing: ";
-        spellInfoContainer.appendChild(healLabel);
-        spellInfoContainer.appendChild(healNum);
+    spellButtonPressed(dieNum, num, spell_button) {
+        this.setSpellDieNum(dieNum, num);
+        this.updateSelectedButton(spell_button);
     }
 
-    const extraInfoContainer = document.createElement('div');
-    extraInfoContainer.classList.add('extra-spell-data');
-    spellContainer.appendChild(extraInfoContainer);
+    castButtonPressed() {
 
-    const extraInfoExpandContainer = document.createElement('div');
-    extraInfoExpandContainer.classList.add('expand-spell-info');
-    extraInfoContainer.appendChild(extraInfoExpandContainer);
+    }
 
-    const extraInfoExpandText = document.createElement('t3');
-    extraInfoExpandText.textContent = "⯆";
-    extraInfoExpandContainer.appendChild(extraInfoExpandText);
-
-    const hiddenDataContainer = document.createElement('div');
-    hiddenDataContainer.classList.add("hidden-spell-data-container", "hidden");
-    extraInfoContainer.appendChild(hiddenDataContainer);
-
-    extraInfoExpandContainer.addEventListener("click", (action) => {
-       expandSpellContainer(extraInfoExpandText, hiddenDataContainer); 
-    });
-
-    const spellDescriptionContainer = document.createElement('div');
-    spellDescriptionContainer.classList.add('spell-description-container');
-    hiddenDataContainer.appendChild(spellDescriptionContainer);
-
-    const spellDescription = document.createElement('p');
-    const spellDescriptions = spell_data.desc;
-    spellDescriptions.forEach((description) => {
-        spellDescription.textContent += description;
-    });
-    spellDescriptionContainer.appendChild(spellDescription);
+    addToParent(parent) {
+        parent.appendChild(this.spell_container);
+    }
 }
 
-function expandSpellContainer(arrow, expandableContainer) {
-    if(expandableContainer.classList.contains("hidden")) {
-        arrow.textContent = "⯅";
-        expandableContainer.classList.remove("hidden");
-    } else {
-        arrow.textContent = "⯆";
-        expandableContainer.classList.add("hidden");
-    }
+function castButtonPressed(button) {
+    bus.publish(EVENTS.SPELL_CASTED);
 }
 
 function getCorrectSpellDamage(spell_data, level) {
@@ -237,26 +286,6 @@ function getCorrectSpellHeal(spell_data, level) {
             }
         }
     }
-}
-
-function setSpellDieNum(dieNum, num) {
-    dieNum.textContent = num;
-}
-
-
-function spellButtonPressed(spellContainer, pressedButton, dieNum, num) {
-    setSpellDieNum(dieNum, num);
-}
-
-function updateSelectedButton(spellContainer, pressedButton) {
-    const buttons = spellContainer.querySelectorAll(".spell-level-button");
-    buttons.forEach((button) => {
-        button.classList.remove("selectedButton");
-        button.disabled = false;
-    });
-
-    pressedButton.classList.add('selectedButton');
-    pressedButton.disabled = true;
 }
 
 function addCantrip(cantrip_data){
