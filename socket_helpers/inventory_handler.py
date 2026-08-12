@@ -7,7 +7,6 @@ from utils.client_tracker import ID_TO_CLIENT
 
 @socketio.on('save_inventory')
 def save_inventory(data):
-    print(data)
     players_folder = get_players_folder()
 
     char_id = data.get('char_id')

@@ -13,7 +13,6 @@ let character_skills = {};
 let background_skills = [];
 let max_prepared_spells = 0;
 let prepared_spell_count = 0;
-let spell_slot_map = {};
 let concentration = '';
 
 
@@ -23,14 +22,6 @@ export function setConcentration(spell_name) {
 
 export function getConcentration() {
     return concentration;
-}
-
-export function setSpellSlotMap(map) {
-    spell_slot_map = map;
-}
-
-export function getSpellSlotMap() {
-    return spell_slot_map;
 }
 
 export function getPreparedSpellCount() {

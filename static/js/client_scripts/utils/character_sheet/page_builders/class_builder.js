@@ -1,4 +1,4 @@
-import {setDefaultClassData, getClassData, getClassName, setClassSkills, getClassSkills, resetClassData} from './../mappers/class_mapper.js';
+import {setDefaultClassData, getClassData, getClassName, setClassSkills, getClassSkills, resetClassData, getCurrentSpellSlots} from './../mappers/class_mapper.js';
 import {linkDropdown} from './../../dropdown_handler.js';
 import {addClassSkillEventListeners} from './../dropdown_handlers/class_skill_handler.js';
 import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
@@ -7,11 +7,11 @@ import * as inventory_builder from './inventory_builder.js';
 import { clearItems as clearInventory, clearItems} from '../inventory/inventory_item_manager.js';
 import { saveInventory } from '../inventory/savers/inventory_saver.js';
 import { updateSpells } from '../../spell_handler.js';
-import { setUsingSpellbook, isUsingSpellbook } from './../mappers/class_mapper.js';
+import { setUsingSpellbook, isUsingSpellbook, saveClassData } from './../mappers/class_mapper.js';
 import { updateData as updateCombatSpellData } from './sub_builders/combat_builder.js';
 import { getInventory } from '../character_data_handler.js';
 import * as inventory_handler from '../../inventory_handler.js';
-import { bus, EVENTS } from '../../event_bus.js';
+import { bus, EVENTS, SAVE_EVENTS } from '../../event_bus.js';
 
 
 let socket = null;
@@ -109,11 +109,13 @@ async function clickEvent(option, head) {
     const skill_array = getClassSkills();
     await inventory_builder.rebuildInventory();
     socket.emit('use_spell_book', {char_id: char_id, use_spell_book: isUsingSpellbook()})
-    socket.emit('save_player_class', {class_name: option.textContent, skills: skill_array, char_id: char_id});
-    
+    bus.publish(EVENTS.SAVE_CLASS);    
     bus.publish(EVENTS.CLASS_CHANGED);
     building = false;
 }
+
+const save_class_data_subscriptions = [SAVE_EVENTS.SAVE_CLASS];
+bus.subscribeToEvents(save_class_data_subscriptions, saveClassData);
 
 function setSkills() {
     const skills_container = document.querySelector('.class-skills-div');

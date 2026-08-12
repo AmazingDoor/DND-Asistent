@@ -15,6 +15,7 @@ import {setPlayerLevel} from './client_scripts/player_level_handler.js';
 import {updateAbilities, updateSkills} from './client_scripts/utils/display_stat_updater.js';
 import { calculateAbilities } from './client_scripts/utils/character_sheet/calculators/ability_calculator.js';
 import { bus, EVENTS } from './client_scripts/utils/event_bus.js';
+import { handleSpellSlotOnLevelUp } from './client_scripts/utils/character_sheet/mappers/class_mapper.js';
 
 const socket = io();
 setFactorySocket(socket);
@@ -27,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ipt.addEventListener('change',
     function() {
         setPlayerLevel(ipt.value);
+        handleSpellSlotOnLevelUp();
         bus.publish(EVENTS.LEVEL_UPDATED);
     });
 
@@ -38,16 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeClient();
 
 });
-
-function updateEverything(ipt) {
-    setPlayerLevel(ipt.value)
-    class_builder.buildCharacterClass();
-    const race = getRace();
-    race_builder.buildRaceSection(race);
-    updateSkills();
-    updateAbilities();
-    updateSpells();
-}
 
 function selectCharacter() {
     socket.emit('register_name', { name, char_id });

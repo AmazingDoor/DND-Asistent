@@ -1,5 +1,8 @@
 import * as class_proficiencies from './../../../../shared/class_proficiencies.js';
 import { getClassSpells, getPreparedSpellCount, getPreparedCantripCount } from '../../../../shared/spell_data_filterer.js';
+import { getMagicSlots } from '../../../../shared/spell_caster_slot_map.js';
+import { getPlayerLevel } from '../../../player_level_handler.js';
+import { bus, EVENTS, SAVE_EVENTS } from '../../event_bus.js';
 
 let class_name = null;
 let socket = null;
@@ -11,6 +14,7 @@ let class_tool_proficiencies = [];
 let class_saving_throws = [];
 let class_spells = [];
 let class_cantrips = [];
+let current_spell_slots = {};
 let using_spellbook = false;
 
 
@@ -33,6 +37,20 @@ export function resetClassData() {
     class_spells = [];
     class_cantrips = [];
     using_spellbook = false;
+    current_spell_slots = {};
+}
+
+export function handleSpellSlotOnLevelUp() {
+    const current_slots = getCurrentSpellSlots();
+    const max_slots = getMagicSlots(class_name).spell_slots[getPlayerLevel() - 1];
+    for(let i = 0; i < current_slots.length; i++) {
+        if(current_slots[i] < max_slots[i]) {
+            max_slots[i] = current_slots[i];
+        }
+    }
+
+    setCurrentSpellSlots(max_slots);
+    bus.publish(SAVE_EVENTS.SAVE_CLASS);
 }
 
 
@@ -134,6 +152,13 @@ export function setDefaultClassData(c) {
     class_weapon_proficiencies = class_data.weapons.proficiencies;
     class_armor_proficiencies = class_data.armor.proficiencies;
     class_tool_proficiencies = class_data.tools;
+    const spell_slots = getMagicSlots(class_name)["spell_slots"];
+    if(spell_slots != undefined && spell_slots != null)  {
+        if(spell_slots.length >= getPlayerLevel() - 1) {
+            const spell_slots_at_level = spell_slots[getPlayerLevel() - 1];
+            setCurrentSpellSlots(spell_slots_at_level);
+        }
+    }
 }
 
 export function setClass(data) {
@@ -145,16 +170,32 @@ export function setClass(data) {
     if("use_spell_book" in data) {
         using_spellbook = data.use_spell_book;
     }
+    if(Object.hasOwn(data, "current_spell_slots")) {
+        setCurrentSpellSlots(data.current_spell_slots);
+    } else {
+        setCurrentSpellSlots([]);
+    }
 }
 
 function initializeClassData(data) {
     setClass(data);
+}
 
+export function setCurrentSpellSlots(slots) {
+    current_spell_slots = slots;
+}
 
+export function getCurrentSpellSlots() {
+    return current_spell_slots;
 }
 
 export function getClassName() {
     return class_name;
+}
+
+export function saveClassData() {
+    let class_data = {class_name: getClassName(), skills: getClassSkills(), current_spell_slots: getCurrentSpellSlots(), char_id: char_id};
+    socket.emit('save_player_class', class_data);
 }
 
 export function getClassData() {

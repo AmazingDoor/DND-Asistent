@@ -1,5 +1,5 @@
 import { getSpellCastingAbilityScore, getCharacterAbilityModifiers} from "../../character_data_handler.js";
-import { getSpellData, getClassName, isUsingSpellbook } from "../../mappers/class_mapper.js";
+import { getSpellData, getClassName, isUsingSpellbook, getCurrentSpellSlots, setCurrentSpellSlots, saveClassData } from "../../mappers/class_mapper.js";
 import { getSpellsFromSpellbooks } from "../../character_data_handler.js";
 import { getMagicSlots } from "../../../../../shared/spell_caster_slot_map.js";
 import { getPlayerLevel } from "../../../../player_level_handler.js";
@@ -8,6 +8,7 @@ import { bus, EVENTS } from "../../../event_bus.js";
 
 
 const concentrationSpellName = document.getElementById('concentration-spell-name');
+const spellSlotDisplays = document.getElementById('spell-slot-displays');
 const spellDisplayList = document.getElementById('combat-spell-display-list');
 let className = '';
 let max_spell_level = 0;
@@ -17,6 +18,23 @@ const update_data_subscribe_events = [EVENTS.LEVEL_UPDATED, EVENTS.CLASS_CHANGED
 bus.subscribeToEvents(update_data_subscribe_events, updateData);
 
 
+const update_current_spell_slots_subscriptions = [EVENTS.LEVEL_UPDATED, EVENTS.SPELL_CASTED];
+bus.subscribeToEvents(update_current_spell_slots_subscriptions, updateCurrentSpellSlots);
+
+export function updateCurrentSpellSlots() {
+    spellSlotDisplays.textContent = '';
+    const current_spell_slot_count = getCurrentSpellSlots();
+    const spell_level_count = current_spell_slot_count.length;
+
+    for(let i = 0; i < spell_level_count; i++) {
+        const t = document.createElement('p');
+        const spell_level = i + 1;
+        const spell_count = current_spell_slot_count[i];
+        t.textContent = spell_level + ":" + spell_count + " ";
+        spellSlotDisplays.appendChild(t);
+    }
+
+}
 
 export function updateData() {
     spellDisplayList.textContent = '';
@@ -45,6 +63,7 @@ export function updateData() {
             addEmpty(spellDisplayList);
         }
     }
+    updateCurrentSpellSlots();
 }
 
 function addEmpty(container) {
@@ -68,12 +87,18 @@ class CombatSpell {
         this.spell_data = spellData;
         this.spell_container = document.createElement('div');
         this.spell_container.classList.add("combat-spell-container");
+        this.selected_spell_level = 0;
+        
+        const disable_cast_button_subscriptions = [EVENTS.SPELL_CASTED];
+        bus.subscribeToEvents(disable_cast_button_subscriptions, () => this.disableCastButton());
         
 
         this.buildSpellDiv();
+        this.disableCastButton();
     }
 
     buildSpellDiv() {
+        this.spell_container.textContent = '';
         const top_container = document.createElement('div');
         top_container.classList.add('combat-spell-top-container');
         this.spell_container.appendChild(top_container);
@@ -93,11 +118,12 @@ class CombatSpell {
         cast_button_container.classList.add("cast-button-container");
         top_container.appendChild(cast_button_container);
 
-        const cast_button = document.createElement('button');
-        cast_button.textContent = "Cast";
-        cast_button.addEventListener("click", function() {
+        this.cast_button = document.createElement('button');
+        this.cast_button.textContent = "Cast";
+        this.cast_button.addEventListener("click", () => {
             this.castButtonPressed();
         });
+        top_container.appendChild(this.cast_button);
 
         const spell_level_div = document.createElement('div');
         spell_level_div.classList.add('combat-spell-level-div');
@@ -122,6 +148,8 @@ class CombatSpell {
             spell_level_button.textContent = i;
             spell_level_button.classList.add("spell-level-button");
             spell_level_div.appendChild(spell_level_button);
+            
+            let spell_level_num = i - 1;
             if(!selected_level_button) {
                 spell_level_button.classList.add("selected-button");
                 spell_level_button.disabled = true;
@@ -130,20 +158,20 @@ class CombatSpell {
 
             if("heal_at_slot_level" in this.spell_data) {
                 spell_level_button.addEventListener("click", (event) => {
-                    this.spellButtonPressed(this.heal_num, getCorrectSpellHeal(this.spell_data, i), spell_level_button);
+                    this.setSpellDieData(this.heal_num, getCorrectSpellHeal(this.spell_data, i));
                 });
                 this.setSpellDieNum(this.heal_num, getCorrectSpellHeal(this.spell_data, i));
             }
 
             if("damage" in this.spell_data) {
                 spell_level_button.addEventListener("click", (event) => {
-                    this.spellButtonPressed(this.damage_num, getCorrectSpellDamage(this.spell_data, i), spell_level_button);
+                    this.setSpellDieData(this.damage_num, getCorrectSpellDamage(this.spell_data, i));
                 });
                 this.setSpellDieNum(this.damage_num, getCorrectSpellDamage(this.spell_data, i));
             }
 
             spell_level_button.addEventListener("click", (event) => {
-                this.updateSelectedButton(spell_level_button);
+                this.spellLevelButtonPressed(spell_level_button, spell_level_num);
             });
 
             this.spell_level_buttons.push(spell_level_button);
@@ -212,6 +240,24 @@ class CombatSpell {
 
     }
 
+    disableCastButton() {
+        const current_spell_slots = getCurrentSpellSlots();
+        if(current_spell_slots[this.selected_spell_level] <= 0) {
+            this.cast_button.disabled = true;
+        } else {
+            this.cast_button.disabled = false;
+        }
+    }
+
+    castButtonPressed() {
+        let new_spell_slots = getCurrentSpellSlots();
+        new_spell_slots[this.selected_spell_level] = new_spell_slots[this.selected_spell_level] - 1;
+        setCurrentSpellSlots(new_spell_slots);
+        saveClassData();
+        
+        bus.publish(EVENTS.SPELL_CASTED);
+    }
+
     expandSpellContainer() {
         if(this.hidden_data_container.classList.contains("hidden")) {
             this.extra_info_expand_text.textContent = "⯅";
@@ -222,7 +268,7 @@ class CombatSpell {
         }
     }
 
-    updateSelectedButton(selected_button) {
+    spellLevelButtonPressed(selected_button, spell_level_num) {
         this.spell_level_buttons.forEach((button) => {
             if(button == selected_button) {
                 button.classList.add("selected-button");
@@ -232,28 +278,21 @@ class CombatSpell {
                 button.disabled = false;
             }
         });
+        this.selected_spell_level = spell_level_num;
+        this.disableCastButton();
     }
 
     setSpellDieNum(dieNum, num) {
         dieNum.textContent = num;
     }
 
-    spellButtonPressed(dieNum, num, spell_button) {
+    setSpellDieData(dieNum, num) {
         this.setSpellDieNum(dieNum, num);
-        this.updateSelectedButton(spell_button);
-    }
-
-    castButtonPressed() {
-
     }
 
     addToParent(parent) {
         parent.appendChild(this.spell_container);
     }
-}
-
-function castButtonPressed(button) {
-    bus.publish(EVENTS.SPELL_CASTED);
 }
 
 function getCorrectSpellDamage(spell_data, level) {

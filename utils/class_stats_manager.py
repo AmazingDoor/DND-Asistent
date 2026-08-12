@@ -8,14 +8,15 @@ from utils.client_tracker import ID_TO_CLIENT
 def save_player_class(data):
     char_id = data.get('char_id')
     class_name = data.get('class_name')
+    current_spell_slots = data.get('current_spell_slots')
     players_folder = get_players_folder()
     player_data = safe_read_json(f'{players_folder}\\{char_id}\\class_data.json')
-    if player_data.get('class_name') is None or player_data.get('class_name') != class_name:
-        player_data['class_name'] = class_name
-        player_data['class_spells'] = []
-        player_data['clas_cantrips'] = []
-        player_data = reset_player_skills(player_data)
-        safe_write_json(player_data, f'{players_folder}\\{char_id}\\class_data.json')
+    player_data['class_name'] = class_name
+    player_data['class_spells'] = []
+    player_data['clas_cantrips'] = []
+    player_data['current_spell_slots'] = current_spell_slots
+    player_data = reset_player_skills(player_data)
+    safe_write_json(player_data, f'{players_folder}\\{char_id}\\class_data.json')
 
 
 @socketio.on('save_player_skills')
@@ -46,6 +47,7 @@ def send_player_class_data(data):
     players_folder = get_players_folder()
     player_data = safe_read_json(f'{players_folder}\\{char_id}\\class_data.json')
     class_name = player_data.get('class_name')
+    player_current_spell_slots = player_data.get('current_spell_slots') if player_data.get('current_spell_slots') is not None else []
     if player_data.get('class_skills') is None:
         player_data['class_skills'] = [0, []]
         safe_write_json(player_data, f'{players_folder}\\{char_id}\\class_data.json')
@@ -57,7 +59,7 @@ def send_player_class_data(data):
 
     emit('build_character_class',
          {'class_name': class_name, 'class_skills': player_skills, 'use_spell_book': use_spell_book,
-          'spells': class_spells, 'cantrips': class_cantrips}, room=sid)
+          'spells': class_spells, 'current_spell_slots': player_current_spell_slots, 'cantrips': class_cantrips}, room=sid)
 
 
 def load_player_class(char_id, sid):

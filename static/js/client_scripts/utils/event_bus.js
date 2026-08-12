@@ -47,3 +47,10 @@ export const EVENTS = {
     SPELL_CASTED: "spell_casted"
 
 };
+
+export const SAVE_EVENTS = {
+    SAVE_CLASS : "save_class",
+    SAVE_RACE: "save_race",
+    SAVE_BACKGROUND: "save_background",
+    SAVE_INVENTORY: "save_inventory"
+}
