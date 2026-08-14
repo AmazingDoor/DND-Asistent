@@ -14,7 +14,8 @@ let class_tool_proficiencies = [];
 let class_saving_throws = [];
 let class_spells = [];
 let class_cantrips = [];
-let current_spell_slots = {};
+let current_spell_slots = [];
+let spell_slots_used = [];
 let using_spellbook = false;
 
 
@@ -37,17 +38,30 @@ export function resetClassData() {
     class_spells = [];
     class_cantrips = [];
     using_spellbook = false;
-    current_spell_slots = {};
+    current_spell_slots = [];
+    resetUsedSpellSlots();
 }
 
 export function handleSpellSlotOnLevelUp() {
-    const current_slots = getCurrentSpellSlots();
-    const max_slots = getMagicSlots(class_name).spell_slots[getPlayerLevel() - 1];
-    for(let i = 0; i < current_slots.length; i++) {
-        if(current_slots[i] < max_slots[i]) {
-            max_slots[i] = current_slots[i];
-        }
+    
+    const player_level = getPlayerLevel();
+    const magic_slots = getMagicSlots(class_name);
+
+    let max_slots = []
+    if(Object.hasOwn(magic_slots, "spell_slots")) {
+        max_slots = magic_slots.spell_slots[player_level - 1];
     }
+
+    const spell_slots_used = getSpellSlotsUsed();
+    console.log(spell_slots_used);
+    for(let i = 0; i < spell_slots_used.length; i++) {
+        if(i >= max_slots.length) {
+            break;
+        }
+        max_slots[i] = parseInt(max_slots[i]) - parseInt(spell_slots_used[i]);
+        console.log(spell_slots_used[i]);
+    }
+
 
     setCurrentSpellSlots(max_slots);
     bus.publish(SAVE_EVENTS.SAVE_CLASS);
@@ -175,6 +189,14 @@ export function setClass(data) {
     } else {
         setCurrentSpellSlots([]);
     }
+
+    if(Object.hasOwn(data, "spell_slots_used")) {
+        setSpellSlotsUsed(data.spell_slots_used);
+        spell_slots_used.forEach((slot) => {
+        });
+    } else {
+        resetUsedSpellSlots();
+    }
 }
 
 function initializeClassData(data) {
@@ -189,12 +211,51 @@ export function getCurrentSpellSlots() {
     return current_spell_slots;
 }
 
+export function setSpellSlotsUsed(slots) {
+    spell_slots_used = slots;
+}
+
+export function resetUsedSpellSlots() {
+    const spell_slot_length = getCurrentSpellSlots().length;
+    let used_spell_slots = [];
+    for(let i = 0; i < spell_slot_length; i++) {
+        used_spell_slots.push(0);
+    }
+
+    setSpellSlotsUsed(used_spell_slots);
+}
+
+function ensureEnoughUsedSpellSlots() {
+    const current_spell_slots_length = getCurrentSpellSlots().length;
+    const used_spell_slots = getSpellSlotsUsed();
+    let new_used_slots = [];
+
+    for(let i = 0; i < current_spell_slots_length; i++) {
+        if(i < used_spell_slots.length) {
+            new_used_slots.push(used_spell_slots[i]);
+        } else {
+            new_used_slots.push(0);
+        }
+    }
+    setSpellSlotsUsed(new_used_slots);
+}
+
+export function incrementUsedSpellSlot(index) {
+    ensureEnoughUsedSpellSlots();
+    console.log(spell_slots_used[index]);
+    spell_slots_used[index] = parseInt(spell_slots_used[index]) + 1;
+}
+
+export function getSpellSlotsUsed() {
+    return spell_slots_used;
+}
+
 export function getClassName() {
     return class_name;
 }
 
 export function saveClassData() {
-    let class_data = {class_name: getClassName(), skills: getClassSkills(), current_spell_slots: getCurrentSpellSlots(), char_id: char_id};
+    let class_data = {class_name: getClassName(), skills: getClassSkills(), current_spell_slots: getCurrentSpellSlots(), used_spell_slots: getSpellSlotsUsed(), char_id: char_id};
     socket.emit('save_player_class', class_data);
 }
 

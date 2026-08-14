@@ -245,7 +245,7 @@
           <div id="player-stats">
             <div class="display-horizontal">
               <h3>Level: </h3>
-              <input type="number" id="player-level-input">
+              <input type="number" min="1" max="20" id="player-level-input">
             </div>
             <div class="player-stat-row">
               <div class="player-stat-column" id="damage">
@@ -472,7 +472,10 @@
                     <div class="combat-category-pages">
                       <div class="combat-category-page" id="spells-page">
                         <div id="spell-slot-display-container">
-                          <p>Spell Slots</p>
+                          <div id="spell-slot-display-label-container">
+                            <p>Spell Slots</p>
+                            <button id="reset-spell-slots-button">Reset</button>
+                          </div>
                           <div id="spell-slot-displays">
                           </div>
                         </div>

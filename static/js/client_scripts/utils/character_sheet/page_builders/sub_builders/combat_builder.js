@@ -1,15 +1,17 @@
 import { getSpellCastingAbilityScore, getCharacterAbilityModifiers} from "../../character_data_handler.js";
-import { getSpellData, getClassName, isUsingSpellbook, getCurrentSpellSlots, setCurrentSpellSlots, saveClassData } from "../../mappers/class_mapper.js";
+import { getSpellData, getClassName, isUsingSpellbook, getCurrentSpellSlots, setCurrentSpellSlots, saveClassData, setSpellSlotsUsed, resetUsedSpellSlots, incrementUsedSpellSlot, getSpellSlotsUsed } from "../../mappers/class_mapper.js";
 import { getSpellsFromSpellbooks } from "../../character_data_handler.js";
 import { getMagicSlots } from "../../../../../shared/spell_caster_slot_map.js";
 import { getPlayerLevel } from "../../../../player_level_handler.js";
 import { getPreparedSpellCount } from "../../../../../shared/spell_data_filterer.js";
-import { bus, EVENTS } from "../../../event_bus.js";
+import { bus, EVENTS, SAVE_EVENTS } from "../../../event_bus.js";
 
 
 const concentrationSpellName = document.getElementById('concentration-spell-name');
 const spellSlotDisplays = document.getElementById('spell-slot-displays');
 const spellDisplayList = document.getElementById('combat-spell-display-list');
+const resetSpellsButton = document.getElementById('reset-spell-slots-button');
+
 let className = '';
 let max_spell_level = 0;
 
@@ -21,17 +23,45 @@ bus.subscribeToEvents(update_data_subscribe_events, updateData);
 const update_current_spell_slots_subscriptions = [EVENTS.LEVEL_UPDATED, EVENTS.SPELL_CASTED];
 bus.subscribeToEvents(update_current_spell_slots_subscriptions, updateCurrentSpellSlots);
 
+resetSpellsButton.addEventListener("click", () => resetSpellsButtonPressed());
+
+function resetSpellsButtonPressed() {
+    const max_spell_slots = getMagicSlots(getClassName()).spell_slots[getPlayerLevel() - 1];
+    setCurrentSpellSlots(max_spell_slots);
+    resetUsedSpellSlots();
+    bus.publish(SAVE_EVENTS.SAVE_CLASS);
+    updateCurrentSpellSlots();
+
+}
+
 export function updateCurrentSpellSlots() {
     spellSlotDisplays.textContent = '';
     const current_spell_slot_count = getCurrentSpellSlots();
     const spell_level_count = current_spell_slot_count.length;
 
     for(let i = 0; i < spell_level_count; i++) {
-        const t = document.createElement('p');
-        const spell_level = i + 1;
-        const spell_count = current_spell_slot_count[i];
-        t.textContent = spell_level + ":" + spell_count + " ";
-        spellSlotDisplays.appendChild(t);
+        if(current_spell_slot_count[i] != null && current_spell_slot_count[i] != undefined) {
+            const t = document.createElement('p');
+            let spell_level = i + 1;
+            let spell_level_text = '';
+            switch (spell_level) {
+                case 1: 
+                    spell_level_text = spell_level + "st";
+                    break;
+                case 2:
+                    spell_level_text = spell_level + "nd";
+                    break;
+                case 3:
+                    spell_level_text = spell_level + "rd";
+                    break;
+                default:
+                    spell_level_text = spell_level + "th";
+                    break;
+            }
+            const spell_count = current_spell_slot_count[i];
+            t.textContent = spell_level_text + ":" + spell_count + " ";
+            spellSlotDisplays.appendChild(t);
+        }
     }
 
 }
@@ -252,8 +282,14 @@ class CombatSpell {
     castButtonPressed() {
         let new_spell_slots = getCurrentSpellSlots();
         new_spell_slots[this.selected_spell_level] = new_spell_slots[this.selected_spell_level] - 1;
+        incrementUsedSpellSlot(this.selected_spell_level);
         setCurrentSpellSlots(new_spell_slots);
+        console.log(getSpellSlotsUsed());
         saveClassData();
+
+        if(this.spell_data.concentration) {
+            concentrationSpellName.textContent = this.spell_data.spell_name;
+        }
         
         bus.publish(EVENTS.SPELL_CASTED);
     }

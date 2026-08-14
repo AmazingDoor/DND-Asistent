@@ -22,7 +22,7 @@ export function getPlayerLevel() {
     return player_level;
 }
 
-export function setPlayerLevel(level) {
+export function setPlayerLevel(level, level_input) {
     //change called from client
     player_level = level;
     socket.emit('client_change_player_level', {player_level: level, char_id: char_id});

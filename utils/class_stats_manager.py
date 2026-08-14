@@ -9,12 +9,14 @@ def save_player_class(data):
     char_id = data.get('char_id')
     class_name = data.get('class_name')
     current_spell_slots = data.get('current_spell_slots')
+    spell_slots_used = data.get('spell_slots_used')
     players_folder = get_players_folder()
     player_data = safe_read_json(f'{players_folder}\\{char_id}\\class_data.json')
     player_data['class_name'] = class_name
     player_data['class_spells'] = []
     player_data['clas_cantrips'] = []
     player_data['current_spell_slots'] = current_spell_slots
+    player_data['spell_slots_used'] = spell_slots_used
     player_data = reset_player_skills(player_data)
     safe_write_json(player_data, f'{players_folder}\\{char_id}\\class_data.json')
 
@@ -38,6 +40,7 @@ def save_using_spell_book(data):
     player_data = safe_read_json(file_path)
     player_data['use_spell_book'] = use_spell_book
     safe_write_json(player_data, file_path)
+    return True
 
 
 @socketio.on('required_client_class_data')
@@ -48,6 +51,7 @@ def send_player_class_data(data):
     player_data = safe_read_json(f'{players_folder}\\{char_id}\\class_data.json')
     class_name = player_data.get('class_name')
     player_current_spell_slots = player_data.get('current_spell_slots') if player_data.get('current_spell_slots') is not None else []
+    player_spell_slots_used = player_data.get('spell_slots_used') if player_data.get('spell_slots_used') is not None else []
     if player_data.get('class_skills') is None:
         player_data['class_skills'] = [0, []]
         safe_write_json(player_data, f'{players_folder}\\{char_id}\\class_data.json')
@@ -59,7 +63,7 @@ def send_player_class_data(data):
 
     emit('build_character_class',
          {'class_name': class_name, 'class_skills': player_skills, 'use_spell_book': use_spell_book,
-          'spells': class_spells, 'current_spell_slots': player_current_spell_slots, 'cantrips': class_cantrips}, room=sid)
+          'spells': class_spells, 'current_spell_slots': player_current_spell_slots, 'spell_slots_used': player_spell_slots_used, 'cantrips': class_cantrips}, room=sid)
 
 
 def load_player_class(char_id, sid):

@@ -12,6 +12,7 @@ import { updateData as updateCombatSpellData } from './sub_builders/combat_build
 import { getInventory } from '../character_data_handler.js';
 import * as inventory_handler from '../../inventory_handler.js';
 import { bus, EVENTS, SAVE_EVENTS } from '../../event_bus.js';
+import { emitAndWait } from '../../socket_emitter.js';
 
 
 let socket = null;
@@ -108,8 +109,8 @@ async function clickEvent(option, head) {
     setSkills()
     const skill_array = getClassSkills();
     await inventory_builder.rebuildInventory();
-    socket.emit('use_spell_book', {char_id: char_id, use_spell_book: isUsingSpellbook()})
-    bus.publish(EVENTS.SAVE_CLASS);    
+    await emitAndWait('use_spell_book', {char_id: char_id, use_spell_book: isUsingSpellbook()});
+    bus.publish(SAVE_EVENTS.SAVE_CLASS);    
     bus.publish(EVENTS.CLASS_CHANGED);
     building = false;
 }
