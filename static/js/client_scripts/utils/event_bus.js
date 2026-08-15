@@ -44,7 +44,10 @@ export const EVENTS = {
     SPELL_SELECTED: "spell_selected",
     SPELL_BOOK_SPELL_SELECTED: "spell_book_spell_selected",
     SPELL_PREPARED: "spell_prepared",
-    SPELL_CASTED: "spell_casted"
+    SPELL_CASTED: "spell_casted",
+    HEALTH_UPDATED: "health_updated",
+    LONG_REST: "long_rest",
+    SHORT_REST: "short_rest"
 
 };
 

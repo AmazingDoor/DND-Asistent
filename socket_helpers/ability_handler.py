@@ -11,3 +11,4 @@ def save_abilities(data):
     j['abilities'] = abilities
 
     safe_write_json(j, f"{PLAYERS_FOLDER}\\{char_id}\\abilities.json")
+    return True

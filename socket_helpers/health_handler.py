@@ -14,11 +14,9 @@ def client_update_health(data):
     safe_write_json(d, f"{get_players_folder()}\\{char_id}\\basic_data.json")
     for key in ID_TO_CLIENT.keys():
         if ID_TO_CLIENT.get(key) == request.sid:
-            print(get_dm_sid())
             emit('client_update_health', {'result': data.get('result'), 'char_id': key}, room=get_dm_sid())
             break
-
-
+    return True
 @socketio.on('host_update_health')
 def host_update_health(data):
     # Save new health and sync with the client
@@ -28,6 +26,7 @@ def host_update_health(data):
     d["health"] = data.get("result")
     safe_write_json(d, f"{get_players_folder()}\\{char_id}\\basic_data.json")
     emit('host_update_health', {'result': data.get('result')}, room=target_id)
+    return True
 
 @socketio.on('host_update_max_health')
 def host_update_max_health(data):
@@ -39,7 +38,7 @@ def host_update_max_health(data):
     d["max_health"] = health
     safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     emit('host_update_max_health', {'max_health': health}, room=sid)
-
+    return True
 
 @socketio.on('client_update_max_health')
 def client_update_max_health(data):
@@ -51,3 +50,4 @@ def client_update_max_health(data):
     d["max_health"] = max_health
     safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     emit('client_update_max_health', {'max_health': max_health, 'char_id': char_id}, room=DM_SID)
+    return True

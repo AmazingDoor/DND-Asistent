@@ -18,6 +18,7 @@ import { updateSpells } from '../../../spell_handler.js';
 import * as inventory_builder from '../inventory_builder.js';
 import { clearItems } from '../../inventory/inventory_item_manager.js';
 import { bus, EVENTS } from '../../../event_bus.js';
+import { saveSpells } from '../../../../save_handler.js';
 
 let socket = null;
 
@@ -69,7 +70,7 @@ export function buildSpellSection(saved_spells = [], saved_cantrips = []) {
 function spellOptionClickEvent(head, option) {
     const txt = head.querySelector('p');
     txt.textContent = option.textContent;
-    saveSpells();
+    setSpells();
     updateSpells();
 }
 
@@ -96,7 +97,7 @@ function findHighestCharacterLevelAvailable(d, level) {
     return highest;
 }
 
-export function saveSpells() {
+export async function setSpells() {
     let class_name = getClassName();
     let s = [];
     const container = document.querySelector('.spell-container');
@@ -126,7 +127,7 @@ export function saveSpells() {
     setClassPreparedSpells(s);
     setClassPreparedCantrips(c);
 
-    socket.emit('save_spells', {char_id: char_id, spells: s, cantrips: c});
+    await saveSpells();
 }
 
 function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, cantrips, saved_spells, saved_cantrips, class_name, max_spell_level) {

@@ -13,3 +13,4 @@ def save_spells(data):
     j['class_spells'] = spells
     j['class_cantrips'] = cantrips
     safe_write_json(j, f'{players_folder}\\{char_id}\\class_data.json')
+    return True

@@ -10,3 +10,7 @@ export function emitAndWait(signalName, data) {
         socket.emit(signalName, data, resolve); 
     });
 }
+
+export function emitSignal(signalName, data) {
+    socket.emit(signalName, data);
+}

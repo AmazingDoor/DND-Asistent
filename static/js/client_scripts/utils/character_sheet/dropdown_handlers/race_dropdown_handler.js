@@ -1,6 +1,7 @@
 import {setRace, resetRaceData, getRaceName} from './../mappers/race_mapper.js';
 import {buildRaceSection} from './../page_builders/race_builder.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
+import { saveRace } from '../../../save_handler.js';
 let socket = null;
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -35,7 +36,7 @@ async function clickEvent(dropdown_text, option) {
     buildRaceSection(option.textContent);
     updateAbilities();
     updateSkills();
-    socket.emit('save_race', {race_name: option.textContent, char_id: char_id});
+    await saveRace();
 }
 
 function loadEvent() {

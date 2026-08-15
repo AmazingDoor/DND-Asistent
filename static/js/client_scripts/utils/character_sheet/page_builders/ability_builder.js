@@ -1,6 +1,7 @@
 import * as ability_calculator from './../calculators/ability_calculator.js';
 import {getCharacterBaseAbilities, setCharacterBaseAbilities} from './../character_data_handler.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
+import { saveAbilities } from '../../../save_handler.js';
 import { bus, EVENTS } from '../../event_bus.js';
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -53,10 +54,10 @@ export function buildCharacterAbilities() {
     setModTexts();
 }
 
-function addEventListeners() {
+async function addEventListeners() {
     const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
 
-    str_input.addEventListener('change', function() {
+    str_input.addEventListener('change', async function() {
         const mod_num = ability_calculator.calculateStrengthMod();
         const mod = document.querySelector('#strength-mod');
         setModText(mod, mod_num);
@@ -66,10 +67,10 @@ function addEventListeners() {
         setCharacterBaseAbilities(abilities);
 
         bus.publish(EVENTS.ABILITY_CHANGED);
-        saveAbilities();
+        await saveAbilities();
     });
 
-    dex_input.addEventListener('change', function() {
+    dex_input.addEventListener('change', async function() {
         const mod_num = ability_calculator.calculateDexterityMod();
         const mod = document.querySelector('#dexterity-mod');
         setModText(mod, mod_num);
@@ -79,11 +80,11 @@ function addEventListeners() {
         setCharacterBaseAbilities(abilities);
 
         bus.publish(EVENTS.ABILITY_CHANGED);
-        saveAbilities();
+        await saveAbilities();
 
     });
 
-    con_input.addEventListener('change', function() {
+    con_input.addEventListener('change', async function() {
         const mod_num = ability_calculator.calculateConstitutionMod();
         const mod = document.querySelector('#constitution-mod');
         setModText(mod, mod_num);
@@ -93,11 +94,11 @@ function addEventListeners() {
         setCharacterBaseAbilities(abilities);
 
         bus.publish(EVENTS.ABILITY_CHANGED);
-        saveAbilities();
+        await saveAbilities();
 
     });
 
-    int_input.addEventListener('change', function() {
+    int_input.addEventListener('change', async function() {
         const mod_num = ability_calculator.calculateIntelligenceMod();
         const mod = document.querySelector('#intelligence-mod');
         setModText(mod, mod_num);
@@ -107,10 +108,10 @@ function addEventListeners() {
         setCharacterBaseAbilities(abilities);
 
         bus.publish(EVENTS.ABILITY_CHANGED);
-        saveAbilities();
+        await saveAbilities();
     });
 
-    wis_input.addEventListener('change', function() {
+    wis_input.addEventListener('change', async function() {
         const mod_num = ability_calculator.calculateWisdomMod();
         const mod = document.querySelector('#wisdom-mod');
         setModText(mod, mod_num);
@@ -120,10 +121,10 @@ function addEventListeners() {
         setCharacterBaseAbilities(abilities);
 
         bus.publish(EVENTS.ABILITY_CHANGED);
-        saveAbilities();
+        await saveAbilities();
     });
 
-    cha_input.addEventListener('change', function() {
+    cha_input.addEventListener('change', async function() {
         const mod_num = ability_calculator.calculateCharismaMod();
         const mod = document.querySelector('#charisma-mod');
         setModText(mod, mod_num);
@@ -133,7 +134,7 @@ function addEventListeners() {
         setCharacterBaseAbilities(abilities);
 
         bus.publish(EVENTS.ABILITY_CHANGED);
-        saveAbilities();
+        await saveAbilities();
     });
 }
 
@@ -171,11 +172,4 @@ function setModText(mod, num) {
         sign = "+";
     }
     mod.textContent = "(" + sign + num.toString() + ")";
-}
-
-function saveAbilities() {
-    const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
-    const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
-    const data = {char_id: char_id, abilities: abilities};
-    socket.emit('save_abilities', data);
 }

@@ -19,7 +19,7 @@ def save_player_class(data):
     player_data['spell_slots_used'] = spell_slots_used
     player_data = reset_player_skills(player_data)
     safe_write_json(player_data, f'{players_folder}\\{char_id}\\class_data.json')
-
+    return True
 
 @socketio.on('save_player_skills')
 def save_player_skills(data):
@@ -29,7 +29,7 @@ def save_player_skills(data):
     player_data = safe_read_json(f'{players_folder}\\{char_id}\\class_data.json')
     player_data['class_skills'] = skills
     safe_write_json(player_data, f'{players_folder}\\{char_id}\\class_data.json')
-
+    return True
 
 @socketio.on('use_spell_book')
 def save_using_spell_book(data):

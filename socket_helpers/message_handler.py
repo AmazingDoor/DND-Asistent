@@ -24,6 +24,7 @@ def message_to_dm(data):
         if ID_TO_CLIENT.get(key) == sid:
             emit('message_to_dm', {'char_id': key, 'message': msg, 'name': clients.get(sid).get('name')}, room=DM_SID)
             break
+    return True
 
 @socketio.on('message_to_client')
 def message_to_client(data):
@@ -36,5 +37,5 @@ def message_to_client(data):
     safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}\\messages.json")
 
     emit('private_message', {'from': 'DM', 'message': msg}, room=target_id)
-
+    return True
 

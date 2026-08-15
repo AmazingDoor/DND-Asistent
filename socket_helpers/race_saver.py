@@ -11,6 +11,7 @@ def save_race(data):
     j['race_name'] = race_name
     j['race_skills'] = []
     safe_write_json(j, f'{players_folder}\\{char_id}\\race_data.json')
+    return True
 
 @socketio.on('save_race_skills')
 def save_race_skills(data):
@@ -20,6 +21,8 @@ def save_race_skills(data):
     j = safe_read_json(f'{players_folder}\\{char_id}\\race_data.json')
     j['race_skills'] = skills
     safe_write_json(j, f'{players_folder}\\{char_id}\\race_data.json')
+    return True
+
 
 @socketio.on('save_race_abilities')
 def save_race_abilities(data):
@@ -29,6 +32,7 @@ def save_race_abilities(data):
     j = safe_read_json(f'{players_folder}\\{char_id}\\race_data.json')
     j['race_abilities'] = race_abilities
     safe_write_json(j, f'{players_folder}\\{char_id}\\race_data.json')
+    return True
 
 @socketio.on('save_race_languages')
 def save_race_languages(data):
@@ -38,3 +42,4 @@ def save_race_languages(data):
     j = safe_read_json(f'{players_folder}\\{char_id}\\race_data.json')
     j['race_languages'] = languages
     safe_write_json(j, f'{players_folder}\\{char_id}\\race_data.json')
+    return True

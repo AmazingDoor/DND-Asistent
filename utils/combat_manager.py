@@ -22,6 +22,7 @@ def remove_combat(data):
         os.remove(f'{COMBAT_FOLDER}\\{combat_id}.json')
     except:
         pass
+    return True
 
 @socketio.on('update_turn')
 def update_turn(data):
@@ -31,6 +32,7 @@ def update_turn(data):
     d = safe_read_json(f"{COMBAT_FOLDER}\\{combat_id}.json")
     d['current_turn'] = turn_num
     safe_write_json(d, f"{COMBAT_FOLDER}\\{combat_id}.json")
+    return True
 
 @socketio.on('end_combat')
 def end_combat(data):
@@ -40,11 +42,13 @@ def end_combat(data):
     d['current_turn'] = 0
     d['initiative_array'] = []
     safe_write_json(d, f"{COMBAT_FOLDER}\\{combat_id}.json")
+    return True
 
 @socketio.on('initialize_combat')
 def initialize_combat(data):
     combat_id = data.get('combat_id')
     emit('initialize_combat', {'combat_id': combat_id}, broadcast=True)
+    return True
 
 @socketio.on('add_player_inits')
 def add_player_inits(data):
@@ -60,7 +64,7 @@ def add_player_inits(data):
         players_data[player] = {'player_name': j.get('name'), 'player_ac': j.get('ac'),
                                 'player_health': j.get('health'), 'max_health': j.get('max_health')}
     emit('add_player_inits', {'combat_id': combat_id, 'players_data': players_data}, room=DM_SID)
-
+    return True
 
 @socketio.on('saveCombat')
 def save_combat(data):
@@ -73,6 +77,7 @@ def save_combat(data):
     all_combat_data = {'name': combat_name, 'enemy_list': enemy_list, 'initiative_array': initiative_array,
                         'current_turn': current_turn}
     safe_write_json(all_combat_data, f'{COMBAT_FOLDER}\\{combat_id}.json')
+    return True
 
 @socketio.on('player_input_init')
 def player_input_init(data):
@@ -83,3 +88,4 @@ def player_input_init(data):
     char_name = data.get('char_name')
     emit('player_input_init', {'char_id': char_id, 'combat_id': combat_id, 'init': init, 'char_name': char_name},
          room=DM_SID)
+    return True

@@ -15,6 +15,7 @@ def client_change_armor_class(data):
     d["ac"] = value
     safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     emit('client_change_armor_class', {'char_id': char_id, 'value': value}, room=DM_SID)
+    return True
 
 @socketio.on('host_change_armor_class')
 def host_change_armor_class(data):
@@ -27,3 +28,4 @@ def host_change_armor_class(data):
     d["ac"] = value
     safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
     emit('host_change_armor_class', {'value': value}, room=sid)
+    return True

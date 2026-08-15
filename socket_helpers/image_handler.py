@@ -16,3 +16,4 @@ def handle_host_image_url(data):
         d["imgs"].append(f"{url}")
         safe_write_json(d, f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")
         emit('send_image', {'url': url}, room=target_id)
+    return True

@@ -14,7 +14,7 @@ def save_inventory(data):
     j = safe_read_json(f'{players_folder}\\{char_id}\\inventory.json')
     j['inventory'] = inventory
     safe_write_json(j, f'{players_folder}\\{char_id}\\inventory.json')
-
+    return True
 @socketio.on("require_inventory")
 def send_inventory_data(data):
     players_folder = get_players_folder()

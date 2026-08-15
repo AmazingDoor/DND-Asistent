@@ -1,5 +1,6 @@
 import {updateAbilities} from './../../display_stat_updater.js';
 import {setRaceAbilities } from '../mappers/race_mapper.js';
+import { saveRaceAbilities } from '../../../save_handler.js';
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
@@ -18,7 +19,7 @@ export function addEventListeners(head) {
     });
 }
 
-function clickListener(head, option) {
+async function clickListener(head, option) {
     head.querySelector('p').textContent = option.textContent;
     const selected_abilities = head.parentElement.parentElement.parentElement.parentElement.parentElement.querySelectorAll('.selected-ability');
     let abilities = {};
@@ -30,5 +31,5 @@ function clickListener(head, option) {
     });
     setRaceAbilities(abilities);
     updateAbilities();
-    socket.emit('save_race_abilities', {race_abilities: abilities, char_id: char_id});
+    await saveRaceAbilities();
 }

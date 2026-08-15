@@ -13,7 +13,7 @@ def save_combat_global(data):
     cwd = os.getcwd()
     all_combat_data = {'name': combat_name, 'enemy_list': enemy_list}
     safe_write_json(all_combat_data, f'{cwd}\\global\\encounters\\{combat_id}.json')
-
+    return True
 
 @socketio.on('import_id')
 def import_id(data):

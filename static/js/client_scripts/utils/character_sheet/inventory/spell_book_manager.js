@@ -4,7 +4,7 @@ import { getPlayerLevel } from "../../../player_level_handler.js";
 import { wizard } from "../../../../shared/spell_lists/wizard.js";
 import { addSpellToBookInventory, setSpellPrepared, getMaxPreparedSpells, getCharacterAbilityModifiers, getPreparedSpellCount, setMaxPreparedSpells } from "../character_data_handler.js";
 import { updateData as updateCombatSpellData } from "../page_builders/sub_builders/combat_builder.js";
-import { saveInventory } from "./savers/inventory_saver.js";
+import { saveInventory } from "../../../save_handler.js";
 import { getAbilities } from "../mappers/ability_mapper.js";
 import { bus, EVENTS } from "../../event_bus.js";
 
@@ -61,7 +61,7 @@ function ensureDisabledCheckboxes() {
     }
 }
 
-export function addSpellbookToInventory(index, f='default', count=1, spells) {
+export async function addSpellbookToInventory(index, f='default', count=1, spells) {
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
 
@@ -116,9 +116,9 @@ export function addSpellbookToInventory(index, f='default', count=1, spells) {
     max_prepared_spell_num.classList.add('prepared-spell-count-format');
     data_div.appendChild(max_prepared_spell_num);
 
-    item_count.addEventListener("change", function() {
+    item_count.addEventListener("change", async function() {
         character_data_handler.getInventory()[index].count = item_count.value;
-        saveInventory();
+        await saveInventory();
     });
 
     item_div.appendChild(spells_div);
@@ -271,12 +271,12 @@ function addCheckboxToSpell(prepare_option_container, prepared, spell_index, boo
     prepare_option_container.appendChild(prepared_spell_checkbox);
 }
 
-function spellOptionClickEvent(head, option, spells, spell_index, book_index, prepare_option_container, prepared) {
+async function spellOptionClickEvent(head, option, spells, spell_index, book_index, prepare_option_container, prepared) {
     const txt = head.querySelector('p');
     txt.textContent = option.textContent;
     spells[spell_index] = option.textContent;
     addSpellToBookInventory(book_index, spell_index, option.textContent, false);
-    saveInventory();
+    await saveInventory();
     addCheckboxToSpell(prepare_option_container, prepared, spell_index, book_index);
     bus.publish(EVENTS.SPELL_BOOK_SPELL_SELECTED);
 }
@@ -291,11 +291,11 @@ function findHighestSlotLevelAvailable(d, level) {
     return highest;
 }
 
-function togglePreparedSpell(checkbox, spell_index, book_index) {
+async function togglePreparedSpell(checkbox, spell_index, book_index) {
     if(checkbox.checked) {
         setSpellPrepared(book_index, spell_index, true);
     } else {
         setSpellPrepared(book_index, spell_index, false);
     }
-    saveInventory();
+    await saveInventory();
 }

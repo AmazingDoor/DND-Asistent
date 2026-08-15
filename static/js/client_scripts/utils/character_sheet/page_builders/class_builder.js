@@ -5,9 +5,10 @@ import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 import * as inventory_builder from './inventory_builder.js';
 import { clearItems as clearInventory, clearItems} from '../inventory/inventory_item_manager.js';
-import { saveInventory } from '../inventory/savers/inventory_saver.js';
+import { saveInventory } from '../../../save_handler.js';
 import { updateSpells } from '../../spell_handler.js';
-import { setUsingSpellbook, isUsingSpellbook, saveClassData } from './../mappers/class_mapper.js';
+import { setUsingSpellbook, isUsingSpellbook } from './../mappers/class_mapper.js';
+import { saveClassData } from '../../../save_handler.js';
 import { updateData as updateCombatSpellData } from './sub_builders/combat_builder.js';
 import { getInventory } from '../character_data_handler.js';
 import * as inventory_handler from '../../inventory_handler.js';
@@ -104,7 +105,7 @@ async function clickEvent(option, head) {
     inventory_handler.clearInventory();
     setDefaultClassData(option.textContent);
     await inventory_handler.setDefaultInventory();
-    saveInventory();
+    await saveInventory();
     handleSpellBuilding();
     setSkills()
     const skill_array = getClassSkills();

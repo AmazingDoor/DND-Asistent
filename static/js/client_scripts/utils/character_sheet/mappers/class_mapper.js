@@ -211,6 +211,15 @@ export function getCurrentSpellSlots() {
     return current_spell_slots;
 }
 
+export function getMaxSpellSlots() {
+    const magic_slots = getMagicSlots(class_name);
+    let spell_slots = [];
+    if(Object.hasOwn(magic_slots, "spell_slots")) {
+        spell_slots = magic_slots.spell_slots[getPlayerLevel() - 1];
+    }
+    return spell_slots;
+}
+
 export function setSpellSlotsUsed(slots) {
     spell_slots_used = slots;
 }
@@ -252,11 +261,6 @@ export function getSpellSlotsUsed() {
 
 export function getClassName() {
     return class_name;
-}
-
-export function saveClassData() {
-    let class_data = {class_name: getClassName(), skills: getClassSkills(), current_spell_slots: getCurrentSpellSlots(), used_spell_slots: getSpellSlotsUsed(), char_id: char_id};
-    socket.emit('save_player_class', class_data);
 }
 
 export function getClassData() {

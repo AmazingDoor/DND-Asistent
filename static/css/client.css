@@ -4,6 +4,44 @@
         box-sizing: border-box;
     }
 
+    #spell-slot-displays {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    #spell-slot-displays div {
+        padding-left: 1px;
+        padding-right: 1px;
+        margin-left: 2px;
+        margin-right: 2px;
+        border: 1px solid black;
+    }
+
+    #spell-slot-display-label-container {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 2px;
+        margin-top: 2px;
+    }
+
+    #spell-slot-display-label-container button {
+        font-size: 12;
+        width: auto;
+        padding-top: 1px;
+        padding-bottom: 1px;
+    }
+
+    #rest-buttons-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-evenly;
+        margin-top: 2px;
+        margin-bottom: 2px;
+        border-top: 1px solid black;
+        padding-top: 4px;
+    }
+
     .prepared-spell-count-container {
         display: flex;
         flex: 1;

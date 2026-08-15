@@ -43,6 +43,7 @@ def delete_campaign(data):
     file_path = os.getcwd() + '\\local\\campaigns\\' + str(name)
     if os.path.exists(file_path):
         shutil.rmtree(file_path)
+    return True
 
 
 @socketio.on('selected_campaign')

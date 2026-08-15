@@ -11,6 +11,7 @@ import {getMagicSlots} from './../../../../shared/spell_caster_slot_map.js';
 import {options as class_loadout_options} from './../../../../shared/inventory/class_loadout_options.js';
 import { addSpellToBookInventory, setSpellPrepared } from './../character_data_handler.js';
 import { updateData as updateCombatSpellData, updateData } from '../page_builders/sub_builders/combat_builder.js';
+import { saveInventory } from '../../../save_handler.js';
 import * as spell_book_manager from './spell_book_manager.js';
 
 const inventory_list = document.querySelector('.inventory-container');
@@ -36,7 +37,7 @@ export function addSpellbookToInventory(index, f='default', count=1, spells) {
 }
 
 
-export function addWeaponOptionToInventory(option_ref, f = 'default', build_inventory) {
+export async function addWeaponOptionToInventory(option_ref, f = 'default', build_inventory) {
     if (option_ref === null || option_ref === undefined || option_ref.length === 0) {
         return;
     }
@@ -102,7 +103,7 @@ export function addWeaponOptionToInventory(option_ref, f = 'default', build_inve
 
 
         // Handle option selection
-        option.addEventListener('click', () => {
+        option.addEventListener('click', async () => {
             const weapon_reference = option.dataset.weapon_reference;
             const weapon_count = option.dataset.weapon_count;
             const ammo_count = option.dataset.ammo_count;
@@ -127,7 +128,7 @@ export function addWeaponOptionToInventory(option_ref, f = 'default', build_inve
 
             build_inventory();
             item_div.remove();
-            saveInventory();
+            await saveInventory();
         });
 
         optionsContainer.appendChild(option);
@@ -149,7 +150,7 @@ export function addWeaponOptionToInventory(option_ref, f = 'default', build_inve
 }
 
 
-export function addArmorOptionToInventory(option_ref, f = 'default', build_inventory) {
+export async function addArmorOptionToInventory(option_ref, f = 'default', build_inventory) {
     if (option_ref === null || option_ref === undefined || option_ref.length === 0) {
         return;
     }
@@ -201,7 +202,7 @@ export function addArmorOptionToInventory(option_ref, f = 'default', build_inven
 
 
         // Handle option selection
-        option.addEventListener('click', () => {
+        option.addEventListener('click', async () => {
             const armor_reference = option.dataset.armor_reference;
             const armor_count = option.dataset.armor_count;
 
@@ -220,7 +221,7 @@ export function addArmorOptionToInventory(option_ref, f = 'default', build_inven
 
             build_inventory();
             item_div.remove();
-            saveInventory();
+            await saveInventory();
         });
 
         optionsContainer.appendChild(option);
@@ -241,7 +242,7 @@ export function addArmorOptionToInventory(option_ref, f = 'default', build_inven
     });
 }
 
-export function addItemOptionToInventory(option_ref, f = 'default', build_inventory) {
+export async function addItemOptionToInventory(option_ref, f = 'default', build_inventory) {
     if (option_ref === null || option_ref === undefined || option_ref.length === 0) {
         return;
     }
@@ -294,7 +295,7 @@ export function addItemOptionToInventory(option_ref, f = 'default', build_invent
             option.dataset.item_inv = "1";
         }
 
-        option.addEventListener('click', () => {
+        option.addEventListener('click', async () => {
             const item_reference = option.dataset.item_reference;
             const item_count = option.dataset.item_count;
             const label = option.textContent;
@@ -318,7 +319,7 @@ export function addItemOptionToInventory(option_ref, f = 'default', build_invent
 
             build_inventory();
             item_div.remove();
-            saveInventory();
+            await saveInventory();
         });
 
         optionsContainer.appendChild(option);
@@ -339,7 +340,7 @@ export function addItemOptionToInventory(option_ref, f = 'default', build_invent
 
 
 
-export function addWeaponToInventory(weapon_reference, index, f='default', count=1, ammo=0) {
+export async function addWeaponToInventory(weapon_reference, index, f='default', count=1, ammo=0) {
     const weapon_div = document.createElement('div');
     weapon_div.classList.add('inventory-item');
     weapon_div.dataset.tag = 'weapon';
@@ -356,9 +357,9 @@ export function addWeaponToInventory(weapon_reference, index, f='default', count
     weapon_count.value = count.toString();
     weapon_div.appendChild(weapon_count);
 
-    weapon_count.addEventListener("change", function() {
+    weapon_count.addEventListener("change", async function() {
         character_data_handler.getWeaponInventory()[index].count = weapon_count.value;
-        saveInventory();
+        await saveInventory();
     });
 
     weapon_list.appendChild(weapon_div);
@@ -366,7 +367,7 @@ export function addWeaponToInventory(weapon_reference, index, f='default', count
 
 }
 
-export function addArmorToInventory(armor_reference, index, f='default', count=1) {
+export async function addArmorToInventory(armor_reference, index, f='default', count=1) {
     const armor_div = document.createElement('div');
     armor_div.classList.add('inventory-item');
     armor_div.dataset.tag = 'armor';
@@ -383,15 +384,15 @@ export function addArmorToInventory(armor_reference, index, f='default', count=1
     armor_count.value = count.toString();
     armor_div.appendChild(armor_count);
 
-    armor_count.addEventListener("change", function() {
+    armor_count.addEventListener("change", async function() {
         character_data_handler.getArmorInventory()[index].count = armor_count.value;
-        saveInventory();
+        await saveInventory();
     });
 
     armor_list.appendChild(armor_div);
 }
 
-export function addItemToInventory(item_reference, index, f='default', count=1) {
+export async function addItemToInventory(item_reference, index, f='default', count=1) {
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
     item_div.dataset.tag = 'item';
@@ -408,15 +409,15 @@ export function addItemToInventory(item_reference, index, f='default', count=1) 
     item_count.value = count;
     item_div.appendChild(item_count);
 
-    item_count.addEventListener("change", function() {
+    item_count.addEventListener("change", async function() {
         character_data_handler.getInventory()[index].count = item_count.value;
-        saveInventory();
+        await saveInventory();
     });
 
     inventory_list.appendChild(item_div);
 }
 
-export function addContainerToInventory(item_reference, index, f='default', count=1, inv) {
+export async function addContainerToInventory(item_reference, index, f='default', count=1, inv) {
     const item_div = document.createElement('div');
     item_div.classList.add('inventory-item');
 
@@ -444,9 +445,9 @@ export function addContainerToInventory(item_reference, index, f='default', coun
     data_div.appendChild(item_count);
     item_div.appendChild(data_div);
 
-    item_count.addEventListener("change", function() {
+    item_count.addEventListener("change", async function() {
         character_data_handler.getInventory()[index].count = item_count.value;
-        saveInventory();
+        await saveInventory();
     });
 
     item_div.appendChild(inv_div);
@@ -483,9 +484,9 @@ export function buildItemContainerInv(inv, display) {
 
         item_table.appendChild(table_row);
 
-        item_count.addEventListener('change', function() {
+        item_count.addEventListener('change', async function() {
             inv[i].count = item_count.value;
-            saveInventory();
+            await saveInventory();
         });
     }
     display.appendChild(item_table);

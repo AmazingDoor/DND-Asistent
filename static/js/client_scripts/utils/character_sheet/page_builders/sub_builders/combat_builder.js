@@ -1,5 +1,6 @@
 import { getSpellCastingAbilityScore, getCharacterAbilityModifiers} from "../../character_data_handler.js";
-import { getSpellData, getClassName, isUsingSpellbook, getCurrentSpellSlots, setCurrentSpellSlots, saveClassData, setSpellSlotsUsed, resetUsedSpellSlots, incrementUsedSpellSlot, getSpellSlotsUsed } from "../../mappers/class_mapper.js";
+import { getSpellData, getClassName, isUsingSpellbook, getCurrentSpellSlots, setCurrentSpellSlots, setSpellSlotsUsed, resetUsedSpellSlots, incrementUsedSpellSlot, getSpellSlotsUsed } from "../../mappers/class_mapper.js";
+import { saveClassData } from "../../../../save_handler.js";
 import { getSpellsFromSpellbooks } from "../../character_data_handler.js";
 import { getMagicSlots } from "../../../../../shared/spell_caster_slot_map.js";
 import { getPlayerLevel } from "../../../../player_level_handler.js";
@@ -41,6 +42,8 @@ export function updateCurrentSpellSlots() {
 
     for(let i = 0; i < spell_level_count; i++) {
         if(current_spell_slot_count[i] != null && current_spell_slot_count[i] != undefined) {
+            const display_div = document.createElement('div');
+            spellSlotDisplays.appendChild(display_div);
             const t = document.createElement('p');
             let spell_level = i + 1;
             let spell_level_text = '';
@@ -59,8 +62,8 @@ export function updateCurrentSpellSlots() {
                     break;
             }
             const spell_count = current_spell_slot_count[i];
-            t.textContent = spell_level_text + ":" + spell_count + " ";
-            spellSlotDisplays.appendChild(t);
+            t.textContent = spell_level_text + ": " + spell_count + " ";
+            display_div.appendChild(t);
         }
     }
 

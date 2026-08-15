@@ -1,7 +1,11 @@
 import { getClassSpells } from '../../../shared/spell_data_filterer.js';
 import { getPlayerLevel } from '../../player_level_handler.js';
+import { emitSignal } from '../socket_emitter.js';
 import {items} from './../../../shared/inventory/items.js';
 import { getClassName as get_class_name, getClassName } from './mappers/class_mapper.js';
+
+const char_id = sessionStorage.getItem('charId');
+const char_name = sessionStorage.getItem('charName');
 
 let base_character_abilities = {};
 let character_ability_modifiers = {};
@@ -14,6 +18,24 @@ let background_skills = [];
 let max_prepared_spells = 0;
 let prepared_spell_count = 0;
 let concentration = '';
+let health = 0;
+let max_health = 0;
+
+export function setPlayerHealth(h) {
+    health = h;
+}
+
+export function getPlayerHealth() {
+    return health;
+}
+
+export function setMaxHealth(health) {
+    max_health = health;
+}
+
+export function getMaxHeath() {
+    return max_health;
+}
 
 
 export function setConcentration(spell_name) {

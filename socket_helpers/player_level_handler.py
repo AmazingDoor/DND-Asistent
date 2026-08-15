@@ -12,6 +12,8 @@ def client_change_armor_class(data):
     char_id = data.get('char_id')
     save_player_level(char_id, value)
     emit('client_change_player_level', {'char_id': char_id, 'value': value}, room=DM_SID)
+    return True
+
 
 @socketio.on('host_change_player_level')
 def host_change_armor_class(data):
@@ -21,7 +23,7 @@ def host_change_armor_class(data):
     value = data.get('player_level')
     save_player_level(char_id, value)
     emit('host_change_player_level', {'value': value}, room=sid)
-
+    return True
 
 def save_player_level(char_id, value):
     PLAYERS_FOLDER = get_players_folder()

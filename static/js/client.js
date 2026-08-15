@@ -16,6 +16,8 @@ import {updateAbilities, updateSkills} from './client_scripts/utils/display_stat
 import { calculateAbilities } from './client_scripts/utils/character_sheet/calculators/ability_calculator.js';
 import { bus, EVENTS } from './client_scripts/utils/event_bus.js';
 import { handleSpellSlotOnLevelUp } from './client_scripts/utils/character_sheet/mappers/class_mapper.js';
+import { getPlayerHealth, setMaxHealth, setPlayerHealth } from './client_scripts/utils/character_sheet/character_data_handler.js';
+import { savePlayerHealth } from './client_scripts/save_handler.js';
 
 const socket = io();
 setFactorySocket(socket);
@@ -76,22 +78,27 @@ function appendMessage(from, message) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-function updateHealth() {
+async function updateHealth() {
     const heal_val = parseFloat(document.getElementById("heal-input").value) || 0;
     const damage_val = parseFloat(document.getElementById("damage-input").value || 0);
     const health = document.getElementById("health-num");
     const health_val = parseFloat(health.textContent) || 0;
     let result = health_val - damage_val + heal_val;
-    const max_health = document.querySelector('.max-health').value;
 
-    if (result > max_health) {
-        result = max_health;
-    }
-
-    health.textContent = result.toString();
+    setPlayerHealth(result);
+    await savePlayerHealth();
     document.getElementById("heal-input").value = '';
     document.getElementById("damage-input").value = '';
-    socket.emit("client_update_health", {result: result, char_id: char_id});
+    bus.publish(EVENTS.HEALTH_UPDATED);
+}
+
+const set_health_text_subscriptions = [EVENTS.HEALTH_UPDATED, EVENTS.LONG_REST, 
+    EVENTS.SHORT_REST];
+bus.subscribeToEvents(set_health_text_subscriptions, setHealthText);
+
+function setHealthText() {
+    const health = document.getElementById("health-num");
+    health.textContent = getPlayerHealth();
 }
 
 function toggleImages() {
@@ -157,6 +164,7 @@ function escapeHTML(str) {
 
 socket.on('host_update_max_health', data => {
     const max_health = data.max_health;
+    setMaxHealth(max_health);
     updateMaxHealth(max_health);
 });
 
@@ -192,6 +200,7 @@ socket.on('send_image', data => {
 
 socket.on('host_update_health', ({result, client_id}) => {
     const health = document.getElementById("health-num");
+    setPlayerHealth(result);
     health.textContent = result.toString();
 });
 
