@@ -20,6 +20,16 @@ export async function saveAll() {
     await savePlayerHealth();
 }
 
+export async function saveSpeed() {
+    let data = {speed: character_data_handler.getSpeed(), char_id: char_id};
+    await emitAndWait('save_speed', data);
+}
+
+export async function saveInitiativeMod() {
+    let data = {init_mod: character_data_handler.getInitiativeModifier(), char_id: char_id};
+    await emitAndWait('save_init_mod', data);
+}
+
 export async function saveClassData() {
     let class_data = {class_name: getClassName(), skills: getClassSkills(),
         current_spell_slots: getCurrentSpellSlots(), used_spell_slots: getSpellSlotsUsed(), char_id: char_id};

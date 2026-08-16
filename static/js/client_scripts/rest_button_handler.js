@@ -18,6 +18,7 @@ async function longRest() {
         setPlayerHealth(getMaxHeath());
     }
     resetUsedSpellSlots();
+    console.log(getMaxSpellSlots());
     setCurrentSpellSlots(getMaxSpellSlots());
     await saveAll();
     bus.publish(EVENTS.LONG_REST);

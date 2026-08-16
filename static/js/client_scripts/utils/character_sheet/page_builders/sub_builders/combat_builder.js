@@ -21,7 +21,8 @@ const update_data_subscribe_events = [EVENTS.LEVEL_UPDATED, EVENTS.CLASS_CHANGED
 bus.subscribeToEvents(update_data_subscribe_events, updateData);
 
 
-const update_current_spell_slots_subscriptions = [EVENTS.LEVEL_UPDATED, EVENTS.SPELL_CASTED];
+const update_current_spell_slots_subscriptions = [EVENTS.LEVEL_UPDATED, EVENTS.SPELL_CASTED, 
+    EVENTS.LONG_REST, EVENTS.SHORT_REST];
 bus.subscribeToEvents(update_current_spell_slots_subscriptions, updateCurrentSpellSlots);
 
 resetSpellsButton.addEventListener("click", () => resetSpellsButtonPressed());

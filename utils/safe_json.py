@@ -7,8 +7,10 @@ def safe_read_json(file_path):
     lock = FileLock(file_path + '.lock')
     with lock:
         with open(file_path, 'r') as f:
-            return json.load(f)
-
+            try:
+                return json.load(f)
+            except json.JSONDecodeError:
+                return {}
 def safe_write_json(data, file_path):
     lock = FileLock(file_path + '.lock')
     with lock:

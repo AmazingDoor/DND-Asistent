@@ -23,11 +23,12 @@ def host_page_load():
     emit('add_ip_text', {'ip': txt}, room=DM_SID)
     players = [f for f in os.listdir(PLAYERS_FOLDER)]
     for player in players:
-        data = safe_read_json(f"{PLAYERS_FOLDER}\\{player}\\basic_data.json")
-        char_id = player #player.split('.')[0]
-        name = data.get("name")
-        emit('host_load_client_data', {'name': name, 'char_id': char_id})
-        host_init_client_data(char_id)
+        if player is not None:
+            data = safe_read_json(f"{PLAYERS_FOLDER}\\{player}\\basic_data.json")
+            char_id = player #player.split('.')[0]
+            name = data.get("name")
+            emit('host_load_client_data', {'name': name, 'char_id': char_id})
+            host_init_client_data(char_id)
     load_combats()
 
 

@@ -20,6 +20,24 @@ let prepared_spell_count = 0;
 let concentration = '';
 let health = 0;
 let max_health = 0;
+let speed = 0;
+let initiative_modifier = 0;
+
+export function setSpeed(s) {
+    speed = s;
+}
+
+export function getSpeed() {
+    return speed;
+}
+
+export function setInitiativeModifier(mod) {
+    initiative_modifier = mod;
+}
+
+export function getInitiativeModifier() {
+    return initiative_modifier;
+}
 
 export function setPlayerHealth(h) {
     health = h;

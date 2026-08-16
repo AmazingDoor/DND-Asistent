@@ -16,15 +16,27 @@ import {updateAbilities, updateSkills} from './client_scripts/utils/display_stat
 import { calculateAbilities } from './client_scripts/utils/character_sheet/calculators/ability_calculator.js';
 import { bus, EVENTS } from './client_scripts/utils/event_bus.js';
 import { handleSpellSlotOnLevelUp } from './client_scripts/utils/character_sheet/mappers/class_mapper.js';
-import { getPlayerHealth, setMaxHealth, setPlayerHealth } from './client_scripts/utils/character_sheet/character_data_handler.js';
-import { savePlayerHealth } from './client_scripts/save_handler.js';
+import { getPlayerHealth, setInitiativeModifier, setMaxHealth, setPlayerHealth } from './client_scripts/utils/character_sheet/character_data_handler.js';
+import { saveInitiativeMod, savePlayerHealth, saveSpeed } from './client_scripts/save_handler.js';
 
 const socket = io();
 setFactorySocket(socket);
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
+
+    const speed_input = document.getElementById('speed-input');
+    speed_input.addEventListener('change', async function() {
+        setSpeed(speed_input.value);
+        await saveSpeed();
+    });
+
+    const initiative_modifier_input = document.getElementById('initiative-modifier-input');
+    initiative_modifier_input.addEventListener('change', async function() {
+        setInitiativeModifier(initiative_modifier_input.value);
+        await saveInitiativeMod();
+    });
 
     const ipt = document.querySelector('#player-level-input');
     ipt.addEventListener('change',
@@ -208,6 +220,7 @@ socket.on('host_change_armor_class', ({value}) => {
     const ac_value = document.getElementById('ac-input');
     ac_value.value = value;
 });
+
 
 socket.on('initialize_combat', ({combat_id}) => {
     show_initiative_overlay(combat_id);

@@ -67,10 +67,11 @@ export function buildSpellSection(saved_spells = [], saved_cantrips = []) {
     }
 }
 
-function spellOptionClickEvent(head, option) {
+async function spellOptionClickEvent(head, option) {
     const txt = head.querySelector('p');
     txt.textContent = option.textContent;
     setSpells();
+    await saveSpells();
     updateSpells();
 }
 
