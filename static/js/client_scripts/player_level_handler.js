@@ -3,11 +3,12 @@ let socket = null;
 
 export function setSocket(io) {
     socket = io;
+    name = sessionStorage.getItem('charName');
+    char_id = sessionStorage.getItem('charId');
 }
 
 export function Initialize() {
-    name = sessionStorage.getItem('charName');
-    char_id = sessionStorage.getItem('charId');
+
     return new Promise(resolve => {
         socket.once('load_player_level', data => {
             const lvl = data.player_level;
@@ -26,6 +27,10 @@ export function setPlayerLevel(level, level_input) {
     //change called from client
     player_level = level;
     socket.emit('client_change_player_level', {player_level: level, char_id: char_id});
+}
+
+export function updatePlayerLevelDisplay() {
+    document.querySelector("#player-level-input").value = player_level;
 }
 
 export function setPlayerLevelAndUpdate(level) {

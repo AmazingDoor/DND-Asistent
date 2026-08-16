@@ -37,6 +37,7 @@ import socket_helpers.spell_handler
 import socket_helpers.race_saver
 import socket_helpers.player_level_handler
 import socket_helpers.inventory_handler
+import socket_helpers.basic_data_saver
 
 DM_SID = None
 

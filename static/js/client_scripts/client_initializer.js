@@ -9,9 +9,11 @@ import { buildInventory } from "./utils/character_sheet/page_builders/inventory_
 import { updateData as updateCombatSpellData } from "./utils/character_sheet/page_builders/sub_builders/combat_builder.js";
 import { Initialize as InitializeInventoryHandler } from "./utils/inventory_handler.js";
 import { InitializeButtonHandler } from "./rest_button_handler.js";
+import { initializeBasicData } from "./basic_data_initializer.js";
 
 export async function initializeClient() {
-    await InitializePlayerLevelHandler();
+    await initializeBasicData();
+    //await InitializePlayerLevelHandler();
     await InitializeRaceMapper();
     await InitializeClassMapper();
     await InitializeAbilityBuilder();

@@ -1,5 +1,6 @@
 import * as race_features from './../../../../shared/race_features.js';
 import * as character_data_handler from '../character_data_handler.js';
+import { emitSignal } from '../../socket_emitter.js';
 
 let socket = null;
 
@@ -8,9 +9,12 @@ let race_abilities;
 let race_languages;
 let race_name;
 
+let char_id = sessionStorage.getItem("charId");
+
 export function Initialize() {
+    emitSignal('require_race_data', {char_id: char_id});
     return new Promise(resolve =>{
-        socket.once('load_race_stats', data => {
+        socket.once('sent_race_data', data => {
             race_name = data.race_name;
             setRace(race_name);
             resolve(data);

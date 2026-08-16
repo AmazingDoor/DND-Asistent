@@ -22,6 +22,15 @@ let health = 0;
 let max_health = 0;
 let speed = 0;
 let initiative_modifier = 0;
+let armor_class = 0;
+
+export function setArmorClass(ac) {
+    armor_class = ac;
+}
+
+export function getArmorClass() {
+    return armor_class
+}
 
 export function setSpeed(s) {
     speed = s;

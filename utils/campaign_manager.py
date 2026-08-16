@@ -2,7 +2,7 @@ from utils.safe_json import safe_read_json
 from utils.socket_factory import socketio, emit
 from utils.file_manager import assign_folders
 from utils.host_connection_handler import get_dm_sid
-from utils.client_tracker import allow_early_clients
+from utils.initializers.client_initializer import allow_early_clients
 import os
 import shutil
 

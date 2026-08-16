@@ -14,3 +14,7 @@ export function emitAndWait(signalName, data) {
 export function emitSignal(signalName, data) {
     socket.emit(signalName, data);
 }
+
+export function getSocket() {
+    return socket;
+}
