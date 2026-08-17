@@ -6,7 +6,7 @@ let char_id = sessionStorage.getItem("charId");
 
 export async function initializeBasicData() {
 
-    //Doesn't need to be saved because its data loaded directly from the server
+    //Doesn't need to be saved because its data loaded directly from the save file
     emitSignal('require_basic_data', {char_id: char_id});
     return new Promise((resolve) => {
         getSocket().once('sent_basic_data', data => {

@@ -7,6 +7,7 @@ import * as character_data_handler from './../character_data_handler.js';
 import {options as class_loadout_options} from './../../../../shared/inventory/class_loadout_options.js';
 import { getPlayerLevel } from '../../../player_level_handler.js';
 import { getAbilities } from '../mappers/ability_mapper.js';
+import * as inventory_items from '../inventory_items.js';
 
 let socket = null;
 let name;
@@ -26,7 +27,15 @@ export async function rebuildInventory() {
 }
 
 export function buildInventory() {
-    document.querySelector('.inventory-container').innerHTML = '';
+    const inventory_container = document.querySelector('.inventory-container');
+    const test_inv = new inventory_items.InventoryContainer("Test Inventory");
+    test_inv.addTo(inventory_container);
+
+    const test_item = new inventory_items.InventoryItem(test_inv, "alchemists_fire_flask",'default', 1);
+    test_inv.addItem(test_item);
+
+    console.log(test_inv.getSaveData());
+    //document.querySelector('.inventory-container').innerHTML = '';
     document.querySelector('.inventory-weapons').innerHTML = '';
     document.querySelector('.inventory-armor').innerHTML = '';
     document.querySelector('.mounts-container').innerHTML = '';
