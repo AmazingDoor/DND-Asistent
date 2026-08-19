@@ -23,6 +23,7 @@ export let socket = null;
 
 export function setFactorySocket(io) {
     socket = io;
+    setSocketEmitterSocket(io);
     setClassSpellSectionBuilderSocket(io);
     setRaceDropdownHandlerSocket(io);
     setRaceSkillDropdownHandlerSocket(io);
@@ -41,10 +42,4 @@ export function setFactorySocket(io) {
     setBackgroundMapperSocket(io);
     setInventoryHandlerSocket(io);
     setInventorySaverSocket(io);
-    setSocketEmitterSocket(io);
-}
-
-export function getSocket() {
-  if (!socket) throw new Error("Socket not initialized yet!");
-  return socket;
 }

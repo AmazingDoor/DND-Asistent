@@ -10,10 +10,14 @@ import { updateData as updateCombatSpellData } from "./utils/character_sheet/pag
 import { Initialize as InitializeInventoryHandler } from "./utils/inventory_handler.js";
 import { InitializeButtonHandler } from "./rest_button_handler.js";
 import { initializeBasicData } from "./basic_data_initializer.js";
+import { InitializeCharacterDataHandler } from "./utils/character_sheet/character_data_handler.js";
+import { initializeInventoryClasses } from "./utils/character_sheet/inventory_items.js";
+import { saveInventory } from "./save_handler.js";
 
 export async function initializeClient() {
+    await initializeInventoryClasses();
+    await InitializeCharacterDataHandler();
     await initializeBasicData();
-    //await InitializePlayerLevelHandler();
     await InitializeRaceMapper();
     await InitializeClassMapper();
     await InitializeAbilityBuilder();

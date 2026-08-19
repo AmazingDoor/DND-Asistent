@@ -28,13 +28,22 @@ export async function rebuildInventory() {
 
 export function buildInventory() {
     const inventory_container = document.querySelector('.inventory-container');
-    const test_inv = new inventory_items.InventoryContainer("Test Inventory");
+   
+    const inventory_handler = character_data_handler.getInventoryHandler();
+    return;
+
+    /*const test_inv = new inventory_items.InventoryContainer("Test Inventory");
     test_inv.addTo(inventory_container);
 
-    const test_item = new inventory_items.InventoryItem(test_inv, "alchemists_fire_flask",'default', 1);
+    const test_item = new inventory_items.InventoryItem("alchemists_fire_flask",'default', 1);
     test_inv.addItem(test_item);
 
-    console.log(test_inv.getSaveData());
+    const test_container_item = new inventory_items.InventoryContainerItem("backpack", "default", 1);
+    test_inv.addItem(test_container_item);
+
+    const test_sub_item = new inventory_items.InventoryItem("alchemists_fire_flask",'default', 1);
+    test_container_item.addItem(test_sub_item);*/
+
     //document.querySelector('.inventory-container').innerHTML = '';
     document.querySelector('.inventory-weapons').innerHTML = '';
     document.querySelector('.inventory-armor').innerHTML = '';

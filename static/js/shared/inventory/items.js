@@ -240,7 +240,7 @@ export const items = {
         "contents": [],
         "properties": []
     },
-    "ball_bearings_bag_of_1000": {
+    "ball_bearings_bag_of_1,000": {
         "special": [],
         "index": "ball-bearings-bag-of-1000",
         "name": "Ball bearings (bag of 1,000)",
@@ -801,102 +801,74 @@ export const items = {
         },
         "contents": [
             {
-                "item": {
-                    "index": "backpack",
-                    "name": "Backpack"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "backpack",
+                "name": "Backpack"
             },
             {
-                "item": {
-                    "index": "ball-bearings-bag-of-1000",
-                    "name": "Ball bearings (bag of 1,000)"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "ball_bearings_bag_of_1000",
+                "name": "Ball bearings (bag of 1,000)"
             },
             {
-                "item": {
-                    "index": "string-10-feet",
-                    "name": "String (10 feet)"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "string_10_feet",
+                "name": "String (10 feet)"
             },
             {
-                "item": {
-                    "index": "bell",
-                    "name": "Bell"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "bell",
+                "name": "Bell"
             },
             {
-                "item": {
-                    "index": "candle",
-                    "name": "Candle"
-                },
-                "quantity": 5
+                "count": 5,
+                "reference": "candle",
+                "name": "Candle"
             },
             {
-                "item": {
-                    "index": "crowbar",
-                    "name": "Crowbar"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "crowbar",
+                "name": "Crowbar"
             },
             {
-                "item": {
-                    "index": "hammer",
-                    "name": "Hammer"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "hammer",
+                "name": "Hammer"
             },
             {
-                "item": {
-                    "index": "piton",
-                    "name": "Piton"
-                },
-                "quantity": 10
+                "count": 10,
+                "reference": "piton",
+                "name": "Piton"
             },
             {
-                "item": {
-                    "index": "lantern-hooded",
-                    "name": "Lantern, hooded"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "lantern_hooded",
+                "name": "Lantern, hooded"
             },
             {
-                "item": {
-                    "index": "oil-flask",
-                    "name": "Oil (flask)"
-                },
-                "quantity": 2
+                "count": 2,
+                "reference": "oil_flask",
+                "name": "Oil (flask)"
             },
             {
-                "item": {
-                    "index": "rations-1-day",
-                    "name": "Rations (1 day)"
-                },
-                "quantity": 5
+                "count": 5,
+                "reference": "rations_1_day",
+                "name": "Rations (1 day)"
             },
             {
-                "item": {
-                    "index": "tinderbox",
-                    "name": "Tinderbox"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "tinderbox",
+                "name": "Tinderbox"
             },
             {
-                "item": {
-                    "index": "waterskin",
-                    "name": "Waterskin"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "waterskin",
+                "name": "Waterskin"
             },
             {
-                "item": {
-                    "index": "rope-hempen-50-feet",
-                    "name": "Rope, hempen (50 feet)"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "rope_hempen_50_feet",
+                "name": "Rope, hempen (50 feet)"
             }
         ],
         "properties": []
@@ -1497,81 +1469,59 @@ export const items = {
         },
         "contents": [
             {
-                "item": {
-                    "index": "chest",
-                    "name": "Chest"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "chest",
+                "name": "Chest"
             },
             {
-                "item": {
-                    "index": "case-map-or-scroll",
-                    "name": "Case, map or scroll"
-                },
-                "quantity": 2
+                "count": 2,
+                "reference": "case_map_or_scroll",
+                "name": "Case, map or scroll"
             },
             {
-                "item": {
-                    "index": "clothes-fine",
-                    "name": "Clothes, fine"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "clothes_fine",
+                "name": "Clothes, fine"
             },
             {
-                "item": {
-                    "index": "ink-1-ounce-bottle",
-                    "name": "Ink (1 ounce bottle)"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "ink_1_ounce_bottle",
+                "name": "Ink (1 ounce bottle)"
             },
             {
-                "item": {
-                    "index": "ink-pen",
-                    "name": "Ink pen"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "ink_pen",
+                "name": "Ink pen"
             },
             {
-                "item": {
-                    "index": "lamp",
-                    "name": "Lamp"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "lamp",
+                "name": "Lamp"
             },
             {
-                "item": {
-                    "index": "oil_flask",
-                    "name": "Oil (flask)"
-                },
-                "quantity": 2
+                "count": 2,
+                "reference": "oil_flask",
+                "name": "Oil (flask)"
             },
             {
-                "item": {
-                    "index": "paper_one_sheet",
-                    "name": "Paper (one sheet)"
-                },
-                "quantity": 5
+                "count": 5,
+                "reference": "paper_one_sheet",
+                "name": "Paper (one sheet)"
             },
             {
-                "item": {
-                    "index": "perfume_vial",
-                    "name": "Perfume (vial)"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "perfume_vial",
+                "name": "Perfume (vial)"
             },
             {
-                "item": {
-                    "index": "sealing_wax",
-                    "name": "Sealing wax"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "sealing_wax",
+                "name": "Sealing wax"
             },
             {
-                "item": {
-                    "index": "soap",
-                    "name": "Soap"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "soap",
+                "name": "Soap"
             }
         ],
         "properties": []
@@ -1681,67 +1631,49 @@ export const items = {
         },
         "contents": [
             {
-                "item": {
-                    "index": "backpack",
-                    "name": "Backpack"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "backpack",
+                "name": "Backpack"
             },
             {
-                "item": {
-                    "index": "crowbar",
-                    "name": "Crowbar"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "crowbar",
+                "name": "Crowbar"
             },
             {
-                "item": {
-                    "index": "hammer",
-                    "name": "Hammer"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "hammer",
+                "name": "Hammer"
             },
             {
-                "item": {
-                    "index": "piton",
-                    "name": "Piton"
-                },
-                "quantity": 10
+                "count": 10,
+                "reference": "piton",
+                "name": "Piton"
             },
             {
-                "item": {
-                    "index": "torch",
-                    "name": "Torch"
-                },
-                "quantity": 10
+                "count": 10,
+                "reference": "torch",
+                "name": "Torch"
             },
             {
-                "item": {
-                    "index": "tinderbox",
-                    "name": "Tinderbox"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "tinderbox",
+                "name": "Tinderbox"
             },
             {
-                "item": {
-                    "index": "rations-1-day",
-                    "name": "Rations (1 day)"
-                },
-                "quantity": 10
+                "count": 10,
+                "reference": "rations_1_day",
+                "name": "Rations (1 day)"
             },
             {
-                "item": {
-                    "index": "waterskin",
-                    "name": "Waterskin"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "waterskin",
+                "name": "Waterskin"
             },
             {
-                "item": {
-                    "index": "rope-hempen-50-feet",
-                    "name": "Rope, hempen (50 feet)"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "rope_hempen_50_feet",
+                "name": "Rope, hempen (50 feet)"
             }
         ],
         "properties": []
@@ -1811,53 +1743,39 @@ export const items = {
         },
         "contents": [
             {
-                "item": {
-                    "index": "backpack",
-                    "name": "Backpack"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "backpack",
+                "name": "Backpack"
             },
             {
-                "item": {
-                    "index": "bedroll",
-                    "name": "Bedroll"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "bedroll",
+                "name": "Bedroll"
             },
             {
-                "item": {
-                    "index": "clothes-costume",
-                    "name": "Clothes, costume"
-                },
-                "quantity": 2
+                "count": 2,
+                "reference": "clothes_costume",
+                "name": "Clothes, costume"
             },
             {
-                "item": {
-                    "index": "candle",
-                    "name": "Candle"
-                },
-                "quantity": 5
+                "count": 5,
+                "reference": "candle",
+                "name": "Candle"
             },
             {
-                "item": {
-                    "index": "rations-1-day",
-                    "name": "Rations (1 day)"
-                },
-                "quantity": 5
+                "count": 5,
+                "reference": "rations_1_day",
+                "name": "Rations (1 day)"
             },
             {
-                "item": {
-                    "index": "waterskin",
-                    "name": "Waterskin"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "waterskin",
+                "name": "Waterskin"
             },
             {
-                "item": {
-                    "index": "disguise-kit",
-                    "name": "Disguise Kit"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "disguise_kit",
+                "name": "Disguise Kit"
             }
         ],
         "properties": []
@@ -1881,60 +1799,44 @@ export const items = {
         },
         "contents": [
             {
-                "item": {
-                    "index": "backpack",
-                    "name": "Backpack"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "backpack",
+                "name": "Backpack"
             },
             {
-                "item": {
-                    "index": "bedroll",
-                    "name": "Bedroll"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "bedroll",
+                "name": "Bedroll"
             },
             {
-                "item": {
-                    "index": "mess-kit",
-                    "name": "Mess Kit"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "mess_kit",
+                "name": "Mess Kit"
             },
             {
-                "item": {
-                    "index": "tinderbox",
-                    "name": "Tinderbox"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "tinderbox",
+                "name": "Tinderbox"
             },
             {
-                "item": {
-                    "index": "torch",
-                    "name": "Torch"
-                },
-                "quantity": 10
+                "count": 10,
+                "reference": "torch",
+                "name": "Torch"
             },
             {
-                "item": {
-                    "index": "rations-1-day",
-                    "name": "Rations (1 day)"
-                },
-                "quantity": 10
+                "count": 10,
+                "reference": "rations_1_day",
+                "name": "Rations (1 day)"
             },
             {
-                "item": {
-                    "index": "waterskin",
-                    "name": "Waterskin"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "waterskin",
+                "name": "Waterskin"
             },
             {
-                "item": {
-                    "index": "rope-hempen-50-feet",
-                    "name": "Rope, hempen (50 feet)"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "rope_hempen_50_feet",
+                "name": "Rope, hempen (50 feet)"
             }
         ],
         "properties": []
@@ -3199,74 +3101,54 @@ export const items = {
         },
         "contents": [
             {
-                "item": {
-                    "index": "backpack",
-                    "name": "Backpack"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "backpack",
+                "name": "Backpack"
             },
             {
-                "item": {
-                    "index": "blanket",
-                    "name": "Blanket"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "blanket",
+                "name": "Blanket"
             },
             {
-                "item": {
-                    "index": "candle",
-                    "name": "Candle"
-                },
-                "quantity": 10
+                "count": 10,
+                "reference": "candle",
+                "name": "Candle"
             },
             {
-                "item": {
-                    "index": "tinderbox",
-                    "name": "Tinderbox"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "tinderbox",
+                "name": "Tinderbox"
             },
             {
-                "item": {
-                    "index": "rations-1-day",
-                    "name": "Rations (1 day)"
-                },
-                "quantity": 2
+                "count": 2,
+                "reference": "rations_1_day",
+                "name": "Rations (1 day)"
             },
             {
-                "item": {
-                    "index": "waterskin",
-                    "name": "Waterskin"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "waterskin",
+                "name": "Waterskin"
             },
             {
-                "item": {
-                    "index": "alms-box",
-                    "name": "Alms box"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "alms_box",
+                "name": "Alms box"
             },
             {
-                "item": {
-                    "index": "block-of-incense",
-                    "name": "Block of incense"
-                },
-                "quantity": 2
+                "count": 2,
+                "reference": "block_of_incense",
+                "name": "Block of incense"
             },
             {
-                "item": {
-                    "index": "censer",
-                    "name": "Censer"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "censer",
+                "name": "Censer"
             },
             {
-                "item": {
-                    "index": "vestments",
-                    "name": "Vestments"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "vestments",
+                "name": "Vestments"
             }
         ],
         "properties": []
@@ -3655,53 +3537,39 @@ export const items = {
         },
         "contents": [
             {
-                "item": {
-                    "index": "backpack",
-                    "name": "Backpack"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "backpack",
+                "name": "Backpack"
             },
             {
-                "item": {
-                    "index": "book",
-                    "name": "Book"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "book",
+                "name": "Book"
             },
             {
-                "item": {
-                    "index": "ink-1-ounce-bottle",
-                    "name": "Ink (1 ounce bottle)"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "ink_1_ounce_bottle",
+                "name": "Ink (1 ounce bottle)"
             },
             {
-                "item": {
-                    "index": "ink-pen",
-                    "name": "Ink pen"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "ink_pen",
+                "name": "Ink pen"
             },
             {
-                "item": {
-                    "index": "parchment-one-sheet",
-                    "name": "Parchment (one sheet)"
-                },
-                "quantity": 10
+                "count": 10,
+                "reference": "parchment_one_sheet",
+                "name": "Parchment (one sheet)"
             },
             {
-                "item": {
-                    "index": "little-bag-of-sand",
-                    "name": "Little bag of sand"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "little_bag_of_sand",
+                "name": "Little bag of sand"
             },
             {
-                "item": {
-                    "index": "small-knife",
-                    "name": "Small knife"
-                },
-                "quantity": 1
+                "count": 1,
+                "reference": "small_knife",
+                "name": "Small knife"
             }
         ],
         "properties": []

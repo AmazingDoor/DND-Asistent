@@ -2,6 +2,7 @@ import { getClassSpells } from '../../../shared/spell_data_filterer.js';
 import { getPlayerLevel } from '../../player_level_handler.js';
 import { emitSignal } from '../socket_emitter.js';
 import {items} from './../../../shared/inventory/items.js';
+import { InventoryContainer, InventoryManager } from './inventory_items.js';
 import { getClassName as get_class_name, getClassName } from './mappers/class_mapper.js';
 
 const char_id = sessionStorage.getItem('charId');
@@ -23,6 +24,16 @@ let max_health = 0;
 let speed = 0;
 let initiative_modifier = 0;
 let armor_class = 0;
+let inventory_handler =  null;
+
+export async function InitializeCharacterDataHandler() {
+    inventory_handler = await InventoryManager.Initialize();
+    return true;
+}
+
+export function getInventoryHandler() {
+    return inventory_handler;
+}
 
 export function setArmorClass(ac) {
     armor_class = ac;
@@ -253,7 +264,7 @@ export function addInvContainerItem(item, t='default', count=1, input_inv=null) 
             }));
         }
     }
-    const i = {type: 'container_item', reference: item, from: t, count: count, inventory: inv};
+    const i = {type: 'inventory_container_item', reference: item, from: t, count: count, inventory: inv};
     inventory.push(i);
 }
 

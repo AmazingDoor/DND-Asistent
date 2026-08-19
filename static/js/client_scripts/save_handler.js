@@ -64,12 +64,8 @@ export async function saveRaceSkills() {
 
 
 export async function saveInventory() {
-    const inventory = character_data_handler.getInventory();
-    const weapon_inventory = character_data_handler.getWeaponInventory();
-    const armor_inventory = character_data_handler.getArmorInventory();
-    const mount_inventory = character_data_handler.getMountInventory();
-    const inv = {inv: inventory, weapon: weapon_inventory, armor: armor_inventory, mount: mount_inventory};
-    let data = { char_id: char_id, inventory: inv};
+    let data = {char_id: char_id, inventory: character_data_handler.getInventoryHandler().getSaveData()};
+    console.log(data);
     await emitAndWait('save_inventory', data);
 }
 

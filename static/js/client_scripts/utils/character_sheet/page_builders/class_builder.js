@@ -10,10 +10,11 @@ import { updateSpells } from '../../spell_handler.js';
 import { setUsingSpellbook, isUsingSpellbook } from './../mappers/class_mapper.js';
 import { saveClassData } from '../../../save_handler.js';
 import { updateData as updateCombatSpellData } from './sub_builders/combat_builder.js';
-import { getInventory } from '../character_data_handler.js';
+import { getInventory, getInventoryHandler } from '../character_data_handler.js';
 import * as inventory_handler from '../../inventory_handler.js';
 import { bus, EVENTS, SAVE_EVENTS } from '../../event_bus.js';
 import { emitAndWait } from '../../socket_emitter.js';
+import { ITEM_SOURCES } from '../inventory_items.js';
 
 
 let socket = null;
@@ -102,18 +103,30 @@ async function clickEvent(option, head) {
     }
 
     head.querySelector('.selected-class').textContent = option.textContent;
-    inventory_handler.clearInventory();
+
     setDefaultClassData(option.textContent);
-    await inventory_handler.setDefaultInventory();
+
+
+    let inv_manager = getInventoryHandler();
+    inv_manager.clearInventories(ITEM_SOURCES.CLASS);
+    inv_manager.setDefaultClassData();
     await saveInventory();
     handleSpellBuilding();
     setSkills()
     const skill_array = getClassSkills();
-    await inventory_builder.rebuildInventory();
     await emitAndWait('use_spell_book', {char_id: char_id, use_spell_book: isUsingSpellbook()});
     bus.publish(SAVE_EVENTS.SAVE_CLASS);    
     bus.publish(EVENTS.CLASS_CHANGED);
     building = false;
+
+    return;
+
+
+    inventory_handler.clearInventory();
+    await inventory_handler.setDefaultInventory();
+    await saveInventory();
+   
+    await inventory_builder.rebuildInventory();
 }
 
 const save_class_data_subscriptions = [SAVE_EVENTS.SAVE_CLASS];

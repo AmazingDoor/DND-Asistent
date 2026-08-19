@@ -20,12 +20,11 @@ import { getInitiativeModifier, getPlayerHealth, getSpeed, setInitiativeModifier
 import { saveInitiativeMod, savePlayerHealth, saveSpeed } from './client_scripts/save_handler.js';
 
 const socket = io();
-setFactorySocket(socket);
 
 document.addEventListener("DOMContentLoaded", async () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
-
+    await setFactorySocket(socket);
     await initializeClient();
 
     const speed_input = document.getElementById('speed-input');

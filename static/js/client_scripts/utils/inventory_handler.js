@@ -1,4 +1,3 @@
-import { getSocket } from "../factories/socket_factory.js";
 import * as character_data_handler from "./character_sheet/character_data_handler.js";
 import { isUsingSpellbook, getClassData } from "./character_sheet/mappers/class_mapper.js";
 import { weapons } from "../../shared/inventory/weapons.js";
@@ -56,6 +55,7 @@ export function clearInventory() {
 }
 
 export function setDefaultInventory() {
+    return;
     const class_data = getClassData();
 
     const weapon_options = class_data.weapons.options;
@@ -68,19 +68,19 @@ export function setDefaultInventory() {
 
     let i = 0;
     weapon_options.forEach(option_array => {
-        character_data_handler.addInvOption("weapon_option", option_array, "class");
+        character_data_handler.addInvOption("inventory_weapon_option", option_array, "class");
         i++;
     });
 
     i = 0;
     armor_options.forEach(option_array => {
-        character_data_handler.addInvOption("armor_option", option_array, "class");
+        character_data_handler.addInvOption("inventory_armor_option", option_array, "class");
         i++;
     });
 
     i = 0;
     item_options.forEach((option_array) => {
-        character_data_handler.addInvOption("item_option", option_array, "class");
+        character_data_handler.addInvOption("inventory_item_option", option_array, "class");
         i++
     });
 
