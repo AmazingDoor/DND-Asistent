@@ -34,6 +34,10 @@ export const light_armor = {
     }
 };
 
+for (const [key, armor] of Object.entries(light_armor)) {
+    armor.index = key;
+}
+
 export const medium_armor = {
     hide: {
         name: "Hide",
@@ -92,6 +96,10 @@ export const medium_armor = {
     }
 };
 
+for (const [key, armor] of Object.entries(medium_armor)) {
+    armor.index = key;
+}
+
 export const heavy_armor = {
     ring_mail: {
         name: "Ring Mail",
@@ -138,6 +146,11 @@ export const heavy_armor = {
         weight: 65
     }
 };
+
+for (const [key, armor] of Object.entries(heavy_armor)) {
+    armor.index = key;
+    armor.type = "armor";
+}
 
 
 export function getAllArmors() {

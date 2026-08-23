@@ -604,6 +604,11 @@ export const weapons = {
     }
 };
 
+for (const [key, weapon] of Object.entries(weapons)) {
+    weapon.index = key;
+    weapon.type = "weapon";
+}
+
 export const martial_weapons = [
     weapons.battleaxe,
     weapons.flail,

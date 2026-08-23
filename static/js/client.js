@@ -19,7 +19,9 @@ import { handleSpellSlotOnLevelUp } from './client_scripts/utils/character_sheet
 import { getInitiativeModifier, getPlayerHealth, getSpeed, setInitiativeModifier, setMaxHealth, setPlayerHealth, setSpeed } from './client_scripts/utils/character_sheet/character_data_handler.js';
 import { saveInitiativeMod, savePlayerHealth, saveSpeed } from './client_scripts/save_handler.js';
 
-const socket = io();
+const socket = io({
+    transports: ["websocket"]
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
     name = sessionStorage.getItem('charName');

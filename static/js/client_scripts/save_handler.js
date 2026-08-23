@@ -65,7 +65,6 @@ export async function saveRaceSkills() {
 
 export async function saveInventory() {
     let data = {char_id: char_id, inventory: character_data_handler.getInventoryHandler().getSaveData()};
-    console.log(data);
     await emitAndWait('save_inventory', data);
 }
 

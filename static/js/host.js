@@ -7,7 +7,9 @@ import {add_image_to_host} from './host_scripts/image_handler.js';
 import {combatUpdatePlayerHealth, setPlayerHealth} from './host_scripts/combat/health_handler.js';
 import {updatePlayerAC, manageCombat} from './combat.js';
 import {updateMaxHealth, hostUpdateMaxHealth} from './host_scripts/combat/health_section_builder.js';
-const socket = io({ query: { role: "host" } });
+const socket = io({
+    transports: ["websocket"],
+    query: { role: "host" } });
 setFactorySocket(socket);
 
 const clientMap = {};

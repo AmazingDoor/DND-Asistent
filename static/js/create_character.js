@@ -1,4 +1,6 @@
-const socket = io();
+const socket = io({
+    transports: ["websocket"]
+});
 window.onload = function () {
     const fileInput = document.getElementById('fileInput');
 

@@ -14,7 +14,7 @@ import { getInventory, getInventoryHandler } from '../character_data_handler.js'
 import * as inventory_handler from '../../inventory_handler.js';
 import { bus, EVENTS, SAVE_EVENTS } from '../../event_bus.js';
 import { emitAndWait } from '../../socket_emitter.js';
-import { ITEM_SOURCES } from '../inventory_items.js';
+import { ITEM_SOURCES } from '../../../../shared/inventory/item_metadata.js';
 
 
 let socket = null;
@@ -109,6 +109,7 @@ async function clickEvent(option, head) {
 
     let inv_manager = getInventoryHandler();
     inv_manager.clearInventories(ITEM_SOURCES.CLASS);
+    console.log(inv_manager.getSaveData());
     inv_manager.setDefaultClassData();
     await saveInventory();
     handleSpellBuilding();

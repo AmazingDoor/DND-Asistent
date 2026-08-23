@@ -4347,6 +4347,11 @@ export const items = {
     }
 }
 
+for (const [key, item] of Object.entries(items)) {
+    item.index = key;
+    item.type = "item";
+}
+
 export function getDruidicFoci() {
     let foci = [];
     for (const [key, value] of Object.entries(items)) {

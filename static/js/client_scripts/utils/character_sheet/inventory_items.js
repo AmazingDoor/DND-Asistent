@@ -4,7 +4,9 @@ import { getClassData, getClassName } from "./mappers/class_mapper.js";
 import { emitAndWait, emitSignal, getSocket } from "../socket_emitter.js";
 import { weapons as WEAPONS } from "../../../shared/inventory/weapons.js";
 import { getAllArmors } from "../../../shared/inventory/armor.js";
-
+import { options as CLASS_LOADOUT_OPTIONS } from "../../../shared/inventory/class_loadout_options.js";
+import { saveInventory } from "../../save_handler.js";
+import { OTHER_ITEM_TYPES,  INVENTORY_ITEM_TYPES, ITEM_SOURCES} from "../../../shared/inventory/item_metadata.js";
 
 let char_id = sessionStorage.getItem("charId");
 let socket;
@@ -19,6 +21,7 @@ export function initializeInventoryClasses() {
 }
 
 function getKey(d, d2) {
+    //get the key from data in an array
     for (let key in d) {
         if (d[key] === d2) {
             return key;
@@ -26,11 +29,60 @@ function getKey(d, d2) {
     }
 }
 
-function getItemData(reference) {
-    return ITEMS[reference] || getAllArmors()[reference] || WEAPONS[reference];
+function getItemReference(data) {
+    //get item reference from item data in any of the arrays
+    return getKey(WEAPONS, data) || 
+    getKey(getAllArmors(), data) || 
+    getKey(ITEMS, data) || null;
 }
 
-export function createItem(item_type, reference='', from='default', count=1, contents=[]) {
+function getItemData(reference) {
+    //get item data from a reference from any of the arrays
+    try {
+        return ITEMS[reference] || getAllArmors()[reference] || WEAPONS[reference];
+    } catch {
+        return null;
+    }
+}
+
+function getItemType(item_data) {
+    //return an INVENTORY_ITEM_TYPE based on item data
+    try {
+        const contents = item_data.contents || [];
+        const spells = item_data.spells || [];
+        const options = item_data.item_options || [];
+
+        if(contents.length > 0) {
+            return INVENTORY_ITEM_TYPES.INVENTORY_CONTAINER_ITEM;
+        }
+
+        if(spells.length > 0) {
+            return INVENTORY_ITEM_TYPES.SPELL_BOOK_ITEM;
+        }
+
+        if(options.length > 0) {
+            return INVENTORY_ITEM_TYPES.INVENTORY_OPTION;
+        }
+
+        return INVENTORY_ITEM_TYPES.INVENTORY_ITEM;
+    } catch {
+        return null;
+    }
+
+
+}
+
+export function createItem({item_type, reference='', from='default', count=1, contents=[], linked_inventory=null} = {}) {
+    /*
+    create an item based on data given
+        -item_type is INVENTORY_ITEM_TYPE
+        -reference is the item reference or a class_loadout_option reference
+        -from is the origin of the item (class, background, race, default)
+        -count is number of that item
+        -contents can be items in the container_item's inventory or spells in a spell book
+        -linked_inventory is the InventoryContainer that an item is in
+    */
+
     let item;
     switch(item_type) {
         case INVENTORY_ITEM_TYPES.INVENTORY_ITEM:
@@ -42,11 +94,16 @@ export function createItem(item_type, reference='', from='default', count=1, con
         case INVENTORY_ITEM_TYPES.SPELL_BOOK_ITEM:
             item = new InventorySpellBook(from, count, contents);
             break;
+        case INVENTORY_ITEM_TYPES.INVENTORY_OPTION:
+            item = new InventoryOption(from, reference, linked_inventory);
     }
     return item;
 }
 
 export class InventoryManager {
+    //Used to interact with the 4 inventories
+    static instance = null;
+
     constructor(inventory) {
         this.character_inventory = inventory;
         this.items_inventory = new InventoryContainer("Inventory");
@@ -55,6 +112,11 @@ export class InventoryManager {
         this.mounts_inventory = new InventoryContainer("Mounts");
 
         this.items_inventory.addTo(inventory_container);
+        this.weapons_inventory.addTo(inventory_container);
+        this.armor_inventory.addTo(inventory_container);
+        this.mounts_inventory.addTo(inventory_container);
+
+        InventoryManager.instance = this;
 
         this.populateInventories();
     }
@@ -89,16 +151,30 @@ export class InventoryManager {
     }
 
     populateInventories() {
+        //Add items from the saved inventory
         this.character_inventory.inv.forEach((item_data) => {
-            let reference = item_data.reference;
+            let reference = item_data.reference || item_data.options_ref;
             let count = item_data.count;
             let from = item_data.from;
             let item_type = item_data.item_type || item_data.type;
             let contents = item_data.spells || item_data.inv || null;
 
-            let item = createItem(item_type, reference=reference, from=from, count=count, contents=contents);
+            let item = createItem({item_type: item_type, reference: reference, from: from, count: count, contents: contents, linked_inventory: this.items_inventory});
             this.addToItems(item);
         });
+
+        this.character_inventory.weapon.forEach((item_data) => {
+            let reference = item_data.reference || item_data.options_ref;
+            let count = item_data.count;
+            let from = item_data.from;
+            let item_type = item_data.item_type || item_data.type;
+
+            let item = createItem({item_type: item_type, reference: reference, count: count, from: from, linked_inventory: this.weapons_inventory_inventory});
+            this.addToWeapons(item);
+        });
+
+        this.character_inventory = [];
+
     }
 
     addToItems(item) {
@@ -118,6 +194,7 @@ export class InventoryManager {
     }
 
     getSaveData() {
+        //Get data to be saved from the 4 inventories
         let inv = this.items_inventory.getSaveData();
         let weapons = this.weapons_inventory.getSaveData();
         let armor = this.armor_inventory.getSaveData();
@@ -126,6 +203,7 @@ export class InventoryManager {
     }
 
     setDefaultClassData() {
+        //set default data from the class chosen
         const class_data = getClassData();
 
         const weapon_options = class_data.weapons.options;
@@ -163,22 +241,28 @@ export class InventoryManager {
             const item_data = item.item;
             const contents = item_data.contents;
             const reference = getKey(ITEMS, item_data);
-            let item_type = INVENTORY_ITEM_TYPES.INVENTORY_ITEM;
-            if(item_data.contents.length > 0) {
-                item_type = INVENTORY_ITEM_TYPES.INVENTORY_CONTAINER_ITEM;
-            }
-
+            let item_type = getItemType(item_data);
             
-            let i = createItem(item_type, reference, from, count, contents);
+            let i = createItem({item_type: item_type, reference: reference, from: from, count: count, contents: contents});
             this.addToItems(i);
         });
 
+        item_options.forEach((item_option_reference) => {
+            let i = new InventoryOption(ITEM_SOURCES.CLASS, item_option_reference, this.items_inventory);
+            this.addToItems(i);
+        })
+
+        weapon_options.forEach((weapon_option_reference) => {
+            let i = new InventoryOption(ITEM_SOURCES.CLASS, weapon_option_reference, this.weapons_inventory)
+            this.addToWeapons(i);
+        });
     }
 }
 
 
 
 export class InventoryContainer {
+    //Contains items and display them
     constructor(inventory_title) {
         this.items = [];
         this.title = inventory_title;
@@ -214,6 +298,7 @@ export class InventoryContainer {
     }
 
     loadItems(data) {
+        //Load items from data provided
         let inv_array = data;
         if(inv_array === undefined) {
             inv_array = [];
@@ -267,11 +352,7 @@ export class InventoryContainer {
         if(item_source === ITEM_SOURCES.DEFAULT) {
             this.items = [];
         } else {
-            this.items.forEach((item) => {
-                if(item.from == item_source) {
-                    this.removeItem(item);
-                }
-            });
+            this.items = this.items.filter(item => item.from !== item_source);  
         }
         this.refresh();
     }
@@ -295,7 +376,13 @@ export class InventoryContainer {
         if(index !== -1) {
             this.items.splice(index, 1);
             this.refresh();
+
         }
+    }
+
+    async removeItemAndSave(item) {
+        this.removeItem(item);
+        await saveInventory();
     }
 
     addTo(parent_element) {
@@ -303,6 +390,7 @@ export class InventoryContainer {
     }
 
     getSaveData() {
+        //get data to be saved from items
         let item_array = [];
         this.items.forEach((item) => {
             item_array.push(item.getItemDict());
@@ -312,6 +400,7 @@ export class InventoryContainer {
 }
 
 class ContainerItemInventory extends InventoryContainer {
+    //Inventory for items that contain other items
     constructor(inventory_title) {
         super(inventory_title)
     }
@@ -345,6 +434,7 @@ class ContainerItemInventory extends InventoryContainer {
 }
 
 class InventoryAddable {
+    //makes things easily addable to an inventory
     constructor() {
         this.inventory = null;
         this.item_div = document.createElement('div');
@@ -359,15 +449,16 @@ class InventoryAddable {
         parent_element.appendChild(this.item_div);
     }
 
-    remove() {
+    removeAndSave() {
         this.item_div.remove();
-        this.inventory?.removeItem(this);
+        this.inventory?.removeItemAndSave(this);
     }
 
 
 }
 
 export class InventoryItem extends InventoryAddable {
+    //A basic item in an inventory
     constructor(reference, from='default', count=1) {
         super()
         this.reference = reference;
@@ -389,16 +480,21 @@ export class InventoryItem extends InventoryAddable {
         this.count_input.type = 'number';
         this.count_input.classList.add('inventory-item-count');
         this.count_input.value = this.count;
+        this.count_input.addEventListener("change", async() => {
+            this.count = this.count_input.value;
+            await saveInventory();
+        });
         this.item_div.appendChild(this.count_input);
 
         this.remove_button = document.createElement('button');
         this.remove_button.classList.add('inventory-item-remove-button');
         this.remove_button.textContent = "X";
-        this.remove_button.addEventListener('click', () => {this.remove()});
+        this.remove_button.addEventListener('click', async() => {await this.removeAndSave()});
         this.item_div.appendChild(this.remove_button);
     }
 
     getItemDict() {
+        //return data to be saved for the item
         return {reference: this.reference, from: this.from,
             count: this.count, item_type: this.item_type
         };
@@ -414,6 +510,7 @@ export class InventoryItem extends InventoryAddable {
 }
 
 export class InventoryContainerItem extends InventoryAddable {
+    //item that can contain other items
     constructor(reference, from=ITEM_SOURCES.DEFAULT, count=1, inv=[]) {
         super()
         this.reference = reference;
@@ -443,6 +540,7 @@ export class InventoryContainerItem extends InventoryAddable {
     }
 
     loadItems(data) {
+        //load items into the container_item's inventory
         this.item_inventory.loadItems(data);
     }
 
@@ -451,6 +549,7 @@ export class InventoryContainerItem extends InventoryAddable {
     }
 
     getItemDict() {
+        //return data to be saved from container_item and contained items
         let inv = this.item_inventory.getSaveData();
         return {reference: this.reference, from: this.from,
             count: this.count, item_type: this.item_type,
@@ -459,9 +558,200 @@ export class InventoryContainerItem extends InventoryAddable {
     }
 }
 
+class InventoryOption extends InventoryAddable {
+    //A button that allows the player to pick specified items
+    constructor(from, options_ref, inventory) {
+        super();
+        this.inventory = inventory;
+        this.from = from;
+        this.options_ref = options_ref;
+        this.item_options = CLASS_LOADOUT_OPTIONS[this.options_ref];
+        this.buildItem();
+    }
+
+    buildItem() {
+        this.selectButton = document.createElement('button');
+        this.selectButton.classList.add('inventory-item-option');
+        this.selectButton.textContent = this.options_ref;
+        this.selectButton.addEventListener("click", () => {this.createItemSelectOverlay();});
+        this.item_div.appendChild(this.selectButton);
+    }
+
+    createItemSelectOverlay() {
+        //create and display a list of items the player can pick from
+        this.item_selection_overlay = document.createElement('div');
+        this.item_selection_overlay.classList.add('item-select-overlay');
+
+        let close_button_container = document.createElement('div');
+        close_button_container.classList.add('item-select-overlay-close-container');
+        this.item_selection_overlay.appendChild(close_button_container);
+
+        let close_button = document.createElement('button');
+        close_button.classList.add('item-select-overlay-close');
+        close_button.textContent = "X";
+        close_button.addEventListener("click", () => {this.removeItemSelectOverlay()});
+        close_button_container.appendChild(close_button);
+
+        let main_container = document.createElement('div');
+        main_container.classList.add('item-select-overlay-main');
+        this.item_selection_overlay.appendChild(main_container);
+        this.item_div.appendChild(this.item_selection_overlay);
+
+        //create items and add them to the list
+        this.item_options.forEach((item_option) => {
+            let item_option_object = new ItemOption(this, item_option, this.from);
+            item_option_object.addTo(main_container);
+        });
+
+    }
+
+    getItemDict() {
+        //return data to be saved
+        return {item_type: INVENTORY_ITEM_TYPES.INVENTORY_OPTION, from: this.from, 
+            options_ref: this.options_ref
+        };
+    }
+
+    selectItem(item_data, reference, count, ammo, other, inv) {
+        //runs when an item from the option list is selected
+        const item_type = getItemType(item_data);
+        const i = createItem({item_type: item_type, reference: reference, from: this.from, count: count,  contents: inv});
+        this.inventory.addItem(i);
+
+        //add ammo if the weapon comes with it
+        if(ammo > 0) {
+            console.log('ran');
+            const ammo_reference = item_data.ammo_type;
+            const ammo_data = getItemData(ammo_reference);
+            const ammo_count = ammo;
+            const ammo_item_type = INVENTORY_ITEM_TYPES.INVENTORY_ITEM;
+            const ammo_linked_inventory = InventoryManager.instance.items_inventory;
+            const ammo_i = createItem({item_type: ammo_item_type, reference: ammo_reference, from: this.from, count: ammo_count});
+            ammo_linked_inventory.addItem(ammo_i);
+
+        }
+
+        //add other items / item options to inventory if there are any
+        other.forEach((o) => { 
+            const other_reference = o.options || o.item || o.weapon || o.armor;
+            const other_item_data = getItemData(other_reference);
+            const other_count = o.count;
+            const other_inv = other_item_data?.contents || null;
+            let other_item_type;
+            let inventory;
+            switch (o.type) {
+                case OTHER_ITEM_TYPES.armor:
+                    inventory = InventoryManager.instance.armor_inventory;
+                    other_item_type = INVENTORY_ITEM_TYPES.INVENTORY_ITEM
+                    break;
+                case OTHER_ITEM_TYPES.armor_choice:
+                    inventory = InventoryManager.instance.armor_inventory;
+                    other_item_type = INVENTORY_ITEM_TYPES.INVENTORY_OPTION;
+                    break;
+                case OTHER_ITEM_TYPES.container_item:
+                    inventory = InventoryManager.instance.items_inventory;
+                    other_item_type = INVENTORY_ITEM_TYPES.INVENTORY_CONTAINER_ITEM
+                    break;
+                case OTHER_ITEM_TYPES.item:
+                    inventory = InventoryManager.instance.items_inventory;
+                    other_item_type = INVENTORY_ITEM_TYPES.INVENTORY_ITEM;
+                    break;
+                case OTHER_ITEM_TYPES.item_choice:
+                    inventory = InventoryManager.instance.items_inventory;
+                    other_item_type = INVENTORY_ITEM_TYPES.INVENTORY_OPTION;
+                    break;
+                case OTHER_ITEM_TYPES.weapon:
+                    inventory = InventoryManager.instance.weapons_inventory;
+                    other_item_type = INVENTORY_ITEM_TYPES.INVENTORY_ITEM;
+                    break;
+                case OTHER_ITEM_TYPES.weapon_choice:
+                    inventory = InventoryManager.instance.weapons_inventory;
+                    other_item_type = INVENTORY_ITEM_TYPES.INVENTORY_OPTION;
+                    break;
+            }
+            const other_i = createItem({item_type: other_item_type, reference: other_reference, from: this.from, count: other_count,  contents: other_inv, linked_inventory: inventory});
+            inventory.addItem(other_i);
+        });
+
+        this.removeItemSelectOverlay();
+        this.inventory.removeItemAndSave(this);
+    }
+
+    removeItemSelectOverlay() {
+        //remove the option list overlay
+        this.item_selection_overlay.remove();
+        this.item_selection_overlay = null;
+    }
+}
+
+class ItemOption {
+    //item in the item option overlay
+    constructor(item_option, items) {
+        this.linked_option = item_option;
+        this.option_dict = items;
+        this.item_reference = items.item || items.weapon || items.armor || null;
+        this.count = items.count || 1;
+        this.ammo = items.ammo || 0;
+        this.other = items.other || [];
+        this.item_data = getItemData(this.item_reference);
+        this.inv = this.item_data.contents || [];
+        this.buildItemOption();
+    }
+
+    buildItemOption() {
+        this.main_div = document.createElement('div');
+        this.main_div.classList.add('item-select-option');
+
+        this.main_div.addEventListener('click', () => {this.linked_option.selectItem(this.item_data, this.item_reference, this.count, this.ammo, this.other, this.inv)});
+
+        let item_row = document.createElement('div');
+        item_row.classList.add('item-option-row');
+
+        let item_name = document.createElement('p');
+        item_name.textContent = this.item_data.name;
+        item_row.appendChild(item_name);
+
+        let count = document.createElement('p');
+        count.textContent = this.count;
+        item_row.appendChild(count);
+
+        this.main_div.appendChild(item_row);
+
+        //display data for other items / options that come with the option
+        this.other.forEach((o) => {
+            let item_row = document.createElement('div');
+            item_row.classList.add('item-option-row');
+            this.main_div.appendChild(item_row);
+
+            const options_ref = o.options || null;
+            const item_ref = o.item || null;
+            let label;
+
+            if(options_ref === null) {
+                const name = getItemData(item_ref).name;
+                label = name;
+            } else {
+                label = o.label;
+            }
+
+
+            let other_name = document.createElement('p');
+            other_name.textContent = label;
+            item_row.appendChild(other_name);
+
+
+        });
+    }
+
+    addTo(parent_element) {
+        parent_element.appendChild(this.main_div);
+    }
+}
+
 export class InventorySpellBook extends InventoryAddable {
+    //spell book in the inventory
     constructor(from=ITEM_SOURCES.DEFAULT, count=1, spells=[]) {
-        super()
+        super();
         this.from = from;
         this.count = count;
         this.spells = spells;
@@ -498,6 +788,7 @@ export class InventorySpellBook extends InventoryAddable {
 
 
     getItemDict() {
+        //return data to be saved for the spell book
         return {item_type: INVENTORY_ITEM_TYPES.SPELL_BOOK_ITEM,
             from: this.from, count: this.count, spells: this.spells
         };
@@ -505,6 +796,7 @@ export class InventorySpellBook extends InventoryAddable {
 }
 
 class SpellBookAddable {
+    //make it easy to add something to a spell book inventory
     constructor() {
         this.main_div = document.createElement('div');
     }
@@ -515,6 +807,7 @@ class SpellBookAddable {
 }
 
 export class BookSpell extends SpellBookAddable {
+    //spell in a spell book
     constructor(spell_reference) {
         this.spell_reference = spell_reference;
     }
@@ -525,17 +818,3 @@ export class BookSpell extends SpellBookAddable {
         this.spell_name_text.textContent = getClassSpells(getClassName())[this.spell_reference];
     }
 }
-
-const INVENTORY_ITEM_TYPES = {
-    INVENTORY_ITEM: "inventory_item",
-    INVENTORY_CONTAINER_ITEM: "inventory_container_item",
-    SPELL_BOOK_ITEM: "spell_book_item"
-
-};
-
-export const ITEM_SOURCES = {
-    CLASS: "class",
-    RACE: "race",
-    BACKGROUND: "background",
-    DEFAULT: "default"
-};

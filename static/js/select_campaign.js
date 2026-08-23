@@ -1,4 +1,6 @@
-const socket = io({ query: { role: "host" } });
+const socket = io({
+    transports: ["websocket"],
+    query: { role: "host" } });
 let current_div = null;
 
 window.onload = function () {
