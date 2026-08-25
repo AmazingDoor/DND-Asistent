@@ -22,3 +22,8 @@ export const ITEM_SOURCES = {
     BACKGROUND: "background",
     DEFAULT: "default"
 };
+
+export const SPELL_BOOK_TYPES = {
+    SPELL_OPTION: "spell_option",
+    SPELL: "spell"
+};

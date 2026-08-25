@@ -8,6 +8,9 @@ import {warlock} from './../shared/spell_lists/warlock.js';
 import {wizard} from './../shared/spell_lists/wizard.js';
 import {getPlayerLevel} from './../client_scripts/player_level_handler.js';
 import {calculateCharismaMod, calculateIntelligenceMod, calculateWisdomMod} from './../client_scripts/utils/character_sheet/calculators/ability_calculator.js';
+import { getClassName } from '../client_scripts/utils/character_sheet/mappers/class_mapper.js';
+import { getMagicSlots } from './spell_caster_slot_map.js';
+
 
 export function getSpellData(class_name, spell_name) {
     const [cantrips, spells] = getClassSpells(class_name);
@@ -27,6 +30,20 @@ export function getSpellData(class_name, spell_name) {
     });
 
     return null;
+}
+
+export function getMaxSpellLevel() {
+    const spell_slots = getMagicSlots(getClassName());
+    const player_level = getPlayerLevel();
+
+    const spell_slot_map_object = spell_slots.spell_slots;
+    let spell_slot_map = [];
+    if(spell_slot_map_object !== undefined) {
+        spell_slot_map = spell_slot_map_object[player_level - 1] || [];
+    }
+
+    return spell_slot_map.length;
+
 }
 
 export function getClassSpells(class_name) {

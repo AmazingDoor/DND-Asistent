@@ -109,7 +109,6 @@ async function clickEvent(option, head) {
 
     let inv_manager = getInventoryHandler();
     inv_manager.clearInventories(ITEM_SOURCES.CLASS);
-    console.log(inv_manager.getSaveData());
     inv_manager.setDefaultClassData();
     await saveInventory();
     handleSpellBuilding();

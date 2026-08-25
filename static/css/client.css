@@ -4,6 +4,83 @@
         box-sizing: border-box;
     }
 
+    .spell-option-higher-level-text {
+        background-color: darkgrey;
+    }
+
+    .spell-option-description-container {
+        border: 2px solid black;
+        background-color: white;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+
+    .spell-option-stat-label {
+        font-weight: bold;
+        margin-bottom: 0px;
+    }
+
+    .spell-option-stat-container {
+        padding-left: 2px;
+        padding-right: 2px;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+    }
+
+    .spell-option-name-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .spell-option-main {
+        background-color: lightgray;
+        border: 2px solid black;
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+
+    .spell-option-level-container {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .spell-option-stat-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .spell-option-top-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-bottom: 4px;
+    }
+
+    .spell-select-overlay-main {
+        overflow-y: auto;
+        height: 100%;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+
+    .spell-selection-overlay {
+        background-color: white;
+    }
+
+    .fullscreen-overlay {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0px;
+        top: 0px;
+    }
+
+    .overlay-index-4 {
+        z-index: 4;
+    }
+
     .item-select-overlay {
         position: fixed;
         z-index: 4;
