@@ -7,6 +7,7 @@ import { getAllArmors } from "../../../shared/inventory/armor.js";
 import { options as CLASS_LOADOUT_OPTIONS } from "../../../shared/inventory/class_loadout_options.js";
 import { saveInventory } from "../../save_handler.js";
 import { OTHER_ITEM_TYPES,  INVENTORY_ITEM_TYPES, ITEM_SOURCES, SPELL_BOOK_TYPES} from "../../../shared/inventory/item_metadata.js";
+import { SpellOption, SpellOptionOverlay } from "../spell_overlay_classes.js";
 
 let char_id = sessionStorage.getItem("charId");
 let socket;
@@ -92,7 +93,7 @@ export function createItem({item_type, reference='', from='default', count=1, co
             item = new InventoryContainerItem(reference, from, count, contents);
             break;
         case INVENTORY_ITEM_TYPES.SPELL_BOOK_ITEM:
-            item = new InventorySpellBook(from, count, contents);
+            item = new InventorySpellBook(from, count, contents, linked_inventory);
             break;
         case INVENTORY_ITEM_TYPES.INVENTORY_OPTION:
             item = new InventoryOption(from, reference, linked_inventory);
@@ -158,7 +159,7 @@ export class InventoryManager {
             let from = item_data.from;
             let item_type = item_data.item_type || item_data.type;
             let contents = item_data.spells || item_data.inv || null;
-
+            
             let item = createItem({item_type: item_type, reference: reference, from: from, count: count, contents: contents, linked_inventory: this.items_inventory});
             this.addToItems(item);
         });
@@ -752,13 +753,15 @@ class ItemOption {
 export class InventorySpellBook extends InventoryAddable {
     //spell book in the inventory
     static spell_option_overlay = null;
-    constructor(from=ITEM_SOURCES.DEFAULT, count=1, spells=[]) {
+    constructor(from=ITEM_SOURCES.DEFAULT, count=1, spells=[], linked_inventory=null) {
         super();
         this.from = from;
         this.count = count;
-        this.spells = spells;
+        this.spells = [];
+        this.linked_inventory = linked_inventory;
 
         this.buildItem();
+        this.populateSpells(spells);
     }
 
     buildItem() {
@@ -773,20 +776,26 @@ export class InventorySpellBook extends InventoryAddable {
         this.spell_array = document.createElement('div');
         this.spell_array.classList.add('spellbook-spell-array');
         this.item_div.appendChild(this.spell_array);
-        this.setSize(4);
+        //this.setSize(4);
     }
 
     populateSpells(spells) {
         spells.forEach((spell) => {
-            //create spell and add it to this.spells
+            if(spell.item_type === SPELL_BOOK_TYPES.SPELL_OPTION) {
+                const spell_option = new BookSpellOption(this);
+                this.addSpellBookItem(spell_option);
+            } else {
+                const new_spell = new BookSpell(this, spell.spell_name);
+                this.addSpellBookItem(new_spell);
+            }
         });
+        this.refreshSpellList();
     }
 
     setSize(spell_num) {
         for(let i = 0; i < spell_num; i++) {
-            let data = {};
-            data.item_type = SPELL_BOOK_TYPES.SPELL_OPTION;
-            this.spells.push(data);
+            const spell_option = new BookSpellOption(this);
+            this.addSpellBookItem(spell_option);
         }
         this.refreshSpellList();
     }
@@ -794,97 +803,96 @@ export class InventorySpellBook extends InventoryAddable {
     refreshSpellList() {
         this.spell_array.textContent = '';
         this.spells.forEach((spell) => {
-            if(spell.item_type === SPELL_BOOK_TYPES.SPELL_OPTION) {
-                const spell_option = new BookSpellOption();
-                spell_option.addTo(this.spell_array);
-            } else {
-                const spell = new BookSpell();
-                spell.addTo(this.spell_array);
-            }
+            spell.addTo(this.spell_array);
         });
     }
 
-    addSpell(spell_data) {
-        this.spells.push(spell_data);
+
+
+    addSpellBookItem(spellbook_item) {
+        this.spells.push(spellbook_item);
         this.refreshSpellList();
+    }
+
+
+    removeSpellBookItem(spellbook_item) {
+        const index = this.spells.indexOf(spellbook_item);
+
+        if(index !== -1) {
+            this.spells.splice(index, 1);
+            this.refreshSpellList();
+
+        }
     }
 
 
     getItemDict() {
         //return data to be saved for the spell book
+        let spell_data_list = [];
+        this.spells.forEach((item) => {
+            let dict = {item_type: null, spell_name: ""};
+            if(item.item_type == SPELL_BOOK_TYPES.SPELL_OPTION) {
+                dict = {item_type: SPELL_BOOK_TYPES.SPELL_OPTION};
+            } else {
+                dict = {item_type: SPELL_BOOK_TYPES.SPELL, spell_name: item.spell_name};
+            }
+            spell_data_list.push(dict);
+        });
+
+        console.log({item_type: INVENTORY_ITEM_TYPES.SPELL_BOOK_ITEM,
+            from: this.from, count: this.count, spells: spell_data_list
+        });
         return {item_type: INVENTORY_ITEM_TYPES.SPELL_BOOK_ITEM,
-            from: this.from, count: this.count, spells: this.spells
+            from: this.from, count: this.count, spells: spell_data_list
         };
     }
 
-    static createSpellOptionOverlay() {
-        InventorySpellBook.spell_option_overlay = document.createElement('div');
-        InventorySpellBook.spell_option_overlay.classList.add('fullscreen-overlay');
-        InventorySpellBook.spell_option_overlay.classList.add('overlay-index-4');
-        InventorySpellBook.spell_option_overlay.classList.add('spell-selection-overlay');
-        document.body.appendChild(InventorySpellBook.spell_option_overlay);
-
-        let close_button_container = document.createElement('div');
-        close_button_container.classList.add('spell-select-overlay-close-container');
-        InventorySpellBook.spell_option_overlay.appendChild(close_button_container);
-
-        let close_button = document.createElement('button');
-        close_button.classList.add('spell-select-overlay-close');
-        close_button.textContent = "X";
-        close_button.addEventListener("click", () => {InventorySpellBook.removeSpellOptionOverlay()});
-        close_button_container.appendChild(close_button);
-
-        let main_container = document.createElement('div');
-        main_container.classList.add('spell-select-overlay-main');
-        InventorySpellBook.spell_option_overlay.appendChild(main_container);
-
-        const wizard_spells = getClassSpells("Wizard")[1];
-        const max_spell_level = getMaxSpellLevel();
-        wizard_spells.forEach((spell) => {
-            if(spell.level != 0 && spell.level <= max_spell_level) {
-                console.log(spell);
-                const spell_option = new SpellOption(spell);
-                spell_option.addTo(main_container);
-            }
-        });
-    }
-
-    static removeSpellOptionOverlay() {
-        InventorySpellBook.spell_option_overlay.remove();
-        InventorySpellBook.spell_option_overlay = null;
+    async removeSpellAndSave(spellbook_item) {
+        this.removeSpellBookItem(spellbook_item);
+        await saveInventory();
+        this.refreshSpellList();
     }
 }
 
 class SpellBookAddable {
     //make it easy to add something to a spell book inventory
-    constructor() {
+    constructor(spell_book) {
+        this.spell_book = spell_book;
         this.main_div = document.createElement('div');
     }
 
     addTo(parent_element) {
         parent_element.appendChild(this.main_div);
     }
+
+    removeAndSave() {
+        this.main_div.remove();
+        this.spell_book?.removeSpellAndSave(this);
+    }
 }
 
 export class BookSpell extends SpellBookAddable {
     //spell in a spell book
-    constructor(spell_reference) {
-        super();
-        this.spell_reference = spell_reference;
+    constructor(spell_book, spell_name) {
+        super(spell_book);
+        this.item_type = SPELL_BOOK_TYPES.SPELL;
+        this.spell_name = spell_name;
         this.buildItem();
     }
 
     buildItem() {
         this.spell_name_text = document.createElement('p');
-        this.spell_name_text.classList('spell-name-text');
-        this.spell_name_text.textContent = getClassSpells(getClassName())[this.spell_reference];
+        this.spell_name_text.classList.add('spell-name-text');
+        this.spell_name_text.textContent = this.spell_name;
+        this.main_div.appendChild(this.spell_name_text);
     }
 }
 
 export class BookSpellOption extends SpellBookAddable {
     //Spell Option Button in a spell book
-    constructor() {
-        super();
+    constructor(spell_book) {
+        super(spell_book);
+        this.item_type = SPELL_BOOK_TYPES.SPELL_OPTION;
         this.buildItem();
     }
 
@@ -893,173 +901,15 @@ export class BookSpellOption extends SpellBookAddable {
         this.option_button.textContent = "Select";
         this.option_button.classList.add('spell-option-button');
         this.option_button.addEventListener("click", () => {
-            InventorySpellBook.createSpellOptionOverlay();
+            this.spell_option_overlay = SpellOptionOverlay.create((spell_name) => {this.selectSpell(spell_name)});
         });
         this.main_div.appendChild(this.option_button);
     }
 
-    selectSpell() {
-
-    }
-}
-
-export class SpellOption {
-    //Spell options in the spell option overlay
-    constructor(spell_data) {
-        this.spell_data = spell_data;
-        this.buildItem();
-    }
-
-    buildItem() {
-        this.main_div = document.createElement('div');
-        this.main_div.classList.add('spell-option-main');
-
-        this.main_div.addEventListener("click", () => {
-            console.warn("not implemented");
-        });
-
-        const name_container = document.createElement('div');
-        name_container.classList.add('spell-option-name-container');
-        this.main_div.appendChild(name_container);
-        
-        const spell_name = document.createElement('h3');
-        spell_name.textContent = this.spell_data.name;
-        if(this.spell_data.concentration) {
-            spell_name.textContent += " (Uses Concentration)";
-        }
-        name_container.appendChild(spell_name);
-
-        const top_container = document.createElement('div');
-        top_container.classList.add('spell-option-top-container');
-        this.main_div.appendChild(top_container);
-
-        const name_level_container = document.createElement('div');
-        top_container.appendChild(name_level_container)
-
-        const level_container = document.createElement('div');
-        level_container.classList.add('spell-option-stat-container');
-        top_container.appendChild(level_container);
-
-        const level_label = document.createElement('p');
-        level_label.textContent = "Level: ";
-        level_label.classList.add('spell-option-stat-label');
-        level_container.appendChild(level_label);
-
-        const level_num = document.createElement('p');
-        level_num.textContent = this.spell_data.level;
-        level_container.appendChild(level_num);
-
-        const casting_time_container = document.createElement('div');
-        casting_time_container.classList.add('spell-option-stat-container');
-        top_container.appendChild(casting_time_container);
-
-        const casting_time_label = document.createElement('p');
-        casting_time_label.textContent = "Casting Time: ";
-        casting_time_label.classList.add('spell-option-stat-label');
-        casting_time_container.appendChild(casting_time_label);
-
-        const casting_time_num = document.createElement('p');
-        casting_time_num.textContent = this.spell_data.casting_time;
-        casting_time_container.appendChild(casting_time_num);
-
-        const range_container = document.createElement('div');
-        range_container.classList.add('spell-option-stat-container');
-        top_container.appendChild(range_container);
-
-        const range_label = document.createElement('p');
-        range_label.classList.add('spell-option-stat-label');
-        range_label.textContent = "Range: ";
-        range_container.appendChild(range_label);
-
-        const range_num = document.createElement('p');
-        range_num.textContent = this.spell_data.range;
-        range_container.appendChild(range_num);
-
-        const components_container = document.createElement('div');
-        components_container.classList.add('spell-option-stat-container');
-        top_container.appendChild(components_container);
-
-        const components_label = document.createElement('p');
-        components_label.classList.add('spell-option-stat-label');
-        components_label.textContent = 'Components: ';
-        components_container.appendChild(components_label);
-        
-        const components_text = document.createElement('p');
-        if(this.spell_data.components.length > 0) {
-            for(let i = 0; i < this.spell_data.components.length; i++) {
-                components_text.textContent += this.spell_data.components[i];
-                if(i < this.spell_data.components.length - 1) {
-                    components_text.textContent += ", ";
-                }
-            }
-        } else {
-            components_text.textContent = "None";
-        }
-        components_container.appendChild(components_text);
-
-        const school_container = document.createElement('div');
-        school_container.classList.add('spell-option-stat-container');
-        top_container.appendChild(school_container);
-
-        const school_label = document.createElement('p');
-        school_label.classList.add('spell-option-stat-label');
-        school_label.textContent = "School: ";
-        school_container.appendChild(school_label);
-
-        const school_text = document.createElement('p');
-        school_text.textContent = this.spell_data.school;
-        school_container.appendChild(school_text);
-
-        const duration_container = document.createElement('div');
-        duration_container.classList.add('spell-option-stat-container');
-        top_container.appendChild(duration_container);
-
-        const duration_label = document.createElement('p');
-        duration_label.classList.add('spell-option-stat-label');
-        duration_label.textContent = "Duration: ";
-        duration_container.appendChild(duration_label);
-
-        const duration_num = document.createElement('p');
-        duration_num.textContent = this.spell_data.duration;
-        duration_container.appendChild(duration_num);
-        
-        if(this.spell_data.higher_level.length > 0) {
-            const higher_level_container = document.createElement('div');
-            this.main_div.appendChild(higher_level_container);
-
-            const higher_level_top = document.createElement('div');
-            higher_level_container.appendChild(higher_level_top);
-
-            const higher_level_label = document.createElement('p');
-            higher_level_label.classList.add('spell-option-stat-label');
-            higher_level_label.textContent = "Higher Level: ";
-            higher_level_top.appendChild(higher_level_label);
-
-            const higher_level_bottom = document.createElement('div');
-            higher_level_bottom.classList.add('spell-option-higher-level-text');
-            higher_level_container.appendChild(higher_level_bottom);
-
-            const higher_level_text = document.createElement('p');
-            this.spell_data.higher_level.forEach((txt) => {
-                higher_level_text.textContent += "-" + txt + "\n";
-            });
-            higher_level_bottom.appendChild(higher_level_text);
-        }
-
-        const description_container = document.createElement('div');
-        description_container.classList.add('spell-option-description-container');
-        this.main_div.appendChild(description_container);
-
-        const description = document.createElement('p');
-        description_container.appendChild(description);
-
-        const descriptions = this.spell_data.desc;
-        descriptions.forEach((d) => {
-            description.textContent += " " + d;
-        });
-    }
-
-    addTo(parent_element) {
-        parent_element.appendChild(this.main_div);
+    selectSpell(spell_name) {
+        const new_spell = new BookSpell(this.spell_book, spell_name);
+        this.spell_book.addSpellBookItem(new_spell);
+        this.spell_option_overlay.removeOverlay();
+        this.removeAndSave();
     }
 }
