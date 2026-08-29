@@ -1,4 +1,5 @@
 import {ammo_types} from './ammo.js';
+import { ITEM_CLASSES } from './item_metadata.js';
 export const weapons = {
     club: {
         name: "Club",
@@ -607,6 +608,7 @@ export const weapons = {
 for (const [key, weapon] of Object.entries(weapons)) {
     weapon.index = key;
     weapon.type = "weapon";
+    weapon.item_class = ITEM_CLASSES.WEAPON;
 }
 
 export const martial_weapons = [

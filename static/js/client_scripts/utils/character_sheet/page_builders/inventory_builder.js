@@ -30,6 +30,8 @@ export function buildInventory() {
     const inventory_container = document.querySelector('.inventory-container');
    
     const inventory_handler = character_data_handler.getInventoryHandler();
+    character_data_handler.setMaxPreparedSpells();
+
     return;
 
     /*const test_inv = new inventory_items.InventoryContainer("Test Inventory");

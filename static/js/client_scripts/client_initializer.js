@@ -13,6 +13,7 @@ import { initializeBasicData } from "./basic_data_initializer.js";
 import { InitializeCharacterDataHandler } from "./utils/character_sheet/character_data_handler.js";
 import { initializeInventoryClasses } from "./utils/character_sheet/inventory_items.js";
 import { saveInventory } from "./save_handler.js";
+import { bus, INITIAL_EVENTS } from "./utils/event_bus.js";
 
 export async function initializeClient() {
     await initializeInventoryClasses();
@@ -28,4 +29,15 @@ export async function initializeClient() {
     buildInventory();
     updateCombatSpellData();
     InitializeButtonHandler();
+    EmitUpdateSignals();
+}
+
+const initial_events = [INITIAL_EVENTS.UPDATE_PREPARED_SPELL_COUNT, 
+    INITIAL_EVENTS.DISABLE_PREPARED_SPELL_CHECKBOXES
+];
+
+function EmitUpdateSignals() {
+    initial_events.forEach((event) => {
+        bus.publish(event);
+    });
 }

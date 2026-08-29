@@ -27,6 +27,7 @@ let armor_class = 0;
 let inventory_handler =  null;
 
 export async function InitializeCharacterDataHandler() {
+    setMaxPreparedSpells();
     inventory_handler = await InventoryManager.Initialize();
     return true;
 }
@@ -95,6 +96,9 @@ export function setPreparedSpellCount(num) {
 export function setMaxPreparedSpells() {
     const spell_count = parseInt(getPlayerLevel()) + parseInt(character_ability_modifiers.int);
     max_prepared_spells = spell_count;
+    if(max_prepared_spells < 0) {
+        max_prepared_spells = 1;
+    }
 }
 
 export function getMaxPreparedSpells() {

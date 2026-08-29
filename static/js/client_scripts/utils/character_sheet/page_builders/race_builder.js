@@ -1,5 +1,5 @@
 import * as character_data_handler from './../character_data_handler.js';
-import {getRaceData, getRaceAbilities, getRaceLanguages, getRaceSkills, getRace} from "./../mappers/race_mapper.js";
+import {getRaceData, getRaceAbilities, getRaceLanguages, getRaceSkills, getRace, getSavedRaceLanguages} from "./../mappers/race_mapper.js";
 import {createAbilityDropdown} from './../dropdown_builders/ability_dropdown_builder.js';
 import {createLanguageDropdown} from './../dropdown_builders/language_dropdown_builder.js';
 import {createSkillDropdown} from './../dropdown_builders/skill_dropdown_builder.js';
@@ -80,9 +80,10 @@ function createTraits(traits) {
 }
 
 function createLanguages(languages) {
-    const saved_languages = getRaceLanguages();
+    const race_languages = getRaceLanguages();
     const set_languages = languages[0];
     const language_choices = languages[1];
+    const saved_race_language_array = getSavedRaceLanguages();
     const language_list = document.querySelector('.language-list');
     language_list.innerHTML = '';
     set_languages.forEach((language) => {
@@ -92,7 +93,7 @@ function createLanguages(languages) {
     });
 
     for (let i = 0; i < language_choices; i++) {
-        createLanguageDropdown(language_list, saved_languages, i);
+        createLanguageDropdown(language_list, saved_race_language_array, i);
     }
 
 

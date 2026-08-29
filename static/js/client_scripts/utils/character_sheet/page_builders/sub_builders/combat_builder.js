@@ -6,6 +6,7 @@ import { getMagicSlots } from "../../../../../shared/spell_caster_slot_map.js";
 import { getPlayerLevel } from "../../../../player_level_handler.js";
 import { getPreparedSpellCount } from "../../../../../shared/spell_data_filterer.js";
 import { bus, EVENTS, SAVE_EVENTS } from "../../../event_bus.js";
+import { InventoryManager } from "../../inventory_items.js";
 
 
 const concentrationSpellName = document.getElementById('concentration-spell-name');
@@ -80,7 +81,7 @@ export function updateData() {
     if (isUsingSpellbook()) {
         let int_modifier = getCharacterAbilityModifiers().int;
 
-        spell_data_array = getSpellsFromSpellbooks();
+        spell_data_array = InventoryManager.instance.getPreparedSpellsFromBooks();
         prepared_spell_count = parseInt(getPlayerLevel()) + parseInt(int_modifier);
         if(prepared_spell_count < 1) {
             prepared_spell_count = 1;
@@ -288,7 +289,6 @@ class CombatSpell {
         new_spell_slots[this.selected_spell_level] = new_spell_slots[this.selected_spell_level] - 1;
         incrementUsedSpellSlot(this.selected_spell_level);
         setCurrentSpellSlots(new_spell_slots);
-        console.log(getSpellSlotsUsed());
         saveClassData();
 
         if(this.spell_data.concentration) {

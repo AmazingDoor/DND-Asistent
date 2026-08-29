@@ -7,6 +7,7 @@ let socket = null;
 let race_skills;
 let race_abilities;
 let race_languages;
+let saved_race_languages;
 let race_name;
 
 let char_id = sessionStorage.getItem("charId");
@@ -16,6 +17,7 @@ export function Initialize() {
     return new Promise(resolve =>{
         socket.once('sent_race_data', data => {
             race_name = data.race_name;
+            saved_race_languages = data.race_languages || [];
             setRace(race_name);
             resolve(data);
         });
@@ -29,6 +31,10 @@ export function resetRaceData() {
     race_name = '';
 }
 
+export function getSavedRaceLanguages() {
+    return saved_race_languages;
+}
+
 export function setSocket(io) {
     socket = io;
 }
@@ -40,6 +46,7 @@ export function setRace(name) {
     race_skills = race_data.skills;
     race_abilities = race_data.abilities;
     race_languages = race_data.languages;
+    race_languages.push([]);
 }
 
 export function getRaceId(name) {

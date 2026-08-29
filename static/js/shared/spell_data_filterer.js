@@ -15,21 +15,8 @@ import { getMagicSlots } from './spell_caster_slot_map.js';
 export function getSpellData(class_name, spell_name) {
     const [cantrips, spells] = getClassSpells(class_name);
     if (cantrips === undefined || spells === undefined) {return null;}
-    cantrips.forEach((cantrip) => {
-            const name = cantrip.name;
-            if (name === spell_name) {
-                return cantrip;
-            }
-    });
-
-    spells.forEach((spell) => {
-            const name = spell.name;
-            if (name === spell_name) {
-                return spell;
-            }
-    });
-
-    return null;
+   
+    return [...spells, ...cantrips].find((spell) => spell.name === spell_name) ?? null;
 }
 
 export function getMaxSpellLevel() {

@@ -4,6 +4,41 @@
         box-sizing: border-box;
     }
 
+    .spellbook-arrow-container:hover {
+        cursor: pointer;
+    }
+
+    .spellbook-arrow-container {
+        border-top: 1px solid black;
+    }
+
+    .inventory-container-item-arrow:hover {
+        cursor: pointer;
+    }
+
+    .inventory-container-item-arrow {
+        border-top: 1px solid black;
+    }
+
+    .spellbook-spell-array {
+        border: 1px solid black;
+        padding: 2px;
+        margin-left: 5px;
+        background-color: white;
+    }
+
+    .inventory-addable-top {
+        display: flex;
+    }
+
+    .inventory-addable-main {
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        margin-bottom: 5px;
+        background-color: lightgray;
+        padding: 2px 2px 2px 2px;
+    }
+
     .spell-option-higher-level-text {
         background-color: darkgrey;
     }
@@ -81,6 +116,57 @@
         z-index: 4;
     }
 
+    .add-item-overlay-list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        min-height: 0;
+        overflow-y: auto;
+        flex: 1;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .add-item-overlay {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+    }
+
+    .add-item-option-main {
+        background-color: lightgray;
+        border: 2px solid black;
+        margin-bottom: 20px;
+        width: 400px;
+        margin-left: 40px;
+    }
+
+    .add-item-option-name-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .add-item-option-stat-label {
+        margin-bottom: 0px;
+    }
+
+    .add-item-option-stat-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .add-item-option-stat-container div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        padding: 2px 2px 2px 2px;
+    }
+
     .item-select-overlay {
         position: fixed;
         z-index: 4;
@@ -110,6 +196,38 @@
 
     .item-option-row {
         width: 100%;
+    }
+
+    .container-item-inventory {
+        width: 100%;
+        background-color: white;
+        padding: 2px 0px 2px 0px;
+        border: 2px solid black;
+    }
+
+    .inventory-body {
+        border: 2px solid black;
+        width: 100%;
+        overflow-y: auto;
+        background-color: white;
+    }
+
+    .container-item-inventory-container-main {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 0px 2px 0px 2px;
+    }
+
+    .inventory-container-main {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding-left: 2px;
+        padding-right: 2px;
+        margin-bottom: 20px;
+        align-items: center;
+        max-height: 50dvh;
     }
 
     #spell-slot-displays {

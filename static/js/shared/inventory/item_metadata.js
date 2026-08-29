@@ -27,3 +27,10 @@ export const SPELL_BOOK_TYPES = {
     SPELL_OPTION: "spell_option",
     SPELL: "spell"
 };
+
+export const ITEM_CLASSES = {
+    ITEM: "item",
+    WEAPON: "weapon",
+    ARMOR: "armor",
+    MOUNT: "mount"
+}

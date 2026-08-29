@@ -44,6 +44,8 @@ export const EVENTS = {
     SPELL_SELECTED: "spell_selected",
     SPELL_BOOK_SPELL_SELECTED: "spell_book_spell_selected",
     SPELL_PREPARED: "spell_prepared",
+    MAX_PREPARED_SPELLS_HIT: "max_prepared_spells_hit",
+    ENABLE_PREPARED_SPELL_CHECKBOXES: "enable_checkboxes",
     SPELL_CASTED: "spell_casted",
     HEALTH_UPDATED: "health_updated",
     LONG_REST: "long_rest",
@@ -51,9 +53,14 @@ export const EVENTS = {
 
 };
 
+export const INITIAL_EVENTS = {
+    UPDATE_PREPARED_SPELL_COUNT: "update_prepared_spell_count",
+    DISABLE_PREPARED_SPELL_CHECKBOXES: "disable_prepared_spell_checkboxes"
+};
+
 export const SAVE_EVENTS = {
     SAVE_CLASS : "save_class",
     SAVE_RACE: "save_race",
     SAVE_BACKGROUND: "save_background",
     SAVE_INVENTORY: "save_inventory"
-}
+};

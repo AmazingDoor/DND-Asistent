@@ -1,3 +1,5 @@
+import { ITEM_CLASSES } from "./item_metadata.js";
+
 export const light_armor = {
     padded: {
         name: "Padded",
@@ -150,6 +152,7 @@ export const heavy_armor = {
 for (const [key, armor] of Object.entries(heavy_armor)) {
     armor.index = key;
     armor.type = "armor";
+    armor.item_class = ITEM_CLASSES.ARMOR;
 }
 
 
