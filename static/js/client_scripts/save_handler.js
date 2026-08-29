@@ -1,6 +1,6 @@
 import { getPlayerHealth } from "./utils/character_sheet/character_data_handler.js";
 import { getClassName, getClassPreparedCantrips, getClassPreparedSpells, getClassSkills, getCurrentSpellSlots, getSpellSlotsUsed} from "./utils/character_sheet/mappers/class_mapper.js";
-import { getRaceAbilities, getRaceLanguages, getRaceName, getRaceSkills } from "./utils/character_sheet/mappers/race_mapper.js";
+import { getRaceAbilities, getRaceLanguages, getRaceName, getRaceSkills, getSavedRaceAbilities } from "./utils/character_sheet/mappers/race_mapper.js";
 import { emitAndWait } from "./utils/socket_emitter.js";
 import * as character_data_handler from "./utils/character_sheet/character_data_handler.js";
 
@@ -43,7 +43,8 @@ export async function savePlayerSkills() {
 }
 
 export async function saveRaceAbilities() {
- let data = {race_abilities: getRaceAbilities(), char_id: char_id};
+    console.log(getSavedRaceAbilities());
+ let data = {race_abilities: getSavedRaceAbilities(), char_id: char_id};
  await emitAndWait('save_race_abilities', data);
 }
 

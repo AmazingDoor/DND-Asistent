@@ -1,6 +1,6 @@
 import {linkDropdown} from './../../dropdown_handler.js';
 import {addEventListeners} from './../dropdown_handlers/race_ability_dropdown_handler.js';
-export function createAbilityDropdown(parent_element, saved_abilities, i) {
+export function createAbilityDropdown(parent_element, saved_abilities, i, mod_num) {
     const head = document.createElement('div');
     head.classList.add('ability-selector');
     head.classList.add('dropdown-head');
@@ -17,11 +17,19 @@ export function createAbilityDropdown(parent_element, saved_abilities, i) {
             <div>Charisma</div>
         </div>
     </div>`;
-    if (i in saved_abilities) {
+
+    if(i < saved_abilities.length) {
+        const [key, value] = Object.entries(saved_abilities[i])[0];
+        console.log(key);
+        console.log(value);
+
+        const ability_name = key;
+
         const txt = head.querySelector('.selected-ability');
-        txt.textContent = saved_abilities[i];
+        txt.textContent = ability_name;
     }
+
     parent_element.appendChild(head);
     linkDropdown(head);
-    addEventListeners(head);
+    addEventListeners(head, i, mod_num);
 }

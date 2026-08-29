@@ -8,6 +8,7 @@ let race_skills;
 let race_abilities;
 let race_languages;
 let saved_race_languages;
+let saved_race_abilities;
 let race_name;
 
 let char_id = sessionStorage.getItem("charId");
@@ -18,6 +19,7 @@ export function Initialize() {
         socket.once('sent_race_data', data => {
             race_name = data.race_name;
             saved_race_languages = data.race_languages || [];
+            saved_race_abilities = data.race_abilities || [];
             setRace(race_name);
             resolve(data);
         });
@@ -29,6 +31,22 @@ export function resetRaceData() {
     race_abilities = [];
     race_languages = [];
     race_name = '';
+}
+
+export function setSavedAbility(index, ability) {
+    ensureSavedAbilitySize(index);
+    saved_race_abilities[index] = ability;
+
+}
+
+function ensureSavedAbilitySize(size) {
+    while(saved_race_abilities.length <= size) {
+        saved_race_abilities.push({[ABILITIES.OPTION]: 0});
+    }
+}
+
+export function getSavedRaceAbilities() {
+    return saved_race_abilities;
 }
 
 export function getSavedRaceLanguages() {
@@ -110,4 +128,14 @@ export function getRaceData(race) {
         "Human": race_features.human
     }
     return data[race];
+}
+
+export const ABILITIES = {
+    STR: "Strength",
+    DEX: "Dexterity",
+    CON: "Constitution",
+    INT: "Intelligence",
+    WIS: "Wisdom",
+    CHA: "Charisma",
+    OPTION: "Select", 
 }

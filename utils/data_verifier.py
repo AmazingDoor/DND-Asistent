@@ -94,7 +94,7 @@ def ensureRaceData(file_path):
     if "race_name" not in data:
         data["race_name"] = ""
     if "race_abilities" not in data:
-        data["race_abilities"] = {}
+        data["race_abilities"] = []
     if "race_languages" not in data:
         data["race_languages"] = []
     if "race_skills" not in data:
