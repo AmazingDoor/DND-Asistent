@@ -1,6 +1,8 @@
 import {updateAbilities} from './../../display_stat_updater.js';
-import {setRaceAbilities, ABILITIES, setSavedAbility } from '../mappers/race_mapper.js';
+import {setRaceAbilities, ABILITIES, setSavedAbility, getRaceAbilities } from '../mappers/race_mapper.js';
 import { saveRaceAbilities } from '../../../save_handler.js';
+import { bus, EVENTS } from '../../event_bus.js';
+
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
@@ -23,16 +25,18 @@ async function clickListener(head, option, index, mod_num) {
     head.querySelector('p').textContent = option.textContent;
     const data = {[option.textContent]: mod_num};
     setSavedAbility(index, data);
-    const selected_abilities = head.parentElement.parentElement.parentElement.parentElement.parentElement.querySelectorAll('.selected-ability');
-    let abilities = {};
+
+    //const selected_abilities = head.parentElement.parentElement.parentElement.parentElement.parentElement.querySelectorAll('.selected-ability');
+    /*let abilities = {};
     selected_abilities.forEach((ability) => {
         const row = ability.parentElement.parentElement.parentElement;
         const table_datas = row.querySelectorAll('td');
         const mod_num = parseInt(table_datas[1].textContent.replace("+", ""));
         abilities[ability.textContent] = mod_num;
-    });
-    setRaceAbilities(abilities);
+    });*/
+    //setRaceAbilities(abilities);
     updateAbilities();
     await saveRaceAbilities();
+    bus.publish(EVENTS.RACE_ABILITY_SELECTED);
 }
 

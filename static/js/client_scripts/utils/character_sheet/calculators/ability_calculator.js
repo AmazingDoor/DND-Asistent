@@ -1,6 +1,6 @@
 import * as character_data_handler from "./../character_data_handler.js";
 import {getProficiencyBonus} from "./../../../player_level_handler.js";
-import {getRaceData, getRaceAbilities, getRace} from "./../mappers/race_mapper.js";
+import {getRaceData, getRaceAbilities, getRace, getSavedRaceAbilities} from "./../mappers/race_mapper.js";
 import {getClassData} from "./../mappers/class_mapper.js";
 
 
@@ -49,13 +49,16 @@ export function calculateAbilities() {
     const prof_bonus = getProficiencyBonus();
     const race_data = getRaceData(getRace());
 
-    let abilities_dict = {};
-    if (race_data !== null && race_data !== undefined) {
-        abilities_dict = Object.assign({}, race_data.abilities);
-    }
+    const default_abilities = getRaceAbilities();
 
-    const selected_abilities = getRaceAbilities();
-    let all_abilities = Object.assign({}, selected_abilities, abilities_dict);
+
+    const selected_abilities_array = getSavedRaceAbilities();
+    
+
+
+    let all_abilities = Object.assign({}, ...default_abilities, ...selected_abilities_array);
+
+    console.log(all_abilities);
 
     let race_str_mod = 0;
     let race_dex_mod = 0;

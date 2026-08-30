@@ -1,6 +1,6 @@
 import * as character_data_handler from "./../character_data_handler.js";
 import {getProficiencyBonus} from "./../../../player_level_handler.js";
-import { getRaceAbilities, getRaceSkills } from "../mappers/race_mapper.js";
+import { getRaceAbilities, getRaceSkills, getSavedRaceSkills } from "../mappers/race_mapper.js";
 import { getClassSkillNames } from "../mappers/class_mapper.js";
 
 let abilities = {};
@@ -17,10 +17,8 @@ export function calculateSkills() {
         race_skills = [];
     }
 
-    //Not sure if chosen skills are a thing from race
-    //Probably include in homebrew anyway
-    let chosen_skill_objects = [...document.querySelectorAll('.selected-skill')];
-    let chosen_skills = [];
+    //let chosen_skill_objects = [...document.querySelectorAll('.selected-skill')];
+    let chosen_skills = getSavedRaceSkills();
 
     race_skills = race_skills.concat(chosen_skills);
 

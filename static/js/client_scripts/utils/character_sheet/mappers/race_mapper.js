@@ -4,12 +4,13 @@ import { emitSignal } from '../../socket_emitter.js';
 
 let socket = null;
 
-let race_skills;
-let race_abilities;
-let race_languages;
+let default_race_skills;
+let default_race_abilities;
+let default_race_languages;
 let saved_race_languages;
 let saved_race_abilities;
 let race_name;
+let saved_race_skills;
 
 let char_id = sessionStorage.getItem("charId");
 
@@ -17,29 +18,49 @@ export function Initialize() {
     emitSignal('require_race_data', {char_id: char_id});
     return new Promise(resolve =>{
         socket.once('sent_race_data', data => {
+            resetRaceData();
             race_name = data.race_name;
-            saved_race_languages = data.race_languages || [];
-            saved_race_abilities = data.race_abilities || [];
             setRace(race_name);
+            saved_race_languages = data.race_languages || [];
+            let ability_index = 0;
+            data.race_abilities.forEach((ability) => {
+                setSavedAbility(ability_index, ability);
+                ability_index++;
+            });
+            saved_race_skills = data.race_skills || [];
             resolve(data);
         });
     });
 }
 
 export function resetRaceData() {
-    race_skills = [];
-    race_abilities = [];
-    race_languages = [];
+    default_race_skills = [];
+    default_race_abilities = [];
+    default_race_languages = [];
+    saved_race_abilities = [];
+    saved_race_languages = [];
+    saved_race_skills = []
     race_name = '';
 }
 
+export function setRaceSavedSkill(index, skill) {
+    while(saved_race_skills.length <= index) {
+        saved_race_skills.push("Any");
+    }
+    saved_race_skills[index] = skill;
+}
+
+export function getSavedRaceSkills() {
+    return saved_race_skills;
+}
+
 export function setSavedAbility(index, ability) {
-    ensureSavedAbilitySize(index);
+    ensureArraySize(index);
     saved_race_abilities[index] = ability;
 
 }
 
-function ensureSavedAbilitySize(size) {
+function ensureArraySize(size) {
     while(saved_race_abilities.length <= size) {
         saved_race_abilities.push({[ABILITIES.OPTION]: 0});
     }
@@ -58,13 +79,28 @@ export function setSocket(io) {
 }
 
 export function setRace(name) {
+    setDefaultRaceData(name);
+}
+
+export function setDefaultRaceData(name) {
     race_name = name;
     let race_data = race_features[getRaceId(race_name)];
-    if(race_data == undefined) {return;}
-    race_skills = race_data.skills;
-    race_abilities = race_data.abilities;
-    race_languages = race_data.languages;
-    race_languages.push([]);
+    if(race_data === undefined) {return;}
+    default_race_skills = race_data.skills;
+
+    let abilities = race_data.abilities;
+
+    Object.entries(abilities).forEach(([key, value]) => {
+        if(key != "any") {
+            default_race_abilities.push({[key]: value});
+        } else {
+            value.forEach((v) => {
+                saved_race_abilities.push({Any: v});
+            });
+        }
+    });
+    default_race_languages = race_data.languages;
+    default_race_languages.push([]);
 }
 
 export function getRaceId(name) {
@@ -79,27 +115,27 @@ export function getRace() {
 }
 
 export function setRaceSkills(data) {
-    race_skills = data;
+    default_race_skills = data;
 }
 
 export function getRaceSkills() {
-    return race_skills;
+    return default_race_skills;
 }
 
 export function setRaceAbilities(data) {
-    race_abilities = data;
+    default_race_abilities = data;
 }
 
 export function getRaceAbilities() {
-    return race_abilities;
+    return default_race_abilities;
 }
 
 export function setRaceLanguages(d) {
-    race_languages = d;
+    default_race_languages = d;
 }
 
 export function getRaceLanguages() {
-    return race_languages;
+    return default_race_languages;
 }
 
 export function getRaceName() {

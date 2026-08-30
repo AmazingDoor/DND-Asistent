@@ -1,5 +1,5 @@
 import * as character_data_handler from './../character_data_handler.js';
-import {getRaceData, getRaceAbilities, getRaceLanguages, getRaceSkills, getRace, getSavedRaceLanguages, getSavedRaceAbilities} from "./../mappers/race_mapper.js";
+import {getRaceData, getRaceAbilities, getRaceLanguages, getRaceSkills, getRace, getSavedRaceLanguages, getSavedRaceAbilities, getSavedRaceSkills} from "./../mappers/race_mapper.js";
 import {createAbilityDropdown} from './../dropdown_builders/ability_dropdown_builder.js';
 import {createLanguageDropdown} from './../dropdown_builders/language_dropdown_builder.js';
 import {createSkillDropdown} from './../dropdown_builders/skill_dropdown_builder.js';
@@ -24,7 +24,6 @@ export function buildRaceSection() {
 function createAbilities(abilities) {
     const abilities_table = document.querySelector('.race-abilities-table');
     const saved_abilities = getSavedRaceAbilities();
-    console.log(saved_abilities);
     abilities_table.innerHTML = '';
     for (const ability in abilities) {
         if(ability !== "any") {
@@ -102,7 +101,8 @@ function createLanguages(languages) {
 
 function createSkills(skills) {
     const skill_list = document.querySelector('.skill-list');
-    const saved_skills = getRaceSkills();
+    const race_skills = getRaceSkills();
+    const saved_skills = getSavedRaceSkills();
     skill_list.innerHTML = '';
     let selectable = 0;
     skills.forEach((skill) => {

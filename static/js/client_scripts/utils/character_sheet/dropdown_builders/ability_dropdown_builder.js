@@ -20,8 +20,6 @@ export function createAbilityDropdown(parent_element, saved_abilities, i, mod_nu
 
     if(i < saved_abilities.length) {
         const [key, value] = Object.entries(saved_abilities[i])[0];
-        console.log(key);
-        console.log(value);
 
         const ability_name = key;
 

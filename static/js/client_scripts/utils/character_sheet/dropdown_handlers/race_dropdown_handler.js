@@ -1,4 +1,4 @@
-import {setRace, resetRaceData, getRaceName} from './../mappers/race_mapper.js';
+import {setRace, setDefaultRaceData, resetRaceData, getRaceName} from './../mappers/race_mapper.js';
 import {buildRaceSection} from './../page_builders/race_builder.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 import { saveRace } from '../../../save_handler.js';
@@ -32,7 +32,7 @@ export function addEventListeners() {
 async function clickEvent(dropdown_text, option) {
     resetRaceData();
     dropdown_text.textContent = option.textContent;
-    await setRace(option.textContent);
+    setDefaultRaceData(option.textContent);
     buildRaceSection(option.textContent);
     updateAbilities();
     updateSkills();

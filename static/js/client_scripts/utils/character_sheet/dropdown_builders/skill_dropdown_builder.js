@@ -35,5 +35,5 @@ export function createSkillDropdown(parent_element, saved_skills, i) {
     }
     parent_element.appendChild(head);
     linkDropdown(head);
-    addEventListeners(head, updateSkills);
+    addEventListeners(head, updateSkills, i);
 }
