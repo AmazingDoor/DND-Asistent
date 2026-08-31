@@ -53,13 +53,11 @@ export function handleSpellSlotOnLevelUp() {
     }
 
     const spell_slots_used = getSpellSlotsUsed();
-    console.log(spell_slots_used);
     for(let i = 0; i < spell_slots_used.length; i++) {
         if(i >= max_slots.length) {
             break;
         }
         max_slots[i] = parseInt(max_slots[i]) - parseInt(spell_slots_used[i]);
-        console.log(spell_slots_used[i]);
     }
 
 
@@ -251,7 +249,6 @@ function ensureEnoughUsedSpellSlots() {
 
 export function incrementUsedSpellSlot(index) {
     ensureEnoughUsedSpellSlots();
-    console.log(spell_slots_used[index]);
     spell_slots_used[index] = parseInt(spell_slots_used[index]) + 1;
 }
 

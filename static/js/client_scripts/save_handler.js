@@ -23,7 +23,6 @@ export async function saveAll() {
 export async function saveSpeed() {
     let data = {speed: character_data_handler.getSpeed(), char_id: char_id};
     await emitAndWait('save_speed', data);
-    console.log('speed saved');
 }
 
 export async function saveInitiativeMod() {
@@ -58,7 +57,6 @@ export async function saveRaceLanguages() {
 }
 
 export async function saveRaceSkills() {
-    console.log(getSavedRaceSkills());
     let data = {race_skills: getSavedRaceSkills(), char_id: char_id};
     await emitAndWait('save_race_skills', data);
 }

@@ -12,13 +12,10 @@ export function InitializeButtonHandler() {
 }
 
 async function longRest() {
-    console.log(getPlayerHealth());
-    console.log(getMaxHeath());
     if(parseInt(getPlayerHealth()) < parseInt(getMaxHeath())) {
         setPlayerHealth(getMaxHeath());
     }
     resetUsedSpellSlots();
-    console.log(getMaxSpellSlots());
     setCurrentSpellSlots(getMaxSpellSlots());
     await saveAll();
     bus.publish(EVENTS.LONG_REST);

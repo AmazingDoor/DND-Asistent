@@ -1331,6 +1331,7 @@ class AddItemOption {
     constructor(item_data, inventory, item_class) {
         this.item_data = item_data;
         this.inventory = inventory;
+        console.log(this.item_data);
         
         this.build(item_class);
     }
@@ -1390,7 +1391,73 @@ class AddItemOption {
     }
 
     buildArmor() {
+        const stat_container = document.createElement('div');
+        stat_container.classList.add('add-item-option-stat-container');
+        this.main_div.appendChild(stat_container);
 
+        const armor_class_container = document.createElement('div');
+        stat_container.appendChild(armor_class_container);
+
+        const armor_class_label = document.createElement('p');
+        armor_class_label.textContent = "AC Mod: ";
+        armor_class_container.appendChild(armor_class_label);
+
+        const armor_class_num = document.createElement('p');
+        armor_class_num.textContent = this.item_data.ac_mod;
+        armor_class_container.appendChild(armor_class_num);
+
+        const strength_container = document.createElement('div');
+        stat_container.appendChild(strength_container);
+
+        const strength_label = document.createElement('p');
+        strength_label.textContent = "Strength: ";
+        strength_container.appendChild(strength_label);
+
+        const strength_num = document.createElement('p');
+        strength_num.textContent = this.item_data.strength;
+        strength_container.appendChild(strength_num);
+
+        const weight_container = document.createElement('div');
+        stat_container.appendChild(weight_container);
+
+        const weight_label = document.createElement('p');
+        weight_label.textContent = "Weight: ";
+        weight_container.appendChild(weight_label);
+
+        const weight_num = document.createElement('p');
+        weight_num.textContent = this.item_data.weight;
+        weight_container.appendChild(weight_num);
+
+        const cost_container = document.createElement('div');
+        stat_container.appendChild(cost_container);
+
+        const cost_label = document.createElement('p');
+        cost_label.textContent = "Cost: ";
+        cost_container.appendChild(cost_label);
+
+        const cost_num = document.createElement('p');
+        const cost_dict = this.item_data.cost;
+        cost_num.textContent = cost_dict.amount + cost_dict.unit;
+        cost_container.appendChild(cost_num);
+
+        if(this.item_data.stealth_disadvantage) {
+            const disadvantage_container = document.createElement('div');
+            disadvantage_container.classList.add('add-armor-option-disadvantage-container')
+            this.main_div.appendChild(disadvantage_container);
+
+            const disadvantage_text = document.createElement('p');
+            disadvantage_text.textContent = "Stealth Disadvantage";
+
+            disadvantage_container.appendChild(disadvantage_text);
+        }
+        
+
+        const stat_labels = [armor_class_label, strength_label, weight_label,
+            cost_label
+        ];
+        stat_labels.forEach((label) => {
+            label.classList.add('add-item-option-stat-label');
+        });
     }
 
     buildMount() {

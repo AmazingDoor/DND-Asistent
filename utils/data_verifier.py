@@ -174,8 +174,8 @@ def ensureInventory(file_path):
         inventory["weapon"] = []
     if "armor" not in inventory:
         inventory["armor"] = []
-    if "mounts" not in inventory:
-        inventory["mounts"] = []
+    if "mount" not in inventory:
+        inventory["mount"] = []
 
     if(data != base_data):
         safe_write_json(data, file_path)

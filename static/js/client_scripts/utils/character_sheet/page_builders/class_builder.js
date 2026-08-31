@@ -22,7 +22,7 @@ let spell_book_option;
 let name;
 let char_id;
 
-const build_character_class_subscriptions = [EVENTS.LEVEL_UPDATED];
+const build_character_class_subscriptions = [EVENTS.CLASS_CHANGED, EVENTS.LEVEL_UPDATED];
 
 
 export function setSocket(io) {
@@ -57,7 +57,8 @@ export function buildCharacterClass() {
         option.addEventListener("click", function() {clickEvent(option, head)});
     });
 
-    if (class_name !== null) {
+
+    if (class_name !== null && class_name != "") {
         document.querySelector('.selected-class').textContent = class_name;
     } else {
         document.querySelector('.selected-class').textContent = "Select Class";

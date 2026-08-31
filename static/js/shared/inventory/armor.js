@@ -38,6 +38,8 @@ export const light_armor = {
 
 for (const [key, armor] of Object.entries(light_armor)) {
     armor.index = key;
+    armor.type = "armor";
+    armor.item_class = ITEM_CLASSES.ARMOR;
 }
 
 export const medium_armor = {
@@ -100,6 +102,8 @@ export const medium_armor = {
 
 for (const [key, armor] of Object.entries(medium_armor)) {
     armor.index = key;
+    armor.type = "armor";
+    armor.item_class = ITEM_CLASSES.ARMOR;
 }
 
 export const heavy_armor = {

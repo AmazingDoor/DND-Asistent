@@ -1,6 +1,7 @@
 import * as race_features from './../../../../shared/race_features.js';
 import * as character_data_handler from '../character_data_handler.js';
 import { emitSignal } from '../../socket_emitter.js';
+import { ABILITIES } from '../../../../shared/data_enums.js';
 
 let socket = null;
 
@@ -164,14 +165,4 @@ export function getRaceData(race) {
         "Human": race_features.human
     }
     return data[race];
-}
-
-export const ABILITIES = {
-    STR: "Strength",
-    DEX: "Dexterity",
-    CON: "Constitution",
-    INT: "Intelligence",
-    WIS: "Wisdom",
-    CHA: "Charisma",
-    OPTION: "Select", 
 }

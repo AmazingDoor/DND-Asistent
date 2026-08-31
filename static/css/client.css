@@ -4,6 +4,13 @@
         box-sizing: border-box;
     }
 
+    .add-armor-option-disadvantage-container {
+        display: flex;
+        background-color: darkgray;
+        justify-content: center;
+        align-items: center;
+    }
+
     .spellbook-arrow-container:hover {
         cursor: pointer;
     }
@@ -165,6 +172,7 @@
         border-left: 1px solid black;
         border-right: 1px solid black;
         padding: 2px 2px 2px 2px;
+        margin-right: -1px;
     }
 
     .item-select-overlay {

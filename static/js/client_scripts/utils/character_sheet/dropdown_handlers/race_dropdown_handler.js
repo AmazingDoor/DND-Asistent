@@ -41,13 +41,15 @@ async function clickEvent(dropdown_text, option) {
 
 function loadEvent() {
     let race_name = getRaceName();
-    if(race_name !== null) {
-        const dropdown_head = document.querySelector('.race-selector');
-        const dropdown_text = dropdown_head.querySelector('p');
+    const dropdown_head = document.querySelector('.race-selector');
+    const dropdown_text = dropdown_head.querySelector('p');
+    
+    if(race_name !== null && race_name != "") {
         dropdown_text.textContent = race_name;
-        //setRace(race_name);
         buildRaceSection(race_name);
         updateAbilities();
         updateSkills();
+    } else {
+        dropdown_text.textContent = "Select Race";
     }
 }

@@ -4054,3 +4054,34 @@ export function getArcaneFoci() {
     };
     return foci;
 }
+
+export function getMusicalInstruments() {
+    let instruments = [];
+    Object.entries(items).forEach(([key, value]) => {
+        if(value.tool_category == "Musical Instrument") {
+            instruments.push(key);
+        }
+    });
+    return instruments;
+}
+
+export function getGameSets() {
+    let gaming_sets = [];
+    Object.entries(items).forEach(([key, value]) => {
+        if(value.tool_category == "Gaming Sets") {
+            gaming_sets.push(key);
+        }
+    });
+    
+    return gaming_sets;
+}
+
+export function getArtisanTools() {
+    let tools = [];
+    Object.entries(items).forEach(([key, value]) => {
+        if(value.tool_category == "Artisan's Tools") {
+            tools.push(key);
+        }
+    });
+    return tools;
+}

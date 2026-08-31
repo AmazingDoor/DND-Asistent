@@ -58,8 +58,6 @@ export function calculateAbilities() {
 
     let all_abilities = Object.assign({}, ...default_abilities, ...selected_abilities_array);
 
-    console.log(all_abilities);
-
     let race_str_mod = 0;
     let race_dex_mod = 0;
     let race_con_mod = 0;
