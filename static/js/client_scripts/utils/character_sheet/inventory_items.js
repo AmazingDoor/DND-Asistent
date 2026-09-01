@@ -1383,11 +1383,200 @@ class AddItemOption {
         parent_element.appendChild(this.main_div);
     }
     buildItem() {
+        const stat_container = document.createElement('div');
+        stat_container.classList.add('add-item-option-stat-container');
+        this.main_div.appendChild(stat_container);
 
+        let stat_labels = [];
+
+        const cost_container = document.createElement('div');
+        stat_container.appendChild(cost_container);
+
+        const cost_label = document.createElement('p');
+        cost_label.textContent = "Cost: ";
+        stat_labels.push(cost_label);
+        cost_container.appendChild(cost_label);
+
+        const cost_num = document.createElement('p');
+        const cost = this.item_data.cost;
+        cost_num.textContent = cost.quantity + " " + cost.unit;
+        cost_container.appendChild(cost_num);
+
+        const weight_container = document.createElement('div');
+        stat_container.appendChild(weight_container);
+
+        const weight_label = document.createElement('p');
+        weight_label.textContent = "Weight: ";
+        stat_labels.push(weight_label);
+        weight_container.appendChild(weight_label);
+
+        const weight_num = document.createElement('p');
+        weight_num.textContent = this.item_data.weight;
+        weight_container.appendChild(weight_num);
+
+        const description_container = document.createElement('div');
+        this.main_div.appendChild(description_container);
+
+        const description = document.createElement('p');
+
+        const descriptions = this.item_data.desc;
+        descriptions.forEach((d) => {
+            description.textContent += d + " ";
+        });
+        description_container.appendChild(description);
+
+        const contents = this.item_data.contents;
+        if(contents.length > 0) {
+            const contents_container = document.createElement('div');
+            this.main_div.appendChild(contents_container);
+
+            const contents_text = document.createElement('p');
+            contents_container.appendChild(contents_text);
+
+            let item_index = 0;
+            contents.forEach((item) => {
+                contents_text.textContent += item.count + " " + item.name;
+                if(item_index < contents.length - 1) {
+                    contents_text.textContent += "; ";
+                }
+                item_index++;
+            });
+        }
+
+        stat_labels.forEach((label) => {
+            label.classList.add('add-item-option-stat-label');
+        });
     }
     
     buildWeapon() {
+        const stat_container = document.createElement('div');
+        stat_container.classList.add('add-item-option-stat-container');
+        this.main_div.appendChild(stat_container);
 
+        let stat_labels = [];
+
+        const damage_dict = this.item_data.damage || null;
+        
+        if(damage_dict !== null) {
+            const damage_container = document.createElement('div');
+            stat_container.appendChild(damage_container);
+
+            const damage_label = document.createElement('p');
+            damage_label.textContent = "Damage: ";
+            stat_labels.push(damage_label);
+            damage_container.appendChild(damage_label);
+
+            const damage_num = document.createElement('p');
+            damage_num.textContent = damage_dict.count + " d" + damage_dict.die;
+            damage_container.appendChild(damage_num);
+        }
+
+        const damage_type_txt = this.item_data.damage_type || null;
+        if(damage_type_txt !== null) {
+            const damage_type_container = document.createElement('div');
+            stat_container.appendChild(damage_type_container);
+            
+            const damage_type_label = document.createElement('p');
+            damage_type_label.textContent = "Damage Type: ";
+            stat_labels.push(damage_type_label);
+            damage_type_container.appendChild(damage_type_label);
+
+            const damage_type_value = document.createElement('p');
+            damage_type_value.textContent = damage_type_txt;
+            damage_type_container.appendChild(damage_type_value);
+        }
+
+        const cost_container = document.createElement('div');
+        stat_container.appendChild(cost_container);
+
+        const cost_label = document.createElement('p');
+        cost_label.textContent = "Cost: ";
+        stat_labels.push(cost_label);
+        cost_container.appendChild(cost_label);
+
+        const cost_dict = this.item_data.cost;
+        const cost_num = document.createElement('p');
+        cost_num.textContent = cost_dict.amount + cost_dict.unit;
+        cost_container.appendChild(cost_num);
+
+        const ammo_type = this.item_data.ammo_type;
+        if(ammo_type !== null) {
+            const ammo_container = document.createElement('div');
+            stat_container.appendChild(ammo_container);
+
+            const ammo_label = document.createElement('p');
+            ammo_label.textContent = "Ammo Type: ";
+            stat_labels.push(ammo_label);
+            ammo_container.appendChild(ammo_label);
+
+            const ammo_value = document.createElement('p');
+            ammo_value.textContent = ITEMS[ammo_type].name;
+            ammo_container.appendChild(ammo_value);
+        }
+
+        const weight_container = document.createElement('div');
+        stat_container.appendChild(weight_container);
+
+        const weight_label = document.createElement('p');
+        weight_label.textContent = "Weight: ";
+        stat_labels.push(weight_label);
+        weight_container.appendChild(weight_label);
+
+        const weight_num = document.createElement('p');
+        weight_num.textContent = this.item_data.weight;
+        weight_container.appendChild(weight_num);
+
+        const properties_container = document.createElement('div');
+        properties_container.classList.add('weapon-option-properties-container');
+        this.main_div.appendChild(properties_container);
+
+        const properties = this.item_data.properties;
+        let weapon_index = 0;
+        properties.forEach((property) => {
+            const property_div = document.createElement('div');
+            stat_labels.push(property_div);
+            properties_container.appendChild(property_div);
+
+            const property_text = document.createElement('p');
+            property_text.textContent = property;
+            property_div.appendChild(property_text);
+        });
+
+        const ac_mod = this.item_data.ac_mod || null;
+        if(ac_mod !== null) {
+            const armor_class_container = document.createElement('div');
+            stat_container.appendChild(armor_class_container);
+            
+            const armor_class_label = document.createElement('p');
+            armor_class_label.textContent = "AC Mod: ";
+            stat_labels.push(armor_class_label);
+            armor_class_container.appendChild(armor_class_label);
+
+            const armor_class_num = document.createElement('p');
+            armor_class_num.textContent = ac_mod;
+            armor_class_container.appendChild(armor_class_num);
+        }
+
+        const strength = this.item_data.strength;
+        if(strength !== undefined) {
+            const strength_container = document.createElement('div');
+            stat_container.appendChild(strength_container);
+
+            const strength_label = document.createElement('p');
+            strength_label.textContent = "Strength: ";
+            stat_labels.push(strength_label);
+            strength_container.appendChild(strength_label);
+
+            const strength_num = document.createElement('p');
+            strength_num.textContent = strength;
+            strength_container.appendChild(strength_num);
+        }
+
+
+
+        stat_labels.forEach((label) => {
+            label.classList.add('add-item-option-stat-label');
+        });
     }
 
     buildArmor() {

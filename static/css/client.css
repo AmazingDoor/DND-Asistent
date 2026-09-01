@@ -175,6 +175,25 @@
         margin-right: -1px;
     }
 
+    .weapon-option-properties-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: darkgray;
+    }
+
+    .weapon-option-properties-container div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        padding: 2px 2px 2px 2px;
+        margin-right: -1px;   
+    }
+
     .item-select-overlay {
         position: fixed;
         z-index: 4;
