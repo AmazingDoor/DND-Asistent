@@ -4,7 +4,6 @@ import {addClassSkillEventListeners} from './../dropdown_handlers/class_skill_ha
 import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
 import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 import * as inventory_builder from './inventory_builder.js';
-import { clearItems as clearInventory, clearItems} from '../inventory/inventory_item_manager.js';
 import { saveInventory } from '../../../save_handler.js';
 import { updateSpells } from '../../spell_handler.js';
 import { setUsingSpellbook, isUsingSpellbook } from './../mappers/class_mapper.js';

@@ -17,7 +17,6 @@ import { setClassPreparedSpells, getClassPreparedSpells,
     setClassSpell} from './../../mappers/class_mapper.js';
 import { updateSpells } from '../../../spell_handler.js';
 import * as inventory_builder from '../inventory_builder.js';
-import { clearItems } from '../../inventory/inventory_item_manager.js';
 import { bus, EVENTS } from '../../../event_bus.js';
 import { saveSpells } from '../../../../save_handler.js';
 import { SpellOptionOverlay } from '../../../spell_overlay_classes.js';
