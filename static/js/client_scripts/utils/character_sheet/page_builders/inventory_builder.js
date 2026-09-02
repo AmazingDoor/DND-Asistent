@@ -21,11 +21,6 @@ export async function Initialize() {
     char_id = sessionStorage.getItem("charId");
 }
 
-export async function rebuildInventory() {
-    await inv_manager.clearVisualInventory();
-    await buildInventory();
-}
-
 export function buildInventory() {
     const inventory_container = document.querySelector('.inventory-container');
    
@@ -33,54 +28,6 @@ export function buildInventory() {
     character_data_handler.setMaxPreparedSpells();
 
     return;
-
-    //document.querySelector('.inventory-container').innerHTML = '';
-    /*document.querySelector('.inventory-weapons').innerHTML = '';
-    document.querySelector('.inventory-armor').innerHTML = '';
-    document.querySelector('.mounts-container').innerHTML = '';
-    character_data_handler.setMaxPreparedSpells();
-
-    const class_data = getClassData();
-    if (class_data === null || class_data === undefined) {
-        return;
-    }
-
-    const inventory = character_data_handler.getInventory();
-    let i = 0;
-    inventory.forEach(item => {
-        if(item.type === "item") {
-            inv_manager.addItemToInventory(item.reference, i, item.from, item.count);
-        } else if(item.type === "item_option") {
-            inv_manager.addItemOptionToInventory(item.options, item.from, buildInventory);
-        } else if( item.type === "container_item") {
-            inv_manager.addContainerToInventory(item.reference, i, item.from, item.count, item.inventory);
-        } else if(item.type === "spellbook_item") {
-            inv_manager.addSpellbookToInventory(i, item.from, item.count, item.spells);
-        }
-        i++;
-    });
-
-    i = 0;
-    const weapon_inventory = character_data_handler.getWeaponInventory();
-    weapon_inventory.forEach(item => {
-        if(item.type === "weapon_option") {
-            inv_manager.addWeaponOptionToInventory(item.options, item.from, buildInventory);
-        } else if(item.type === "weapon") {
-            inv_manager.addWeaponToInventory(item.reference, i, item.from, item.count);
-        }
-        i++;
-    });
-
-    i = 0;
-    const armor_inventory = character_data_handler.getArmorInventory();
-    armor_inventory.forEach(item => {
-        if(item.type === "armor_option") {
-            inv_manager.addArmorOptionToInventory(item.options, item.from, buildInventory);
-        } else if(item.type === "armor") {
-            inv_manager.addArmorToInventory(item.reference, i, item.from, item.count);
-        }
-        i++;
-    });*/
 
 }
 

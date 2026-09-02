@@ -601,12 +601,6 @@ function addOtherItemsToOption(option, other_items) {
     return option;
 }
 
-export function clearVisualInventory() {
-    inventory_list.innerHTML = '';
-    weapon_list.innerHTML = '';
-    armor_list.innerHTML = '';
-    spell_book_manager.clearCheckboxes();
-}
 
 function escapeHTML(str) {
     return str.replace(/&/g, "&amp;")

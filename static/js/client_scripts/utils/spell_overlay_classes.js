@@ -1,4 +1,5 @@
 import { getClassSpells, getMaxSpellLevel } from "../../shared/spell_data_filterer.js";
+import { getClassName, isUsingSpellbook } from "./character_sheet/mappers/class_mapper.js";
 
 
 export class SpellOptionOverlay {
@@ -35,9 +36,16 @@ export class SpellOptionOverlay {
         main_container.classList.add('spell-select-overlay-main');
         this.spell_option_overlay.appendChild(main_container);
 
-        const wizard_spells = getClassSpells("Wizard")[1];
+        let class_spells = [];
+        if(isUsingSpellbook()) {
+            console.log('wrong');
+            class_spells = getClassSpells("Wizard")[1];
+        } else {
+            class_spells = getClassSpells(getClassName())[1];
+        }
+
         const max_spell_level = getMaxSpellLevel();
-        wizard_spells.forEach((spell) => {
+        class_spells.forEach((spell) => {
             if(spell.level != 0 && spell.level <= max_spell_level) {
                 const spell_option = new SpellOption(spell, this);
                 spell_option.addTo(main_container);
@@ -52,6 +60,64 @@ export class SpellOptionOverlay {
     removeOverlay() {
         this.spell_option_overlay.remove();
         SpellOptionOverlay.instance = null;
+    }
+
+    addTo(parent_element) {
+        parent_element.appendChild(this.spell_option_overlay);
+    }
+}
+
+export class CantripOptionOverlay {
+    static create(spell_chosen_callback, ...args) {
+        return new CantripOptionOverlay(spell_chosen_callback, ...args);
+    }
+
+    static instance;
+    constructor(spell_chosen_callback = () => {console.warn("No spell selected callback provided")}, ...args) {
+        CantripOptionOverlay.instance = this;
+        this.args = args;
+        this.spellChosenCallback = spell_chosen_callback;
+        this.buildOverlay();
+    }
+
+    buildOverlay() {
+        this.spell_option_overlay = document.createElement('div');
+        this.spell_option_overlay.classList.add('fullscreen-overlay', 'overlay-index-4', 'spell-selection-overlay');
+        CantripOptionOverlay.instance.addTo(document.body);
+
+        let close_button_container = document.createElement('div');
+        close_button_container.classList.add('spell-select-overlay-close-container');
+        this.spell_option_overlay.appendChild(close_button_container);
+
+        let close_button = document.createElement('button');
+        close_button.classList.add('spell-select-overlay-close');
+        close_button.textContent = "X";
+        close_button.addEventListener("click", () => {
+            CantripOptionOverlay.instance.removeOverlay();
+        });
+        close_button_container.appendChild(close_button);
+
+        let main_container = document.createElement('div');
+        main_container.classList.add('spell-select-overlay-main');
+        this.spell_option_overlay.appendChild(main_container);
+
+        const class_spells = getClassSpells(getClassName())[0];
+        const max_spell_level = getMaxSpellLevel();
+        class_spells.forEach((spell) => {
+            if(spell.level != 0 && spell.level <= max_spell_level) {
+                const spell_option = new SpellOption(spell, this);
+                spell_option.addTo(main_container);
+            }
+        });
+    }
+
+    selectSpell(spell_name) {
+        this.spellChosenCallback(spell_name, ...this.args);
+    }
+
+    removeOverlay() {
+        this.spell_option_overlay.remove();
+        CantripOptionOverlay.instance = null;
     }
 
     addTo(parent_element) {

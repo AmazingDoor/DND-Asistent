@@ -40,7 +40,6 @@ export function setSocket(io) {
         }
         setUsingSpellbook(spell_book_option.checked);
         socket.emit('use_spell_book', {char_id: char_id, use_spell_book: spell_book_option.checked})
-        await inventory_builder.rebuildInventory();
         bus.publish(EVENTS.USE_SPELL_BOOK_CLICKED);
     });
 
@@ -191,6 +190,9 @@ function createHitDie(hit_die) {
     const hit_die_container = document.querySelector(".hit-die-container");
     const level_1_container = document.querySelector(".hit-die-level-1-container");
     const higher_level_container = document.querySelector(".hit-die-higher-level-container");
+    hit_die_container.textContent = '';
+    level_1_container.textContent = '';
+    higher_level_container.textContent = '';
     
     const hit_die_text = document.createElement('p');
     const level_1_text = document.createElement('p');
