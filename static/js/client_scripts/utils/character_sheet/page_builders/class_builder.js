@@ -189,13 +189,20 @@ function createHitDie(hit_die) {
     const hit_die_container = document.querySelector(".hit-die-container");
     const level_1_container = document.querySelector(".hit-die-level-1-container");
     const higher_level_container = document.querySelector(".hit-die-higher-level-container");
-    hit_die_container.textContent = '';
-    level_1_container.textContent = '';
-    higher_level_container.textContent = '';
+    const removable_children = document.querySelectorAll('.removable-hit-die-text');
     
+    removable_children.forEach((child) => {
+        child.remove();
+    });
+
     const hit_die_text = document.createElement('p');
     const level_1_text = document.createElement('p');
     const higher_level_text = document.createElement('p');
+
+    const removables = [hit_die_text, level_1_text, higher_level_text];
+    removables.forEach((removable) => {
+        removable.classList.add('removable-hit-die-text');
+    });
 
     hit_die_text.textContent = hit_die.number + " d" + hit_die.class;
     level_1_text.textContent = hit_die.level_1;

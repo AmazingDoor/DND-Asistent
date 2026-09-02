@@ -49,13 +49,15 @@ export const EVENTS = {
     SPELL_CASTED: "spell_casted",
     HEALTH_UPDATED: "health_updated",
     LONG_REST: "long_rest",
-    SHORT_REST: "short_rest"
+    SHORT_REST: "short_rest",
+    CANTRIP_SELECTED: "cantrip_selected"
 
 };
 
 export const INITIAL_EVENTS = {
     UPDATE_PREPARED_SPELL_COUNT: "update_prepared_spell_count",
-    DISABLE_PREPARED_SPELL_CHECKBOXES: "disable_prepared_spell_checkboxes"
+    DISABLE_PREPARED_SPELL_CHECKBOXES: "disable_prepared_spell_checkboxes",
+    UPDATE_CANTRIP_DISPLAY: "update_cantrip_display"
 };
 
 export const SAVE_EVENTS = {

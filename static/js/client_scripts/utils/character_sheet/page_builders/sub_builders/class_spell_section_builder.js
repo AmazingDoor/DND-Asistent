@@ -14,12 +14,13 @@ import {getInventory} from './../../character_data_handler.js';
 import { setClassPreparedSpells, getClassPreparedSpells, 
     setClassPreparedCantrips, getClassPreparedCantrips, 
     getClassName, isUsingSpellbook, 
-    setClassSpell} from './../../mappers/class_mapper.js';
+    setClassSpell,
+    setClassCantrip} from './../../mappers/class_mapper.js';
 import { updateSpells } from '../../../spell_handler.js';
 import * as inventory_builder from '../inventory_builder.js';
 import { bus, EVENTS } from '../../../event_bus.js';
 import { saveSpells } from '../../../../save_handler.js';
-import { SpellOptionOverlay } from '../../../spell_overlay_classes.js';
+import { CantripOptionOverlay, SpellOptionOverlay } from '../../../spell_overlay_classes.js';
 
 let socket = null;
 
@@ -75,6 +76,7 @@ async function spellOptionClickEvent(head, option) {
     await saveSpells();
     updateSpells();
 }
+
 
 function findHighestSlotLevelAvailable(d, level) {
     const l = level - 1;
@@ -137,6 +139,20 @@ async function selectSpell(spell_name, index, spell_dropdown_head) {
     spell_dropdown_head.textContent = spell_name;
     await saveSpells();
     SpellOptionOverlay.instance.removeOverlay();
+    bus.publish(EVENTS.SPELL_SELECTED);
+
+    if(getClassName() != "Wizard") {
+        bus.publish(EVENTS.SPELL_PREPARED);
+    }
+}
+
+async function selectCantrip(cantrip_name, index, cantrip_dropdown_head) {
+    setClassCantrip(cantrip_name, index);
+    cantrip_dropdown_head.textContent = cantrip_name;
+    await saveSpells();
+    CantripOptionOverlay.instance.removeOverlay();
+    bus.publish(EVENTS.CANTRIP_SELECTED);
+
 }
 
 function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, cantrips, saved_spells, saved_cantrips, class_name, max_spell_level) {
@@ -173,11 +189,8 @@ function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, can
         spell_dropdown_head.addEventListener("click", () => {
             spell_dropdown.innerHTML = '';
             SpellOptionOverlay.create(selectSpell, e, spell_dropdown_head);
-            //addSpellsToDropdown(spells, max_spell_level, spell_dropdown, spell_dropdown_head, player_level, class_name);
         });
         spell_container.appendChild(spell_dropdown_head);
-        linkDropdown(spell_dropdown_head);
-
     }
 
     const cantrip_div = document.querySelector('.class-cantrip-div');
@@ -205,6 +218,11 @@ function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, can
         d.classList.add('dropdown');
         cantrip_dropdown_head.appendChild(d);
 
+        cantrip_dropdown_head.addEventListener("click", () => {
+            cantrip_dropdown.innerHTML = '';
+            CantripOptionOverlay.create(selectCantrip, e, cantrip_dropdown_head);
+        });
+
         const cantrip_dropdown = document.createElement('div');
         cantrip_dropdown.classList.add('cantrip-options');
         cantrip_dropdown.classList.add('dropdown-content');
@@ -222,7 +240,9 @@ function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, can
                 cantrip_option.appendChild(cantrip_option_text);
                 cantrip_dropdown.appendChild(cantrip_option);
 
-                cantrip_option.addEventListener("click", function() {spellOptionClickEvent(cantrip_dropdown_head, cantrip_option_text)});
+                cantrip_option.addEventListener("click", () => {
+
+                });
 
                 const cantrip_data_container = document.createElement('div');
                 cantrip_data_container.classList.add('cantrip-data-container');
@@ -265,7 +285,6 @@ function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, can
             }
         });
         cantrip_container.appendChild(cantrip_dropdown_head);
-        linkDropdown(cantrip_dropdown_head);
     }
 }
 

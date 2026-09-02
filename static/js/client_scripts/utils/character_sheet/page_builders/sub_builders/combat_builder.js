@@ -1,10 +1,10 @@
 import { getSpellCastingAbilityScore, getCharacterAbilityModifiers} from "../../character_data_handler.js";
-import { getSpellData, getClassName, isUsingSpellbook, getCurrentSpellSlots, setCurrentSpellSlots, setSpellSlotsUsed, resetUsedSpellSlots, incrementUsedSpellSlot, getSpellSlotsUsed } from "../../mappers/class_mapper.js";
+import { getSpellData, getClassName, isUsingSpellbook, getCurrentSpellSlots, setCurrentSpellSlots, setSpellSlotsUsed, resetUsedSpellSlots, incrementUsedSpellSlot, getSpellSlotsUsed, getCantripData } from "../../mappers/class_mapper.js";
 import { saveClassData } from "../../../../save_handler.js";
 import { getMagicSlots } from "../../../../../shared/spell_caster_slot_map.js";
 import { getPlayerLevel } from "../../../../player_level_handler.js";
-import { getPreparedSpellCount } from "../../../../../shared/spell_data_filterer.js";
-import { bus, EVENTS, SAVE_EVENTS } from "../../../event_bus.js";
+import { getPreparedCantripCount, getPreparedSpellCount } from "../../../../../shared/spell_data_filterer.js";
+import { bus, EVENTS, INITIAL_EVENTS, SAVE_EVENTS } from "../../../event_bus.js";
 import { InventoryManager } from "../../inventory_items.js";
 
 
@@ -12,6 +12,8 @@ const concentrationSpellName = document.getElementById('concentration-spell-name
 const spellSlotDisplays = document.getElementById('spell-slot-displays');
 const spellDisplayList = document.getElementById('combat-spell-display-list');
 const resetSpellsButton = document.getElementById('reset-spell-slots-button');
+
+const cantrip_display_list = document.getElementById('combat-cantrip-display-list');
 
 let className = '';
 let max_spell_level = 0;
@@ -24,6 +26,9 @@ bus.subscribeToEvents(update_data_subscribe_events, updateData);
 const update_current_spell_slots_subscriptions = [EVENTS.LEVEL_UPDATED, EVENTS.SPELL_CASTED, 
     EVENTS.LONG_REST, EVENTS.SHORT_REST];
 bus.subscribeToEvents(update_current_spell_slots_subscriptions, updateCurrentSpellSlots);
+
+const update_cantrip_display_subscriptions = [INITIAL_EVENTS.UPDATE_CANTRIP_DISPLAY, EVENTS.CANTRIP_SELECTED];
+bus.subscribeToEvents(update_cantrip_display_subscriptions, updateCantripDisplay)
 
 resetSpellsButton.addEventListener("click", () => resetSpellsButtonPressed());
 
@@ -98,6 +103,20 @@ export function updateData() {
         }
     }
     updateCurrentSpellSlots();
+}
+
+function updateCantripDisplay() {
+    cantrip_display_list.textContent = '';
+    let known_cantrip_count = getPreparedCantripCount(className);
+        const cantrip_data_array = getCantripData();
+
+        for(let i = 0; i < known_cantrip_count; i++) {
+            if(i < cantrip_data_array.length) {
+                addCantrip(cantrip_data_array[i]);
+            } else{
+                addEmpty(cantrip_display_list);
+            }
+        }
 }
 
 function addEmpty(container) {
@@ -367,13 +386,37 @@ function getCorrectSpellHeal(spell_data, level) {
 }
 
 function addCantrip(cantrip_data){
+    const combatSpell = new CombatCantrip(cantrip_data);
+    combatSpell.addToParent(cantrip_display_list);
+}
 
+class CombatCantrip {
+     constructor(cantripData) {
+        this.cantrip_data = cantripData;
+        this.cantrip_container = document.createElement('div');
+        this.cantrip_container.classList.add("combat-cantrip-container");
+        this.buildCantrip();
+    }
+
+     buildCantrip() {
+        const name_container = document.createElement('div');
+        this.cantrip_container.appendChild(name_container);
+
+        const name_text = document.createElement('h3');
+        name_text.textContent = this.cantrip_data.name;
+        name_container.appendChild(name_text);
+        console.log(this.cantrip_data);
+     }
+
+     addToParent(parent_element) {
+        parent_element.appendChild(this.cantrip_container);
+     }
 }
 
 function addWeapon(weapon_data) {
 
 }
 
-function setConcentration(spell_name) {
+function setConcentration(cantrip_name) {
 
 }

@@ -137,6 +137,17 @@ export function removeClassSpell(index) {
     class_spells.splice(index, 1);
 }
 
+export function setClassCantrip(cantrip_name, index) {
+    while(class_cantrips.length <= index) {
+        class_cantrips.push(null);
+    }
+    class_cantrips[index] = cantrip_name;
+}
+
+export function removeClassCantrip(index) {
+    class_cantrips.splice(index, 1);
+}
+
 export function getClassPreparedSpells() {
     return class_spells;
 }
@@ -155,6 +166,22 @@ export function getSpellData() {
         };
     });
     return savedSpellData;
+}
+
+export function getCantripData() {
+    var saved_cantrips = getClassPreparedCantrips();
+    var class_cantirps = getClassSpells(class_name)[0];
+    var savedCantripData = [];
+    saved_cantrips.forEach((cantrip) => {
+        for(let i = 0; i < class_cantirps.length; i++) {
+            let classCantrip = class_cantirps[i];
+            if(cantrip == classCantrip.name) {
+                savedCantripData.push(classCantrip);
+                break;
+            }
+        }
+    });
+    return savedCantripData;
 }
 
 export function setSocket(io) {

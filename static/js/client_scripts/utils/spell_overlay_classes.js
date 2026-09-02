@@ -101,13 +101,12 @@ export class CantripOptionOverlay {
         main_container.classList.add('spell-select-overlay-main');
         this.spell_option_overlay.appendChild(main_container);
 
-        const class_spells = getClassSpells(getClassName())[0];
+        const class_cantrips = getClassSpells(getClassName())[0];
+        console.log(class_cantrips);
         const max_spell_level = getMaxSpellLevel();
-        class_spells.forEach((spell) => {
-            if(spell.level != 0 && spell.level <= max_spell_level) {
-                const spell_option = new SpellOption(spell, this);
-                spell_option.addTo(main_container);
-            }
+        class_cantrips.forEach((spell) => {
+            const spell_option = new SpellOption(spell, this);
+            spell_option.addTo(main_container);
         });
     }
 
