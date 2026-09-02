@@ -1331,7 +1331,6 @@ class AddItemOption {
     constructor(item_data, inventory, item_class) {
         this.item_data = item_data;
         this.inventory = inventory;
-        console.log(this.item_data);
         
         this.build(item_class);
     }

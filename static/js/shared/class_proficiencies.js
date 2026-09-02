@@ -52,6 +52,13 @@ export const barbarian = {
     inventory: {
         options: [],
         starting: [{item: item_data.items.explorers_pack, count: 1}]
+    }, 
+    hit_die: {
+        number: 1,
+        class: 12,
+        level_1: "12 + your Constitution modifier",
+        higher_level: "1 d12 (or 7) + your Constitution modifier per barbarian level after 1st"
+
     }
 };
 
@@ -73,6 +80,13 @@ export const bard = {
     inventory: {
         options: ['bard_inventory_1', 'bard_inventory_2'],
         starting: []
+    }, 
+    hit_die: {
+        number: 1,
+        class: 8,
+        level_1: "8 + your Constitution modifier",
+        higher_level: "1 d8 (or 5) + your Constitution modifier per bard level after 1st"
+
     }
 };
 
@@ -93,6 +107,13 @@ export const cleric = {
     inventory: {
         options: ['cleric_inventory_1', 'cleric_inventory_2'],
         starting: []
+    }, 
+    hit_die: {
+        number: 1,
+        class: 8,
+        level_1: "8 + your Constitution modifier",
+        higher_level: "1 d8 (or 5) + your Constitution modifier per cleric level after 1st"
+
     }
 
 };
@@ -114,6 +135,13 @@ export const druid = {
     inventory: {
         options: ['druid_inventory_1'],
         starting: [{item: item_data.items.explorers_pack, count: 1}]
+    }, 
+    hit_die: {
+        number: 1,
+        class: 8,
+        level_1: "8 + your Constitution modifier",
+        higher_level: "1 d8 (or 5) + your Constitution modifier per druid level after 1st"
+
     }
 
 };
@@ -135,6 +163,13 @@ export const fighter = {
     inventory: {
         options: ['fighter_inventory_1'],
         starting: []
+    }, 
+    hit_die: {
+        number: 1,
+        class: 10,
+        level_1: "10 + your Constitution modifier",
+        higher_level: "1 d10 (or 6) + your Constitution modifier per fighter level after 1st"
+
     }
 
 };
@@ -156,6 +191,13 @@ export const monk = {
     inventory: {
         options: ['monk_inventory_1'],
         starting: []
+    }, 
+    hit_die: {
+        number: 1,
+        class: 8,
+        level_1: "8 + your Constitution modifier",
+        higher_level: "1 d8 (or 5) + your Constitution modifier per monk level after 1st"
+
     }
 
 };
@@ -176,6 +218,13 @@ export const paladin = {
     inventory: {
         options: ['paladin_inventory_1', 'paladin_inventory_2'],
         starting: []
+    }, 
+    hit_die: {
+        number: 1,
+        class: 10,
+        level_1: "10 + your Constitution modifier",
+        higher_level: "1 d10 (or 6) + your Constitution modifier per paladin level after 1st"
+
     }
 
 };
@@ -197,6 +246,13 @@ export const ranger = {
     inventory: {
         options: ['ranger_inventory_1'],
         starting: [{item: item_data.items.quiver, count: 1}]
+    }, 
+    hit_die: {
+        number: 1,
+        class: 10,
+        level_1: "10 + your Constitution modifier",
+        higher_level: "1 d10 (or 6) + your Constitution modifier per ranger level after 1st"
+
     }
 
 };
@@ -218,6 +274,13 @@ export const rogue = {
     inventory: {
         options: ['rogue_inventory_1'],
         starting: [{item: item_data.items.thieves_tools, count: 1}]
+    }, 
+    hit_die: {
+        number: 1,
+        class: 8,
+        level_1: "8 + your Constitution modifier",
+        higher_level: "1 d8 (or 5) + your Constitution modifier per rogue level after 1st"
+
     }
 
 };
@@ -239,6 +302,13 @@ export const sorcerer = {
     inventory: {
         options: ['sorcerer_inventory_1', 'sorcerer_inventory_2'],
         starting: []
+    }, 
+    hit_die: {
+        number: 1,
+        class: 6,
+        level_1: "6 + your Constitution modifier",
+        higher_level: "1 d6 (or 4) + your Constitution modifier per sourcerer level after 1st"
+
     }
 
 };
@@ -260,6 +330,13 @@ export const warlock = {
     inventory: {
         options: ['warlock_inventory_1', 'warlock_inventory_2'],
         starting: []
+    }, 
+    hit_die: {
+        number: 1,
+        class: 8,
+        level_1: "8 + your Constitution modifier",
+        higher_level: "1 d8 (or 5) + your Constitution modifier per warlock level after 1st"
+
     }
 
 };
@@ -281,6 +358,13 @@ export const wizard = {
     inventory: {
         options: ['wizard_inventory_1', 'wizard_inventory_2'],
         starting: [{item: item_data.items.spellbook, count: 1, spells: ["Select Spell", "Select Spell", "Select Spell", "Select Spell", "Select Spell", "Select Spell"]}]
+    }, 
+    hit_die: {
+        number: 1,
+        class: 6,
+        level_1: "6 + your Constitution modifier",
+        higher_level: "1 d6 (or 4) + your Constitution modifier per wizard level after 1st"
+
     }
 
 };

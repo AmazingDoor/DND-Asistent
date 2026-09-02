@@ -126,6 +126,17 @@ export function setClassPreparedSpells(s) {
     class_spells = s;
 }
 
+export function setClassSpell(spell_name, index) {
+    while(class_spells.length <= index) {
+        class_spells.push(null);
+    }
+    class_spells[index] = spell_name;
+}
+
+export function removeClassSpell(index) {
+    class_spells.splice(index, 1);
+}
+
 export function getClassPreparedSpells() {
     return class_spells;
 }

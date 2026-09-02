@@ -1,7 +1,6 @@
 import { getSpellCastingAbilityScore, getCharacterAbilityModifiers} from "../../character_data_handler.js";
 import { getSpellData, getClassName, isUsingSpellbook, getCurrentSpellSlots, setCurrentSpellSlots, setSpellSlotsUsed, resetUsedSpellSlots, incrementUsedSpellSlot, getSpellSlotsUsed } from "../../mappers/class_mapper.js";
 import { saveClassData } from "../../../../save_handler.js";
-import { getSpellsFromSpellbooks } from "../../character_data_handler.js";
 import { getMagicSlots } from "../../../../../shared/spell_caster_slot_map.js";
 import { getPlayerLevel } from "../../../../player_level_handler.js";
 import { getPreparedSpellCount } from "../../../../../shared/spell_data_filterer.js";

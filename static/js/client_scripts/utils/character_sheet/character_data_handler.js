@@ -135,43 +135,6 @@ export function decreasePreparedSpellCount() {
     prepared_spell_count -= 1;
 }
 
-export function getSpellsFromSpellbooks() {
-    let spell_books = [];
-    let all_spells = [];
-    let filtered_spells = [];
-    const class_spells = getClassSpells(getClassName())[1];
-    
-    
-    inventory.forEach((item) => {
-        if(item.type == "spellbook_item") {
-            spell_books.push(item);
-        }
-    });
-
-    //TODO: filter for prepared spells
-    spell_books.forEach((book) => {
-        let spells = book.spells;
-        spells.forEach((spell) => {
-            if(spell.prepared) {
-                all_spells.push(spell);
-            }
-        });
-    });
-
-    all_spells.forEach((spell) => {
-        for(let i = 0; i < class_spells.length; i++) {
-            let classSpell = class_spells[i];
-            if(spell.spell_name == classSpell.name) {
-                filtered_spells.push(classSpell);
-                break;
-            }
-        }
-    });
-
-
-    return filtered_spells;
-}
-
 export function setCharacterBaseAbilities(base_abilities) {
     base_character_abilities = {
         str: base_abilities[0],

@@ -162,14 +162,15 @@ function buildClassStatSection(c, active_skills = []) {
     const tools = class_data.tools;
     const skill_count = class_data.skills[0];
     const skills = class_data.skills[1];
+    const hit_die = class_data.hit_die;
 
     setClassSkills(class_data.skills);
-
-    createSavingThrows(saving_throws)
-    createWeaponProficiencies(weapon_proficiencies)
-    createArmorProficiencies(armor_proficiencies)
-    createTools(tools)
-    createSkillSelections(skill_count, skills, active_skills)
+    createHitDie(hit_die);
+    createSavingThrows(saving_throws);
+    createWeaponProficiencies(weapon_proficiencies);
+    createArmorProficiencies(armor_proficiencies);
+    createTools(tools);
+    createSkillSelections(skill_count, skills, active_skills);
 }
 
 function createSavingThrows(saving_throws) {
@@ -183,6 +184,26 @@ function createSavingThrows(saving_throws) {
     }
 
     document.querySelector('.saving-throw-display').textContent = str;
+
+}
+
+function createHitDie(hit_die) {
+    const hit_die_container = document.querySelector(".hit-die-container");
+    const level_1_container = document.querySelector(".hit-die-level-1-container");
+    const higher_level_container = document.querySelector(".hit-die-higher-level-container");
+    
+    const hit_die_text = document.createElement('p');
+    const level_1_text = document.createElement('p');
+    const higher_level_text = document.createElement('p');
+
+    hit_die_text.textContent = hit_die.number + " d" + hit_die.class;
+    level_1_text.textContent = hit_die.level_1;
+    higher_level_text.textContent = hit_die.higher_level;
+
+    hit_die_container.appendChild(hit_die_text);
+    level_1_container.appendChild(level_1_text);
+    higher_level_container.appendChild(higher_level_text);
+
 
 }
 

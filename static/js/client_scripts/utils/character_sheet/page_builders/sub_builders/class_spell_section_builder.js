@@ -13,12 +13,14 @@ import {getClassSpells, getPreparedSpellCount, getPreparedCantripCount} from './
 import {getInventory} from './../../character_data_handler.js';
 import { setClassPreparedSpells, getClassPreparedSpells, 
     setClassPreparedCantrips, getClassPreparedCantrips, 
-    getClassName, isUsingSpellbook } from './../../mappers/class_mapper.js';
+    getClassName, isUsingSpellbook, 
+    setClassSpell} from './../../mappers/class_mapper.js';
 import { updateSpells } from '../../../spell_handler.js';
 import * as inventory_builder from '../inventory_builder.js';
 import { clearItems } from '../../inventory/inventory_item_manager.js';
 import { bus, EVENTS } from '../../../event_bus.js';
 import { saveSpells } from '../../../../save_handler.js';
+import { SpellOptionOverlay } from '../../../spell_overlay_classes.js';
 
 let socket = null;
 
@@ -131,6 +133,13 @@ export async function setSpells() {
     await saveSpells();
 }
 
+async function selectSpell(spell_name, index, spell_dropdown_head) {
+    setClassSpell(spell_name, index);
+    spell_dropdown_head.textContent = spell_name;
+    await saveSpells();
+    SpellOptionOverlay.instance.removeOverlay();
+}
+
 function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, cantrips, saved_spells, saved_cantrips, class_name, max_spell_level) {
     const spell_div = document.querySelector('.class-spell-div');
     spell_div.innerHTML = '';
@@ -162,9 +171,10 @@ function buildSpells(spell_slot_map, cantrip_slot_map, player_level, spells, can
         spell_dropdown.classList.add('hidden');
         d.appendChild(spell_dropdown);
 
-        spell_dropdown_head.addEventListener("click", function() {
+        spell_dropdown_head.addEventListener("click", () => {
             spell_dropdown.innerHTML = '';
-            addSpellsToDropdown(spells, max_spell_level, spell_dropdown, spell_dropdown_head, player_level, class_name);
+            SpellOptionOverlay.create(selectSpell, e, spell_dropdown_head);
+            //addSpellsToDropdown(spells, max_spell_level, spell_dropdown, spell_dropdown_head, player_level, class_name);
         });
         spell_container.appendChild(spell_dropdown_head);
         linkDropdown(spell_dropdown_head);

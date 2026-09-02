@@ -4,6 +4,14 @@
         box-sizing: border-box;
     }
 
+    .hit-die-display-container {
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+        margin-bottom: -1px;
+    }
+
     .add-armor-option-disadvantage-container {
         display: flex;
         background-color: darkgray;

@@ -2,13 +2,14 @@ import { getClassSpells, getMaxSpellLevel } from "../../shared/spell_data_filter
 
 
 export class SpellOptionOverlay {
-    static create(spell_chosen_callback) {
-        return new SpellOptionOverlay(spell_chosen_callback);
+    static create(spell_chosen_callback, ...args) {
+        return new SpellOptionOverlay(spell_chosen_callback, ...args);
     }
 
     static instance;
-    constructor(spell_chosen_callback = () => {console.warn("No spell selected callback provided")}) {
+    constructor(spell_chosen_callback = () => {console.warn("No spell selected callback provided")}, ...args) {
         SpellOptionOverlay.instance = this;
+        this.args = args;
         this.spellChosenCallback = spell_chosen_callback;
         this.buildOverlay();
     }
@@ -45,7 +46,7 @@ export class SpellOptionOverlay {
     }
 
     selectSpell(spell_name) {
-        this.spellChosenCallback(spell_name);
+        this.spellChosenCallback(spell_name, ...this.args);
     }
 
     removeOverlay() {
