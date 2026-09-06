@@ -1,6 +1,6 @@
 import { getMagicSlots } from "../shared/spell_caster_slot_map.js";
 import { getMaxHeath, getPlayerHealth, setPlayerHealth } from "./utils/character_sheet/character_data_handler.js";
-import { getMaxSpellSlots, resetUsedSpellSlots, setCurrentSpellSlots } from "./utils/character_sheet/mappers/class_mapper.js";
+import { getMaxSpellSlots, setCurrentSpellSlots } from "./utils/character_sheet/mappers/class_mapper.js";
 import { saveAll } from "./save_handler.js";
 import { bus, EVENTS } from "./utils/event_bus.js";
 const long_rest_button = document.getElementById("long-rest-button");
@@ -15,7 +15,6 @@ async function longRest() {
     if(parseInt(getPlayerHealth()) < parseInt(getMaxHeath())) {
         setPlayerHealth(getMaxHeath());
     }
-    resetUsedSpellSlots();
     setCurrentSpellSlots(getMaxSpellSlots());
     await saveAll();
     bus.publish(EVENTS.LONG_REST);

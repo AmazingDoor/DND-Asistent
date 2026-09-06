@@ -47,6 +47,7 @@ export const EVENTS = {
     MAX_PREPARED_SPELLS_HIT: "max_prepared_spells_hit",
     ENABLE_PREPARED_SPELL_CHECKBOXES: "enable_checkboxes",
     SPELL_CASTED: "spell_casted",
+    CANTRIP_CASTED: "cantrip_casted",
     HEALTH_UPDATED: "health_updated",
     LONG_REST: "long_rest",
     SHORT_REST: "short_rest",
@@ -57,7 +58,8 @@ export const EVENTS = {
 export const INITIAL_EVENTS = {
     UPDATE_PREPARED_SPELL_COUNT: "update_prepared_spell_count",
     DISABLE_PREPARED_SPELL_CHECKBOXES: "disable_prepared_spell_checkboxes",
-    UPDATE_CANTRIP_DISPLAY: "update_cantrip_display"
+    UPDATE_CANTRIP_DISPLAY: "update_cantrip_display",
+    UPDATE_CONCENTRATION: "update_concentration"
 };
 
 export const SAVE_EVENTS = {

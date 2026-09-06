@@ -1,5 +1,5 @@
 import { getSpellCastingAbilityScore, getCharacterAbilityModifiers} from "../../character_data_handler.js";
-import { getSpellData, getClassName, isUsingSpellbook, getCurrentSpellSlots, setCurrentSpellSlots, setSpellSlotsUsed, resetUsedSpellSlots, incrementUsedSpellSlot, getSpellSlotsUsed, getCantripData } from "../../mappers/class_mapper.js";
+import { getSpellData, getClassName, isUsingSpellbook, getCurrentSpellSlots, setCurrentSpellSlots, getCantripData, getConcentration, setConcentration, decrementCurrentSpells } from "../../mappers/class_mapper.js";
 import { saveClassData } from "../../../../save_handler.js";
 import { getMagicSlots } from "../../../../../shared/spell_caster_slot_map.js";
 import { getPlayerLevel } from "../../../../player_level_handler.js";
@@ -27,18 +27,28 @@ const update_current_spell_slots_subscriptions = [EVENTS.LEVEL_UPDATED, EVENTS.S
     EVENTS.LONG_REST, EVENTS.SHORT_REST];
 bus.subscribeToEvents(update_current_spell_slots_subscriptions, updateCurrentSpellSlots);
 
-const update_cantrip_display_subscriptions = [INITIAL_EVENTS.UPDATE_CANTRIP_DISPLAY, EVENTS.CANTRIP_SELECTED];
-bus.subscribeToEvents(update_cantrip_display_subscriptions, updateCantripDisplay)
+const update_cantrip_display_subscriptions = [INITIAL_EVENTS.UPDATE_CANTRIP_DISPLAY, EVENTS.CANTRIP_SELECTED, EVENTS.LEVEL_UPDATED];
+bus.subscribeToEvents(update_cantrip_display_subscriptions, updateCantripDisplay);
+
+
+const update_concentration_subscriptions = [INITIAL_EVENTS.UPDATE_CONCENTRATION, EVENTS.SPELL_CASTED, EVENTS.CANTRIP_CASTED];
+bus.subscribeToEvents(update_concentration_subscriptions, updateConcentrationSpell);
 
 resetSpellsButton.addEventListener("click", () => resetSpellsButtonPressed());
 
 function resetSpellsButtonPressed() {
     const max_spell_slots = getMagicSlots(getClassName()).spell_slots[getPlayerLevel() - 1];
     setCurrentSpellSlots(max_spell_slots);
-    resetUsedSpellSlots();
     bus.publish(SAVE_EVENTS.SAVE_CLASS);
     updateCurrentSpellSlots();
 
+}
+
+export function updateConcentrationSpell() {
+    const concentration_spell = getConcentration();
+    if(concentration_spell !== null && concentration_spell !== undefined) {
+        concentrationSpellName.textContent = concentration_spell;
+    }
 }
 
 export function updateCurrentSpellSlots() {
@@ -137,12 +147,13 @@ function addSpell(spell_data) {
 
 class CombatSpell {
     constructor(spellData) {
+        console.log(spellData);
         this.spell_data = spellData;
         this.spell_container = document.createElement('div');
         this.spell_container.classList.add("combat-spell-container");
         this.selected_spell_level = 0;
         
-        const disable_cast_button_subscriptions = [EVENTS.SPELL_CASTED];
+        const disable_cast_button_subscriptions = [EVENTS.SPELL_CASTED, EVENTS.LEVEL_UPDATED, EVENTS.LONG_REST];
         bus.subscribeToEvents(disable_cast_button_subscriptions, () => this.disableCastButton());
         
 
@@ -302,17 +313,16 @@ class CombatSpell {
         }
     }
 
-    castButtonPressed() {
+    async castButtonPressed() {
         let new_spell_slots = getCurrentSpellSlots();
-        new_spell_slots[this.selected_spell_level] = new_spell_slots[this.selected_spell_level] - 1;
-        incrementUsedSpellSlot(this.selected_spell_level);
-        setCurrentSpellSlots(new_spell_slots);
-        saveClassData();
-
+        decrementCurrentSpells(this.selected_spell_level);
         if(this.spell_data.concentration) {
-            concentrationSpellName.textContent = this.spell_data.spell_name;
+            setConcentration(this.spell_data.name);
         }
         
+        await saveClassData();
+
+
         bus.publish(EVENTS.SPELL_CASTED);
     }
 
@@ -386,15 +396,16 @@ function getCorrectSpellHeal(spell_data, level) {
 }
 
 function addCantrip(cantrip_data){
-    const combatSpell = new CombatCantrip(cantrip_data);
-    combatSpell.addToParent(cantrip_display_list);
+    const combatCantrip = new CombatCantrip(cantrip_data);
+    combatCantrip.addToParent(cantrip_display_list);
 }
 
 class CombatCantrip {
      constructor(cantripData) {
         this.cantrip_data = cantripData;
+        console.log(this.cantrip_data);
         this.cantrip_container = document.createElement('div');
-        this.cantrip_container.classList.add("combat-cantrip-container");
+        this.cantrip_container.classList.add("combat-spell-container");
         this.buildCantrip();
     }
 
@@ -405,8 +416,137 @@ class CombatCantrip {
         const name_text = document.createElement('h3');
         name_text.textContent = this.cantrip_data.name;
         name_container.appendChild(name_text);
-        console.log(this.cantrip_data);
+
+        if(this.cantrip_data.concentration) {
+            const concentration_container = document.createElement('div');
+            concentration_container.classList.add('combat-cantrip-concentration-container');
+            name_container.appendChild(concentration_container);
+
+            const concentration_text = document.createElement('p');
+            concentration_text.textContent = ("(Uses Concentration)");
+            concentration_container.appendChild(concentration_text);
+        }
+
+        const cast_button_container = document.createElement('div');
+        this.cantrip_container.appendChild(cast_button_container);
+        
+        const cast_button = document.createElement('button');
+        cast_button.textContent = "Cast";
+        cast_button.addEventListener("click", () => {
+            this.castCantrip();
+        })
+        cast_button_container.appendChild(cast_button);
+
+        const has_damage = Object.hasOwn(this.cantrip_data, "damage");
+
+        if(has_damage) {
+            const damage_container = document.createElement('div');
+            this.cantrip_container.appendChild(damage_container);
+
+            const damage_label = document.createElement('p');
+            damage_label.textContent = "Damage: ";
+            damage_container.appendChild(damage_label);
+
+            const damage_num = document.createElement('p');
+            const damage_at_level = this.cantrip_data.damage.damage_at_character_level;
+            const player_level = getPlayerLevel();
+            let correct_level = 1;
+            Object.entries(damage_at_level).forEach(([key, value]) => {
+                key = parseInt(key);
+                if(key <= player_level) {
+                    correct_level = key;
+                }
+            });
+            damage_num.textContent = damage_at_level[correct_level];
+            damage_container.appendChild(damage_num);
+            
+        }
+
+        const higher_level_container = document.createElement('div');
+        higher_level_container.classList.add('combat-cantrip-higher-level-container');
+        this.cantrip_container.appendChild(higher_level_container);
+
+        const higher_level_text = document.createElement('p');
+        const higher_level_array = this.cantrip_data.higher_level;
+        higher_level_array.forEach((higher_level) => {
+            higher_level_text.textContent += " " + higher_level;
+        });
+
+        const bottom_container = document.createElement('div');
+        bottom_container.classList.add('combat-cantrip-bottom-container');
+        this.cantrip_container.appendChild(bottom_container);
+
+        bottom_container.addEventListener("click", () => {
+            this.expandSpellContainer();
+        });
+
+        this.hidden_container_arrow = document.createElement('p');
+        this.hidden_container_arrow.textContent = "⯆";
+        bottom_container.appendChild(this.hidden_container_arrow);
+
+        this.hidden_info_container = document.createElement('div');
+        this.hidden_info_container.classList.add('cantrip-hidden-info', 'hidden');
+        bottom_container.appendChild(this.hidden_info_container);
+
+        this.stat_container = document.createElement('div');
+        this.stat_container.classList.add('cantrip-stat-container');
+        this.hidden_info_container.appendChild(this.stat_container);
+
+        const components_container = this.addStat("Components: ", this.cantrip_data.components);
+        const range_container = this.addStat("Range: ", this.cantrip_data.range);
+        const duration_container = this.addStat("Duration: ", this.cantrip_data.duration);
+        const ritual_container = this.addStat("Use Ritual: ", this.cantrip_data.ritual);
+        const school_container = this.addStat("School: ", this.cantrip_data.school);
+        if(has_damage) {
+            const damage_type_container = this.addStat("Damage Type: ", this.cantrip_data.damage.damage_type.name);
+        }
+
+        const description_container = document.createElement('div');
+        description_container.classList.add('combat-cantrip-description-container');
+        this.hidden_info_container.appendChild(description_container);
+
+        const description = document.createElement('p');
+        description_container.appendChild(description);
+
+        const descrpitions_array = this.cantrip_data.desc;
+        descrpitions_array.forEach((d) => {
+            description.textContent += d;
+        });
      }
+
+     addStat(label_text, value) {
+        const stat_container = document.createElement('div');
+        this.stat_container.appendChild(stat_container);
+        
+
+        const stat_label = document.createElement('p');
+        stat_label.classList.add('cantrip-stat-label');
+        stat_label.textContent = label_text;
+        stat_container.appendChild(stat_label);
+
+        const stat_value = document.createElement('p');
+        stat_value.textContent = value;
+        stat_container.appendChild(stat_value);
+        return stat_container;
+     }
+
+     async castCantrip() {
+        if(this.cantrip_data.concentration) {
+            setConcentration(this.cantrip_data.name);
+        }
+        await saveClassData();
+        bus.publish(EVENTS.CANTRIP_CASTED);
+     }
+
+    expandSpellContainer() {
+        if(this.hidden_info_container.classList.contains("hidden")) {
+            this.hidden_container_arrow.textContent = "⯅";
+            this.hidden_info_container.classList.remove("hidden");
+        } else {
+            this.hidden_container_arrow.textContent = "⯆";
+            this.hidden_info_container.classList.add("hidden");
+        }
+    }
 
      addToParent(parent_element) {
         parent_element.appendChild(this.cantrip_container);
@@ -414,9 +554,5 @@ class CombatCantrip {
 }
 
 function addWeapon(weapon_data) {
-
-}
-
-function setConcentration(cantrip_name) {
 
 }

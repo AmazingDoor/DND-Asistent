@@ -144,6 +144,8 @@ def ensureClassData(file_path):
         data["class_cantrips"] = []
     if "use_spell_book" not in data:
         data["use_spell_book"] = False
+    if "concentration" not in data:
+        data["concentration"] = None
 
     if(data != base_data):
         safe_write_json(data, file_path)

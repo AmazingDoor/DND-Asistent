@@ -1,5 +1,5 @@
 import { getPlayerHealth } from "./utils/character_sheet/character_data_handler.js";
-import { getClassName, getClassPreparedCantrips, getClassPreparedSpells, getClassSkills, getCurrentSpellSlots, getSpellSlotsUsed} from "./utils/character_sheet/mappers/class_mapper.js";
+import { getClassName, getClassPreparedCantrips, getClassPreparedSpells, getClassSkills, getConcentration, getCurrentSpellSlots} from "./utils/character_sheet/mappers/class_mapper.js";
 import { getRaceAbilities, getRaceLanguages, getRaceName, getRaceSkills, getSavedRaceAbilities, getSavedRaceSkills } from "./utils/character_sheet/mappers/race_mapper.js";
 import { emitAndWait } from "./utils/socket_emitter.js";
 import * as character_data_handler from "./utils/character_sheet/character_data_handler.js";
@@ -32,7 +32,8 @@ export async function saveInitiativeMod() {
 
 export async function saveClassData() {
     let class_data = {class_name: getClassName(), skills: getClassSkills(),
-        current_spell_slots: getCurrentSpellSlots(), used_spell_slots: getSpellSlotsUsed(), char_id: char_id};
+        current_spell_slots: getCurrentSpellSlots(), 
+        concentration: getConcentration(), char_id: char_id};
     await emitAndWait('save_player_class', class_data);
 }
 

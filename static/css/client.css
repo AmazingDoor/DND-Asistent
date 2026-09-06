@@ -3,6 +3,44 @@
     *::after {
         box-sizing: border-box;
     }
+    
+
+    .cantrip-stat-label {
+        margin-bottom: 0px;
+    }
+
+    .cantrip-stat-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .cantrip-stat-container div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        padding: 2px 2px 2px 2px;
+        margin-right: -1px;
+    }
+
+    .combat-cantrip-higher-level-container {
+        background-color: darkgray;
+    }
+
+    .combat-cantrip-bottom-container {
+        border-top: 1px solid black;
+    }
+
+    .combat-cantrip-description-container {
+        margin: 2px 5px 2px 5px;
+        background-color: white;
+        border: 2px solid black;
+        padding: 2px;
+    }
 
     .hit-die-display-container {
         display: flex;

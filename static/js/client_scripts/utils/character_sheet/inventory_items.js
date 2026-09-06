@@ -977,7 +977,7 @@ export class InventorySpellBook extends InventoryAddable {
         const remove_button = document.createElement('button');
         remove_button.textContent = "X";
         remove_button.addEventListener('click', () => {
-            removeItem(this);
+            this.removeAndSave();
         });
         remove_button_container.appendChild(remove_button);
 

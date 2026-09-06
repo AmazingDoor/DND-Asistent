@@ -18,7 +18,6 @@ let character_skills = {};
 let background_skills = [];
 let max_prepared_spells = 0;
 let prepared_spell_count = 0;
-let concentration = '';
 let health = 0;
 let max_health = 0;
 let speed = 0;
@@ -74,15 +73,6 @@ export function setMaxHealth(health) {
 
 export function getMaxHeath() {
     return max_health;
-}
-
-
-export function setConcentration(spell_name) {
-    concentration = spell_name;
-}
-
-export function getConcentration() {
-    return concentration;
 }
 
 export function getPreparedSpellCount() {

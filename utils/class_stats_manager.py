@@ -10,14 +10,16 @@ def save_player_class(data):
     class_name = data.get('class_name')
     current_spell_slots = data.get('current_spell_slots')
     spell_slots_used = data.get('spell_slots_used')
+    concentration = data.get('concentration')
     players_folder = get_players_folder()
     player_data = safe_read_json(f'{players_folder}\\{char_id}\\class_data.json')
     player_data['class_name'] = class_name
-    player_data['class_spells'] = []
-    player_data['clas_cantrips'] = []
+    #player_data['class_spells'] = []
+    #player_data['clas_cantrips'] = []
     player_data['current_spell_slots'] = current_spell_slots
     player_data['spell_slots_used'] = spell_slots_used
-    player_data = reset_player_skills(player_data)
+    player_data['concentration'] = concentration
+    #player_data = reset_player_skills(player_data)
     safe_write_json(player_data, f'{players_folder}\\{char_id}\\class_data.json')
     return True
 
@@ -61,9 +63,13 @@ def send_player_class_data(data):
     class_spells = player_data.get('class_spells') if player_data.get('class_spells') else []
     class_cantrips = player_data.get('class_cantrips') if player_data.get('class_cantrips') else []
 
+    concentration = player_data.get('concentration') if player_data.get('concentration') else []
+
     emit('build_character_class',
          {'class_name': class_name, 'class_skills': player_skills, 'use_spell_book': use_spell_book,
-          'spells': class_spells, 'current_spell_slots': player_current_spell_slots, 'spell_slots_used': player_spell_slots_used, 'cantrips': class_cantrips}, room=sid)
+          'spells': class_spells, 'current_spell_slots': player_current_spell_slots,
+          'spell_slots_used': player_spell_slots_used, 'cantrips': class_cantrips,
+          'concentration': concentration}, room=sid)
 
 
 def load_player_class(char_id, sid):
