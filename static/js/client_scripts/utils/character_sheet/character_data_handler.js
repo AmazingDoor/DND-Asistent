@@ -2,7 +2,7 @@ import { getClassSpells } from '../../../shared/spell_data_filterer.js';
 import { getPlayerLevel } from '../../player_level_handler.js';
 import { emitSignal } from '../socket_emitter.js';
 import {items} from './../../../shared/inventory/items.js';
-import { InventoryContainer, InventoryManager } from './inventory_items.js';
+import { CURRENCY_TYPES, InventoryContainer, InventoryManager } from './inventory_items.js';
 import { getClassName as get_class_name, getClassName } from './mappers/class_mapper.js';
 
 const char_id = sessionStorage.getItem('charId');
@@ -24,11 +24,86 @@ let speed = 0;
 let initiative_modifier = 0;
 let armor_class = 0;
 let inventory_handler =  null;
+let currency = [0, 0, 0, 0, 0];
 
 export async function InitializeCharacterDataHandler() {
     setMaxPreparedSpells();
     inventory_handler = await InventoryManager.Initialize();
     return true;
+}
+
+export function getAllCurrency() {
+    return currency;
+}
+
+export function getCurrencyOfType(currency_type) {
+    return currency[currency_type];
+}
+
+export function setAllCurrency(c) {
+    currency = c;
+}
+
+export function setCurrencyOfType(currency_type, currency_count) {
+    currency[currency_type] = currency_count;
+}
+
+export function addCurrencyOfType(currency_type, amount) {
+    console.log(currency);
+    currency[currency_type] = parseInt(currency[currency_type]) + parseInt(amount);
+}
+
+export function subtractCurrencyOfType(currency_type, amount) {
+    if(currency[currency_type] >= amount) {
+        currency[currency_type] -= amount;
+    } else {
+        tryRemoveLargerCoin(currency_type, amount);
+    }
+
+    if(currency[currency_type] < 0) {
+        currency[currency_type] = 0;
+    }
+    /*currency[currency_type] -= parseInt(amount);
+    if(parseInt(currency[currency_type]) < 0) {
+        if(currency_type > 0) {
+            const num_larger_coins = Math.ceil(parseInt(currency[currency_type]) / 100);
+            const enough_larger_coins = subtractCurrencyOfType(parseInt(currency[currency_type - 1]), num_larger_coins);
+            if(enough_larger_coins) {
+                parseInt(currency[currency_type]) += 100;
+                return true;
+            } else {
+                currency[currency_type] = 0;
+                return false;
+            }
+
+        } else {
+            return false;
+            setCurrencyOfType(0, 0);
+        }
+    }*/
+}
+
+export function tryRemoveLargerCoin(current_currency_type, current_coin_count) {
+    if(current_currency_type > CURRENCY_TYPES.PLATINUM) {
+
+        let num_larger_coins = Math.ceil(current_coin_count / 100);
+        let larger_coin_type = current_currency_type - 1;
+
+        if(currency[larger_coin_type] >= num_larger_coins) {
+            currency[larger_coin_type] -= num_larger_coins;
+            currency[current_currency_type] += (100 - current_coin_count);
+            return true;
+        } else {
+            const coin_remove_success = tryRemoveLargerCoin(larger_coin_type, num_larger_coins);
+            if(coin_remove_success) {
+                currency[current_currency_type] += (100 - current_coin_count);
+            }
+            return coin_remove_success;
+        }
+    } else {
+        setCurrencyOfType(CURRENCY_TYPES.PLATINUM, 0);
+        return false;
+    }
 }
 
 export function getInventoryHandler() {

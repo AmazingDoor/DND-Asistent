@@ -14,12 +14,9 @@ def save_player_class(data):
     players_folder = get_players_folder()
     player_data = safe_read_json(f'{players_folder}\\{char_id}\\class_data.json')
     player_data['class_name'] = class_name
-    #player_data['class_spells'] = []
-    #player_data['clas_cantrips'] = []
     player_data['current_spell_slots'] = current_spell_slots
     player_data['spell_slots_used'] = spell_slots_used
     player_data['concentration'] = concentration
-    #player_data = reset_player_skills(player_data)
     safe_write_json(player_data, f'{players_folder}\\{char_id}\\class_data.json')
     return True
 

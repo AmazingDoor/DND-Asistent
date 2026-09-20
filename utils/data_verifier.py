@@ -170,6 +170,8 @@ def ensureInventory(file_path):
 
     inventory = data["inventory"]
 
+    if "currency" not in inventory:
+        inventory["currency"] = []
     if "inv" not in inventory:
         inventory["inv"] = []
     if "weapon" not in inventory:

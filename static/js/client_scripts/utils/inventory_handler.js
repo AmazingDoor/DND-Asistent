@@ -51,7 +51,7 @@ export function setSavedInventory() {
 }
 
 export function clearInventory() {
-    character_data_handler.setInventory({inv: [], weapon: [], armor: []});
+    character_data_handler.setInventory({inv: [], weapon: [], armor: [], mount: []});
 }
 
 export function setDefaultInventory() {

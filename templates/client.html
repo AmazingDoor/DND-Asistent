@@ -8,7 +8,6 @@
     <script src="{{url_for('static', filename='js/character_id.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/client.js') }}"></script>
 
-    <!--<script type="module" src="{{ url_for('static', filename='dist/client-bundle.js') }}"></script>-->
 
 
   </head>
@@ -475,6 +474,9 @@
                       <div class="combat-category-tab" id="cantrips-tab">
                         Cantrips
                       </div>
+                      <div class="combat-category-tab" id="weapons-tab">
+                        Weapons
+                      </div>
                       <div class="tablinks-filler">
                       </div>
                     </div>
@@ -495,6 +497,11 @@
                       <div class="combat-category-page hidden" id="cantrips-page">
                         <h3>Cantrips</h3>
                         <div id="combat-cantrip-display-list">
+                        </div>
+                      </div>
+                      <div class="combat-category-page hidden" id="weapons-page">
+                        <h3>Weapons</h3>
+                        <div id="combat-weapon-display-list">
                         </div>
                       </div>
                     </div>

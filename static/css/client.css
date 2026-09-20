@@ -3,7 +3,91 @@
     *::after {
         box-sizing: border-box;
     }
+
+    .horizontal-container {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .stat-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        padding: 2px 2px 2px 2px;
+        margin-right: -1px;
+    }
+
+    .stat-label {
+        margin-bottom: 0px;
+    }
+
+    .combat-spell-stat-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        padding: 2px 2px 2px 2px;
+        margin-right: -1px;
+    }
+
+    .stat-container div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        padding: 2px 2px 2px 2px;
+        margin-right: -1px;
+    }
     
+
+    .combat-weapon-container {
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+        margin-bottom: 10px;
+        background-color: #ccc;
+    }
+
+    .combat-weapon-damage-container {
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px solid black;
+        margin-bottom: 2px;
+    }
+
+    .combat-weapon-properties-container {
+        background-color: darkgray;
+        margin-top: 2px;
+        padding: 0px 2px 0px 2px;
+    }
+
+    .weapon-stat-label {
+        margin-bottom: 0px;
+    }
+
+    .weapon-stat-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .weapon-stat-container div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        padding: 2px 2px 2px 2px;
+        margin-right: -1px;
+    }
 
     .cantrip-stat-label {
         margin-bottom: 0px;

@@ -172,7 +172,8 @@ def get_ipv4_address():
         s.close()
         return ip
     except Exception as e:
-        return f"Could not get IP: {e}"
+        print("WARNING: Could not find IP. Defaulting to local host")
+        return "127.0.0.1"
 
 
 def find_available_port(start=5000, end=65535, max_attempts=50):

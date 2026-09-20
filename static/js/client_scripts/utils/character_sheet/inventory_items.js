@@ -8,7 +8,7 @@ import { options as CLASS_LOADOUT_OPTIONS } from "../../../shared/inventory/clas
 import { saveInventory } from "../../save_handler.js";
 import { OTHER_ITEM_TYPES,  INVENTORY_ITEM_TYPES, ITEM_SOURCES, SPELL_BOOK_TYPES, ITEM_CLASSES} from "../../../shared/inventory/item_metadata.js";
 import { SpellOption, SpellOptionOverlay } from "../spell_overlay_classes.js";
-import { getMaxPreparedSpells, removeItem, setPreparedSpellCount } from "./character_data_handler.js";
+import { addCurrencyOfType, getCurrencyOfType, getMaxPreparedSpells, removeItem, setPreparedSpellCount, subtractCurrencyOfType } from "./character_data_handler.js";
 import { mounts as MOUNTS } from "../../../shared/inventory/mounts.js";
 import { bus, EVENTS, INITIAL_EVENTS } from "../event_bus.js";
 
@@ -110,11 +110,14 @@ export class InventoryManager {
 
     constructor(inventory) {
         this.character_inventory = inventory;
+
+        this.currency_inventory = new CurrencyInventory(0, 0, 0, 0, 0);
         this.items_inventory = new InventoryContainer("Inventory", ITEM_CLASSES.ITEM);
         this.weapons_inventory = new InventoryContainer("Weapons", ITEM_CLASSES.WEAPON);
         this.armor_inventory = new InventoryContainer("Armor", ITEM_CLASSES.ARMOR);
         this.mounts_inventory = new InventoryContainer("Mounts", ITEM_CLASSES.MOUNT);
 
+        this.currency_inventory.addTo(inventory_container);
         this.items_inventory.addTo(inventory_container);
         this.weapons_inventory.addTo(inventory_container);
         this.armor_inventory.addTo(inventory_container);
@@ -270,6 +273,16 @@ export class InventoryManager {
         return filtered_spells;
     }
 
+    getEquippedWeapons() {
+        let equipped_weapons = [];
+        this.weapons_inventory.items.forEach((weapon) => {
+            if(weapon.equipped) {
+                equipped_weapons.push(weapon.item_data);
+            }
+        });
+        return equipped_weapons;
+    }
+
     setDefaultClassData() {
         //set default data from the class chosen
         const class_data = getClassData();
@@ -327,6 +340,128 @@ export class InventoryManager {
     }
 }
 
+export const CURRENCY_TYPES = {
+    PLATINUM: 0,
+    GOLD: 1,
+    ELECTRUM: 2,
+    SILVER: 3,
+    COPPER: 4
+}
+
+export class CurrencyInventory {
+    constructor(pp, gp, ep, sp, cp) {
+        this.platinum_pieces = pp;
+        this.gold_pieces = gp;
+        this.electrum_pieces = ep;
+        this.silver_pieces = sp;
+        this.copper_pieces = cp;
+
+        this.main_div = document.createElement('div');
+
+        const update_currency_display_subscriptions = [EVENTS.CURRENCY_CHANGED];
+        bus.subscribeToEvents(update_currency_display_subscriptions, () => {this.updateCurrencyDisplay()});
+
+        this.buildItem();
+    }
+
+    buildItem() {
+        this.currency_sections = [];
+        const name_container = document.createElement('div');
+        this.main_div.appendChild(name_container);
+
+        const name = document.createElement('h3');
+        name.textContent = "Currency";
+        name_container.appendChild(name);
+
+        const currency_display = document.createElement('div');
+        this.main_div.appendChild(currency_display);
+
+        this.currency_sections.push(new CurrencySection("PP", CURRENCY_TYPES.PLATINUM));
+        this.currency_sections.push(new CurrencySection("GP", CURRENCY_TYPES.GOLD));
+        this.currency_sections.push(new CurrencySection("EP", CURRENCY_TYPES.ELECTRUM));
+        this.currency_sections.push(new CurrencySection("SP", CURRENCY_TYPES.SILVER));
+        this.currency_sections.push(new CurrencySection("CP", CURRENCY_TYPES.COPPER));
+
+        this.currency_sections.forEach((section) => {
+            section.addTo(currency_display);
+        });
+
+
+    }
+
+    updateCurrencyDisplay() {
+        this.currency_sections.forEach((section) => {
+            section.updateCurrencyDisplay();
+        });
+    }
+
+    addTo(parent) {
+        parent.appendChild(this.main_div);
+    }
+}
+
+
+export class CurrencySection {
+    constructor(name, currency_type) {
+        this.name = name;
+        this.currency_type = currency_type;
+        this.main_div = document.createElement('div');
+
+        this.buildItem();
+
+    }
+
+    buildItem() {
+        const title = document.createElement('h3');
+        title.textContent = this.name;
+        this.main_div.appendChild(title);
+
+        const count_container = document.createElement('div');
+        this.main_div.appendChild(count_container);
+
+        this.count = document.createElement('p');
+        this.count.textContent = 0;
+        count_container.appendChild(this.count);
+
+        const input_container = document.createElement('div');
+        this.main_div.appendChild(input_container);
+
+        this.currency_input = document.createElement('input');
+        this.currency_input.type = "number";
+        this.currency_input.value = 1;
+
+        this.add_currency_button = document.createElement('button');
+        this.add_currency_button.textContent = "+";
+        this.add_currency_button.addEventListener("click", () => {
+            addCurrencyOfType(this.currency_type, this.currency_input.value);
+            this.currency_input.value = 1;
+            this.updateCurrencyDisplay();
+        });
+        input_container.appendChild(this.add_currency_button);
+
+
+        input_container.appendChild(this.currency_input);
+
+        this.subtract_currency_button = document.createElement('button');
+        this.subtract_currency_button.textContent = "-";
+        this.subtract_currency_button.addEventListener("click", () => {
+            subtractCurrencyOfType(this.currency_type, this.currency_input.value);
+            this.currency_input.value = 1;
+            bus.publish(EVENTS.CURRENCY_CHANGED);
+        });
+        input_container.appendChild(this.subtract_currency_button);
+
+    }
+
+    updateCurrencyDisplay() {
+        const currency = getCurrencyOfType(this.currency_type);
+        this.count.textContent = currency;
+    }
+
+    addTo(parent) {
+        parent.appendChild(this.main_div);
+    }
+}
 
 
 export class InventoryContainer {
@@ -597,6 +732,7 @@ export class InventoryItem extends InventoryAddable {
 
                 this.equipped_checkbox.addEventListener("input", async () => {
                     this.equipped = !this.equipped;
+                    this.emitEquppedSignal();
                     await saveInventory();
                 });
 
@@ -612,6 +748,21 @@ export class InventoryItem extends InventoryAddable {
         this.item_div.appendChild(this.remove_button);
 
 
+    }
+
+    emitEquppedSignal() {
+        switch(this.item_data.item_class) {
+            case ITEM_CLASSES.ITEM:
+                break;
+            case ITEM_CLASSES.ARMOR:
+                bus.publish(EVENTS.ARMOR_EQUIPPED);
+                break;
+            case ITEM_CLASSES.WEAPON:
+                bus.publish(EVENTS.WEAPON_EQUIPPED);
+                break;
+            case ITEM_CLASSES.MOUNT:
+                break; 
+        }
     }
 
     getItemDict() {

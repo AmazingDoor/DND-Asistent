@@ -11,6 +11,7 @@ import { InventoryManager } from "../../inventory_items.js";
 const concentrationSpellName = document.getElementById('concentration-spell-name');
 const spellSlotDisplays = document.getElementById('spell-slot-displays');
 const spellDisplayList = document.getElementById('combat-spell-display-list');
+const weapon_display_list = document.getElementById('combat-weapon-display-list');
 const resetSpellsButton = document.getElementById('reset-spell-slots-button');
 
 const cantrip_display_list = document.getElementById('combat-cantrip-display-list');
@@ -35,6 +36,9 @@ const update_concentration_subscriptions = [INITIAL_EVENTS.UPDATE_CONCENTRATION,
 bus.subscribeToEvents(update_concentration_subscriptions, updateConcentrationSpell);
 
 resetSpellsButton.addEventListener("click", () => resetSpellsButtonPressed());
+
+const update_weapon_display_subscriptions = [INITIAL_EVENTS.UPDATE_WEAPON_DISPLAY, EVENTS.WEAPON_EQUIPPED];
+bus.subscribeToEvents(update_weapon_display_subscriptions, updateWeaponDisplay);
 
 function resetSpellsButtonPressed() {
     const max_spell_slots = getMagicSlots(getClassName()).spell_slots[getPlayerLevel() - 1];
@@ -129,6 +133,14 @@ function updateCantripDisplay() {
         }
 }
 
+function updateWeaponDisplay() {
+    weapon_display_list.textContent = '';
+    const equipped_weapons = InventoryManager.instance.getEquippedWeapons();
+    equipped_weapons.forEach((weapon_data) => {
+        addWeapon(weapon_data);
+    });
+}
+
 function addEmpty(container) {
     const emtpyContainer = document.createElement('div');
     emtpyContainer.classList.add("combat-empty-container");
@@ -147,7 +159,6 @@ function addSpell(spell_data) {
 
 class CombatSpell {
     constructor(spellData) {
-        console.log(spellData);
         this.spell_data = spellData;
         this.spell_container = document.createElement('div');
         this.spell_container.classList.add("combat-spell-container");
@@ -291,6 +302,28 @@ class CombatSpell {
             this.expandSpellContainer(); 
         });
 
+        this.stat_container = document.createElement('div');
+        this.stat_container.classList.add('combat-spell-stat-container');
+        this.hidden_data_container.appendChild(this.stat_container);
+
+        const material_container = document.createElement('div');
+        material_container.classList.add("horizontal-container");
+        this.hidden_data_container.appendChild(material_container);
+
+        const material_label_container = document.createElement('div');
+        material_container.appendChild(material_label_container);
+
+        const material_value_container = document.createElement('div');
+        material_container.appendChild(material_value_container);
+
+        const material_label = document.createElement('p');
+        material_label.textContent = "Material: ";
+        material_label_container.appendChild(material_label);
+
+        const material_value = document.createElement('p');
+        material_value.textContent = this.spell_data.material;
+        material_value_container.appendChild(material_value);
+
         const spell_description_container = document.createElement('div');
         spell_description_container.classList.add('spell-description-container');
         this.hidden_data_container.appendChild(spell_description_container);
@@ -301,7 +334,27 @@ class CombatSpell {
             spell_description.textContent += description;
         });
         spell_description_container.appendChild(spell_description);
+        console.log(this.spell_data);
+        this.addStat("Range: ", this.spell_data.range);
+        this.addStat("Duration: ", this.spell_data.duration);
+        this.addStat("Components: ", this.spell_data.components);
+        this.addStat("School", this.spell_data.school);
 
+    }
+
+    addStat(label_text, value) {
+        const container = document.createElement('div');
+        container.classList.add('stat-container');
+        this.stat_container.appendChild(container);
+
+        const label = document.createElement('p');
+        label.classList.add('stat-label');
+        label.textContent = label_text;
+        container.appendChild(label);
+
+        const value_txt = document.createElement('p');
+        value_txt.textContent = value;
+        container.appendChild(value_txt);
     }
 
     disableCastButton() {
@@ -403,7 +456,6 @@ function addCantrip(cantrip_data){
 class CombatCantrip {
      constructor(cantripData) {
         this.cantrip_data = cantripData;
-        console.log(this.cantrip_data);
         this.cantrip_container = document.createElement('div');
         this.cantrip_container.classList.add("combat-spell-container");
         this.buildCantrip();
@@ -554,5 +606,97 @@ class CombatCantrip {
 }
 
 function addWeapon(weapon_data) {
+    const combat_weapon = new CombatWeapon(weapon_data);
+    combat_weapon.addToParent(weapon_display_list);
+}
 
+class CombatWeapon {
+    constructor(weapon_data) {
+        this.weapon_data = weapon_data;
+        this.weapon_div = document.createElement('div');
+        this.weapon_div.classList.add('combat-weapon-container');
+        this.buildWeapon();
+    }
+
+    buildWeapon() {
+        const name_container = document.createElement('div');
+        this.weapon_div.appendChild(name_container);
+
+        const name_text = document.createElement('h3');
+        name_text.textContent = this.weapon_data.name;
+        name_container.appendChild(name_text);
+
+        if(Object.hasOwn(this.weapon_data, "damage")) {
+            const damage_container = document.createElement('div');
+            damage_container.classList.add('combat-weapon-damage-container');
+            this.weapon_div.appendChild(damage_container);
+
+            const damage_label = document.createElement('p');
+            damage_label.textContent = "Damage: ";
+            damage_container.appendChild(damage_label);
+
+            const damage = this.weapon_data.damage;
+            const damage_string = damage.count + "d" + damage.die;
+
+            const damage_txt = document.createElement('p');
+            damage_txt.textContent = damage_string;
+            damage_container.appendChild(damage_txt);
+        }
+
+        this.stat_container = document.createElement('div');
+        this.stat_container.classList.add('weapon-stat-container');
+        this.weapon_div.appendChild(this.stat_container);
+
+        const cost = this.weapon_data.cost;
+        const cost_text = cost.amount + " " + cost.unit;
+        this.addStat("Cost: ", cost_text);
+        this.addStat("Damage Type: ", this.weapon_data.damage_type);
+        this.addStat("Weight: ", this.weapon_data.weight);
+        if(this.weapon_data.properties.length > 0) {
+            const properties_container = document.createElement('div');
+            properties_container.classList.add('combat-weapon-properties-container', 'horizontal-container');
+            this.weapon_div.appendChild(properties_container);
+
+            const properties_label_container = document.createElement('div');
+            properties_container.appendChild(properties_label_container);
+
+            const properties_value_container = document.createElement('div');
+            properties_container.appendChild(properties_value_container)
+
+            const properties_label = document.createElement('p');
+            properties_label.textContent = "Properties: ";
+            properties_label_container.appendChild(properties_label);
+
+            const properties_value = document.createElement('p');
+            properties_value_container.appendChild(properties_value);
+
+            let i = 0;
+            this.weapon_data.properties.forEach((property) => {
+                properties_value.textContent += property;
+                if(i < this.weapon_data.properties.length - 1) {
+                    properties_value.textContent += "; ";
+                }
+                i++;
+            });        
+        }
+    }
+
+    addStat(label_text, value) {
+        const container = document.createElement('div');
+        this.stat_container.appendChild(container);
+
+        const stat_label = document.createElement('p');
+        stat_label.classList.add('weapon-stat-label');
+        stat_label.textContent = label_text;
+        container.appendChild(stat_label);
+
+        const stat_value = document.createElement('p');
+        stat_value.textContent = value;
+        container.appendChild(stat_value);
+
+    }
+
+    addToParent(parent) {
+        parent.appendChild(this.weapon_div);
+    }
 }
