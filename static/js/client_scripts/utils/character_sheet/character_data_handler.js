@@ -86,17 +86,18 @@ export function subtractCurrencyOfType(currency_type, amount) {
 export function tryRemoveLargerCoin(current_currency_type, current_coin_count) {
     if(current_currency_type > CURRENCY_TYPES.PLATINUM) {
 
-        let num_larger_coins = Math.ceil(current_coin_count / 100);
-        let larger_coin_type = current_currency_type - 1;
+        const num_larger_coins = Math.ceil(current_coin_count / 100);
+        const larger_coin_type = current_currency_type - 1;
 
         if(currency[larger_coin_type] >= num_larger_coins) {
             currency[larger_coin_type] -= num_larger_coins;
-            currency[current_currency_type] += (100 - current_coin_count);
+            currency[current_currency_type] += ((100 * num_larger_coins) - current_coin_count);
+            console.log(100 - current_coin_count);
             return true;
         } else {
             const coin_remove_success = tryRemoveLargerCoin(larger_coin_type, num_larger_coins);
             if(coin_remove_success) {
-                currency[current_currency_type] += (100 - current_coin_count);
+                currency[current_currency_type] += ((100 * num_larger_coins) - current_coin_count);
             }
             return coin_remove_success;
         }
