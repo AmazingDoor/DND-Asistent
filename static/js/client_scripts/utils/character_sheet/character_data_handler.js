@@ -1,6 +1,6 @@
 import { getClassSpells } from '../../../shared/spell_data_filterer.js';
 import { getPlayerLevel } from '../../player_level_handler.js';
-import { emitSignal } from '../socket_emitter.js';
+import { emitSignal, getSocket } from '../socket_emitter.js';
 import {items} from './../../../shared/inventory/items.js';
 import { CURRENCY_TYPES, InventoryContainer, InventoryManager } from './inventory_items.js';
 import { getClassName as get_class_name, getClassName } from './mappers/class_mapper.js';
@@ -29,7 +29,19 @@ let currency = [0, 0, 0, 0, 0];
 export async function InitializeCharacterDataHandler() {
     setMaxPreparedSpells();
     inventory_handler = await InventoryManager.Initialize();
+    await setSavedCurrency();
     return true;
+}
+
+async function setSavedCurrency() {
+    emitSignal('require_currency', {char_id: char_id});
+    return new Promise((resolve) => {
+        getSocket().once('sent_currency', data => {
+            const c = data['currency'];
+            currency = c;
+            resolve(data);
+        });
+    })
 }
 
 export function getAllCurrency() {

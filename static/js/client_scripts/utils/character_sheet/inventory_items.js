@@ -5,7 +5,7 @@ import { emitAndWait, emitSignal, getSocket } from "../socket_emitter.js";
 import { weapons, weapons as WEAPONS } from "../../../shared/inventory/weapons.js";
 import { getAllArmors } from "../../../shared/inventory/armor.js";
 import { options as CLASS_LOADOUT_OPTIONS } from "../../../shared/inventory/class_loadout_options.js";
-import { saveInventory } from "../../save_handler.js";
+import { saveCurrency, saveInventory } from "../../save_handler.js";
 import { OTHER_ITEM_TYPES,  INVENTORY_ITEM_TYPES, ITEM_SOURCES, SPELL_BOOK_TYPES, ITEM_CLASSES} from "../../../shared/inventory/item_metadata.js";
 import { SpellOption, SpellOptionOverlay } from "../spell_overlay_classes.js";
 import { addCurrencyOfType, getCurrencyOfType, getMaxPreparedSpells, removeItem, setPreparedSpellCount, subtractCurrencyOfType } from "./character_data_handler.js";
@@ -357,8 +357,9 @@ export class CurrencyInventory {
         this.copper_pieces = cp;
 
         this.main_div = document.createElement('div');
+        this.main_div.classList.add('currency-inventory');
 
-        const update_currency_display_subscriptions = [EVENTS.CURRENCY_CHANGED];
+        const update_currency_display_subscriptions = [EVENTS.CURRENCY_CHANGED, INITIAL_EVENTS.UPDATE_CURRENCY];
         bus.subscribeToEvents(update_currency_display_subscriptions, () => {this.updateCurrencyDisplay()});
 
         this.buildItem();
@@ -367,6 +368,7 @@ export class CurrencyInventory {
     buildItem() {
         this.currency_sections = [];
         const name_container = document.createElement('div');
+        name_container.classList.add('currency-inventory-name-container');
         this.main_div.appendChild(name_container);
 
         const name = document.createElement('h3');
@@ -374,6 +376,7 @@ export class CurrencyInventory {
         name_container.appendChild(name);
 
         const currency_display = document.createElement('div');
+        currency_display.classList.add('currency-display');
         this.main_div.appendChild(currency_display);
 
         this.currency_sections.push(new CurrencySection("PP", CURRENCY_TYPES.PLATINUM));
@@ -406,6 +409,7 @@ export class CurrencySection {
         this.name = name;
         this.currency_type = currency_type;
         this.main_div = document.createElement('div');
+        this.main_div.classList.add('currency-display-main');
 
         this.buildItem();
 
@@ -424,6 +428,7 @@ export class CurrencySection {
         count_container.appendChild(this.count);
 
         const input_container = document.createElement('div');
+        input_container.classList.add('currency-display-input-container');
         this.main_div.appendChild(input_container);
 
         this.currency_input = document.createElement('input');
@@ -432,10 +437,11 @@ export class CurrencySection {
 
         this.add_currency_button = document.createElement('button');
         this.add_currency_button.textContent = "+";
-        this.add_currency_button.addEventListener("click", () => {
+        this.add_currency_button.addEventListener("click", async () => {
             addCurrencyOfType(this.currency_type, this.currency_input.value);
             this.currency_input.value = 1;
             this.updateCurrencyDisplay();
+            await saveCurrency();
         });
         input_container.appendChild(this.add_currency_button);
 
@@ -444,10 +450,11 @@ export class CurrencySection {
 
         this.subtract_currency_button = document.createElement('button');
         this.subtract_currency_button.textContent = "-";
-        this.subtract_currency_button.addEventListener("click", () => {
+        this.subtract_currency_button.addEventListener("click", async () => {
             subtractCurrencyOfType(this.currency_type, this.currency_input.value);
             this.currency_input.value = 1;
             bus.publish(EVENTS.CURRENCY_CHANGED);
+            await saveCurrency();
         });
         input_container.appendChild(this.subtract_currency_button);
 

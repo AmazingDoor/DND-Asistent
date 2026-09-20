@@ -66,6 +66,12 @@ export async function saveRaceSkills() {
 export async function saveInventory() {
     let data = {char_id: char_id, inventory: character_data_handler.getInventoryHandler().getSaveData()};
     await emitAndWait('save_inventory', data);
+    await saveCurrency();
+}
+
+export async function saveCurrency() {
+    let data = {char_id: char_id, currency: character_data_handler.getAllCurrency()};
+    await emitAndWait('save_currency', data);
 }
 
 export async function saveAbilities() {

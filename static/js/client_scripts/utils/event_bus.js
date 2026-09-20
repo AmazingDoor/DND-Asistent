@@ -63,7 +63,8 @@ export const INITIAL_EVENTS = {
     DISABLE_PREPARED_SPELL_CHECKBOXES: "disable_prepared_spell_checkboxes",
     UPDATE_CANTRIP_DISPLAY: "update_cantrip_display",
     UPDATE_CONCENTRATION: "update_concentration",
-    UPDATE_WEAPON_DISPLAY: "update_weapon_display"
+    UPDATE_WEAPON_DISPLAY: "update_weapon_display",
+    UPDATE_CURRENCY: "update_currency"
 };
 
 export const SAVE_EVENTS = {
