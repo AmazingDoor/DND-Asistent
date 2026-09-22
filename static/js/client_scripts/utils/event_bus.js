@@ -64,7 +64,8 @@ export const INITIAL_EVENTS = {
     UPDATE_CANTRIP_DISPLAY: "update_cantrip_display",
     UPDATE_CONCENTRATION: "update_concentration",
     UPDATE_WEAPON_DISPLAY: "update_weapon_display",
-    UPDATE_CURRENCY: "update_currency"
+    UPDATE_CURRENCY: "update_currency",
+    UPDATE_REMOVE_EXACT_CHECKBOX: "update_remove_exact_checkbox"
 };
 
 export const SAVE_EVENTS = {

@@ -16,54 +16,21 @@ def ensureExsistingFiles(PLAYERS_FOLDER, char_id, name):
 
     if not os.path.exists(basic_data_path):
         open(basic_data_path, "w").close()
-        '''char_data = {
-            "name": name,
-            "imgs": [],
-            "health": 0,
-            "ac": 0,
-            "max_health": 0,
-            "states_text": '',
-            "player_level": 1,
-            "speed": 0,
-            "init_mod": 0
-        }
-        safe_write_json(char_data, f"{PLAYERS_FOLDER}\\{char_id}\\basic_data.json")'''
 
     if not os.path.exists(abilities_path):
         open(abilities_path, "w").close()
-        '''char_data = {"abilities": {"str_num": 0, "dex_num": 0, "con_num": 0, "int_num": 0, "wis_num": 0, "cha_num": 0}}
-        safe_write_json(char_data, f"{PLAYERS_FOLDER}\\{char_id}\\abilities.json")'''
 
     if not os.path.exists(class_data_path):
         open(class_data_path, "w").close()
-        '''char_data = {
-            "class_name": "Select Class",
-            "player_skills": [0, []],
-            "class_skills": [0, []],
-            "class_spells": [],
-            "class_cantrips": []
-
-        }
-        safe_write_json(char_data, f"{PLAYERS_FOLDER}\\{char_id}\\class_data.json")'''
 
     if not os.path.exists(race_data_path):
         open(race_data_path, "w").close()
-        '''char_data = {
-            "race_name": "Select Race",
-            "race_abilities": {},
-            "race_languages": []
-        }
-        safe_write_json(char_data, f"{PLAYERS_FOLDER}\\{char_id}\\race_data.json")'''
 
     if not os.path.exists(messages_path):
         open(messages_path, "w").close()
-        '''char_data = {"messages": []}
-        safe_write_json(char_data, f"{PLAYERS_FOLDER}\\{char_id}\\messages.json")'''
 
     if not os.path.exists(inventory_path):
         open(inventory_path, "w").close()
-        '''char_data = {"inventory": None}
-        safe_write_json(char_data, f"{PLAYERS_FOLDER}\\{char_id}\\inventory.json")'''
     ensureBasicData(basic_data_path, name)
     ensureAbilitiesData(abilities_path)
     ensureClassData(class_data_path)
@@ -170,8 +137,10 @@ def ensureInventory(file_path):
 
     inventory = data["inventory"]
 
-    if "currency" not in inventory:
-        inventory["currency"] = []
+    if "currency" not in data:
+        data["currency"] = []
+    if "remove_amount" not in data or data["remove_amount"] is None:
+        data["remove_amount"] = True
     if "inv" not in inventory:
         inventory["inv"] = []
     if "weapon" not in inventory:

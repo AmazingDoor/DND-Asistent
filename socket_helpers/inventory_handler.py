@@ -21,9 +21,11 @@ def save_currency(data):
     players_folder = get_players_folder()
 
     currency = data.get('currency')
+    remove_amount = data.get('remove_amount')
     char_id = data.get('char_id')
     j = safe_read_json(f'{players_folder}\\{char_id}\\inventory.json')
     j['currency'] = currency
+    j['remove_amount'] = remove_amount
     safe_write_json(j, f'{players_folder}\\{char_id}\\inventory.json')
     return True
 
@@ -33,5 +35,6 @@ def send_currency_data(data):
     sid = ID_TO_CLIENT.get(char_id)
     base_folder = f"{get_players_folder()}\\{char_id}\\"
     currency = safe_read_json(base_folder + "inventory.json").get("currency")
-    emit('sent_currency', {"currency": currency, }, room=sid)
+    remove_amount = safe_read_json(base_folder + "inventory.json").get("remove_amount")
+    emit('sent_currency', {"currency": currency, "remove_amount": remove_amount}, room=sid)
 

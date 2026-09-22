@@ -8,7 +8,7 @@ import { options as CLASS_LOADOUT_OPTIONS } from "../../../shared/inventory/clas
 import { saveCurrency, saveInventory } from "../../save_handler.js";
 import { OTHER_ITEM_TYPES,  INVENTORY_ITEM_TYPES, ITEM_SOURCES, SPELL_BOOK_TYPES, ITEM_CLASSES} from "../../../shared/inventory/item_metadata.js";
 import { SpellOption, SpellOptionOverlay } from "../spell_overlay_classes.js";
-import { addCurrencyOfType, getCurrencyOfType, getMaxPreparedSpells, removeItem, setPreparedSpellCount, subtractCurrencyOfType } from "./character_data_handler.js";
+import { addCurrencyOfType, getCurrencyOfType, getMaxPreparedSpells, subtractCurrencyOfType, removeExactCurrency, setRemoveExactCurrency } from "./character_data_handler.js";
 import { mounts as MOUNTS } from "../../../shared/inventory/mounts.js";
 import { bus, EVENTS, INITIAL_EVENTS } from "../event_bus.js";
 
@@ -361,6 +361,8 @@ export class CurrencyInventory {
 
         const update_currency_display_subscriptions = [EVENTS.CURRENCY_CHANGED, INITIAL_EVENTS.UPDATE_CURRENCY];
         bus.subscribeToEvents(update_currency_display_subscriptions, () => {this.updateCurrencyDisplay()});
+        const update_checkbox_subscriptions = [INITIAL_EVENTS.UPDATE_REMOVE_EXACT_CHECKBOX];
+        bus.subscribeToEvents(update_checkbox_subscriptions, () => {this.updateCheckbox()})
 
         this.buildItem();
     }
@@ -374,6 +376,24 @@ export class CurrencyInventory {
         const name = document.createElement('h3');
         name.textContent = "Currency";
         name_container.appendChild(name);
+
+        const remove_exact_amount_container = document.createElement('div');
+        remove_exact_amount_container.classList.add('remove-exact-amount-container');
+        this.main_div.appendChild(remove_exact_amount_container);
+
+        const remove_exact_label = document.createElement('p');
+        remove_exact_label.textContent = "Remove Exact Amount";
+        remove_exact_amount_container.appendChild(remove_exact_label);
+
+        this.remove_exact_input = document.createElement('input');
+        this.remove_exact_input.type = "checkbox";
+        this.remove_exact_input.checked = true;
+        this.remove_exact_input.addEventListener("click", () => {
+            setRemoveExactCurrency(this.remove_exact_input.checked);
+            saveCurrency();
+        });
+        remove_exact_amount_container.appendChild(this.remove_exact_input);
+
 
         const currency_display = document.createElement('div');
         currency_display.classList.add('currency-display');
@@ -390,6 +410,10 @@ export class CurrencyInventory {
         });
 
 
+    }
+
+    updateCheckbox() {
+        this.remove_exact_input.checked = removeExactCurrency();
     }
 
     updateCurrencyDisplay() {

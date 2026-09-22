@@ -53,6 +53,12 @@
         width: 50px;
     }
 
+    .remove-exact-amount-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
     .stat-container {
         display: flex;
         flex-direction: row;

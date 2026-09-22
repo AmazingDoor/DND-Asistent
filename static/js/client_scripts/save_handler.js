@@ -70,9 +70,9 @@ export async function saveInventory() {
 }
 
 export async function saveCurrency() {
-    let data = {char_id: char_id, currency: character_data_handler.getAllCurrency()};
+    let data = {char_id: char_id, currency: character_data_handler.getAllCurrency(), remove_amount: character_data_handler.removeExactCurrency()};
     await emitAndWait('save_currency', data);
-}
+} 
 
 export async function saveAbilities() {
     const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();

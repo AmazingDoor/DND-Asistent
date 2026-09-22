@@ -25,6 +25,7 @@ let initiative_modifier = 0;
 let armor_class = 0;
 let inventory_handler =  null;
 let currency = [0, 0, 0, 0, 0];
+let remove_exact_currency = true;
 
 export async function InitializeCharacterDataHandler() {
     setMaxPreparedSpells();
@@ -38,10 +39,21 @@ async function setSavedCurrency() {
     return new Promise((resolve) => {
         getSocket().once('sent_currency', data => {
             const c = data['currency'];
+            const remove_amount = data['remove_amount'];
             currency = c;
+            remove_exact_currency = remove_amount;
+
             resolve(data);
         });
     })
+}
+
+export function setRemoveExactCurrency(b) {
+    remove_exact_currency = b;
+}
+
+export function removeExactCurrency() {
+    return remove_exact_currency;
 }
 
 export function getAllCurrency() {
@@ -69,30 +81,16 @@ export function subtractCurrencyOfType(currency_type, amount) {
     if(currency[currency_type] >= amount) {
         currency[currency_type] -= amount;
     } else {
-        tryRemoveLargerCoin(currency_type, amount);
+        if(removeExactCurrency()) {
+            tryRemoveLargerCoin(currency_type, amount);
+        } else {
+            currency[currency_type] = 0;
+        }
     }
 
     if(currency[currency_type] < 0) {
         currency[currency_type] = 0;
     }
-    /*currency[currency_type] -= parseInt(amount);
-    if(parseInt(currency[currency_type]) < 0) {
-        if(currency_type > 0) {
-            const num_larger_coins = Math.ceil(parseInt(currency[currency_type]) / 100);
-            const enough_larger_coins = subtractCurrencyOfType(parseInt(currency[currency_type - 1]), num_larger_coins);
-            if(enough_larger_coins) {
-                parseInt(currency[currency_type]) += 100;
-                return true;
-            } else {
-                currency[currency_type] = 0;
-                return false;
-            }
-
-        } else {
-            return false;
-            setCurrencyOfType(0, 0);
-        }
-    }*/
 }
 
 export function tryRemoveLargerCoin(current_currency_type, current_coin_count) {
