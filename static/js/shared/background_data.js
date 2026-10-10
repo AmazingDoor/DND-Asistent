@@ -141,10 +141,10 @@ export const fold_hero = {
 }
 
 export const guild_artisan = {
-    skills: [],
-    languages: [[],0],
-    feature: {},
-    tool_profs: [],
+    skills: [SKILLS.INSIGHT, SKILLS.PERSUASION],
+    languages: [[],1],
+    feature: {name: "Guild Membership", description: "You have benifites from being in a guild. You must pay dues of 5gp per month."},
+    tool_profs: [{type: TOOL_PROF_TYPES.OPTION, name: "Artisan's Tool", options: item_data.getArtisanTools()}],
     weapons: {
         options: [],
         starting: [],
@@ -154,23 +154,23 @@ export const guild_artisan = {
         starting: [],
     },
     inventory: {
-        options: [],
-        starting: []
+        options: ['guild_artisan_inventory_1'],
+        starting: [{item: item_data.items.clothes_travelers, count: 1}]
     },
     currency: {
         cp: 0,
         sp: 0,
         ep: 0,
-        gp: 0,
+        gp: 15,
         pp: 0
     }
 }
 
 export const hermit = {
-    skills: [],
-    languages: [[],0],
-    feature: {},
-    tool_profs: [],
+    skills: [SKILLS.MEDICINE, SKILLS.RELIGION],
+    languages: [[],1],
+    feature: {name: "Discovery", description: "Seclusion gave you access to a descovery. The nature of your descovery depends on the nature of your seclusion."},
+    tool_profs: [{type: TOOL_PROF_TYPES.ITEM, name: "Herbalism kit"}],
     weapons: {
         options: [],
         starting: [],
@@ -181,22 +181,24 @@ export const hermit = {
     },
     inventory: {
         options: [],
-        starting: []
+        starting: [{item: item_data.items.case_map_or_scroll, count: 1}, {item: item_data.items.blanket, count: 1}, 
+            {item: item_data.items.clothes_common, count: 1}, {item: item_data.items.herbalism_kit, count: 1}
+        ]
     },
     currency: {
         cp: 0,
         sp: 0,
         ep: 0,
-        gp: 0,
+        gp: 5,
         pp: 0
     }
 }
 
 export const noble = {
-    skills: [],
-    languages: [[],0],
-    feature: {},
-    tool_profs: [],
+    skills: [SKILLS.HISTORY, SKILLS.PERSUASION],
+    languages: [[],1],
+    feature: {name: "Position of Privilege", description: "People are inclined to think the best of you."},
+    tool_profs: [{type: TOOL_PROF_TYPES.OPTION, name: "Gaming Set", options: item_data.getGameSets()}],
     weapons: {
         options: [],
         starting: [],
@@ -207,13 +209,15 @@ export const noble = {
     },
     inventory: {
         options: [],
-        starting: []
+        starting: [{item: item_data.items.clothes_fine, count: 1}, 
+            {item: item_data.items.signet_ring, count: 1}
+                ]
     },
     currency: {
         cp: 0,
         sp: 0,
         ep: 0,
-        gp: 0,
+        gp: 25,
         pp: 0
     }
 }
