@@ -1,6 +1,7 @@
 import * as weapon_data from './inventory/weapons.js';
 import * as armor_data from './inventory/armor.js';
 import * as item_data from './inventory/items.js';
+import { CLASSES } from './data_enums.js';
 import {options as selection_options} from './inventory/class_loadout_options.js';
 
 function setDefaultCount(l, t="weapon") {
@@ -33,38 +34,36 @@ export const other_item_types = {
     item_choice: 'item_choice'
 }
 
+export const PROFICIENCIES = {
+    [CLASSES.BARBARIAN]: {
+        saving_throws: ['Strength', 'Constitution'],
+        weapons: {
+            proficiencies: ["Simple Weapons", "Martial Weapons"],
+            options: ['barbarian_weapon_1', 'barbarian_weapon_2'],
+            starting: [{weapon: weapon_data.weapons.javelin, count: 4}]
 
-export const barbarian = {
-    saving_throws: ['Strength', 'Constitution'],
-    weapons: {
-        proficiencies: ["Simple Weapons", "Martial Weapons"],
-        options: ['barbarian_weapon_1', 'barbarian_weapon_2'],
-        starting: [{weapon: weapon_data.weapons.javelin, count: 4}]
+        },
+        armor: {
+            proficiencies: ["Light Armor", "Medium Armor", "Shields"],
+            options: [],
+            starting: []
+        },
+        tools: [],
+        skills: [2, ["Animal Handling", "Athletics", "Intimidation", "Nature", "Perception", "Survival"]],
+        inventory: {
+            options: [],
+            starting: [{item: item_data.items.explorers_pack, count: 1}]
+        }, 
+        hit_die: {
+            number: 1,
+            class: 12,
+            level_1: "12 + your Constitution modifier",
+            higher_level: "1 d12 (or 7) + your Constitution modifier per barbarian level after 1st"
 
+        }
     },
-    armor: {
-        proficiencies: ["Light Armor", "Medium Armor", "Shields"],
-        options: [],
-        starting: []
-    },
-    tools: [],
-    skills: [2, ["Animal Handling", "Athletics", "Intimidation", "Nature", "Perception", "Survival"]],
-    inventory: {
-        options: [],
-        starting: [{item: item_data.items.explorers_pack, count: 1}]
-    }, 
-    hit_die: {
-        number: 1,
-        class: 12,
-        level_1: "12 + your Constitution modifier",
-        higher_level: "1 d12 (or 7) + your Constitution modifier per barbarian level after 1st"
 
-    }
-};
-
-
-export const bard = {
-    saving_throws: ['Dexterity', 'Charisma'],
+    [CLASSES.BARD]: {saving_throws: ['Dexterity', 'Charisma'],
     weapons: {
         proficiencies: ["Simple Weapons", "Hand Crossbows", "Longswords", "Rapiers", "Shortswords"],
         options: ['bard_weapon_1'],
@@ -87,11 +86,8 @@ export const bard = {
         level_1: "8 + your Constitution modifier",
         higher_level: "1 d8 (or 5) + your Constitution modifier per bard level after 1st"
 
-    }
-};
-
-export const cleric = {
-    saving_throws: ['Wisdom', 'Charisma'],
+    }},
+    [CLASSES.CLERIC]: {saving_throws: ['Wisdom', 'Charisma'],
     weapons: {
         proficiencies: ["Simple Weapons"],
         options: ['cleric_weapon_1', 'cleric_weapon_2'],
@@ -114,12 +110,8 @@ export const cleric = {
         level_1: "8 + your Constitution modifier",
         higher_level: "1 d8 (or 5) + your Constitution modifier per cleric level after 1st"
 
-    }
-
-};
-
-export const druid = {
-    saving_throws: ["Intelligence", "Wisdom"],
+    }},
+    [CLASSES.DRUID]: {saving_throws: ["Intelligence", "Wisdom"],
     weapons: {
         proficiencies: ["Clubs", "Daggers", "Darts", "Javelins", "Maces", "Quarterstaffs", "Scimitars", "sickless", "Slings", "Spears"],
         options: ['druid_weapon_1', 'druid_weapon_2'],
@@ -142,12 +134,8 @@ export const druid = {
         level_1: "8 + your Constitution modifier",
         higher_level: "1 d8 (or 5) + your Constitution modifier per druid level after 1st"
 
-    }
-
-};
-
-export const fighter = {
-    saving_throws: ["Strength", "Constitution"],
+    }},
+    [CLASSES.FIGHTER]: {saving_throws: ["Strength", "Constitution"],
     weapons: {
         proficiencies: ["Simple Weapons", "Martial Weapons"],
         options: ['fighter_weapon_1', 'fighter_weapon_2'],
@@ -170,12 +158,8 @@ export const fighter = {
         level_1: "10 + your Constitution modifier",
         higher_level: "1 d10 (or 6) + your Constitution modifier per fighter level after 1st"
 
-    }
-
-};
-
-export const monk = {
-    saving_throws: ["Strength", "Dexterity"],
+    }},
+    [CLASSES.MONK]: {saving_throws: ["Strength", "Dexterity"],
     weapons: {
         proficiencies: ["Simple Weapons", "Shortswords"],
         options: ['monk_weapon_1'],
@@ -198,12 +182,8 @@ export const monk = {
         level_1: "8 + your Constitution modifier",
         higher_level: "1 d8 (or 5) + your Constitution modifier per monk level after 1st"
 
-    }
-
-};
-
-export const paladin = {
-    saving_throws: ["Wisdom", "Charisma"],
+    }},
+    [CLASSES.PALADIN]: {saving_throws: ["Wisdom", "Charisma"],
     weapons: {
         proficiencies: ["Simple Weapons", "Martial Weapons"],
         options: ['paladin_weapon_1', 'paladin_weapon_2'],
@@ -225,12 +205,8 @@ export const paladin = {
         level_1: "10 + your Constitution modifier",
         higher_level: "1 d10 (or 6) + your Constitution modifier per paladin level after 1st"
 
-    }
-
-};
-
-export const ranger = {
-    saving_throws: ["Strength", "Dexterity"],
+    }},
+    [CLASSES.RANGER]: {saving_throws: ["Strength", "Dexterity"],
     weapons: {
         proficiencies: ["Simple Weapons", "Martial Weapons"],
         options: ['ranger_weapon_1', 'ranger_weapon_1'],
@@ -253,12 +229,8 @@ export const ranger = {
         level_1: "10 + your Constitution modifier",
         higher_level: "1 d10 (or 6) + your Constitution modifier per ranger level after 1st"
 
-    }
-
-};
-
-export const rogue = {
-    saving_throws: ["Dexterity", "Intelligence"],
+    }},
+    [CLASSES.ROGUE]: {saving_throws: ["Dexterity", "Intelligence"],
     weapons: {
         proficiencies: ["Simple Weapons", "Hand Crossbows", "Longswords", "Rapiers", "Shortswords"],
         options: ['rogue_weapon_1', 'rogue_weapon_2'],
@@ -281,12 +253,8 @@ export const rogue = {
         level_1: "8 + your Constitution modifier",
         higher_level: "1 d8 (or 5) + your Constitution modifier per rogue level after 1st"
 
-    }
-
-};
-
-export const sorcerer = {
-    saving_throws: ["Constitution", "Charisma"],
+    }},
+    [CLASSES.SORCERER]: {saving_throws: ["Constitution", "Charisma"],
     weapons: {
         proficiencies: ["Daggers", "Darts", "Slings", "Quarterstaffs", "Light Crossbows"],
         options: ['sorcerer_weapon_1'],
@@ -309,12 +277,8 @@ export const sorcerer = {
         level_1: "6 + your Constitution modifier",
         higher_level: "1 d6 (or 4) + your Constitution modifier per sourcerer level after 1st"
 
-    }
-
-};
-
-export const warlock = {
-    saving_throws: ["Wisdom", "Charisma"],
+    }},
+    [CLASSES.WARLOCK]: {saving_throws: ["Wisdom", "Charisma"],
     weapons: {
         proficiencies: ["Simple Weapons"],
         options: ['warlock_weapon_1'],
@@ -337,12 +301,8 @@ export const warlock = {
         level_1: "8 + your Constitution modifier",
         higher_level: "1 d8 (or 5) + your Constitution modifier per warlock level after 1st"
 
-    }
-
-};
-
-export const wizard = {
-    saving_throws: ["Intelligence", "Wisdom"],
+    }},
+    [CLASSES.WIZARD]: {saving_throws: ["Intelligence", "Wisdom"],
     weapons: {
         proficiencies: ["Daggers", "Darts", "Slings", "Quarterstaffs", "Light Crossbows"],
         options: ['wizard_weapon_1'],
@@ -365,9 +325,8 @@ export const wizard = {
         level_1: "6 + your Constitution modifier",
         higher_level: "1 d6 (or 4) + your Constitution modifier per wizard level after 1st"
 
-    }
-
-};
+    }}
+}
 
 function getInstruments() {
     let instruments = [];

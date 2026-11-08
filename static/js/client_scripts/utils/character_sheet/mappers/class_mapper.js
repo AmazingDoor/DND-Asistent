@@ -3,7 +3,7 @@ import { getClassSpells, getPreparedSpellCount, getPreparedCantripCount, getMaxS
 import { getMagicSlots } from '../../../../shared/spell_caster_slot_map.js';
 import { getPlayerLevel } from '../../../player_level_handler.js';
 import { bus, EVENTS, SAVE_EVENTS } from '../../event_bus.js';
-
+import { CLASSES } from '../../../../shared/data_enums.js';
 let class_name = null;
 let socket = null;
 
@@ -276,18 +276,18 @@ export function getClassName() {
 
 export function getClassData() {
     const default_class_data = {
-        Barbarian: class_proficiencies.barbarian,
-        Bard: class_proficiencies.bard,
-        Cleric: class_proficiencies.cleric,
-        Druid: class_proficiencies.druid,
-        Fighter: class_proficiencies.fighter,
-        Monk: class_proficiencies.monk,
-        Paladin: class_proficiencies.paladin,
-        Ranger: class_proficiencies.ranger,
-        Rogue: class_proficiencies.rogue,
-        Sorcerer: class_proficiencies.sorcerer,
-        Warlock: class_proficiencies.warlock,
-        Wizard: class_proficiencies.wizard
+        Barbarian: class_proficiencies.PROFICIENCIES[CLASSES.BARBARIAN],
+        Bard: class_proficiencies.PROFICIENCIES[CLASSES.BARD],
+        Cleric: class_proficiencies.PROFICIENCIES[CLASSES.CLERIC],
+        Druid: class_proficiencies.PROFICIENCIES[CLASSES.DRUID],
+        Fighter: class_proficiencies.PROFICIENCIES[CLASSES.FIGHTER],
+        Monk: class_proficiencies.PROFICIENCIES[CLASSES.MONK],
+        Paladin: class_proficiencies.PROFICIENCIES[CLASSES.PALADIN],
+        Ranger: class_proficiencies.PROFICIENCIES[CLASSES.RANGER],
+        Rogue: class_proficiencies.PROFICIENCIES[CLASSES.ROGUE],
+        Sorcerer: class_proficiencies.PROFICIENCIES[CLASSES.SORCERER],
+        Warlock: class_proficiencies.PROFICIENCIES[CLASSES.WARLOCK],
+        Wizard: class_proficiencies.PROFICIENCIES[CLASSES.WIZARD]
     }
 
     return default_class_data[class_name] || null;
