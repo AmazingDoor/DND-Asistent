@@ -1,4 +1,5 @@
 import { getClassSpells } from '../../../shared/spell_data_filterer.js';
+import { ClassesHandler } from '../../classes_handler.js';
 import { getPlayerLevel } from '../../player_level_handler.js';
 import { emitSignal, getSocket } from '../socket_emitter.js';
 import {items} from './../../../shared/inventory/items.js';

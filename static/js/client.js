@@ -6,18 +6,15 @@ import './client_scripts/utils/dropdown_handler.js';
 import './client_scripts/player_display_tab_handler.js';
 import './client_scripts/utils/character_sheet/page_builders/inventory_builder.js';
 import './client_scripts/utils/character_sheet/page_builders/ability_builder.js';
-import { updateSpells } from './client_scripts/utils/spell_handler.js';
-import  * as mobile_button_handler from './client_scripts/mobile_button_handler.js';
-import * as class_builder from './client_scripts/utils/character_sheet/page_builders/class_builder.js';
-import * as race_builder from './client_scripts/utils/character_sheet/page_builders/race_builder.js';
-import {getRace} from './client_scripts/utils/character_sheet/mappers/race_mapper.js';
 import {setPlayerLevel} from './client_scripts/player_level_handler.js';
-import {updateAbilities, updateSkills} from './client_scripts/utils/display_stat_updater.js';
-import { calculateAbilities } from './client_scripts/utils/character_sheet/calculators/ability_calculator.js';
 import { bus, EVENTS } from './client_scripts/utils/event_bus.js';
 import { handleSpellSlotOnLevelUp } from './client_scripts/utils/character_sheet/mappers/class_mapper.js';
 import { getInitiativeModifier, getPlayerHealth, getSpeed, setInitiativeModifier, setMaxHealth, setPlayerHealth, setSpeed } from './client_scripts/utils/character_sheet/character_data_handler.js';
 import { saveInitiativeMod, savePlayerHealth, saveSpeed } from './client_scripts/save_handler.js';
+import { ClassesHandler } from './client_scripts/classes_handler.js';
+
+const classes_handler = new ClassesHandler();
+
 
 const socket = io({
     transports: ["websocket"]
@@ -56,6 +53,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         clientUpdateMaxHealth(max_health_input.value);
     });
     selectCharacter();
+
+    classes_handler.createClassTab();
 });
 
 function selectCharacter() {

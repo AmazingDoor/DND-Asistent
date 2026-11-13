@@ -14,6 +14,9 @@ import * as inventory_handler from '../../inventory_handler.js';
 import { bus, EVENTS, SAVE_EVENTS } from '../../event_bus.js';
 import { emitAndWait } from '../../socket_emitter.js';
 import { ITEM_SOURCES } from '../../../../shared/inventory/item_metadata.js';
+import { ClassTab } from '../../../class_tab.js';
+import { CLASSES } from '../../../../shared/data_enums.js';
+import { ClassesHandler } from '../../../classes_handler.js';
 
 
 let socket = null;
@@ -22,7 +25,6 @@ let name;
 let char_id;
 
 const build_character_class_subscriptions = [EVENTS.CLASS_CHANGED, EVENTS.LEVEL_UPDATED];
-
 
 export function setSocket(io) {
     socket = io;
