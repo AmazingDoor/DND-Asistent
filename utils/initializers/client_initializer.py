@@ -98,10 +98,10 @@ def requireRaceData(data):
     PLAYERS_FOLDER = get_players_folder()
     base_folder = f"{PLAYERS_FOLDER}\\{char_id}"
     race_file_data = safe_read_json(f"{base_folder}\\race_data.json")
-    race_data = {'race_skills': race_file_data.get('race_skills'),
-                 'race_abilities': race_file_data.get('race_abilities'),
-                 'race_languages': race_file_data.get('race_languages'),
-                 'race_name': race_file_data.get('race_name')}
+    race_data = {'skills': race_file_data.get('skills'),
+                 'abilities': race_file_data.get('abilities'),
+                 'languages': race_file_data.get('languages'),
+                 'race_id': race_file_data.get('race_id')}
     emit('sent_race_data', race_data, room=sid)
 
 @socketio.on("require_inventory")

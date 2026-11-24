@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     //classes_handler.createClassTab();
     await classes_handler.loadSaveData();
+    await race_handler.loadSaveData();
     ability_handler.getCharacterAbilityModifiers();
     
 

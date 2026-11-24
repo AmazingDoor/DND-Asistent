@@ -1,6 +1,7 @@
 import { ABILITIES, ABILITY_NAMES, RACE_NAMES, RACES } from "../shared/data_enums.js";
 import { OptionSelect } from "../shared/option_dropdown.js";
 import { getRaceData } from "../shared/race_features.js";
+import { saveRace as sendSaveRace } from "./save_handler.js";
 import { emitSignal } from "./utils/socket_emitter.js";
 
 export class RaceHandler {
@@ -13,12 +14,8 @@ export class RaceHandler {
         
         this.race_id = RACES.OPTION;
 
-        const race_selection = document.querySelector('.race-selection');
-
-        this.select_race_dropdown = new OptionSelect(this.buildRaceOptionArray(),
-        (opt) => this.onRaceSelected(opt));
-
-        this.select_race_dropdown.addTo(race_selection);
+        this.race_selection = document.querySelector('.race-selection');
+        this.createHeadder();
     }
 
     buildRaceOptionArray() {
@@ -35,12 +32,27 @@ export class RaceHandler {
         const race_id = opt.option_id;
         this.setRaceData(race_id);
         this.select_race_dropdown.setOptions(this.buildRaceOptionArray());
+        this.saveRace();
     }
 
     build() {
+        this.createHeadder();
         this.linked_ability_options = [];
         const race_data = getRaceData(this.race_id);
         this.createAbilities(race_data.abilities);
+    }
+
+    createHeadder() {
+        this.race_selection.textContent = '';
+
+        const race_label = document.createElement('h3');
+        race_label.textContent = "Race: ";
+        this.race_selection.appendChild(race_label);
+
+        this.select_race_dropdown = new OptionSelect(this.buildRaceOptionArray(),
+        (opt) => this.onRaceSelected(opt), RACE_NAMES[this.race_id]);
+
+        this.select_race_dropdown.addTo(this.race_selection);
     }
 
     createAbilities(abilities) {
@@ -63,8 +75,10 @@ export class RaceHandler {
                 row.appendChild(ability_value_text);
                 abilities_table.appendChild(row);       
             } else {
+                console.log(this.abilities);
                 const option_container = document.createElement('td');
-                const ability_option = new OptionSelect(this.createAbilityOptionArray(), (opt) => {this.raceAbilitySelected(opt, i)});
+                const option_id = this.abilities[i].id || ability_id;
+                const ability_option = new OptionSelect(this.createAbilityOptionArray(), (opt) => {this.raceAbilitySelected(opt, i)}, ABILITY_NAMES[option_id]);
                 ability_option.addTo(option_container);
                 this.linked_ability_options.push(ability_option);
                 row.appendChild(option_container);
@@ -96,6 +110,12 @@ export class RaceHandler {
         this.linked_ability_options.forEach((linked) => {
             linked.setOptions(this.createAbilityOptionArray());
         });
+
+        this.saveRace();
+    }
+
+    saveRace() {
+        sendSaveRace(this.getSaveData());
     }
 
     resetRaceData() {
@@ -121,23 +141,19 @@ export class RaceHandler {
             this.socket.once('sent_race_data', data => {
                 this.resetRaceData();
                 this.race_id = data.race_id;
-                this.selected_skills = data.selected_skills;
-                this.selected_languages = data.selected_languages;
-                this.selected_abilities = data.selected_abilities;
-                this.default_abilities = data.default_abilities;
-                this.default_languages = data.default_languages;
-                this.default_skills = data.default_skills;
+                this.skills = data.skills;
+                this.languages = data.languages;
+                this.abilities = data.abilities;
 
+                this.build();
                 resolve(data);
             });
         });
     }
 
     getSaveData() {
-        return {race_id: this.race_id, selected_skills: this.selected_skills,
-            selected_languages: this.selected_languages, selected_abilities: this.selected_abilities,
-            default_abilities: this.default_abilities, default_languages: this.default_languages,
-            default_skills: this.default_skills
+        return {race_id: this.race_id, skills: this.skills,
+            languages: this.languages, abilities: this.abilities,
         };
     }
 }

@@ -62,9 +62,11 @@ export async function saveRaceAbilities() {
     await emitAndWait('save_race_abilities', data);
 }
 
-export async function saveRace() {
-    let data = {race_name: getRaceName(), char_id: char_id};
-    await emitAndWait('save_race', data);
+export async function saveRace(save_data) {
+    const data = appendCharId(save_data);
+    await emitAndWait('save_race_data', data);
+    //let data = {race_name: getRaceName(), char_id: char_id};
+    //await emitAndWait('save_race', data);
 }
 
 export async function saveRaceLanguages() {

@@ -58,14 +58,14 @@ def ensureRaceData(file_path):
     base_data = safe_read_json(file_path)
     data = copy.deepcopy(base_data)
 
-    if "race_name" not in data:
-        data["race_name"] = ""
-    if "race_abilities" not in data:
-        data["race_abilities"] = []
-    if "race_languages" not in data:
-        data["race_languages"] = []
-    if "race_skills" not in data:
-        data["race_skills"] = []
+    if "race_id" not in data:
+        data["race_id"] = ""
+    if "skills" not in data:
+        data["skills"] = []
+    if "abilities" not in data:
+        data["abilities"] = []
+    if "languages" not in data:
+        data["languages"] = []
 
     if(data != base_data):
         safe_write_json(data, file_path)
