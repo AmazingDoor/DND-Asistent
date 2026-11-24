@@ -1,16 +1,18 @@
-export const high_elf = {
-  abilities: { dex: 2,  int: 1 },
+import { ABILITIES, LANGUAGES, SKILLS, RACES } from "./data_enums.js";
+
+export const HIGH_ELF = {
+  abilities: [{id: [ABILITIES.DEX], value: 2}, {id: [ABILITIES.INT], value: 1}],
   size: "Medium",
   speed: 30,
   features: ["Darkvision", "Keen Senses (Perception)", "Fey Ancestry", "Trance", "Elf Weapon Training"],
-  languages: [["Common", "Elvish"], 1], // 1 extra language choice
-  skills: ["Perception"],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.ELVISH], 1], // 1 extra language choice
+  skills: [SKILLS.PERCEPTION],
   cantrips: 1,
   spells: 0,
 };
 
-export const wood_elf = {
-  abilities: { dex: 2, wis: 1 },
+export const WOOD_ELF = {
+  abilities:[{id: [ABILITIES.DEX], value: 2}, {id: [ABILITIES.WIS], value: 1}],
   size: "Medium",
   speed: 35,
   features: [
@@ -21,14 +23,14 @@ export const wood_elf = {
     "Mask of the Wild",
     "Elf Weapon Training"
   ],
-  languages: [["Common", "Elvish"], 0],
-  skills: ["Perception"],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.ELVISH], 0],
+  skills: [SKILLS.PERCEPTION],
   cantrips: 0,
   spells: 0,
 };
 
-export const drow = {
-  abilities: { dex: 2, cha: 1 },
+export const DROW = {
+  abilities: [{id: [ABILITIES.DEX], value: 2}, {id: [ABILITIES.CHA], value: 1}],
   size: "Medium",
   speed: 30,
   features: [
@@ -39,14 +41,14 @@ export const drow = {
     "Drow Magic",
     "Sunlight Sensitivity",
   ],
-  languages: [["Common", "Elvish"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.ELVISH], 0],
   skills: ["Perception"],
   cantrips: 0,
   spells: 0,
 };
 
-export const hill_dwarf = {
-  abilities: { con: 2, wis: 1 },
+export const HILL_DWARF = {
+  abilities: [{id: [ABILITIES.CON], value: 2}, {id: [ABILITIES.WIS], value: 1}],
   size: "Medium",
   speed: 25,
   features: [
@@ -57,14 +59,14 @@ export const hill_dwarf = {
     "Stonecunning",
     "Dwarven Toughness (+1 HP per level)",
   ],
-  languages: [["Common", "Dwarvish"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.DWARVISH], 0],
   skills: [],
   cantrips: 0,
   spells: 0,
 };
 
-export const mountain_dwarf = {
-  abilities: { con: 2, str: 2 },
+export const MOUNTAIN_DWARF = {
+  abilities: [{id: [ABILITIES.CON], value: 2}, {id: [ABILITIES.STR], value: 2}],
   size: "Medium",
   speed: 25,
   features: [
@@ -75,130 +77,125 @@ export const mountain_dwarf = {
     "Stonecunning",
     "Dwarven Armor Training",
   ],
-  languages: [["Common", "Dwarvish"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.DWARVISH], 0],
   skills: [],
   cantrips: 0,
   spells: 0,
 };
 
-export const lightfoot_halfling = {
-  abilities: { dex: 2, cha: 1 },
+export const LIGHTFOOT_HALFLING = {
+  abilities: [{id: [ABILITIES.DEX], value: 2}, {id: [ABILITIES.CHA], value: 1}],
   size: "Small",
   speed: 25,
   features: ["Lucky", "Brave", "Halfling Nimbleness", "Naturally Stealthy"],
-  languages: [["Common", "Halfling"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.HALFLING], 0],
   skills: [],
   cantrips: 0,
   spells: 0,
 };
 
-export const stout_halfling = {
-  abilities: { dex: 2, con: 1 },
+export const STOUT_HALFLING = {
+  abilities: [{id: [ABILITIES.DEX], value: 2}, {id: [ABILITIES.CON], value: 1}],
   size: "Small",
   speed: 25,
   features: ["Lucky", "Brave", "Halfling Nimbleness", "Stout Resilience"],
-  languages: [["Common", "Halfling"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.HALFLING], 0],
   skills: [],
   cantrips: 0,
   spells: 0,
 };
 
-export const dragonborn = {
-  abilities: { str: 2, cha: 1 },
+export const DRAGONBORN = {
+  abilities: [{id: [ABILITIES.STR], value: 2}, {id: [ABILITIES.CHA], value: 1}],
   size: "Medium",
   speed: 30,
   features: ["Breath Weapon", "Damage Resistance (depends on draconic ancestry)"],
-  languages: [["Common", "Draconic"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.DRACONIC], 0],
   skills: [],
   cantrips: 0,
   spells: 0,
 };
 
-export const forest_gnome = {
-  abilities: { int: 2, dex: 1 },
+export const FOREST_GNOME = {
+  abilities: [{id: [ABILITIES.INT], value: 2}, {id: [ABILITIES.DEX], value: 1 }],
   size: "Small",
   speed: 25,
   features: ["Darkvision", "Gnome Cunning", "Minor Illusion Cantrip", "Speak with Small Beasts"],
-  languages: [["Common", "Gnomish"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.GNOMISH], 0],
   skills: [],
   cantrips: 1,
   spells: 0,
 };
 
-export const rock_gnome = {
-  abilities: { int: 2, con: 1 },
+export const ROCK_GNOME = {
+  abilities: [{id: [ABILITIES.INT], value: 2}, {id: [ABILITIES.CON], value: 1}],
   size: "Small",
   speed: 25,
   features: ["Darkvision", "Gnome Cunning", "Artificer’s Lore", "Tinker"],
-  languages: [["Common", "Gnomish"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.GNOMISH], 0],
   skills: [],
   cantrips: 0,
   spells: 0,
 };
 
-export const half_elf = {
-  abilities: { cha: 2, any: [1, 1] },
+export const HALF_ELF = {
+  abilities: [{id: [ABILITIES.CHA], value: 2}, {id: [ABILITIES.OPTION], value: 1}, {id: [ABILITIES.OPTION], value: 1}],
   size: "Medium",
   speed: 30,
   features: ["Darkvision", "Fey Ancestry", "Skill Versatility (2 skills)"],
-  languages: [["Common", "Elvish"], 1],
-  skills: ["Any", "Any"],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.ELVISH], 1],
+  skills: [SKILLS.OPTION, SKILLS.OPTION],
   cantrips: 0,
   spells: 0,
 };
 
-export const half_orc = {
-  abilities: { str: 2, con: 1 },
+export const HALF_ORC = {
+  abilities: [{id: [ABILITIES.STR], value: 2}, {id: [ABILITIES.CON], value: 1}],
   size: "Medium",
   speed: 30,
   features: ["Darkvision", "Relentless Endurance", "Savage Attacks"],
-  languages: [["Common", "Orc"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.ORC], 0],
   skills: [],
   cantrips: 0,
   spells: 0,
 };
 
-export const tiefling = {
-  abilities: { cha: 2, int: 1 },
+export const TIEFLING = {
+  abilities: [{id: [ABILITIES.CHA], value: 2}, {id: [ABILITIES.INT], value: 1}],
   size: "Medium",
   speed: 30,
   features: ["Darkvision", "Hellish Resistance (fire)", "Infernal Legacy (cantrips and spells)"],
-  languages: [["Common", "Infernal"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.INFERNAL], 0],
   skills: [],
   cantrips: 1,
   spells: 3,
 };
 
-export const human = {
-  abilities:
-    { str: 1,
-    dex: 1,
-    con: 1,
-    int: 1,
-    wis: 1,
-    cha: 1 },
+export const HUMAN = {
+  abilities: [{id: [ABILITIES.STR], value: 1}, {id: [ABILITIES.DEX], value: 1}, {id: [ABILITIES.CON], value: 1},
+   {id: [ABILITIES.INT], value: 1}, {id: [ABILITIES.WIS], value: 1}, {id: [ABILITIES.CHA], value: 1}],
   size: "Medium",
   speed: 30,
   features: [],
-  languages: [["Common"], 1],
+  languages: [[LANGUAGES.COMMON], 1],
   skills: [],
   cantrips: 0,
   spells: 0,
 };
 
-export const elf_generic = {
-  abilities: { dex: 2 },
+export const ELF_GENERIC = {
+  abilities: [{id: [ABILITIES.DEX], value: 2}],
   size: "Medium",
   speed: 30,
   features: ["Darkvision", "Keen Senses (Perception)", "Fey Ancestry", "Trance"],
-  languages: [["Common", "Elvish"], 0],
-  skills: ["Perception"],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.ELVISH], 0],
+  skills: [SKILLS.PERCEPTION],
   cantrips: 0,
   spells: 0,
 };
 
-export const dwarf_generic = {
-  abilities: { con: 2 },
+export const DWARF_GENERIC = {
+  abilities: [{id: [ABILITIES.CON], value: 2}],
   size: "Medium",
   speed: 25,
   features: [
@@ -208,30 +205,61 @@ export const dwarf_generic = {
     "Tool Proficiency",
     "Stonecunning",
   ],
-  languages: [["Common", "Dwarvish"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.DWARVISH], 0],
   skills: [],
   cantrips: 0,
   spells: 0,
 };
 
-export const halfling_generic = {
-  abilities: { dex: 2 },
+export const HALFLING_GENERIC = {
+  abilities: [{id: [ABILITIES.DEX], value: 2}],
   size: "Small",
   speed: 25,
   features: ["Lucky", "Brave", "Halfling Nimbleness"],
-  languages: [["Common", "Halfling"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.HALFLING], 0],
   skills: [],
   cantrips: 0,
   spells: 0,
 };
 
-export const gnome_generic = {
-  abilities: { int: 2 },
+export const GNOME_GENERIC = {
+  abilities: [{id: [ABILITIES.INT], value: 2}],
   size: "Small",
   speed: 25,
   features: ["Darkvision", "Gnome Cunning"],
-  languages: [["Common", "Gnomish"], 0],
+  languages: [[LANGUAGES.COMMON, LANGUAGES.GNOMISH], 0],
   skills: [],
   cantrips: 0,
   spells: 0,
 };
+
+export const EMPTY = {
+  abilities: [],
+  size: "",
+  speed: 25,
+  features: [],
+  skills: [],
+  cantrips: 0,
+  spells: 0
+}
+
+export function getRaceData(race) {
+    const data = {
+        [RACES.HIGH_ELF]: HIGH_ELF,
+        [RACES.WOOD_ELF]: WOOD_ELF,
+        [RACES.DROW]: DROW,
+        [RACES.HILL_DWARF]: HILL_DWARF,
+        [RACES.MOUNTAIN_DWARF]: MOUNTAIN_DWARF,
+        [RACES.LIGHTFOOT_HALFLING]: LIGHTFOOT_HALFLING,
+        [RACES.STOUT_HALFLING]: STOUT_HALFLING,
+        [RACES.DRAGONBORN]: DRAGONBORN,
+        [RACES.FOREST_GNOME]: FOREST_GNOME,
+        [RACES.ROCK_GNOME]: ROCK_GNOME,
+        [RACES.HALF_ELF]: HALF_ELF,
+        [RACES.HALF_ORC]: HALF_ORC,
+        [RACES.TIEFLING]: TIEFLING,
+        [RACES.HUMAN]: HUMAN,
+        [RACES.OPTION]: EMPTY
+    }
+    return data[race];
+}

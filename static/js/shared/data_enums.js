@@ -30,6 +30,44 @@ export const CLASS_NAMES = {
     [CLASSES.OPTION]: "Select Class"
 }
 
+export const RACES = {
+    HUMAN: "HUMAN",
+    HILL_DWARF: "HILL_DWARF",
+    MOUNTAIN_DWARF: "MOUNTAIN_DWARF",
+    STOUT_HALFLING: "STOUT_HALFLING",
+    LIGHTFOOT_HALFLING: "LIGHTFOOT_HALFLING",
+    DRAGONBORN: "DRAGONBORN",
+    DROW: "DROW",
+    FOREST_GNOME: "FOREST_GNOME",
+    ROCK_GNOME: "ROCK_GNOME",
+    HALF_ELF: "HALF_ELF",
+    HIGH_ELF: "HIGH_ELF",
+    WOOD_ELF: "WOOD_ELF",
+    HALF_ORC: "HALF_ORC",
+    TIEFLING: "TIEFLING",
+    OPTION: "OPTION"
+}
+
+export const RACE_NAMES = {
+    [RACES.HUMAN]: "Human",
+    [RACES.HILL_DWARF]: "Hill Dwarf",
+    [RACES.MOUNTAIN_DWARF]: "Mountain Dwarf",
+    [RACES.STOUT_HALFLING]: "Stout Halfling",
+    [RACES.LIGHTFOOT_HALFLING]: "Lightfoot Halfling",
+    [RACES.DRAGONBORN]: "Dragonborn",
+    [RACES.DROW]: "Drow",
+    [RACES.FOREST_GNOME]: "Forest Gnome",
+    [RACES.ROCK_GNOME]: "Rock Gnome",
+    [RACES.HALF_ELF]: "Half-elf",
+    [RACES.HIGH_ELF]: "High Elf",
+    [RACES.WOOD_ELF]: "Wood Elf",
+    [RACES.HALF_ORC]: "Half-orc",
+    [RACES.TIEFLING]: "Tiefling",
+    [RACES.OPTION]: "Select Race"
+}
+
+
+
 export const ABILITIES = {
     STR: "STR",
     DEX: "DEX",

@@ -5,6 +5,7 @@
     <title>DM Chat</title>
     <script src="{{url_for('static', filename='js/shared/socket_io.js')}}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/client.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tabs.css') }}">
     <script src="{{url_for('static', filename='js/character_id.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/client.js') }}"></script>
 
@@ -101,8 +102,11 @@
               </table>
             </div>
             <div class="class-stats character-sheet-tab-contents hidden" id="class-tab-contents">
-              <div id="selected-class-tab-bar">
-                <p>This is a tab bar</p>
+              <div id="class-top-section">
+                <button id="add-class-button">Add Class</button>
+              </div>
+              <div id="selected-class-tab-bar" class="horizontal-container">
+                <!--Class tabs go here-->
               </div>
               <div id="class-pages">
                   <!--class pages go here -->
@@ -170,27 +174,6 @@
             <div class="race-stats character-sheet-tab-contents hidden" id="race-tab-contents">
               <div class="race-selection">
                 <h3>Race: </h3>
-                <div class="race-selector dropdown-head">
-                  <p class="selected-race">Select Race</p>
-                  <div class="dropdown">
-                    <div class="race-options dropdown-content hidden">
-                      <div>Dragonborn</div>
-                      <div>Drow</div>
-                      <div>Forest Gnome</div>
-                      <div>Rock Gnome</div>
-                      <div>Half Elf</div>
-                      <div>High Elf</div>
-                      <div>Wood Elf</div>
-                      <div>Half Orc</div>
-                      <div>Hill Dwarf</div>
-                      <div>Mountain Dwarf</div>
-                      <div>Human</div>
-                      <div>Lightfoot Halfling</div>
-                      <div>Stout Halfling</div>
-                      <div>Tiefling</div>
-                    </div>
-                  </div>
-                </div>
               </div>
               <div class="race-abilities">
                 <h3>Abilities </h3>

@@ -4,20 +4,55 @@ from utils.file_manager import get_players_folder
 from utils.client_tracker import ID_TO_CLIENT
 
 
+@socketio.on('save_class_data')
+def save_class_data(data):
+    print(data)
+    players_folder = get_players_folder()
+
+    char_id = data.get('char_id')
+    classes = data.get('classes')
+
+    file_path = f'{players_folder}\\{char_id}\\class_data.json'
+    player_data = safe_read_json(file_path)
+
+    player_data['classes'] = classes
+
+    safe_write_json(player_data, file_path)
+
+
+    '''class_id = data.get('class_id')
+    chosen_skills = data.get('chosen_skills')
+    default_skills = data.get('default_skills')
+    class_spells = data.get('class_spells')
+    class_cantirps = data.get('class_cantrips')
+    use_spell_book = data.get('use_spell_book')
+    concentration = data.get('concentration')
+
+    player_data['class_id'] = class_id
+    player_data['chosen_skills'] = chosen_skills
+    player_data['default_skills'] = default_skills
+    player_data['class_spells'] = class_spells
+    player_data['class_cantrips'] = class_cantirps
+    player_data['use_spell_book'] = use_spell_book
+    player_data['concentration'] = concentration'''
+
+
+
 @socketio.on('save_player_class')
 def save_player_class(data):
+    return True
     char_id = data.get('char_id')
     class_name = data.get('class_name')
     current_spell_slots = data.get('current_spell_slots')
     spell_slots_used = data.get('spell_slots_used')
     concentration = data.get('concentration')
     players_folder = get_players_folder()
-    player_data = safe_read_json(f'{players_folder}\\{char_id}\\class_data.json')
+    player_data = safe_read_json(f'{players_folder}\\{char_id}\\class_data_old.json')
     player_data['class_name'] = class_name
     player_data['current_spell_slots'] = current_spell_slots
     player_data['spell_slots_used'] = spell_slots_used
     player_data['concentration'] = concentration
-    safe_write_json(player_data, f'{players_folder}\\{char_id}\\class_data.json')
+    safe_write_json(player_data, f'{players_folder}\\{char_id}\\class_data_old.json')
     return True
 
 @socketio.on('save_player_skills')
@@ -41,7 +76,19 @@ def save_using_spell_book(data):
     safe_write_json(player_data, file_path)
     return True
 
+@socketio.on('require_class_data')
+def send_class_data(data):
+    print('ran')
+    char_id = data.get('char_id')
+    sid = ID_TO_CLIENT.get(char_id)
+    players_folder = get_players_folder()
+    player_data = safe_read_json(f'{players_folder}\\{char_id}\\class_data.json')
+    classes = player_data.get('classes')
+    emit('sent_class_data',
+         classes, room=sid)
 
+
+#old
 @socketio.on('required_client_class_data')
 def send_player_class_data(data):
     char_id = data.get('char_id')

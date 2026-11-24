@@ -1,7 +1,8 @@
 import * as race_features from './../../../../shared/race_features.js';
 import * as character_data_handler from '../character_data_handler.js';
 import { emitSignal } from '../../socket_emitter.js';
-import { ABILITIES } from '../../../../shared/data_enums.js';
+import { ABILITIES, RACES } from '../../../../shared/data_enums.js';
+
 
 let socket = null;
 
@@ -149,20 +150,20 @@ export function setRaceName(d) {
 
 export function getRaceData(race) {
     const data = {
-        "High Elf": race_features.high_elf,
-        "Wood Elf": race_features.wood_elf,
-        "Drow": race_features.drow,
-        "Hill Dwarf": race_features.hill_dwarf,
-        "Mountain Dwarf": race_features.mountain_dwarf,
-        "Lightfoot Halfling": race_features.lightfoot_halfling,
-        "Stout Halfling": race_features.stout_halfling,
-        "Dragonborn": race_features.dragonborn,
-        "Forest Gnome": race_features.forest_gnome,
-        "Rock Gnome": race_features.rock_gnome,
-        "Half Elf": race_features.half_elf,
-        "Half Orc": race_features.half_orc,
-        "Tiefling": race_features.tiefling,
-        "Human": race_features.human
+        [RACES.HIGH_ELF]: race_features.high_elf,
+        [RACES.WOOD_ELF]: race_features.wood_elf,
+        [RACES.DROW]: race_features.drow,
+        [RACES.HILL_DWARF]: race_features.hill_dwarf,
+        [RACES.MOUNTAIN_DWARF]: race_features.mountain_dwarf,
+        [RACES.LIGHTFOOT_HALFLING]: race_features.lightfoot_halfling,
+        [RACES.STOUT_HALFLING]: race_features.stout_halfling,
+        [RACES.DRAGONBORN]: race_features.dragonborn,
+        [RACES.FOREST_GNOME]: race_features.forest_gnome,
+        [RACES.ROCK_GNOME]: race_features.rock_gnome,
+        [RACES.HALF_ELF]: race_features.half_elf,
+        [RACES.HALF_ORC]: race_features.half_orc,
+        [RACES.TIEFLING]: race_features.tiefling,
+        [RACES.HUMAN]: race_features.human
     }
     return data[race];
 }

@@ -7,11 +7,14 @@ export class OptionSelect {
     constructor(option_array, callback, default_text="Select") {
         this.option_array = option_array;
         this.buildDropdown();
-        this.current_option = null;
         this.options_visible = false;
         this.callback = callback;
 
         this.setLabelText(default_text);
+    }
+
+    setOptions(options) {
+        this.option_array = options;
     }
 
     addTo(parent_element) {

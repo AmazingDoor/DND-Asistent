@@ -5,6 +5,14 @@ import { getClassSkillNames } from "../mappers/class_mapper.js";
 
 let abilities = {};
 
+export function calculateCharacterSkills(classes_handler, ability_handler) {
+    const class_skills = classes_handler.getFilterdSkills();
+    const character_level = classes_handler.getCharacterLevel();
+    const character_level_mod = getProficiencyBonus(character_level);
+
+    const characterAbilities = ability_handler.getCharacterAbilities();
+}
+
 export function calculateSkills() {
     const class_skills = getClassSkillNames();
     const race_skills_main = getRaceSkills();

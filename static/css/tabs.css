@@ -1,0 +1,27 @@
+.tab-bar {
+    justify-content: center;
+}
+.tab {
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    padding: 2px 2px 2px 2px;
+}
+
+.tab.selected {
+    background-color: white;
+    padding: 2px 3px 2px 3px;
+}
+
+.tab:not(.selected) {
+    background-color: lightgray;
+    border-bottom: 1px solid black;
+}
+
+.tab:not(.selected):hover {
+    background-color: gray;
+}
+
+.tab:hover {
+    cursor: default;
+}

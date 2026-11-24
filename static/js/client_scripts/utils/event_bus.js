@@ -20,8 +20,8 @@ class EventBus {
         });
     }
 
-    publish(event) {
-        this.listeners.get(event)?.forEach(fn => fn());
+    publish(event, ...args) {
+        this.listeners.get(event)?.forEach(fn => fn(...args));
     }
 }
 
@@ -54,7 +54,8 @@ export const EVENTS = {
     CANTRIP_SELECTED: "cantrip_selected",
     WEAPON_EQUIPPED: "weapon_equipped",
     ARMOR_EQUIPPED: "armor_equipped",
-    CURRENCY_CHANGED: "currency_changed"
+    CURRENCY_CHANGED: "currency_changed",
+    CLASS_TAB_CHANGED: "class_tab_changed"
 
 };
 

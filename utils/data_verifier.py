@@ -79,18 +79,16 @@ def ensureBasicData(file_path, name):
         data["imgs"] = []
     if "health" not in data:
         data["health"] = 0
-    if "ac" not in data:
-        data["ac"] = 0
+    if "armor_class" not in data:
+        data["armor_class"] = 0
     if "max_health" not in data:
         data["max_health"] = 0
     if "states_text" not in data:
         data["states_text"] = ""
-    if "player_level" not in data:
-        data["player_level"] = 1
     if "speed" not in data:
         data["speed"] = 0
-    if "init_mod" not in data:
-        data["init_mod"] = 0
+    if "initiative_modifier" not in data:
+        data["initiative_modifier"] = 0
 
     if(base_data != data):
         safe_write_json(data, file_path)
@@ -99,20 +97,23 @@ def ensureClassData(file_path):
     base_data = safe_read_json(file_path)
     data = copy.deepcopy(base_data)
 
-    if "class_name" not in data:
-        data["class_name"] = ''
-    if "player_skills" not in data:
-        data["player_skills"] = [0, []]
-    if "class_skills" not in data:
-        data["class_skills"] = [0, []]
-    if "class_spells" not in data:
-        data["class_spells"] = []
-    if "class_cantrips" not in data:
-        data["class_cantrips"] = []
+    if "classes" not in data:
+        data["classes"] = []
+
+    '''if "class_id" not in data:
+        data["class_id"] = ''
+    if "chosen_skills" not in data:
+        data["chosen_skills"] = [0, []]
+    if "default_skills" not in data:
+        data["default_skills"] = [0, []]
+    if "spells" not in data:
+        data["spells"] = []
+    if "cantrips" not in data:
+        data["cantrips"] = []
     if "use_spell_book" not in data:
         data["use_spell_book"] = False
     if "concentration" not in data:
-        data["concentration"] = None
+        data["concentration"] = None'''
 
     if(data != base_data):
         safe_write_json(data, file_path)
