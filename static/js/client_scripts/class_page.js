@@ -107,7 +107,7 @@ export class ClassPage {
 
     createSelectClassButton() {
         this.select_class_container.textContent = "";
-        let class_options = [CLASSES.BARBARIAN, CLASSES.BARD].map((class_id) => ({id: class_id, value: CLASS_NAMES[class_id]}));
+        let class_options = Object.keys(CLASSES).map((class_id) => ({id: class_id, value: CLASS_NAMES[class_id]}));
 
         const class_dropdown = new OptionSelect(class_options, (option) => this.optionSelected(option), CLASS_NAMES[this.class_id]);
         class_dropdown.addTo(this.select_class_container);

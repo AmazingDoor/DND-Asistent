@@ -1,11 +1,13 @@
+import { PROFICIENCIES } from "../shared/class_proficiencies.js";
 import { ABILITIES } from "../shared/data_enums.js";
 import { saveAbilities as sendSaveAbilities } from "./save_handler.js";
 import { emitSignal } from "./utils/socket_emitter.js";
 
 export class AbilityHandler {
-    constructor(socket, classes_handler) {
+    constructor(socket, classes_handler, race_handler) {
         this.socket = socket;
         this.classes_handler = classes_handler;
+        this.race_handler = race_handler;
 
         this.str = 0;
         this.dex = 0;
@@ -124,10 +126,11 @@ export class AbilityHandler {
         };
     }
 
-    getCharacterAbilityModifiers() {
+    getCharacterSavingThrowModifiers() {
         const prof_bonus = this.classes_handler.getProficiencyBonus();
 
-        let all_abilities = [];
+        const race_ability_bonuses = this.race_handler.abilities;
+        console.log(race_ability_bonuses);
 
         let race_str_mod = 0;
         let race_dex_mod = 0;
@@ -143,31 +146,39 @@ export class AbilityHandler {
         let wis_bonus = 0;
         let cha_bonus = 0;
 
-        for(const ability in all_abilities) {
-            switch(ability.toString()) {
+        race_ability_bonuses.forEach((bonus) => {
+            //Set the bonuses from race
+            const ability_id = bonus.id;
+            const ability_bonus = bonus.value;
+            console.log('-');
+            console.log(ability_id);
+            console.log(ability_bonus);
+            console.log('-');
+            switch(ability_id) {
                 case ABILITIES.STR:
-                    race_str_mod = all_abilities[ability];
+                    race_str_mod = ability_bonus;
                     break;
                 case ABILITIES.DEX:
-                    race_dex_mod = all_abilities[ability];
+                    race_dex_mod = ability_bonus;
                     break;
                 case ABILITIES.CON:
-                    race_con_mod = all_abilities[ability];
+                    race_con_mod = ability_bonus;
                     break;
                 case ABILITIES.INT:
-                    race_int_mod = all_abilities[ability];
+                    race_int_mod = ability_bonus;
                     break;
                 case ABILITIES.WIS:
-                    race_WIS_mod = all_abilities[ability];
+                    race_wis_mod = ability_bonus;
                     break;
                 case ABILITIES.CHA:
-                    race_cha_mod = all_abilities[ability];
+                    race_cha_mod = ability_bonus;
                     break;
             }
-        }
+        });
 
         const saving_throws = this.classes_handler.getSavingThrows();
         saving_throws.forEach((saving_throw) => {
+            //set saving throw bonus based on level from class
             switch (saving_throw) {
                 case ABILITIES.STR:
                     str_bonus = prof_bonus;
@@ -189,13 +200,15 @@ export class AbilityHandler {
             }
         });
 
+        console.log(race_str_mod);
+        //Ability modifier + ability bonuses from race + saving throw class bonus based on character level
         const finalCalculations = [
-        this.calculateModifier(parseInt(this.str) + parseInt(race_str_mod)),
-        this.calculateModifier(parseInt(this.dex) + parseInt(race_dex_mod)),
-        this.calculateModifier(parseInt(this.con) + parseInt(race_con_mod)),
-        this.calculateModifier(parseInt(this.int) + parseInt(race_int_mod)),
-        this.calculateModifier(parseInt(this.wis) + parseInt(race_wis_mod)),
-        this.calculateModifier(parseInt(this.cha) + parseInt(race_cha_mod))];
+        this.calculateModifier(parseInt(this.str)) + parseInt(race_str_mod) + parseInt(str_bonus),
+        this.calculateModifier(parseInt(this.dex)) + parseInt(race_dex_mod) + parseInt(dex_bonus),
+        this.calculateModifier(parseInt(this.con)) + parseInt(race_con_mod) + parseInt(con_bonus),
+        this.calculateModifier(parseInt(this.int)) + parseInt(race_int_mod) + parseInt(int_bonus),
+        this.calculateModifier(parseInt(this.wis)) + parseInt(race_wis_mod) + parseInt(wis_bonus),
+        this.calculateModifier(parseInt(this.cha)) + parseInt(race_cha_mod) + parseInt(cha_bonus)];
 
         const finalCalculationDict = {
             str: finalCalculations[0],
@@ -225,7 +238,6 @@ export class AbilityHandler {
         emitSignal('require_character_abilities', {char_id: char_id});
         return new Promise(resolve => {
             this.socket.once('sent_character_abilities', save_data => {
-                console.log(save_data);
                 this.str = save_data.str;
                 this.dex = save_data.dex;
                 this.con = save_data.con;
@@ -244,12 +256,5 @@ export class AbilityHandler {
                 resolve(save_data);
             });
         });
-
-        this.str = save_data.str;
-        this.dex = save_data.dex;
-        this.con = save_data.con;
-        this.int = save_data.int;
-        this.wis = save_data.wis;
-        this.cha = save_data.cha;
     }
 }

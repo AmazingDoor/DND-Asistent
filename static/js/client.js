@@ -22,9 +22,10 @@ const socket = io({
 });
 
 const classes_handler = new ClassesHandler(socket);
-const ability_handler = new AbilityHandler(socket, classes_handler);
-const basic_data_handler = new BasicDataHandler(socket);
 const race_handler = new RaceHandler(socket);
+
+const ability_handler = new AbilityHandler(socket, classes_handler, race_handler);
+const basic_data_handler = new BasicDataHandler(socket);
 
 let char_name = null;
 let char_id = null;
@@ -41,11 +42,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     await basic_data_handler.loadSaveData();
     //await initializeClient();
 
-    //classes_handler.createClassTab();
     await classes_handler.loadSaveData();
     await ability_handler.loadSaveData();
     await race_handler.loadSaveData();
-    ability_handler.getCharacterAbilityModifiers();
+    ability_handler.getCharacterSavingThrowModifiers();
     
 
 });

@@ -1,7 +1,7 @@
 import { ABILITIES, LANGUAGES, SKILLS, RACES } from "./data_enums.js";
 
 export const HIGH_ELF = {
-  abilities: [{id: [ABILITIES.DEX], value: 2}, {id: [ABILITIES.INT], value: 1}],
+  abilities: [{id: ABILITIES.DEX, value: 2}, {id: ABILITIES.INT, value: 1}],
   size: "Medium",
   speed: 30,
   features: ["Darkvision", "Keen Senses (Perception)", "Fey Ancestry", "Trance", "Elf Weapon Training"],
@@ -12,7 +12,7 @@ export const HIGH_ELF = {
 };
 
 export const WOOD_ELF = {
-  abilities:[{id: [ABILITIES.DEX], value: 2}, {id: [ABILITIES.WIS], value: 1}],
+  abilities:[{id: ABILITIES.DEX, value: 2}, {id: ABILITIES.WIS, value: 1}],
   size: "Medium",
   speed: 35,
   features: [
@@ -30,7 +30,7 @@ export const WOOD_ELF = {
 };
 
 export const DROW = {
-  abilities: [{id: [ABILITIES.DEX], value: 2}, {id: [ABILITIES.CHA], value: 1}],
+  abilities: [{id: ABILITIES.DEX, value: 2}, {id: ABILITIES.CHA, value: 1}],
   size: "Medium",
   speed: 30,
   features: [
@@ -48,7 +48,7 @@ export const DROW = {
 };
 
 export const HILL_DWARF = {
-  abilities: [{id: [ABILITIES.CON], value: 2}, {id: [ABILITIES.WIS], value: 1}],
+  abilities: [{id: ABILITIES.CON, value: 2}, {id: ABILITIES.WIS, value: 1}],
   size: "Medium",
   speed: 25,
   features: [
@@ -66,7 +66,7 @@ export const HILL_DWARF = {
 };
 
 export const MOUNTAIN_DWARF = {
-  abilities: [{id: [ABILITIES.CON], value: 2}, {id: [ABILITIES.STR], value: 2}],
+  abilities: [{id: ABILITIES.CON, value: 2}, {id: ABILITIES.STR, value: 2}],
   size: "Medium",
   speed: 25,
   features: [
@@ -84,7 +84,7 @@ export const MOUNTAIN_DWARF = {
 };
 
 export const LIGHTFOOT_HALFLING = {
-  abilities: [{id: [ABILITIES.DEX], value: 2}, {id: [ABILITIES.CHA], value: 1}],
+  abilities: [{id: ABILITIES.DEX, value: 2}, {id: ABILITIES.CHA, value: 1}],
   size: "Small",
   speed: 25,
   features: ["Lucky", "Brave", "Halfling Nimbleness", "Naturally Stealthy"],
@@ -95,7 +95,7 @@ export const LIGHTFOOT_HALFLING = {
 };
 
 export const STOUT_HALFLING = {
-  abilities: [{id: [ABILITIES.DEX], value: 2}, {id: [ABILITIES.CON], value: 1}],
+  abilities: [{id: ABILITIES.DEX, value: 2}, {id: ABILITIES.CON, value: 1}],
   size: "Small",
   speed: 25,
   features: ["Lucky", "Brave", "Halfling Nimbleness", "Stout Resilience"],
@@ -106,7 +106,7 @@ export const STOUT_HALFLING = {
 };
 
 export const DRAGONBORN = {
-  abilities: [{id: [ABILITIES.STR], value: 2}, {id: [ABILITIES.CHA], value: 1}],
+  abilities: [{id: ABILITIES.STR, value: 2}, {id: ABILITIES.CHA, value: 1}],
   size: "Medium",
   speed: 30,
   features: ["Breath Weapon", "Damage Resistance (depends on draconic ancestry)"],
@@ -117,7 +117,7 @@ export const DRAGONBORN = {
 };
 
 export const FOREST_GNOME = {
-  abilities: [{id: [ABILITIES.INT], value: 2}, {id: [ABILITIES.DEX], value: 1 }],
+  abilities: [{id: ABILITIES.INT, value: 2}, {id: ABILITIES.DEX, value: 1 }],
   size: "Small",
   speed: 25,
   features: ["Darkvision", "Gnome Cunning", "Minor Illusion Cantrip", "Speak with Small Beasts"],
@@ -128,7 +128,7 @@ export const FOREST_GNOME = {
 };
 
 export const ROCK_GNOME = {
-  abilities: [{id: [ABILITIES.INT], value: 2}, {id: [ABILITIES.CON], value: 1}],
+  abilities: [{id: ABILITIES.INT, value: 2}, {id: ABILITIES.CON, value: 1}],
   size: "Small",
   speed: 25,
   features: ["Darkvision", "Gnome Cunning", "Artificer’s Lore", "Tinker"],
@@ -139,7 +139,7 @@ export const ROCK_GNOME = {
 };
 
 export const HALF_ELF = {
-  abilities: [{id: [ABILITIES.CHA], value: 2}, {id: [ABILITIES.OPTION], value: 1}, {id: [ABILITIES.OPTION], value: 1}],
+  abilities: [{id: ABILITIES.CHA, value: 2}, {id: ABILITIES.OPTION, value: 1}, {id: ABILITIES.OPTION, value: 1}],
   size: "Medium",
   speed: 30,
   features: ["Darkvision", "Fey Ancestry", "Skill Versatility (2 skills)"],
@@ -150,7 +150,7 @@ export const HALF_ELF = {
 };
 
 export const HALF_ORC = {
-  abilities: [{id: [ABILITIES.STR], value: 2}, {id: [ABILITIES.CON], value: 1}],
+  abilities: [{id: ABILITIES.STR, value: 2}, {id: ABILITIES.CON, value: 1}],
   size: "Medium",
   speed: 30,
   features: ["Darkvision", "Relentless Endurance", "Savage Attacks"],
@@ -161,7 +161,7 @@ export const HALF_ORC = {
 };
 
 export const TIEFLING = {
-  abilities: [{id: [ABILITIES.CHA], value: 2}, {id: [ABILITIES.INT], value: 1}],
+  abilities: [{id: ABILITIES.CHA, value: 2}, {id: ABILITIES.INT, value: 1}],
   size: "Medium",
   speed: 30,
   features: ["Darkvision", "Hellish Resistance (fire)", "Infernal Legacy (cantrips and spells)"],
@@ -172,7 +172,7 @@ export const TIEFLING = {
 };
 
 export const HUMAN = {
-  abilities: [{id: [ABILITIES.STR], value: 1}, {id: [ABILITIES.DEX], value: 1}, {id: [ABILITIES.CON], value: 1},
+  abilities: [{id: ABILITIES.STR, value: 1}, {id: ABILITIES.DEX, value: 1}, {id: ABILITIES.CON, value: 1},
    {id: [ABILITIES.INT], value: 1}, {id: [ABILITIES.WIS], value: 1}, {id: [ABILITIES.CHA], value: 1}],
   size: "Medium",
   speed: 30,
@@ -184,7 +184,7 @@ export const HUMAN = {
 };
 
 export const ELF_GENERIC = {
-  abilities: [{id: [ABILITIES.DEX], value: 2}],
+  abilities: [{id: ABILITIES.DEX, value: 2}],
   size: "Medium",
   speed: 30,
   features: ["Darkvision", "Keen Senses (Perception)", "Fey Ancestry", "Trance"],
@@ -195,7 +195,7 @@ export const ELF_GENERIC = {
 };
 
 export const DWARF_GENERIC = {
-  abilities: [{id: [ABILITIES.CON], value: 2}],
+  abilities: [{id: ABILITIES.CON, value: 2}],
   size: "Medium",
   speed: 25,
   features: [
@@ -212,7 +212,7 @@ export const DWARF_GENERIC = {
 };
 
 export const HALFLING_GENERIC = {
-  abilities: [{id: [ABILITIES.DEX], value: 2}],
+  abilities: [{id: ABILITIES.DEX, value: 2}],
   size: "Small",
   speed: 25,
   features: ["Lucky", "Brave", "Halfling Nimbleness"],
@@ -223,7 +223,7 @@ export const HALFLING_GENERIC = {
 };
 
 export const GNOME_GENERIC = {
-  abilities: [{id: [ABILITIES.INT], value: 2}],
+  abilities: [{id: ABILITIES.INT, value: 2}],
   size: "Small",
   speed: 25,
   features: ["Darkvision", "Gnome Cunning"],

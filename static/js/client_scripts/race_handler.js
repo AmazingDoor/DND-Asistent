@@ -194,7 +194,8 @@ export class RaceHandler {
 
     async raceAbilitySelected(opt, option_index) {
         const ability_id = opt.option_id;
-        this.abilities[option_index] = {id: ability_id, value: this.abilities[option_index]};
+        console.log(this.abilities);
+        this.abilities[option_index] = {id: ability_id, value: this.abilities[option_index].value};
         this.linked_ability_options.forEach((linked) => {
             linked.setOptions(this.createAbilityOptionArray());
         });
