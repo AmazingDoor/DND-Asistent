@@ -39,7 +39,14 @@ def send_character_abilities(data):
     sid = ID_TO_CLIENT.get(char_id)
     base_folder = f"{get_players_folder()}\\{char_id}\\"
     abilities = safe_read_json(base_folder + "abilities.json")
-    emit('build_character_abilities', {'abilities': abilities.get('abilities')}, room=sid)
+    emit('sent_character_abilities', {
+        "str": abilities.get('str'),
+        "dex": abilities.get('dex'),
+        "con": abilities.get('con'),
+        "int": abilities.get('int'),
+        "wis": abilities.get('wis'),
+        "cha": abilities.get('cha')
+    }, room=sid)
 
 def init_json_data(sid, name, char_id):
     # Load or Create all the data for each client

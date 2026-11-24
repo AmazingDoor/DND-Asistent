@@ -1,4 +1,4 @@
-import { ABILITIES, ABILITY_NAMES, RACE_NAMES, RACES } from "../shared/data_enums.js";
+import { ABILITIES, ABILITY_NAMES, RACE_NAMES, RACES, LANGUAGE_NAMES, LANGUAGES, SKILLS, SKILL_NAMES } from "../shared/data_enums.js";
 import { OptionSelect } from "../shared/option_dropdown.js";
 import { getRaceData } from "../shared/race_features.js";
 import { saveRace as sendSaveRace } from "./save_handler.js";
@@ -28,11 +28,11 @@ export class RaceHandler {
         return options;
     }
 
-    onRaceSelected(opt) {
+    async onRaceSelected(opt) {
         const race_id = opt.option_id;
         this.setRaceData(race_id);
         this.select_race_dropdown.setOptions(this.buildRaceOptionArray());
-        this.saveRace();
+        await this.saveRace();
     }
 
     build() {
@@ -40,6 +40,11 @@ export class RaceHandler {
         this.linked_ability_options = [];
         const race_data = getRaceData(this.race_id);
         this.createAbilities(race_data.abilities);
+        this.setSize(race_data.size);
+        this.setSpeed(race_data.speed);
+        this.createTraits(race_data.features);
+        this.createLanguages(race_data.languages);
+        this.createSkills(race_data.skills);
     }
 
     createHeadder() {
@@ -91,6 +96,89 @@ export class RaceHandler {
         });
     }
 
+    setSize(size) {
+        const size_num = document.querySelector('.race-size');
+        size_num.textContent = size;
+    }
+
+    setSpeed(speed) {
+        const speed_num = document.querySelector('.speed-num');
+        speed_num.textContent = speed.toString();
+    }
+
+    createTraits(traits) {
+        const trait_list = document.querySelector('.trait-list');
+        trait_list.innerHTML = "";
+        traits.forEach((trait) => {
+            const t = document.createElement('p');
+            t.textContent = trait;
+            trait_list.appendChild(t);
+        });
+    }
+
+    createLanguages(languages) {
+        const set_languages = languages;
+        const language_list = document.querySelector('.language-list');
+        language_list.innerHTML = '';
+        set_languages.forEach((language_id, i) => {
+            if(language_id != LANGUAGES.OPTION) {
+                const t = document.createElement('p');
+                t.textContent = LANGUAGE_NAMES[language_id];
+                language_list.appendChild(t);
+            } else {
+                const language_option_text = LANGUAGE_NAMES[this.languages[i]] || LANGUAGE_NAMES[language_id];
+                const language_option_select = new OptionSelect(this.createLanguagesArray(), (opt) => {this.languageOptionSelected(opt, i);}, language_option_text);
+                language_option_select.addTo(language_list);
+            }
+        });
+    }
+
+    createSkills(skills) {
+        const skill_list = document.querySelector('.skill-list');
+        skill_list.innerHTML = '';
+        skills.forEach((skill_id, i) => {
+            if(skill_id != SKILLS.OPTION) {
+                const t = document.createElement('p');
+                t.textContent = SKILL_NAMES[skill_id];
+                skill_list.appendChild(skill);
+            } else {
+                const skill_option_text = SKILL_NAMES[this.skills[i]] || SKILL_NAMES[skill_id];
+                const skill_option = new OptionSelect(this.createSkillOptionArray(), (opt) => this.skillSelected(opt, i), skill_option_text);
+                skill_option.addTo(skill_list);
+            }
+        });
+    }
+
+    createSkillOptionArray() {
+        const skills = Object.keys(SKILLS)
+        .filter((skill) => !this.skills.includes(skill))
+        .map((skill_id) => ({
+            id: skill_id, value: SKILL_NAMES[skill_id]
+        }));
+        return skills;
+    }
+
+    async skillSelected(opt, i) {
+        const skill_id = opt.option_id;
+        this.skills[i] = skill_id;
+        await this.saveRace();
+    }
+
+    createLanguagesArray() {
+        const languages = Object.keys(LANGUAGES)
+        .filter((language_id) => !this.languages.includes(language_id))
+        .map((language_id) => ({
+            id: language_id, value: LANGUAGE_NAMES[language_id]
+        }));
+        return languages;
+    }
+
+    async languageOptionSelected(opt, i) {
+        const language_id = opt.option_id;
+        this.languages[i] = language_id;
+        await this.saveRace();
+    }
+
     createAbilityOptionArray() {
         const options = Object.keys(ABILITIES).filter(
             (ability_id) => !this.abilities.some(
@@ -104,18 +192,18 @@ export class RaceHandler {
         return options;
     }
 
-    raceAbilitySelected(opt, option_index) {
+    async raceAbilitySelected(opt, option_index) {
         const ability_id = opt.option_id;
         this.abilities[option_index] = {id: ability_id, value: this.abilities[option_index]};
         this.linked_ability_options.forEach((linked) => {
             linked.setOptions(this.createAbilityOptionArray());
         });
 
-        this.saveRace();
+        await this.saveRace();
     }
 
-    saveRace() {
-        sendSaveRace(this.getSaveData());
+    async saveRace() {
+        await sendSaveRace(this.getSaveData());
     }
 
     resetRaceData() {

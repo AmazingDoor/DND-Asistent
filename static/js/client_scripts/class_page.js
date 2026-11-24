@@ -206,15 +206,12 @@ export class ClassPage {
     }
 
     async selectedSkill(skill_option, option_select_id) {
-        console.log(option_select_id);
         const skill_id = skill_option.getOptionID();
         this.chosen_skills[option_select_id] = skill_id;
         await this.classes_hanlder.saveClasses();
-        console.log(this.getSaveData());
     }
 
     createSkillSections(skill_ids) {
-        console.log(skill_ids);
        this.skill_container.textContent = "";
         const skill_options = skill_ids.map((skill_id) => ({id: skill_id, value: SKILL_NAMES[skill_id]}));
         

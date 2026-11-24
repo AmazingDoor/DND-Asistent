@@ -1,4 +1,6 @@
 import { ABILITIES } from "../shared/data_enums.js";
+import { saveAbilities as sendSaveAbilities } from "./save_handler.js";
+import { emitSignal } from "./utils/socket_emitter.js";
 
 export class AbilityHandler {
     constructor(socket, classes_handler) {
@@ -11,11 +13,109 @@ export class AbilityHandler {
         this.int = 0;
         this.wis = 0;
         this.cha = 0;
+
+        this.str_input = document.querySelector("#strength-input");
+        this.dex_input = document.querySelector("#dexterity-input");
+        this.con_input = document.querySelector("#constitution-input");
+        this.int_input = document.querySelector("#intelligence-input");
+        this.wis_input = document.querySelector("#wisdom-input");
+        this.cha_input = document.querySelector("#charisma-input");
+        this.addInputEventListeners();
+        this.setModifiers();
     }
 
-    calculateModifier(i) {
-        const new_num = Math.floor((parseInt(i) - 10) / 2);
+    addInputEventListeners() {
+        this.str_input.addEventListener("change", () => {this.strChanged();});
+        this.dex_input.addEventListener("change", () => {this.dexChanged();});
+        this.con_input.addEventListener("change", () => {this.conChanged();});
+        this.int_input.addEventListener("change", () => {this.intChanged();});
+        this.wis_input.addEventListener("change", () => {this.wisChanged();});
+        this.cha_input.addEventListener("change", () => {this.chaChanged();});
+    }
+
+    async strChanged() {
+        this.str = parseInt(this.str_input.value);
+        this.setStrMod();
+        await this.saveAbilities();
+    }
+
+    async dexChanged() {
+        this.dex = parseInt(this.dex_input.value);
+        this.setDexMod();
+        await this.saveAbilities();
+    }
+
+    async conChanged() {
+        this.con = parseInt(this.con_input.value);
+        this.setConMod();
+        await this.saveAbilities();
+    }
+
+    async intChanged() {
+        this.int = parseInt(this.int_input.value);
+        this.setIntMod();
+        await this.saveAbilities();
+    }
+
+    async wisChanged() {
+        this.wis = parseInt(this.wis_input.value);
+        this.setWisMod();
+        await this.saveAbilities();
+    }
+
+    async chaChanged() {
+        this.cha = parseInt(this.cha_input.value);
+        this.setChaMod();
+        await this.saveAbilities();
+    }
+
+    setModifiers() {
+        this.setStrMod();
+        this.setDexMod();
+        this.setConMod();
+        this.setIntMod();
+        this.setWisMod();
+        this.setChaMod();
+    }
+
+    setStrMod() {
+        document.querySelector('#strength-mod').textContent = this.getSignedModifier(this.str);
+    }
+
+    setDexMod() {
+        document.querySelector('#dexterity-mod').textContent = this.getSignedModifier(this.dex);
+    }
+
+    setConMod() {
+        document.querySelector('#constitution-mod').textContent = this.getSignedModifier(this.con);
+    }
+
+    setIntMod() {
+        document.querySelector('#intelligence-mod').textContent = this.getSignedModifier(this.int);
+    }
+
+    setWisMod() {
+        document.querySelector('#wisdom-mod').textContent = this.getSignedModifier(this.wis);
+    }
+
+    setChaMod() {
+        document.querySelector('#charisma-mod').textContent = this.getSignedModifier(this.cha);
+    }
+
+    calculateModifier(value) {
+        const new_num = Math.floor((parseInt(value) - 10) / 2);
         return new_num;
+    }
+
+    getSignedModifier(value) {
+        let num = this.calculateModifier(value);
+        if(num > 0) {
+            num = "(+" + num + ")";
+        } else {
+            num = "(" + num + ")";
+        }
+
+        return num;
     }
 
     getCharacterAbilities() {
@@ -107,5 +207,49 @@ export class AbilityHandler {
         };
 
         console.log(finalCalculationDict);
+    }
+
+    async saveAbilities() {
+        await sendSaveAbilities(this.getSaveData());
+    }
+
+    getSaveData() {
+        const dict = {str: this.str, dex: this.dex, con: this.con, 
+            int: this.int, wis: this.wis, cha: this.cha
+        }
+
+        return dict;
+    }
+
+    loadSaveData() {
+        emitSignal('require_character_abilities', {char_id: char_id});
+        return new Promise(resolve => {
+            this.socket.once('sent_character_abilities', save_data => {
+                console.log(save_data);
+                this.str = save_data.str;
+                this.dex = save_data.dex;
+                this.con = save_data.con;
+                this.int = save_data.int;
+                this.wis = save_data.wis;
+                this.cha = save_data.cha;
+
+                this.str_input.value = this.str;
+                this.dex_input.value = this.dex;
+                this.con_input.value = this.con;
+                this.int_input.value = this.int;
+                this.wis_input.value = this.wis;
+                this.cha_input.value = this.cha;
+                this.setModifiers();
+            
+                resolve(save_data);
+            });
+        });
+
+        this.str = save_data.str;
+        this.dex = save_data.dex;
+        this.con = save_data.con;
+        this.int = save_data.int;
+        this.wis = save_data.wis;
+        this.cha = save_data.cha;
     }
 }

@@ -57,9 +57,10 @@ export async function savePlayerSkills() {
     await emitAndWait('save_player_skills', data);
 }
 
-export async function saveRaceAbilities() {
-    let data = {race_abilities: getSavedRaceAbilities(), char_id: char_id};
-    await emitAndWait('save_race_abilities', data);
+export async function saveRaceAbilities(data) {
+    await emitAndWait('save_race_abilities', appendCharId(data));
+    //let data = {race_abilities: getSavedRaceAbilities(), char_id: char_id};
+    //await emitAndWait('save_race_abilities', data);
 }
 
 export async function saveRace(save_data) {
@@ -91,12 +92,12 @@ export async function saveCurrency() {
     await emitAndWait('save_currency', data);
 } 
 
-export async function saveAbilities() {
-    const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
-    const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
-    const data = {char_id: char_id, abilities: abilities};
+export async function saveAbilities(data) {
+    //const [str_input, dex_input, con_input, int_input, wis_input, cha_input] = getInputs();
+    //const abilities = {str_num: str_input.value, dex_num: dex_input.value, con_num: con_input.value, int_num: int_input.value, wis_num: wis_input.value, cha_num: cha_input.value};
+    //const data = {char_id: char_id, abilities: abilities};
     
-    await emitAndWait('save_abilities', data);
+    await emitAndWait('save_abilities', appendCharId(data));
 }
 
 export async function saveSpells() {
