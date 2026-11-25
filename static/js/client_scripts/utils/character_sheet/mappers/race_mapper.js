@@ -147,23 +147,3 @@ export function getRaceName() {
 export function setRaceName(d) {
     race_name = d;
 }
-
-export function getRaceData(race) {
-    const data = {
-        [RACES.HIGH_ELF]: race_features.high_elf,
-        [RACES.WOOD_ELF]: race_features.wood_elf,
-        [RACES.DROW]: race_features.drow,
-        [RACES.HILL_DWARF]: race_features.hill_dwarf,
-        [RACES.MOUNTAIN_DWARF]: race_features.mountain_dwarf,
-        [RACES.LIGHTFOOT_HALFLING]: race_features.lightfoot_halfling,
-        [RACES.STOUT_HALFLING]: race_features.stout_halfling,
-        [RACES.DRAGONBORN]: race_features.dragonborn,
-        [RACES.FOREST_GNOME]: race_features.forest_gnome,
-        [RACES.ROCK_GNOME]: race_features.rock_gnome,
-        [RACES.HALF_ELF]: race_features.half_elf,
-        [RACES.HALF_ORC]: race_features.half_orc,
-        [RACES.TIEFLING]: race_features.tiefling,
-        [RACES.HUMAN]: race_features.human
-    }
-    return data[race];
-}

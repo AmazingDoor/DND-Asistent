@@ -99,6 +99,17 @@ def ensureClassData(file_path):
 
     if "classes" not in data:
         data["classes"] = []
+    if "main_class" not in data:
+        data["main_class"] = {
+            "class_id": "OPTION",
+            "class_level": 1,
+            "chosen_skills": [],
+            "default_skills": [],
+            "spells": [],
+            "cantrips": [],
+            "use_spell_book": [],
+            "concentration": ""
+        }
 
     '''if "class_id" not in data:
         data["class_id"] = ''

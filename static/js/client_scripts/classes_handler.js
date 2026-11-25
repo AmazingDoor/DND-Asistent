@@ -8,6 +8,8 @@ export class ClassesHandler {
     constructor(socket) {
         this.socket = socket;
         this.character_classes = [];
+        this.main_class = new ClassTab(this, true);
+        this.main_class.setActive();
         document.getElementById('add-class-button').addEventListener('click', () => {this.addClassPressed()});        
     }
 
@@ -36,13 +38,21 @@ export class ClassesHandler {
     async loadSaveData() {
         emitSignal('require_class_data', {char_id: char_id});
         return new Promise((resolve) => {
-            getSocket().once('sent_class_data', save_data => {
-                save_data.forEach((class_data) => {
-                    const new_class_tab = this.createClassTab();
-                    const new_class_page = new_class_tab.getClassPage();
-                    new_class_page.loadSaveData(class_data);
-                });
-
+            getSocket().once('sent_class_data', (save_data) => {
+                console.log(save_data);
+                const classes = save_data.classes;
+                const main_class = save_data.main_class;
+                if(classes.length > 0) {
+                    classes.forEach(async (class_data) => {
+                        const new_class_tab = this.createClassTab();
+                        const new_class_page = new_class_tab.getClassPage();
+                        await new_class_page.loadSaveData(class_data);
+                    });
+                }
+                if(Object.keys(main_class).length > 0) {
+                    console.log('ran');
+                    this.main_class.getClassPage().loadSaveData(main_class);
+                }
                 if(this.character_classes.length > 0) {
                     this.character_classes[0].setActive();
                 }
@@ -57,7 +67,7 @@ export class ClassesHandler {
     }
 
     getSaveData() {
-        let save_dict = {classes: []};
+        let save_dict = {classes: [], main_class: this.main_class.getClassPage().getSaveData()};
         this.character_classes.forEach((class_tab) => {
             const save_data = class_tab.getClassPage().getSaveData();
             save_dict.classes.push(save_data);
@@ -100,14 +110,12 @@ export class ClassesHandler {
     }
 
     getSavingThrows() {
-        this.character_classes.forEach((class_tab) => {
-            const class_page = class_tab.getClassPage();
-            if(class_page.main_page) {
-                const class_data = PROFICIENCIES[class_page.getClassID()];
-                return class_data.saving_throws;
-            }
-        });
-        return [];
+        const main_class_id = this.main_class.getClassPage().class_id;
+        if(main_class_id == CLASSES.OPTION) {
+            return [];
+        }
+
+        return PROFICIENCIES[main_class_id].saving_throws;
     }
 
     isInRange(num, min, max) {

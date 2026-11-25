@@ -1,10 +1,10 @@
 import { PROFICIENCIES } from "../shared/class_proficiencies.js";
 import { ABILITY_NAMES, CLASS_NAMES, CLASSES, SKILL_NAMES, SKILLS } from "../shared/data_enums.js";
 import { OptionSelect } from "../shared/option_dropdown.js";
+import { bus, EVENTS } from "./utils/event_bus.js";
 
 export class ClassPage {
     constructor(classes_hanlder, update_tab_name) {
-        this.main_main = false;
         this.chosen_skills = [];
         this.default_skills = [];
         this.class_level = 1;
@@ -61,9 +61,11 @@ export class ClassPage {
 
     async optionSelected(value) {
         this.resetPage();
-        this.updateTabName?.(value.getOptionValue());
+        let tab_name_text = value.getOptionValue();
+        this.updateTabName?.(tab_name_text);
         this.class_id = value.getOptionID();
         this.buildCharacterClass();
+        bus.publish(EVENTS.CLASS_CHANGED);
         await this.classes_hanlder.saveClasses();
     }
 
@@ -227,7 +229,6 @@ export class ClassPage {
     getSaveData() {
         let dict = {
             class_id: this.class_id,
-            main_class: this.main_class,
             class_level: this.class_level,
             chosen_skills: this.chosen_skills, 
             default_skills: this.default_skills,
@@ -244,8 +245,8 @@ export class ClassPage {
     }
 
     loadSaveData(dict) {
+        console.log("load ran");
         this.class_id = dict.class_id;
-        this.main_class = dict.main_class;
         this.class_level = dict.class_level;
         this.chosen_skills = dict.chosen_skills;
         this.default_skills = dict.default_skills;

@@ -16,20 +16,51 @@ import { BasicDataHandler } from './client_scripts/basic_data_handler.js';
 import { escapeHTML } from './shared/utils/text_helper.js';
 import { AbilityHandler } from './client_scripts/ability_handler.js';
 import { RaceHandler } from './client_scripts/race_handler.js';
+import { SkillHandler } from './client_scripts/skill_handler.js';
+import { DisplayStatHandler } from './client_scripts/utils/display_stat_updater.js';
 
 const socket = io({
     transports: ["websocket"]
 });
-
-const classes_handler = new ClassesHandler(socket);
-const race_handler = new RaceHandler(socket);
-
-const ability_handler = new AbilityHandler(socket, classes_handler, race_handler);
-const basic_data_handler = new BasicDataHandler(socket);
-
 let char_name = null;
 let char_id = null;
 
+
+export class Client {
+    static Instance = null;
+
+    constructor(socket) {
+        this.socket = socket;
+
+        this.classes_handler = new ClassesHandler(socket);
+        this.race_handler = new RaceHandler(socket);
+        this.ability_handler = new AbilityHandler(socket, this.classes_handler, this.race_handler);
+        this.basic_data_handler = new BasicDataHandler(socket);
+        this.skill_handler = new SkillHandler(socket, this.classes_handler, this.race_handler, this.ability_handler)
+        this.display_stat_handler = new DisplayStatHandler(socket, this);
+
+        this.setUp();
+    }
+
+    async setUp() {
+        await this.loadHandlerData();
+        await this.initializeHandlers();
+    }
+
+    async loadHandlerData() {
+        await setFactorySocket(socket);
+        await this.basic_data_handler.loadSaveData();
+
+        await this.classes_handler.loadSaveData();
+        await this.ability_handler.loadSaveData();
+        await this.race_handler.loadSaveData();
+        this.ability_handler.getCharacterSavingThrowModifiers();
+    }
+
+    async initializeHandlers() {
+        await this.display_stat_handler.Initialize();
+    }
+}
 
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -37,17 +68,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     char_id = sessionStorage.getItem('charId');
 
     registerCharacter();
+    Client.Instance = new Client(socket);
 
-    await setFactorySocket(socket);
-    await basic_data_handler.loadSaveData();
+  
     //await initializeClient();
-
-    await classes_handler.loadSaveData();
-    await ability_handler.loadSaveData();
-    await race_handler.loadSaveData();
-    ability_handler.getCharacterSavingThrowModifiers();
-    
-
 });
 
 

@@ -1,6 +1,5 @@
 import * as ability_calculator from './../calculators/ability_calculator.js';
 import {getCharacterBaseAbilities, setCharacterBaseAbilities} from './../character_data_handler.js';
-import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 import { saveAbilities } from '../../../save_handler.js';
 import { bus, EVENTS } from '../../event_bus.js';
 document.addEventListener("DOMContentLoaded", () => {

@@ -42,15 +42,10 @@ export async function saveInitiativeMod() {
 }
 
 export async function saveClassData(data) {
+    console.log(data);
     await emitAndWait('save_class_data', appendCharId(data));
 }
 
-/*export async function saveClassData() {
-    let class_data = {class_name: getClassName(), skills: getClassSkills(),
-        current_spell_slots: getCurrentSpellSlots(), 
-        concentration: getConcentration(), char_id: char_id};
-    await emitAndWait('save_player_class', class_data);
-}*/
 
 export async function savePlayerSkills() {
     let data = {skills: getClassSkills(), char_id: char_id};

@@ -2,7 +2,6 @@ import {setDefaultClassData, getClassData, getClassName, setClassSkills, getClas
 import {linkDropdown} from './../../dropdown_handler.js';
 import {addClassSkillEventListeners} from './../dropdown_handlers/class_skill_handler.js';
 import {buildSpellSection} from './sub_builders/class_spell_section_builder.js';
-import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 import * as inventory_builder from './inventory_builder.js';
 import { saveInventory } from '../../../save_handler.js';
 import { updateSpells } from '../../spell_handler.js';

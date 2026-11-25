@@ -1,13 +1,12 @@
 import {setRace, setDefaultRaceData, resetRaceData, getRaceName} from './../mappers/race_mapper.js';
 import {buildRaceSection} from './../page_builders/race_builder.js';
-import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 import { saveRace } from '../../../save_handler.js';
 let socket = null;
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
     char_id = sessionStorage.getItem('charId');
 
-    addEventListeners();
+    //addEventListeners();
 });
 
 export function setSocket(io) {
@@ -34,8 +33,8 @@ async function clickEvent(dropdown_text, option) {
     dropdown_text.textContent = option.textContent;
     setDefaultRaceData(option.textContent);
     buildRaceSection(option.textContent);
-    updateAbilities();
-    updateSkills();
+    //updateAbilities();
+    //updateSkills();
     await saveRace();
 }
 
@@ -47,8 +46,8 @@ function loadEvent() {
     if(race_name !== null && race_name != "") {
         dropdown_text.textContent = race_name;
         buildRaceSection(race_name);
-        updateAbilities();
-        updateSkills();
+        //updateAbilities();
+        //updateSkills();
     } else {
         dropdown_text.textContent = "Select Race";
     }

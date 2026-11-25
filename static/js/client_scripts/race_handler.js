@@ -2,6 +2,7 @@ import { ABILITIES, ABILITY_NAMES, RACE_NAMES, RACES, LANGUAGE_NAMES, LANGUAGES,
 import { OptionSelect } from "../shared/option_dropdown.js";
 import { getRaceData } from "../shared/race_features.js";
 import { saveRace as sendSaveRace } from "./save_handler.js";
+import { bus, EVENTS } from "./utils/event_bus.js";
 import { emitSignal } from "./utils/socket_emitter.js";
 
 export class RaceHandler {
@@ -32,6 +33,7 @@ export class RaceHandler {
         const race_id = opt.option_id;
         this.setRaceData(race_id);
         this.select_race_dropdown.setOptions(this.buildRaceOptionArray());
+        bus.publish(EVENTS.RACE_CHANGED);
         await this.saveRace();
     }
 

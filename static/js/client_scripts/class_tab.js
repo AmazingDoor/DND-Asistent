@@ -3,9 +3,10 @@ import { ClassPage } from "./class_page.js";
 import { bus, EVENTS } from "./utils/event_bus.js";
 
 export class ClassTab {
-    constructor(classes_handler) {
+    constructor(classes_handler, main_class_page = false) {
         this.class_page_container = document.querySelector("#class-pages");
         this.classes_handler = classes_handler;
+        this.main_class_page = main_class_page
         this.build();
         this.createClassPage();
         const update_selected_subscriptions = [EVENTS.CLASS_TAB_CHANGED];
@@ -48,5 +49,8 @@ export class ClassTab {
 
     setTabName(name) {
         this.class_name.textContent = name;
+        if(this.main_class_page) {
+            this.class_name.textContent += "(Main)";
+        }
     }
 }

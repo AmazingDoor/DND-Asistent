@@ -9,7 +9,6 @@ import {setSocket as setAbilityMapperSocket} from './../utils/character_sheet/ma
 import {setSocket as setRaceMapperSocket} from './../utils/character_sheet/mappers/race_mapper.js';
 import {setSocket as setClassBuilderSocket} from './../utils/character_sheet/page_builders/class_builder.js';
 import {setSocket as setAbilityBuilderSocket} from './../utils/character_sheet/page_builders/ability_builder.js';
-import {setSocket as setDisplayStatUpdaterSocket} from "./../utils/display_stat_updater.js";
 import {setSocket as setPlayerLevelHandlerSocket} from './../player_level_handler.js';
 import {setSocket as setInventoryBuilderSocket} from './../utils/character_sheet/page_builders/inventory_builder.js';
 import {setSocket as setInventoryItemManagerSocket} from './../utils/character_sheet/inventory/inventory_item_manager.js';
@@ -34,7 +33,6 @@ export function setFactorySocket(io) {
     setRaceMapperSocket(io);
     setClassBuilderSocket(io);
     setAbilityBuilderSocket(io);
-    setDisplayStatUpdaterSocket(io);
     setPlayerLevelHandlerSocket(io);
     setInventoryBuilderSocket(io);
     setInventoryItemManagerSocket(io);

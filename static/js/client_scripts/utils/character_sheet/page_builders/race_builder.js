@@ -1,5 +1,4 @@
 import * as character_data_handler from './../character_data_handler.js';
-import {getRaceData, getRaceAbilities, getRaceLanguages, getRaceSkills, getRace, getSavedRaceLanguages, getSavedRaceAbilities, getSavedRaceSkills} from "./../mappers/race_mapper.js";
 import {createAbilityDropdown} from './../dropdown_builders/ability_dropdown_builder.js';
 import {createLanguageDropdown} from './../dropdown_builders/language_dropdown_builder.js';
 import {createSkillDropdown} from './../dropdown_builders/skill_dropdown_builder.js';

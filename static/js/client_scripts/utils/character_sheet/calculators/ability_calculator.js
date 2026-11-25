@@ -1,7 +1,4 @@
 import * as character_data_handler from "./../character_data_handler.js";
-import {getProficiencyBonus} from "./../../../player_level_handler.js";
-import {getRaceData, getRaceAbilities, getRace, getSavedRaceAbilities} from "./../mappers/race_mapper.js";
-import {getClassData} from "./../mappers/class_mapper.js";
 
 
 export function calculateStrengthMod() {

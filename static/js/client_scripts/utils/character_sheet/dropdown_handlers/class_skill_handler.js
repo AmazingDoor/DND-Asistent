@@ -1,6 +1,5 @@
 import { savePlayerSkills } from '../../../save_handler.js';
 import { getClassSkills } from '../mappers/class_mapper.js';
-import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     name = sessionStorage.getItem('charName');
@@ -17,8 +16,8 @@ export async function addClassSkillEventListeners(socket, setSkills) {
                 changeHeadText(skill_head, option);
                 setSkills();
                 const skills = getClassSkills();
-                updateSkills();
-                updateAbilities();
+                //updateSkills();
+                //updateAbilities();
                 await savePlayerSkills();
             });
         });

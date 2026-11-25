@@ -1,7 +1,6 @@
 import * as character_data_handler from './../character_data_handler.js';
 import {setBackground, getBackgroundData, getBackgroundName} from './../mappers/background_mapper.js';
 import {linkDropdown} from './../../dropdown_handler.js';
-import {updateSkills, updateAbilities} from './../../display_stat_updater.js';
 import * as inventory_builder from './inventory_builder.js';
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -36,5 +35,5 @@ function clickEvent(option, head) {
     head.querySelector('.selected-background').textContent = option.textContent;
     setBackground(option.textContent);
     character_data_handler.setBackgroundSkills(getBackgroundData().skills);
-    updateSkills();
+    //updateSkills();
 }
